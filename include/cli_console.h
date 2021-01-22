@@ -21,30 +21,39 @@
 
 //! @file
 //! @author Alexis Royer
-//! @brief CcliKeyword class definition.
+//! @brief CcliConsole class definition.
 
-#ifndef _CLI_KEYWORD_H_
-#define _CLI_KEYWORD_H_
+#ifndef _CLI_CONSOLE_H_
+#define _CLI_CONSOLE_H_
 
-#include "cli_syntax_node.h"
-
-
-// Forward declarations.
-class CcliHelp;
+#include "cli_io_device.h"
 
 
-//! @brief Keyword element class.
-class CcliKeyword : public CcliSyntaxNode
+//! @brief Console intput/output device class.
+class CcliConsole : public CcliIODevice
 {
 public:
     //! @brief Constructor.
-    CcliKeyword(
-        const std::string& STR_Keyword, //!< THE keyword.
-        const CcliHelp& CLI_Help        //!< Corresponding help.
-        );
+    CcliConsole(void);
 
     //! @brief Destructor.
-    virtual ~CcliKeyword(void);
+    virtual ~CcliConsole(void);
+
+public:
+    //! @brief Open device handler.
+    virtual const bool OpenDevice(void);
+    //! @brief Close device handler.
+    virtual const bool CloseDevice(void);
+    //! @brief Character input handler.
+    virtual const CLI_CHAR GetChar(void) const;
+
+protected:
+    //! @brief Output handler.
+    virtual void PutString(const std::string& STR_Out) const;
+public:
+    //! @brief Beep handler.
+    virtual void Beep(void) const;
 };
 
-#endif // _CLI_KEYWORD_H_
+#endif // _CLI_CONSOLE_H_
+

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright 2006 Alexis Royer
+    This file is part of the CLI library.  The CLI library aims to provide
+    facilities in making text-based user interfaces.
+    Copyright (C) 2006 Alexis Royer.
 
-    This file is part of the CLI library.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-    The CLI library is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation; either version 2.1 of the License, or
-    (at your option) any later version.
-
-    Foobar is distributed in the hope that it will be useful,
+    This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with Foobar; if not, write to the Free Software
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 
 <!-- Define the root element. Obviously, it is named 'cli'. -->
 <!-- Give it a name through the '@name' attribute. -->
-<cli name="sample-cli" cpp="PCLI_SampleCli" xmlns="http://alexis.royer.free.fr/cli/1.0/">
+<cli name="sample-cli" cpp="PCLI_SampleCli" xmlns="http://alexis.royer.free.fr/CLI">
 	<!-- 'cpp' attributes and elements allows you to command the target generation. -->
 	<!-- The '@cpp' attribute above declares a CcliCli object pointer. This way, you can reference this CLI from the outside, especially for CcliShell::RunConsole() or CcliShell::RunTelnet(). -->
 
@@ -53,6 +53,18 @@
 			<param id="the-word" type="string">
 				<!-- 'value-of' elements can then be used to reference the parameters. Only ancestor parameters can be referenced. -->
 				<endl><cpp><out/> &lt;&lt; <value-of param="the-word"/> &lt;&lt; CLI_ENDL;</cpp></endl>
+			</param>
+		</keyword>
+		<keyword string="int"><help lang="en">Print out an int</help>
+			<!-- Here is an integer parameter. -->
+			<param id="the-int" type="int">
+				<endl><cpp><out/> &lt;&lt; <value-of param="the-int"/> &lt;&lt; CLI_ENDL;</cpp></endl>
+			</param>
+		</keyword>
+		<keyword string="float"><help lang="en">Print out a float</help>
+			<!-- Here is a float parameter. -->
+			<param id="the-float" type="float">
+				<endl><cpp><out/> &lt;&lt; <value-of param="the-float"/> &lt;&lt; CLI_ENDL;</cpp></endl>
 			</param>
 		</keyword>
 		<keyword string="words"><help lang="en">Print out several words</help>
@@ -98,6 +110,7 @@
 	<cpp option="include">///////////////////////////////</cpp>
 	<cpp option="include">// User define code ('include')</cpp>
 	<cpp option="include">#include &lt;string&gt;</cpp>
+        <cpp option="include">#include "cli_console.h"</cpp>
 
 	<!-- 'cpp' elements with the 'menu-decl' option generate code right after CLI declarations. -->
 	<cpp option="menu-decl">/////////////////////////////////</cpp>
@@ -111,11 +124,16 @@
 	<cpp option="menu-impl">/////////////////////////////////</cpp>
 	<cpp option="menu-impl">// User define code ('menu-impl')</cpp>
 
-	<cpp option="menu-impl">int main(void) {</cpp>
+	<!--<cpp option="menu-impl">int main(void) {</cpp>
+        <cpp option="menu-impl">    CcliCliList cli_List;</cpp>
+        <cpp option="menu-impl">    if (CcliCli::FindFromName(cli_List, ".*") != 1) return -1;</cpp>
+        <cpp option="menu-impl">    if (cli_List[0] != PCLI_SampleCli) return -1;</cpp>
+
 	<cpp option="menu-impl">    CcliShell cli_Shell(*PCLI_SampleCli);</cpp>
-	<cpp option="menu-impl">    cli_Shell.RunConsole();</cpp>
+        <cpp option="menu-impl">    CcliConsole cli_Console;</cpp>
+	<cpp option="menu-impl">    cli_Shell.Run(cli_Console);</cpp>
 	<cpp option="menu-impl">    return 0;</cpp>
-	<cpp option="menu-impl">}</cpp>
+	<cpp option="menu-impl">}</cpp>-->
 
 </cli>
 

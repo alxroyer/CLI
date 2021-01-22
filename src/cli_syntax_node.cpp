@@ -1,20 +1,20 @@
 /*
-    Copyright 2006 Alexis Royer
+    This file is part of the CLI library.  The CLI library aims to provide
+    facilities in making text-based user interfaces.
+    Copyright (C) 2006 Alexis Royer.
 
-    This file is part of the CLI library.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-    The CLI library is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation; either version 2.1 of the License, or
-    (at your option) any later version.
-
-    Foobar is distributed in the hope that it will be useful,
+    This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with Foobar; if not, write to the Free Software
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
@@ -40,7 +40,7 @@ CcliSyntaxNode::~CcliSyntaxNode(void)
     m_cliElements.clear();
 }
 
-CcliElement& CcliSyntaxNode::AddElement(CcliElement* PCLI_Element)
+CcliElement& CcliSyntaxNode::AddElement(CcliElement* const PCLI_Element)
 {
     CcliElementMap::const_iterator it = m_cliElements.find(PCLI_Element->GetKeyword());
     if (it != m_cliElements.end())
@@ -56,37 +56,38 @@ CcliElement& CcliSyntaxNode::AddElement(CcliElement* PCLI_Element)
     }
 }
 
-bool CcliSyntaxNode::FindElements(CcliElementList& CLI_OutList, const std::string& STR_Keyword) const
-{
-    CcliElementList cli_ExactList;
-    return FindElements(cli_ExactList, CLI_OutList, STR_Keyword);
-}
-
-bool CcliSyntaxNode::FindElements(CcliElementList& CLI_ExactList, CcliElementList& CLI_NearList, const std::string& STR_Keyword) const
+const bool CcliSyntaxNode::FindElements(
+        CcliElementList& CLI_ExactList,
+        CcliElementList& CLI_NearList,
+        const std::string& STR_Keyword
+        ) const
 {
 
     for (   CcliElementMap::const_iterator it = m_cliElements.begin();
             it != m_cliElements.end();
             it ++)
     {
-        const CcliElement* pcli_Element = it->second;
+        const CcliElement* const pcli_Element = it->second;
 
         if (0) {}
-        else if (const CcliSyntaxTag* pcli_Tag = dynamic_cast<const CcliSyntaxTag*>(pcli_Element))
+        else if (const CcliSyntaxTag* const pcli_Tag = dynamic_cast<const CcliSyntaxTag*>(pcli_Element))
         {
-            if (! pcli_Tag->FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
+            if (! pcli_Tag->GetbHollow())
             {
-                return false;
+                if (! pcli_Tag->FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
+                {
+                    return false;
+                }
             }
         }
-        else if (const CcliSyntaxRef* pcli_Ref = dynamic_cast<const CcliSyntaxRef*>(pcli_Element))
+        else if (const CcliSyntaxRef* const pcli_Ref = dynamic_cast<const CcliSyntaxRef*>(pcli_Element))
         {
             if (! pcli_Ref->GetTag().FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
             {
                 return false;
             }
         }
-        else if (const CcliParam* pcli_Param = dynamic_cast<const CcliParam*>(pcli_Element))
+        else if (const CcliParam* const pcli_Param = dynamic_cast<const CcliParam*>(pcli_Element))
         {
             if (STR_Keyword != "\n")
             {

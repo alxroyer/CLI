@@ -19,32 +19,38 @@
 */
 
 
-//! @file
-//! @author Alexis Royer
-//! @brief CcliKeyword class definition.
+#include <iostream>
 
-#ifndef _CLI_KEYWORD_H_
-#define _CLI_KEYWORD_H_
-
-#include "cli_syntax_node.h"
+#include "cli_common.h"
+#include "cli_shell.h"
+#include "cli_console.h"
+#include "cli_telnet.h"
 
 
-// Forward declarations.
-class CcliHelp;
-
-
-//! @brief Keyword element class.
-class CcliKeyword : public CcliSyntaxNode
+int main(int I_Args, char** ARSTR_Args)
 {
-public:
-    //! @brief Constructor.
-    CcliKeyword(
-        const std::string& STR_Keyword, //!< THE keyword.
-        const CcliHelp& CLI_Help        //!< Corresponding help.
-        );
+    // Look for a CLI to launch.
+    CcliCliList cli_List;
+    CcliCli::FindFromName(cli_List, ".*");
+    if (cli_List.size() == 0)
+    {
+        std::cerr << "No CLI found" << std::endl;
+        return -1;
+    }
+    else if (cli_List.size() != 1)
+    {
+        std::cerr << "Several CLI found" << std::endl;
+    }
 
-    //! @brief Destructor.
-    virtual ~CcliKeyword(void);
-};
+    // Create a shell.
+    CcliShell cli_Shell(*cli_List[0]);
+    // Enable only echo, prompt, output and error streams.
+    cli_Shell.SetWelcomeStream(CcliOutputDevice::GetNullDevice());
 
-#endif // _CLI_KEYWORD_H_
+    // Launch it.
+    CcliConsole cli_Console;
+    cli_Shell.Run(cli_Console);
+
+    // Successful return.
+    return 0;
+}

@@ -1,48 +1,32 @@
+# This file is part of the CLI library.  The CLI library aims to provide
+# facilities in making text-based user interfaces.
+# Copyright (C) 2006 Alexis Royer.
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-SRCDIR = $(shell pwd)
-OUTPUT = ../LinuxGcc
 
-CXXFILES = $(wildcard *.cpp)
-OBJS = $(patsubst %.cpp, %.o, $(CXXFILES))
-#CXXFILES = $(patsubst %.cpp, $(SRCDIR)/%.cpp, $(CXXLOCALFILES))
-CXXFLAGS = -D_LINUX
-INCLUDES = -I/usr/include -I../include
-LIBS =
-PRODUCT = libclicpp.a
+# Variables
+include ../make/Makefile.vars
+CPP_DIR = ..
+SRC_DIR = .
+PROJ_INCLUDES = -I../include
+PRODUCT_TYPE = LIB
+PRODUCT = $(OUTPUT)/libclicpp.a
 
-default: $(PRODUCT)
-	cp $(PRODUCT) $(OUTPUT)
+# Rules
+include ../make/Makefile.rules
 
-vars:
-	@echo "CXX = $(CXX)"
-	@echo "AR = $(AR)"
-	@echo "OUTPUT = $(OUTPUT)"
-	@echo "SRCDIR = $(SRCDIR)"
-	@echo "CXXFILES = $(CXXFILES)"
-	@echo "OBJS = $(OBJS)"
-	@echo "CXXFLAGS = $(CXXFLAGS)"
-	@echo "INCLUDES = $(INCLUDES)"
-	@echo "LIBS = $(LIBS)"
-	@echo "PRODUCT = $(PRODUCT)"
-
-help:
-	@echo "make help        Get help"
-	@echo "make vars        Show Makefile variables"
-	@echo "make depend      Update Makefile.depend"
-	@echo "make             Generate libclicpp.a"
-	@echo "make clean       Clean up output objects and library"
-
-$(PRODUCT): $(OBJS)
-	$(AR) -cru $(PRODUCT) $(OBJS) $(LIBS)
-
-%.o:
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-depend:
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MM $(CXXFILES) > Makefile.depend
-
-clean:
-	rm -f $(OBJS) $(PRODUCT)
-
-include Makefile.depend
-
+# Dependencies
+include Makefile.deps

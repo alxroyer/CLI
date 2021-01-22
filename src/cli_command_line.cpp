@@ -1,20 +1,20 @@
 /*
-    Copyright 2006 Alexis Royer
+    This file is part of the CLI library.  The CLI library aims to provide
+    facilities in making text-based user interfaces.
+    Copyright (C) 2006 Alexis Royer.
 
-    This file is part of the CLI library.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-    The CLI library is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation; either version 2.1 of the License, or
-    (at your option) any later version.
-
-    Foobar is distributed in the hope that it will be useful,
+    This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with Foobar; if not, write to the Free Software
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
@@ -28,8 +28,9 @@
 
 
 CcliCommandLine::CcliCommandLine(void)
+  : m_pcliMenu(NULL),
+    m_iNumBackspacesForCompletion(0)
 {
-    m_pcliMenu = NULL;
 }
 
 CcliCommandLine::~CcliCommandLine(void)
@@ -42,29 +43,40 @@ CcliCommandLine::~CcliCommandLine(void)
     }
 }
 
-bool CcliCommandLine::Parse(const CcliMenu& CLI_Menu, const std::string& STR_Line, bool B_Execution)
+const bool CcliCommandLine::Parse(
+        const CcliMenu& CLI_Menu,
+        const std::string& STR_Line,
+        const bool B_Execution
+        )
 {
     m_pcliMenu = & CLI_Menu;
 
+    // Reset the error message.
+    m_strError.erase();
+
     // Split the line into words.
     const CcliElement* pcli_Node = & CLI_Menu;
-    std::vector<std::string> vstr_Words = Split(STR_Line);
+    std::vector<std::string> vstr_Words;
+    int i_LastWordPosition = -1;
+    if (! Split(STR_Line, vstr_Words, i_LastWordPosition))
+    {
+        return false;
+    }
 
     // Determine whether the last word should be parsed.
     int i_WordCount = vstr_Words.size();
     if ((! B_Execution)
         && (! vstr_Words.empty())
-        && (STR_Line.compare(
-            STR_Line.size() - vstr_Words.back().size(),
-            vstr_Words.back().size(),
-            vstr_Words.back()) == 0))
+        && (i_LastWordPosition >= 0))
     {
         i_WordCount --;
         m_strLastWord = vstr_Words.back();
+        m_iNumBackspacesForCompletion = (STR_Line.size() - i_LastWordPosition);
     }
     else
     {
         m_strLastWord.erase();
+        m_iNumBackspacesForCompletion = 0;
     }
 
     // For each word, match the right element.
@@ -73,7 +85,7 @@ bool CcliCommandLine::Parse(const CcliMenu& CLI_Menu, const std::string& STR_Lin
         CcliElementList cli_ExactList, cli_NearList;
         if (! pcli_Node->FindElements(cli_ExactList, cli_NearList, vstr_Words[i]))
 	{
-            CLI_Menu.GetErrorStream() << "Internal error" << CLI_ENDL;
+            m_strError =  "Internal error";
             return false;
 	}
 
@@ -87,20 +99,20 @@ bool CcliCommandLine::Parse(const CcliMenu& CLI_Menu, const std::string& STR_Lin
                 }
                 else
                 {
-                    CLI_Menu.GetErrorStream() << "Uncomplete command" << CLI_ENDL;
+                    m_strError = "Uncomplete command";
                     return false;
                 }
             }
             else
             {
-                CLI_Menu.GetErrorStream() << "Syntax error next to " << vstr_Words[i] << CLI_ENDL;
+                m_strError = "Syntax error next to " + vstr_Words[i];
                 return false;
             }
         }
         else if ((cli_ExactList.size() > 1)
                 || ((cli_ExactList.size() == 0) && (cli_NearList.size() > 1)))
         {
-            CLI_Menu.GetErrorStream() << "Ambiguous syntax next to " << vstr_Words[i] << CLI_ENDL;
+            m_strError = "Ambiguous syntax next to " + vstr_Words[i];
             return false;
         }
         else
@@ -113,14 +125,14 @@ bool CcliCommandLine::Parse(const CcliMenu& CLI_Menu, const std::string& STR_Lin
     if (B_Execution && (i_WordCount > 0)
         && (! dynamic_cast<const CcliEndl*>(& GetLastElement())))
     {
-        CLI_Menu.GetErrorStream() << "Uncomplete command" << CLI_ENDL;
+        m_strError = "Uncomplete command";
         return false;
     }
 
     return true;
 }
 
-const CcliElement& CcliCommandLine::operator[](int I_Pos) const
+const CcliElement& CcliCommandLine::operator[](const int I_Pos) const
 {
     return *m_cliElements[I_Pos];
 }
@@ -137,48 +149,127 @@ const CcliElement& CcliCommandLine::GetLastElement(void) const
     }
 }
 
-int CcliCommandLine::GetElementCount(void) const
+const int CcliCommandLine::GetElementCount(void) const
 {
     return m_cliElements.size();
 }
 
-std::string CcliCommandLine::GetLastWord(void) const
+const std::string CcliCommandLine::GetLastWord(void) const
 {
     return m_strLastWord;
 }
 
-std::vector<std::string> CcliCommandLine::Split(const std::string& STR_Line)
+const int CcliCommandLine::GetNumBackspacesForCompletion(void) const
 {
-    std::vector<std::string> vstr_Words;
+    return m_iNumBackspacesForCompletion;
+}
+
+const std::string CcliCommandLine::GetLastError(void) const
+{
+    return m_strError;
+}
+
+const bool CcliCommandLine::Split(
+        const std::string& STR_Line,
+        std::vector<std::string>& VSTR_Words,
+        int& I_LastWordPosition
+        )
+{
+    I_LastWordPosition = -1;
 
     std::string str_Word;
+    bool b_EscapeMode = false;
+    bool b_QuotedWord = false;
     for (int i=0; i<STR_Line.size(); i++)
     {
-        if ((STR_Line[i] != ' ') && (STR_Line[i] != '\n') && (STR_Line[i] != '\t'))
-        {
-            str_Word += STR_Line[i];
-        }
+        const char c = STR_Line[i];
+        bool b_PushWord = false;
 
-        if ((STR_Line[i] == ' ') || (STR_Line[i] == '\n') && (STR_Line[i] == '\t')
-            || (i == STR_Line.size() - 1))
+        // End of line.
+        if (c == '\n')
+        {
+            if (b_EscapeMode)
+            {
+                m_strError = "Unterminated escape sequence";
+                return false;
+            }
+            if (b_QuotedWord)
+            {
+                m_strError = "Unterminated quoted string";
+                return false;
+            }
+            if (! str_Word.empty())
+            {
+                b_PushWord = true;
+                I_LastWordPosition = -1;
+            }
+        }
+        // Quote
+        else if ((c == '"') && (! b_EscapeMode))
+        {
+            b_QuotedWord = (! b_QuotedWord);
+            if (I_LastWordPosition < 0) { I_LastWordPosition = i; }
+        }
+        // Blank characters.
+        else if (((c == ' ') || (c == '\t')) && (! b_EscapeMode) && (! b_QuotedWord))
         {
             if (! str_Word.empty())
             {
-                vstr_Words.push_back(str_Word);
-                str_Word.erase();
+                b_PushWord = true;
+                I_LastWordPosition = -1;
             }
         }
-        if (STR_Line[i] == '\n')
+        // Escape character.
+        else if ((c == '\\') && (! b_EscapeMode) && (i < STR_Line.size() - 1))
         {
-            vstr_Words.push_back("\n");
-            break;
+            b_EscapeMode = true;
+            if (I_LastWordPosition < 0) { I_LastWordPosition = i; }
+        }
+        // Non blank character.
+        else
+        {
+            // Word expansion.
+            str_Word += c;
+            if (I_LastWordPosition < 0) { I_LastWordPosition = i; }
+
+            // Escape mode reset.
+            b_EscapeMode = false;
+        }
+
+        // End of line management.
+        if (i >= STR_Line.size() - 1)
+        {
+            b_PushWord = true;
+        }
+
+        // Push the word if necessary.
+        if (b_PushWord && (! str_Word.empty()))
+        {
+            VSTR_Words.push_back(str_Word);
+            str_Word.erase();
+        }
+        if (c == '\n')
+        {
+            I_LastWordPosition = -1;
+            VSTR_Words.push_back("\n");
+            return true;
         }
     }
 
-    return vstr_Words;
+    if (b_EscapeMode)
+    {
+        m_strError = "Unterminated escape sequence";
+        return false;
+    }
+    if (b_QuotedWord)
+    {
+        m_strError = "Unterminated quoted string";
+        return false;
+    }
+    return true;
 }
 
-CcliCommandLine& CcliCommandLine::AddElement(const CcliElement* PCLI_Element)
+CcliCommandLine& CcliCommandLine::AddElement(const CcliElement* const PCLI_Element)
 {
     if (const CcliParam* pcli_Param = dynamic_cast<const CcliParam*>(PCLI_Element))
     {
