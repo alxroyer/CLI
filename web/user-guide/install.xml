@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+    This file is part of the CLI library.  The CLI library aims to provide
+    facilities in making text-based user interfaces.
+    Copyright (C) 2006-2007 Alexis Royer.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+
+<section id="install"><title id="install.title">Installation</title>
+
+    <section id="download"><title id="download.title">Download</title>
+
+        <para>
+        The CLI library can downloaded from
+        <ulink url="http://alexis.royer.free.fr/CLI/index.html#download">here</ulink>
+        in the form of gzipped archives.
+        </para>
+
+    </section>
+
+    <section id="prerequisit"><title id="prerequisit.title">Prerequisit</title>
+
+        <para>
+        The CLI library needs nothing special when compiled on Linux.
+        You will have however to install cygwin if you compile it on Windows.
+        </para>
+
+    </section>
+
+    <section id="compilation"><title id="compilation.title">Compilation</title>
+
+        <para>
+        Once you have downloaded the archive, unpack it on your disk:
+        <programlisting>tar xvfz cppcli-1.0.tgz</programlisting>
+        </para>
+
+        <para>
+        Go to <filename class="directory">cpp/build/make</filename>:
+            <programlisting>cd cpp/build/make</programlisting>
+        And compile:
+            <programlisting>make</programlisting>
+        This compilation will run over the following steps:
+            <orderedlist>
+            <listitem>Compilation of the CLI library for C++</listitem>
+            <listitem>Compilation of program samples: cpptest, empty, clisample</listitem>
+            <listitem>User guide samples testing: all samples of this user guide are compiled, executed, and checked</listitem>
+            <listitem>Additional unit tests: io_device</listitem>
+            </orderedlist>
+        </para>
+
+    </section>
+
+</section>
+

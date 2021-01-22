@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+    This file is part of the CLI library.  The CLI library aims to provide
+    facilities in making text-based user interfaces.
+    Copyright (C) 2006-2007 Alexis Royer.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+
+<cli xmlns="http://alexis.royer.free.fr/CLI" name="Circle">
+    <cpp option="include">#include "circle.h"</cpp>
+    <keyword string="add">
+        <keyword string="circle">
+            <cpp>Circle c;</cpp>
+
+            <keyword string="black">
+                <cpp>c.SetColor(0x000000);</cpp>
+                <tag ref="draw-circle"/>
+            </keyword>
+            <keyword string="blue">
+                <cpp>c.SetColor(0x00ff00);</cpp>
+                <tag ref="draw-circle"/>
+            </keyword>
+            <keyword string="red">
+                <cpp>c.SetColor(0xff0000);</cpp>
+                <tag ref="draw-circle"/>
+            </keyword>
+            <keyword string="green">
+                <cpp>c.SetColor(0x0000ff);</cpp>
+                <tag ref="draw-circle"/>
+            </keyword>
+
+            <tag id="draw-circle">
+                <endl><cpp>Draw(c);</cpp></endl>
+            </tag>
+        </keyword>
+    </keyword>
+</cli>

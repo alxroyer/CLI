@@ -1,0 +1,59 @@
+<IO_DEVICE_INSTANCES> One more user for instance stdout, user count: 1 -> 2, from InputFileDevice
+<IO_DEVICE_INSTANCES> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 0 -> 1, from AddInput
+<IO_DEVICE_INSTANCES> One more user for instance mux, user count: 1 -> 2, from OpenDevices
+<IO_DEVICE_INSTANCES> One more user for instance mux, user count: 2 -> 3, from OpenDevices
+<IO_DEVICE_INSTANCES> One more user for instance mux, user count: 3 -> 4, from OpenDevices
+<IO_DEVICE_INSTANCES> One more user for instance mux, user count: 4 -> 5, from OpenDevices
+<IO_DEVICE_INSTANCES> One more user for instance mux, user count: 5 -> 6, from OpenDevices
+<IO_DEVICE_INSTANCES> One more user for instance mux, user count: 6 -> 7, from OpenDevices
+<IO_DEVICE_OPENING> One more user for instance mux, user count: 0 -> 1, from OpenDevices
+<IO_DEVICE_OPENING> Opening the device mux
+<IO_DEVICE_OPENING> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 0 -> 1, from OpenDevice
+<IO_DEVICE_OPENING> Opening the device input-file[../../tests/io_device/io_device.test]
+<IO_DEVICE_OPENING> One more user for instance stdout, user count: 0 -> 1, from OpenDevice
+<IO_DEVICE_OPENING> Opening the device stdout
+<IO_DEVICE_INSTANCES> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 1 -> 2, from OpenDevice
+<IO_DEVICE_OPENING> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 1 -> 2, from OpenDevice
+<IO_DEVICE_INSTANCES> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 2 -> 3, from OpenDevice
+<IO_DEVICE_OPENING> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 2 -> 3, from OpenDevice
+<IO_DEVICE_INSTANCES> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 3 -> 4, from OpenDevice
+<IO_DEVICE_OPENING> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 3 -> 4, from OpenDevice
+<IO_DEVICE_INSTANCES> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 4 -> 5, from OpenDevice
+<IO_DEVICE_OPENING> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 4 -> 5, from OpenDevice
+<IO_DEVICE_INSTANCES> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 5 -> 6, from OpenDevice
+<IO_DEVICE_OPENING> One more user for instance input-file[../../tests/io_device/io_device.test], user count: 5 -> 6, from OpenDevice
+<IO_DEVICE_OPENING> One more user for instance mux, user count: 1 -> 2, from OpenDevices
+<IO_DEVICE_OPENING> One more user for instance mux, user count: 2 -> 3, from OpenDevices
+<IO_DEVICE_OPENING> One more user for instance mux, user count: 3 -> 4, from OpenDevices
+<IO_DEVICE_OPENING> One more user for instance mux, user count: 4 -> 5, from OpenDevices
+<IO_DEVICE_OPENING> One more user for instance mux, user count: 5 -> 6, from OpenDevices
+<IO_DEVICE_OPENING> One less user for instance mux, user count: 6 -> 5, from CloseDevices
+<IO_DEVICE_OPENING> One less user for instance mux, user count: 5 -> 4, from CloseDevices
+<IO_DEVICE_OPENING> One less user for instance mux, user count: 4 -> 3, from CloseDevices
+<IO_DEVICE_OPENING> One less user for instance mux, user count: 3 -> 2, from CloseDevices
+<IO_DEVICE_OPENING> One less user for instance mux, user count: 2 -> 1, from CloseDevices
+<IO_DEVICE_OPENING> One less user for instance mux, user count: 1 -> 0, from CloseDevices
+<IO_DEVICE_OPENING> Closing the device mux
+<IO_DEVICE_OPENING> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 6 -> 5, from CloseDevice
+<IO_DEVICE_OPENING> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 5 -> 4, from CloseDevice
+<IO_DEVICE_OPENING> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 4 -> 3, from CloseDevice
+<IO_DEVICE_OPENING> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 3 -> 2, from CloseDevice
+<IO_DEVICE_OPENING> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 2 -> 1, from CloseDevice
+<IO_DEVICE_OPENING> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 1 -> 0, from ReleaseFirstInputDevice
+<IO_DEVICE_OPENING> Closing the device input-file[../../tests/io_device/io_device.test]
+<IO_DEVICE_OPENING> One less user for instance stdout, user count: 1 -> 0, from CloseDevice
+<IO_DEVICE_OPENING> Closing the device stdout
+<IO_DEVICE_INSTANCES> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 6 -> 5, from ReleaseFirstInputDevice
+<IO_DEVICE_INSTANCES> One less user for instance mux, user count: 7 -> 6, from CloseDevices
+<IO_DEVICE_INSTANCES> One less user for instance mux, user count: 6 -> 5, from CloseDevices
+<IO_DEVICE_INSTANCES> One less user for instance mux, user count: 5 -> 4, from CloseDevices
+<IO_DEVICE_INSTANCES> One less user for instance mux, user count: 4 -> 3, from CloseDevices
+<IO_DEVICE_INSTANCES> One less user for instance mux, user count: 3 -> 2, from CloseDevices
+<IO_DEVICE_INSTANCES> One less user for instance mux, user count: 2 -> 1, from CloseDevices
+<IO_DEVICE_INSTANCES> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 5 -> 4, from ReleaseOutputDevice
+<IO_DEVICE_INSTANCES> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 4 -> 3, from ReleaseOutputDevice
+<IO_DEVICE_INSTANCES> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 3 -> 2, from ReleaseOutputDevice
+<IO_DEVICE_INSTANCES> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 2 -> 1, from ReleaseOutputDevice
+<IO_DEVICE_INSTANCES> One less user for instance input-file[../../tests/io_device/io_device.test], user count: 1 -> 0, from ReleaseOutputDevice
+<IO_DEVICE_INSTANCES> Deleting the device input-file[../../tests/io_device/io_device.test]
+<IO_DEVICE_INSTANCES> One less user for instance stdout, user count: 2 -> 1, from ~InputFileDevice

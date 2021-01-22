@@ -1,0 +1,412 @@
+<html>
+
+<!--
+    This file is part of the CLI library.  The CLI library aims to provide
+    facilities in making text-based user interfaces.
+    Copyright (C) 2006-2007 Alexis Royer.
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+
+<head>
+    <title>CLI library - How to quickly develop a command line interface</title>
+</head>
+<body>
+<p align="right"><font size="-2">Last updated on Apr, 30th 2007</font></p>
+    <center><font size="+3"><b>CLI</b></font></center>
+
+<table>
+<tr>
+<td valign="top">
+    <a href="#presentation">Presentation</a><br/>
+    <a href="#howto">How does it work?</a><br/>
+    <a href="#use">Possible use</a><br/>
+    <a href="#license">License</a><br/>
+    <a href="#download">Download</a><br/>
+    <a href="#history">History</a><br/>
+    <a href="#evolutions">Evolutions</a><br/>
+    <a href="#contact">Contact</a>
+</td>
+
+<td/>
+
+<td valign="top">
+<a name="presentation"/>
+    <h1>Presentation</h1>
+
+    <p>
+    CLI stands for <i>Command Line Interface</i>.
+    It is essentially a library,
+    and a set of tools that allow you do such kind of things:
+    <center>
+    <table>
+    <tr><td bgcolor="#ffffcc" align="center"><i>XML resource file</i></td></tr>
+    <tr>
+    <td bgcolor="#eeeeee" valign="top">
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;cli name="<b>Hello</b>" xmlns="http://alexis.royer.free.fr/CLI"&gt;
+ &lt;cpp option="include"&gt;<b>#include "hello.h"</b>&lt;/cpp&gt;
+
+ &lt;keyword string="<b>say</b>"&gt;&lt;help lang="en"&gt;<b>Tell Something.</b>&lt;/help&gt;
+  &lt;keyword string="<b>hello</b>"&gt;&lt;help lang="en"&gt;<b>Just say hello.</b>&lt;/help&gt;
+   &lt;endl&gt;&lt;cpp&gt;<b>sayHello();</b>&lt;/cpp&gt;&lt;/endl&gt;
+  &lt;/keyword&gt;
+  &lt;keyword string="<b>bye</b>"&gt;&lt;help lang="en"&gt;<b>Say goodbye.</b>&lt;/help&gt;
+   &lt;endl&gt;&lt;cpp&gt;<b>sayHello();</b>&lt;/cpp&gt;&lt;/endl&gt;
+  &lt;/keyword&gt;
+ &lt;/keyword&gt;
+&lt;/cli&gt;
+</pre>
+    </td>
+    </tr>
+    <tr><td bgcolor="#ffffcc" align="center"><i>CLI execution</i></td></tr>
+    <tr>
+    <td bgcolor="#eeeeee" valign="top">
+        <img src="hello.jpg"/>
+    </td>
+    </table>
+    </center>
+    </p>
+
+    <p>
+    When the user enters 'say', he/she can then enter either <i>'hello'</i> or <i>'bye'</i>.
+    When he/she enters <i>'hello'</i> and presses the return key,
+    the CLI library automatically calls the user-defined function <i>'sayHello()'</i>.
+    </p>
+
+    <p>
+    This 'Hello world' example shows the direct relationship
+    between the XML resource file and the CLI execution.
+    Here is now a more complete list of the CLI library features:
+    <ol>
+        <li><b>completion and help:</b>
+            The user has facilities to get into the set of commands.
+            The CLI library automatically manages completion,
+            and help can be set for most of CLI elements.
+        </li>
+        <li><b>keywords:</b>
+            A command line is generally composed by a sequence of keywords
+            terminated by a carriage return
+            (symbolized through the <i>'endl'</i> XML element).
+        </li>
+        <li><b>parameters:</b>
+            Parameters can be used instead of keywords.
+            The CLI library manages parameters of different types, such as:
+            strings, integers, floats, host names.
+        </li>
+        <li><b>tags:</b>
+            Tags act like labels do in C/C++ code.
+            As far as it said to be ugly in C/C++, it is wonderful stuff in CLI.
+            It allows you to implement recursive command lines
+            or command lines with optional extensions (basically for options).
+        </li>
+        <li><b>menus:</b>
+            User defined commands can lead to user defined menus,
+            which contain other own set of user defined commands,
+            and so on...
+        </li>
+        <li><b>generic input/output:</b>
+            Input/output can be easily redirected.
+            The library currently gives support for the following input/output devices:
+            console, TCP connections, files, single commands.
+            RS232 and full telnet are planned in the short or middle term.
+            But you may implement your own intput/output device if you need it.
+        </li>
+    </ol>
+    </p>
+
+
+<a name="howto"/>
+    <h1>How does it work?</h1>
+
+    <p>
+    Considering you already have the user code to execute at end,
+    all you have to do is the following:
+    <ol>
+        <li>Edit an <b>XML resource file</b>;</li>
+        <li><b>Transform</b> the XML resource file into target language code;</li>
+        <li>Depending on the target language, <b>integrate</b> the result of the transformation.</li>
+    </ol>
+    </p>
+
+    <p>
+    For instance, in C++, the result of the transformation is a C++ source file.
+    You should therefore compile it
+    and link it with the CLI library and your user defined program.
+    You should also make a call somewhere in your program
+    to launch the execution of your CLI.
+    In most cases, it should not be too difficult to have it work quickly.
+    </p>
+
+    <p>
+    The transformation step is just an XSLT transformation
+    using an XSL stylesheet provided with the library.
+    Therefore, the most difficult (and it aims to be easy) is the XML resource file edition.
+    Have a look at the <a href="user-guide/cli-user-guide.html">CLI user guide</a> for more information.
+    </p>
+
+
+<a name="use"/>
+    <h1>Possible use</h1>
+
+    <p>
+    Here is a list of possible interests you could have in this projects:
+    <ul>
+        <li><b>text-based user interface:</b>
+            The CLI library is essentially a text-based user interface,
+            so, obviously, it can be used to define such kind of interfaces.
+            We must admit that graphical user interfaces are much more attractive,
+            however text-based interfaces have the advantage to easily get a file for input.
+            Instructions can be saved and replayed later on.</li>
+        <li><b>monitoring:</b>
+            It is sometimes useful to have a secondary user interface,
+            for monitoring operations for instance,
+            fully dissociated from the primary one.</li>
+        <li><b>configuration files</b>
+            You can easily define a specific configuration file syntax with the CLI library.
+            Therefore, you could use it instead of .ini files or XML files.</li>
+        <li><b>automation:</b>
+            Since CLI is text-based, it is compatible with automation.
+            Automated test tools generally need to interact with target tested equipments or softwares.
+            The CLI library is an easy way to implement an entry point on target equipments for unit tests.</li>
+        <li><b>parsing facilities:</b>
+            The CLI library can be used for its command line parsing ability.
+            I've already used it to make out a compiler for instance.</li>
+        <li><b>reuse of code:</b>
+            Eventually, if the XML CLI definition does not fit your needs,
+            but you are interested in what the library does on the other hand,
+            you could directly use the C++ objects of the library.
+            You shall therefore have a look at
+            the <a href="doxygen">doxygen</a> documentation of the library.</li>
+    </ul>
+    </p>
+
+    <p>
+    If you find any other interest in this library,
+    please
+    <script type='text/javascript'>
+    <!--
+        var v2="FDBVQRYZW82SPA2VXBBJVU";
+        var v7=unescape("%27%28%27.8%21w%288AW%21%10%26_71.l%2998");
+        var v5=v2.length;
+        var v1="";
+        for(var v4=0;v4<v5;v4++){
+            v1+=String.fromCharCode(v2.charCodeAt(v4)^v7.charCodeAt(v4));
+        }
+        document.write(
+            '<a href="javascript:void(0)" onclick="window.location=\'mail\u0074o\u003a'
+            + v1
+            + '?subject=Email%20Alexis%20Royer'
+            + '\'">'
+            + 'let me know</a>');
+    //-->
+    </script><noscript><a href='http://w2.syronex.com/jmr/safemailto/#noscript'>let me know (guarded by anti-spam solution)</a></noscript>.
+    </p>
+
+
+<a name="license"/>
+    <h1>License</h1>
+
+    <p>
+    This software, written by Alexis Royer,
+    is published under <a href="LICENSE.txt">LGPL license</a>.
+    </p>
+
+    <p>
+    This kind of license is compatible with commercial use, modification and redistribution,
+    under the terms of the <a href="LICENSE.txt">license</a>.
+    </p>
+
+
+<a name="download"/>
+    <h1>Download</h1>
+
+    <table>
+
+    <tr>
+    <td>Apr, 30th 2007</td>
+    <td><a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a></td>
+    <td>Not a beta anymore!
+        Improved again, and fully C++ coding now.
+        <a href="#history">History section</a> tells more about improvements.</td>
+    </tr>
+
+    <tr>
+    <td>Sept, 27th 2006</td>
+    <td><a href="cppcli-1.0.beta1.tgz">cppcli-1.0.beta1.tgz</a></td>
+    <td>This version has been improved a lot, and tested on both Linux and Windows.
+        Since things have been cleaned up,
+        compatibility is not strictly respected with the previous release,
+        but it should not be a big deal.
+        Have a look at the <a href="#history">history section</a> for details about improvements.
+        However <a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a> is now available.</td>
+    </tr>
+
+    <tr>
+    <td>May, 17th 2006</td>
+    <td><a href="cppcli-1.0.beta1-1.tgz">cppcli-1.0.beta1-1.tgz</a></td>
+    <td>Very first release.
+        You'd probably better get <a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a>.</td>
+    </tr>
+
+    </table>
+
+
+<a name="history">
+    <h1>History</h1>
+
+    <table border="1">
+
+    <tr>
+    <td valign="top" bgcolor="#ffffcc">1.0</td>
+    <td>
+        Major modifications:
+        <ul>
+        <li>Revision of cpp section naming in XSL.</li>
+        <li>cli namespace.</li>
+        <li>Input / output devices:
+            <ul>
+            <li>instance and opening locking / auto-deletion</li>
+            <li>new devices: cli::FileDevice, cli::SingleCommand, cli::IOMux</li>
+            </ul>
+        </li>
+        </ul>
+        Misceallanous:
+        <ul>
+        <li>include/cli directory creation and file names modification.</li>
+        <li>Makefiles improvements:
+            <ul>
+            <li>build/make directory creation</li>
+            <li>target specific generation</li>
+            <li>debug generation management</li>
+            <li>BIN_SUFFIX addition</li>
+            </ul>
+        </li>
+        <li>Unit tests: empty, io_device.</li>
+        <li>Traces system addition.</li>
+        </ul>
+        Bug corrections:
+        <ul>
+        <li>No help display on completion so far.</li>
+        <li>Bad management of '%' and '|' characters.</li>
+        <li>Incorrect behaviour on a string parameters filled with "" (completion and execution, as if not set).</li>
+        <li>Not possible to have two tags on the same syntax node.</li>
+        <li>Crash on CcliOutputDevice::operator&lt;&lt;(const char* const) with NULL for parameter.</li>
+        <li>PromptStream disabled, Echo enabled, TAB -> help display => current line not printed again.</li>
+        </ul>
+    </td>
+    </tr>
+
+    <tr>
+    <td valign="top" bgcolor="#ffffcc">1.0.beta1</td>
+    <td>
+        Major modifications:
+        <ul>
+        <li>Source documentation.</li>
+        <li>Windows / cygwin support (Linux is still available of course).</li>
+        <li>Command line history.</li>
+        <li>Completion "so far".</li>
+        <li>Escape characters and double quotes management.</li>
+        <li>Hollow-tags.</li>
+        <li>Beep support for IO devices.</li>
+        <li>Stream branching modification.</li>
+        <li>Welcome and prompt messages modification.</li>
+        <li>Echo and beep on/off live configuration.</li>
+        </ul>
+        Misceallanous:
+        <ul>
+        <li>Launch method modification.</li>
+        <li>CLI retrieval based on regular expressions.</li>
+        <li>Automatic test tools.</li>
+        <li>C++ constness improvement.</li>
+        <li>Cross-platform Makefiles improvement.</li>
+        </ul>
+        Bug corrections:
+        <ul>
+        <li>A new line is not printed anymore on unsuccessful tab request.</li>
+        <li>The line is not printed anymore when a syntax error occurred.</li>
+        <li>User-defined includes generated in the very first place (useful for pre-compiled headers).</li>
+        <li>Xml-namespace fixed.</li>
+        <li>Elements sorted for help display.</li>
+        <li>"Syntax error next to..." not correctly displayed on completion.</li>
+        <li>Double definition of CcliElement::FindElements() fixed.</li>
+        <li>'?' / TAB, help / completion behaviours improvement.</li>
+        </ul>
+    </td>
+    </tr>
+
+    <tr>
+    <td valign="top" bgcolor="#ffffcc">1.0.beta1-1</td>
+    <td>Very first release. I still propose it for download for history purpose only.
+        Quite stable, but needs little adaptation to work under Windows for instance.
+        Let's say it was ready for demonstration.</td>
+    </tr>
+
+    </table>
+
+
+<a name="evolutions"/>
+    <h1>Evolutions</h1>
+
+    <p>
+    Coming ASAP:
+    <ol>
+    <li><b>Left and right arrows</b> management.</li>
+    <li><b>Other target languages:</b>
+        Only C++ support for the moment.
+        Next supported languages could be Java and perl.</li>
+    <li><b>Mono-thread execution:</b>
+        The server-like execution of the library can cause troubles for integration
+        in MFC-like applications.
+        The CLI may be launched in a thread,
+        which situation could cause crashes when calling methods
+        designed to be executed in the main process.</li>
+    </ol>
+    </p>
+
+<a name="contact"/>
+    <h1>Contact</h1>
+
+    <p>
+    Any question?
+    Found a bug?
+    Feel free to
+    <script type='text/javascript'>
+    <!--
+        var v2="UI3S4HHZ3YZFPPI5A2PTJT";
+        var v7=unescape("4%25V+%5D%3Bf%28%5C%20%3F4%107%24T%28%5E%7E7%259");
+        var v5=v2.length;
+        var v1="";
+        for(var v4=0;v4<v5;v4++){
+            v1+=String.fromCharCode(v2.charCodeAt(v4)^v7.charCodeAt(v4));
+        }
+        document.write(
+            '<a href="javascript:void(0)" onclick="window.location=\'mail\u0074o\u003a'
+            + v1
+            + '?subject=Email%20Alexis%20Royer'
+            + '\'">'
+            + 'email me</a>');
+    //-->
+    </script><noscript><a href='http://w2.syronex.com/jmr/safemailto/#noscript'>email me (guarded by anti-spam solution)</a></noscript>.
+    </p>
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+

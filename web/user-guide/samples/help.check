@@ -1,0 +1,17 @@
+Hello>
+  cli-config      CLI configuration menu
+  exit            Exit menu Hello
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+  say             Say something.
+Hello>say 
+  bye             Say goodbye.
+  hello           Say hello.
+Hello>say bye 
+  <cr>            
+Hello>say bye 
+Hello>say hello 
+  <cr>            
+Hello>say hello 
+Hello>exit

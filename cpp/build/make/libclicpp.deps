@@ -1,0 +1,112 @@
+$(INT_DIR)/cli.o: ../../src/cli.cpp ../../include/cli/cli.h \
+  ../../include/cli/menu.h ../../include/cli/syntax_node.h \
+  ../../include/cli/element.h ../../include/cli/help.h \
+  ../../include/cli/shell.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h ../../include/cli/keyword.h \
+  ../../include/cli/endl.h ../../include/cli/command_line.h \
+  ../../include/cli/traces.h ../../src/config_menu.h \
+  ../../src/consistency.h
+$(INT_DIR)/command_line.o: ../../src/command_line.cpp \
+  ../../include/cli/command_line.h ../../include/cli/element.h \
+  ../../include/cli/help.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h ../../include/cli/menu.h \
+  ../../include/cli/syntax_node.h ../../include/cli/endl.h \
+  ../../include/cli/param.h ../../include/cli/traces.h \
+  ../../src/consistency.h
+$(INT_DIR)/config_menu.o: ../../src/config_menu.cpp \
+  ../../src/config_menu.h ../../include/cli/menu.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h ../../include/cli/keyword.h \
+  ../../include/cli/endl.h ../../include/cli/command_line.h \
+  ../../include/cli/shell.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h
+$(INT_DIR)/consistency.o: ../../src/consistency.cpp \
+  ../../include/cli/io_device.h ../../include/cli/debug.h \
+  ../../include/cli/traces.h ../../src/consistency.h
+$(INT_DIR)/console.o: ../../src/console.cpp ../../include/cli/console.h \
+  ../../include/cli/io_device.h ../../include/cli/debug.h
+$(INT_DIR)/debug.o: ../../src/debug.cpp ../../include/cli/debug.h
+$(INT_DIR)/element.o: ../../src/element.cpp ../../include/cli/cli.h \
+  ../../include/cli/menu.h ../../include/cli/syntax_node.h \
+  ../../include/cli/element.h ../../include/cli/help.h \
+  ../../include/cli/shell.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h
+$(INT_DIR)/endl.o: ../../src/endl.cpp ../../include/cli/endl.h \
+  ../../include/cli/element.h ../../include/cli/help.h \
+  ../../include/cli/cli.h ../../include/cli/menu.h \
+  ../../include/cli/syntax_node.h
+$(INT_DIR)/file_device.o: ../../src/file_device.cpp \
+  ../../include/cli/file_device.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h ../../src/consistency.h
+$(INT_DIR)/help.o: ../../src/help.cpp ../../include/cli/help.h
+$(INT_DIR)/io_device.o: ../../src/io_device.cpp \
+  ../../include/cli/io_device.h ../../include/cli/debug.h \
+  ../../include/cli/cli.h ../../include/cli/menu.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h ../../include/cli/traces.h
+$(INT_DIR)/io_mux.o: ../../src/io_mux.cpp ../../include/cli/io_mux.h \
+  ../../include/cli/io_device.h ../../include/cli/debug.h \
+  ../../include/cli/shell.h ../../include/cli/help.h \
+  ../../src/consistency.h
+$(INT_DIR)/keyword.o: ../../src/keyword.cpp ../../include/cli/keyword.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h
+$(INT_DIR)/menu.o: ../../src/menu.cpp ../../include/cli/menu.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h ../../include/cli/keyword.h \
+  ../../include/cli/endl.h ../../include/cli/shell.h \
+  ../../include/cli/io_device.h ../../include/cli/debug.h \
+  ../../include/cli/command_line.h
+$(INT_DIR)/param.o: ../../src/param.cpp ../../include/cli/param.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h
+$(INT_DIR)/param_float.o: ../../src/param_float.cpp \
+  ../../include/cli/param_float.h ../../include/cli/param.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h
+$(INT_DIR)/param_host.o: ../../src/param_host.cpp \
+  ../../include/cli/param_host.h ../../include/cli/param.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h
+$(INT_DIR)/param_int.o: ../../src/param_int.cpp \
+  ../../include/cli/param_int.h ../../include/cli/param.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h
+$(INT_DIR)/param_string.o: ../../src/param_string.cpp \
+  ../../include/cli/param_string.h ../../include/cli/param.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h
+$(INT_DIR)/shell.o: ../../src/shell.cpp ../../include/cli/shell.h \
+  ../../include/cli/help.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h ../../include/cli/io_mux.h \
+  ../../include/cli/shell.h ../../include/cli/cli.h \
+  ../../include/cli/menu.h ../../include/cli/syntax_node.h \
+  ../../include/cli/element.h ../../include/cli/command_line.h \
+  ../../include/cli/endl.h ../../include/cli/param.h \
+  ../../include/cli/traces.h ../../src/consistency.h
+$(INT_DIR)/single_command.o: ../../src/single_command.cpp \
+  ../../include/cli/single_command.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h ../../src/consistency.h
+$(INT_DIR)/syntax_node.o: ../../src/syntax_node.cpp \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h ../../include/cli/syntax_tag.h \
+  ../../include/cli/syntax_node.h ../../include/cli/param.h
+$(INT_DIR)/syntax_tag.o: ../../src/syntax_tag.cpp \
+  ../../include/cli/syntax_tag.h ../../include/cli/syntax_node.h \
+  ../../include/cli/element.h ../../include/cli/help.h
+$(INT_DIR)/telnet.o: ../../src/telnet.cpp ../../include/cli/telnet.h \
+  ../../include/cli/io_device.h ../../include/cli/debug.h \
+  ../../include/cli/shell.h ../../include/cli/help.h
+$(INT_DIR)/traces.o: ../../src/traces.cpp ../../include/cli/element.h \
+  ../../include/cli/help.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h ../../include/cli/traces.h \
+  ../../src/consistency.h
+$(INT_DIR)/traces_menu.o: ../../src/traces_menu.cpp \
+  ../../include/cli/keyword.h ../../include/cli/syntax_node.h \
+  ../../include/cli/element.h ../../include/cli/help.h \
+  ../../include/cli/param_string.h ../../include/cli/param.h \
+  ../../include/cli/syntax_tag.h ../../include/cli/endl.h \
+  ../../include/cli/command_line.h ../../include/cli/shell.h \
+  ../../include/cli/io_device.h ../../include/cli/debug.h \
+  ../../src/traces_menu.h ../../include/cli/menu.h \
+  ../../include/cli/traces.h ../../src/consistency.h

@@ -1,0 +1,16 @@
+base referer
+rect $classcli_1_1Endl.html 166,82 235,109
+rect $classcli_1_1MenuRef.html 259,82 355,109
+rect $classcli_1_1SyntaxNode.html 379,82 494,109
+rect $classcli_1_1SyntaxRef.html 518,82 622,109
+rect $classcli_1_1Keyword.html 130,157 223,184
+rect $classcli_1_1Menu.html 247,157 322,184
+rect $classcli_1_1Param.html 469,157 549,184
+rect $classcli_1_1SyntaxTag.html 573,157 679,184
+rect $classcli_1_1Cli.html 7,232 63,258
+rect $classcli_1_1ConfigMenu.html 87,232 202,258
+rect $classcli_1_1TracesMenu.html 226,232 343,258
+rect $classcli_1_1ParamT.html 367,232 490,258
+rect $classcli_1_1ParamT.html 514,232 666,258
+rect $classcli_1_1ParamT.html 690,232 818,258
+rect $classcli_1_1ParamT.html 842,232 1013,258

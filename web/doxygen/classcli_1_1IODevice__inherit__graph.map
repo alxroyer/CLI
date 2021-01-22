@@ -1,0 +1,7 @@
+base referer
+rect $classcli_1_1Console.html 8,157 98,184
+rect $classcli_1_1InputFileDevice.html 122,157 256,184
+rect $classcli_1_1IOMux.html 280,157 362,184
+rect $classcli_1_1SingleCommand.html 386,157 528,184
+rect $classcli_1_1TelnetConnection.html 552,157 698,184
+rect $classcli_1_1OutputDevice.html 260,8 382,34

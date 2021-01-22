@@ -1,0 +1,9 @@
+$(INT_DIR)/cli_test.o: ../../tests/cpp/cli_test.cpp \
+  ../../include/cli/cli.h ../../include/cli/menu.h \
+  ../../include/cli/syntax_node.h ../../include/cli/element.h \
+  ../../include/cli/help.h ../../include/cli/keyword.h \
+  ../../include/cli/param_int.h ../../include/cli/param.h \
+  ../../include/cli/endl.h ../../include/cli/syntax_tag.h \
+  ../../include/cli/shell.h ../../include/cli/io_device.h \
+  ../../include/cli/debug.h ../../include/cli/console.h \
+  ../../include/cli/telnet.h
