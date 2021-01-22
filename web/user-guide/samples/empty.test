@@ -1,0 +1,18 @@
+?	help
+h?	
+pwm
+p?	
+cli-config
+pwm
+help
+echo ?o?n
+abcde
+echo off
+abcde
+echo on
+beep ?on
+beep off
+beep on
+exit	
+cli-config
+quit

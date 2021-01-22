@@ -1,0 +1,62 @@
+myCLI>
+  cli-config      CLI configuration menu
+  exit            Exit menu myCLI
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+myCLI>help
+  cli-config      CLI configuration menu
+  exit            Exit menu myCLI
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+myCLI>h
+  help            Get help
+myCLI>help 
+  cli-config      CLI configuration menu
+  exit            Exit menu myCLI
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+myCLI>pwm
+  /myCLI
+myCLI>p
+  pwm             Print Working Menu
+myCLI>pwm 
+  /myCLI
+myCLI>cli-config
+cli-config>pwm
+  /myCLI/cli-config
+cli-config>help
+  beep            Modify beep behavior
+  echo            Modify echo behavior
+  exit            Exit menu cli-config
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+cli-config>echo 
+  off             Set echo off
+  on              Set echo on
+cli-config>echo o
+  off             Set echo off
+  on              Set echo on
+cli-config>echo on
+echo is on
+cli-config>abcde
+Syntax error next to abcde
+cli-config>echo off
+echo is off
+cli-config>Syntax error next to abcde
+cli-config>echo is on
+cli-config>beep 
+  off             Set beep off
+  on              Set beep on
+cli-config>beep on
+beep is on
+cli-config>beep off
+beep is off
+cli-config>beep on
+beep is on
+cli-config>exit 
+myCLI>cli-config
+cli-config>quit

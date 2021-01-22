@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+    Copyright (c) 2006-2007, Alexis Royer
+
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+        * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+    CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+    EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+    PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+
+<section id="howto"><title id="howto.title">How to use it</title>
+
+    <para>
+    The basic process is the following:
+    <orderedlist>
+    <listitem>creation of an XML resource file;</listitem>
+    <listitem>transformation of the XML resource file into target language code;</listitem>
+    <listitem>integration.</listitem>
+    </orderedlist>
+    The content of the XML resource file will be presented
+    in the <link linkend="xmlres">next section</link>.
+    The <link linkend="xslt">transformation</link>
+    and <link linkend="integ">integration</link> steps are discussed here.
+    </para>
+
+    <section id="xslt"><title id="xslt.title">Transformation</title>
+
+        <para>
+        The transformation of the XML resource file into target language code is very easy.
+        It is nothing but a simple XSL transformation.
+        </para>
+
+        <example><title>Transformation of an XML resource file</title>
+        Try it out!
+        Here is a sample CLI resource file:
+            &sample-empty;
+        Copy the stuff into a new file <filename>empty.xml</filename>.
+        Let's say we want to have C++.
+        Using <filename>cppclic.xsl</filename>, launch the XSL transformation
+        thanks to a command line XSLT processor.
+        I usually use <command>saxon</command>:
+            <programlisting>saxon empty.xml cppclic.xsl &gt; empty.cpp</programlisting>
+        or <command>xsltproc</command>:
+            <programlisting>xsltproc cppclic.xsl empty.xml &gt; empty.cpp</programlisting>
+        That's all falks!
+        Have a look at the generated C++ file if you want.
+        You're now ready to compile.
+        </example>
+
+    </section>
+
+    <section id="integ"><title id="integ.title">Integration</title>
+
+        <para>
+        Now that you have your target language file,
+        you want to have a CLI program running don't you ?
+        </para>
+
+        <para>
+        OK! Let's do it.
+        Here is the trick for C++ again.
+        </para>
+
+        <para>
+        Try to compile <filename>empty.cpp</filename> and link.
+        You should have a missing symbol: <function>main</function>.
+        </para>
+
+        <para>
+        Not a big deal!
+        You create a new C++ file with a main function which we will launch the CLI in.
+        This is done through the <function>Run</function> method
+        with a device parameter of the <classname>cli::Shell</classname> class.
+        </para>
+
+        <para>
+        Though, you need to give a <classname>cli::Cli</classname> reference at the beginning.
+        Two strategies at this point:
+        <itemizedlist>
+        <listitem>the <sgmltag class="attribute">cpp</sgmltag> attribute
+                  of the <sgmltag class="element">cli</sgmltag> element
+                  in the XML resource file;</listitem>
+        <listitem>CLI retrieval through <function>cli::Cli::FindFromName</function>
+                  and a regular expression.</listitem>
+        </itemizedlist>
+        </para>
+
+        <example><title>Empty example with C++ integration
+                        using the <sgmltag class="attribute">cpp</sgmltag> attribute</title>
+        <para>
+        Here is now the <filename>empty.xml</filename> file with C++ integration:
+            &sample-empty-cpp;
+        </para>
+
+        <para>
+        The <sgmltag class="attribute">cpp</sgmltag> attribute
+        defines a C++ global <classname>cli::Cli</classname> pointer name,
+        that will be defined and set in the output of the XSL transformation.
+        This way, you can refer to the <classname>cli::Cli</classname> object
+        from the outside of this output.
+        </para>
+
+        <para>
+        Here is a <filename>goempty.cpp</filename> file doing so:
+<programlisting>
+#include &lt;cli/common.h&gt;
+#include &lt;cli/console.h&gt;
+extern cli::Cli* PCLI_MyCli;
+int main(void) {
+    cli::Shell cli_Shell(*PCLI_MyCli);
+    cli::Console cli_Console;
+    cli_Shell.Run(cli_Console);
+}
+</programlisting>
+        </para>
+
+        <para>
+        Compile (with <command>g++</command> for instance):
+            <programlisting>g++ -Icli/cpp/include -c empty.cpp
+g++ -Icli/cpp/include -c goempty.cpp
+g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a</programlisting>
+        And run:
+            <programlisting>./empty</programlisting>
+        Great for an empty stuff, ain't it?
+        </para>
+        </example>
+
+        <example><title>Empty example with C++ integration
+                        using <function>cli::Cli::FindFromName</function></title>
+        <para>
+        This version of the <filename>goempty.cpp</filename> file works too:
+<programlisting>
+#include &lt;cli_common.h&gt;
+int main(void) {
+    cli::CliList cli_List;
+    const int i_Clis = cli::Cli::FindFromName(cli_List, ".*");
+    if (i_Clis == 0)
+    {
+        perror("Error: No CLI found.\n");
+        return -1;
+    }
+    else if (i_Clis > 1)
+    {
+        perror("Warning: Several CLIs found. Executing only the first one.\n");
+    }
+    cli::Shell cli_MyShell(*cli_List[0]);
+    cli_MyShell.Run(cli::Console());
+}
+</programlisting>
+        </para>
+        </example>
+
+        <para>
+        The example above showed you how to create and launch an empty CLI.
+        Now you want to do more interesting stuff don't you?
+            <blockquote>Oh yes I do!</blockquote>
+        So go to <link linkend="xmlres">next section</link>.
+        </para>
+
+    </section>
+
+</section>
+

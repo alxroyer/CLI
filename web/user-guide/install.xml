@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+    Copyright (c) 2006-2007, Alexis Royer
+
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+        * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+    A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+    CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+    EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+    PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+
+<section id="install"><title id="install.title">Installation</title>
+
+    <section id="download"><title id="download.title">Download</title>
+
+        <para>
+        The CLI library can downloaded from
+        <ulink url="http://alexis.royer.free.fr/CLI/index.html#download">here</ulink>
+        in the form of gzipped archives.
+        </para>
+
+    </section>
+
+    <section id="prerequisit"><title id="prerequisit.title">Prerequisit</title>
+
+        <para>
+        The CLI library needs nothing special when compiled on Linux.
+        You will have however to install cygwin if you compile it on Windows.
+        </para>
+
+    </section>
+
+    <section id="compilation"><title id="compilation.title">Compilation</title>
+
+        <para>
+        Once you have downloaded the archive, unpack it on your disk:
+        <programlisting>tar xvfz cppcli-1.0.tgz</programlisting>
+        </para>
+
+        <para>
+        Go to <filename class="directory">cpp/build/make</filename>:
+            <programlisting>cd cpp/build/make</programlisting>
+        And compile:
+            <programlisting>make</programlisting>
+        This compilation will run over the following steps:
+            <orderedlist>
+            <listitem>Compilation of the CLI library for C++</listitem>
+            <listitem>Compilation of program samples: cpptest, empty, clisample</listitem>
+            <listitem>User guide samples testing: all samples of this user guide are compiled, executed, and checked</listitem>
+            <listitem>Additional unit tests: io_device</listitem>
+            </orderedlist>
+        </para>
+
+    </section>
+
+</section>
+
