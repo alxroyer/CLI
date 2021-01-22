@@ -1,0 +1,12 @@
+clisample.o: clisample.cpp ../include/cli_common.h ../include/cli_shell.h \
+  ../include/cli_shell.h ../include/cli_help.h ../include/cli_io_device.h \
+  ../include/cli_cli.h ../include/cli_menu.h ../include/cli_syntax_node.h \
+  ../include/cli_element.h ../include/cli_help.h ../include/cli_keyword.h \
+  ../include/cli_syntax_node.h ../include/cli_param_string.h \
+  ../include/cli_param.h ../include/cli_syntax_node.h \
+  ../include/cli_param_int.h ../include/cli_param.h \
+  ../include/cli_param_float.h ../include/cli_param.h \
+  ../include/cli_param_host.h ../include/cli_param.h \
+  ../include/cli_endl.h ../include/cli_element.h \
+  ../include/cli_syntax_tag.h ../include/cli_syntax_node.h \
+  ../include/cli_command_line.h ../include/cli_element.h

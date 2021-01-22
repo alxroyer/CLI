@@ -1,0 +1,8 @@
+cli_test.o: cli_test.cpp ../include/cli_cli.h ../include/cli_menu.h \
+  ../include/cli_syntax_node.h ../include/cli_element.h \
+  ../include/cli_help.h ../include/cli_keyword.h \
+  ../include/cli_syntax_node.h ../include/cli_param_int.h \
+  ../include/cli_param.h ../include/cli_syntax_node.h \
+  ../include/cli_endl.h ../include/cli_element.h \
+  ../include/cli_syntax_tag.h ../include/cli_syntax_node.h \
+  ../include/cli_shell.h ../include/cli_shell.h ../include/cli_help.h
