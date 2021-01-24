@@ -30,10 +30,12 @@
 #ifndef _CLI_KEYWORD_H_
 #define _CLI_KEYWORD_H_
 
+#include <cli/namespace.h>
 #include <cli/syntax_node.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Help;
@@ -42,17 +44,27 @@ namespace cli {
     //! @brief Keyword element class.
     class Keyword : public SyntaxNode
     {
+    private:
+        //! @brief No default contructor.
+        Keyword(void);
+        //! @brief No copy constructor.
+        Keyword(const Keyword&);
+
     public:
         //! @brief Constructor.
         Keyword(
-            const std::string& STR_Keyword, //!< THE keyword.
+            const char* const STR_Keyword,  //!< THE keyword.
             const Help& CLI_Help            //!< Corresponding help.
             );
 
         //! @brief Destructor.
         virtual ~Keyword(void);
+
+    private:
+        // @brief No assignment operator.
+        Keyword& operator=(const Keyword&);
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_KEYWORD_H_

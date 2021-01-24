@@ -30,13 +30,15 @@
 #ifndef _CLI_DEBUG_H_
 #define _CLI_DEBUG_H_
 
-#include <string>
+#include <cli/namespace.h>
+#include <cli/object.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief Call information object.
-    class CallInfo
+    class CallInfo : public Object
     {
     private:
         //! No default constructor.
@@ -49,28 +51,32 @@ namespace cli {
 
         //! @brief Regular constructor.
         CallInfo(
-            const std::string& STR_File,    //!< File of call.
+            const char* const STR_File,     //!< File of call.
             const unsigned int I_Line,      //!< Position in file.
-            const std::string& STR_Function //!< Function of call.
+            const char* const STR_Function  //!< Function of call.
             );
 
         //! @brief Destructor.
         ~CallInfo(void);
 
+    private:
+        //! @brief No assignment operator.
+        CallInfo& operator=(const CallInfo&);
+
     public:
         //! @brief File accessor.
-        const std::string& GetFile(void) const;
+        const char* const GetFile(void) const;
 
         //! @brief Line accessor
         const unsigned int GetLine(void) const;
 
         //! @brief Function accessor.
-        const std::string& GetFunction(void) const;
+        const char* const GetFunction(void) const;
 
     private:
-        const std::string& m_strFile;       //!< File of call.
+        const tk::String m_strFile;         //!< File of call.
         const unsigned int m_iLine;         //!< Position in file.
-        const std::string& m_strFunction;   //!< Function of call.
+        const tk::String m_strFunction;     //!< Function of call.
     };
 
     //! @brief Call information filling.
@@ -78,7 +84,7 @@ namespace cli {
     //! Use this constant when call information is needed.
     #define __CALL_INFO__ cli::CallInfo(__FILE__, __LINE__, __FUNCTION__)
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_DEBUG_H_
 

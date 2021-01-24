@@ -23,6 +23,10 @@
 */
 
 
+#include "cli/pch.h"
+
+#include <stdlib.h>
+
 #include "cli/menu.h"
 #include "cli/keyword.h"
 #include "cli/endl.h"
@@ -31,10 +35,10 @@
 #include "cli/command_line.h"
 #include "cli/help.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-Menu::Menu(const std::string& STR_Name, const Help& CLI_Help)
+Menu::Menu(const char* const STR_Name, const Help& CLI_Help)
   : SyntaxNode(STR_Name, CLI_Help),
     m_pcliHelp(NULL), m_pcliExit(NULL), m_pcliQuit(NULL), m_pcliPwm(NULL)
 {
@@ -42,6 +46,11 @@ Menu::Menu(const std::string& STR_Name, const Help& CLI_Help)
 
 Menu::~Menu(void)
 {
+}
+
+const tk::String Menu::GetName(void) const
+{
+    return GetKeyword();
 }
 
 Keyword& Menu::GetHelpNode(void)
@@ -87,50 +96,64 @@ const Keyword& Menu::GetPwmNode(void) const
 void Menu::SetCli(Cli& CLI_Cli)
 {
     SyntaxNode::SetCli(CLI_Cli);
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Get help"));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Get help")
+            .AddHelp(Help::LANG_FR, "Obtenir de l'aide"));
         m_pcliHelp = dynamic_cast<Keyword*>(& AddElement(new Keyword("help", cli_Help)));
         m_pcliHelp->AddElement(new Endl(cli_Help)); }
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Exit menu " + GetKeyword()));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, Help::Concat("Exit menu '", GetKeyword(), "'"))
+            .AddHelp(Help::LANG_FR, Help::Concat("Sortir du menu '", GetKeyword(), "'")));
         m_pcliExit = dynamic_cast<Keyword*>(& AddElement(new Keyword("exit", cli_Help)));
         m_pcliExit->AddElement(new Endl(cli_Help)); }
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Quit"));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Quit")
+            .AddHelp(Help::LANG_FR, "Quitter"));
         m_pcliQuit = dynamic_cast<Keyword*>(& AddElement(new Keyword("quit", cli_Help)));
         m_pcliQuit->AddElement(new Endl(cli_Help)); }
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Print Working Menu"));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Print Working Menu")
+            .AddHelp(Help::LANG_FR, "Affichage du menu courant"));
         m_pcliPwm = dynamic_cast<Keyword*>(& AddElement(new Keyword("pwm", cli_Help)));
         m_pcliPwm->AddElement(new Endl(cli_Help)); }
 }
 
 const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
 {
-    if (0) {}
-    else if (& CLI_CommandLine[0] == & GetHelpNode())
+    CommandLineIterator it(CLI_CommandLine);
+
+    if (! it.StepIt()) { return false; }
+    else if (it == GetHelpNode())
     {
-        if (dynamic_cast<const Endl*>(& CLI_CommandLine[1]))
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
         {
             GetShell().DisplayHelp();
             return true;
         }
     }
-    else if (& CLI_CommandLine[0] == & GetExitNode())
+    else if (it == GetExitNode())
     {
-        if (dynamic_cast<const Endl*>(& CLI_CommandLine[1]))
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
         {
             GetShell().ExitMenu();
             return true;
         }
     }
-    else if (& CLI_CommandLine[0] == & GetQuitNode())
+    else if (it == GetQuitNode())
     {
-        if (dynamic_cast<const Endl*>(& CLI_CommandLine[1]))
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
         {
             GetShell().Quit();
             return true;
         }
     }
-    else if (& CLI_CommandLine[0] == & GetPwmNode())
+    else if (it == GetPwmNode())
     {
-        if (dynamic_cast<const Endl*>(& CLI_CommandLine[1]))
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
         {
             GetShell().PrintWorkingMenu();
             return true;

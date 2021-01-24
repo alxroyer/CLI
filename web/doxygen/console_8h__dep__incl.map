@@ -1,2 +1,3 @@
 base referer
-rect $console_8cpp-source.html 135,8 229,34
+rect $ncurses__console_8cpp-source.html 137,7 283,34
+rect $win__console_8cpp-source.html 150,58 270,85

@@ -22,9 +22,6 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <iostream>
-
 #include <cli/common.h>
 #include <cli/console.h>
 #include <cli/traces.h>
@@ -32,16 +29,23 @@
 
 int main(void) {
     // Find the empty CLI.
-    cli::CliList cli_CLIs;
-    if ((cli::Cli::FindFromName(cli_CLIs, ".*") <= 0)
-        || (cli_CLIs.empty()))
+    cli::Cli::List cli_CLIs(1);
+    if ((cli::Cli::FindFromName(cli_CLIs, ".*") <= 0) || (cli_CLIs.IsEmpty()))
     {
-        std::cerr << "No CLI found" << std::endl;
+        cli::OutputDevice::GetStdErr() << "No CLI found" << cli::endl;
         return -1;
     }
 
     // Launch it.
-    cli::Shell cli_Shell(*cli_CLIs[0]);
-    cli::Console cli_Console(false);
-    cli_Shell.Run(cli_Console);
+    if (const cli::Cli* const pcli_Cli = cli_CLIs.GetHead())
+    {
+        cli::Shell cli_Shell(*pcli_Cli);
+        cli::Console cli_Console(false);
+        cli_Shell.Run(cli_Console);
+        return 0;
+    }
+    else
+    {
+        return -1;
+    }
 }

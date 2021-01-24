@@ -30,7 +30,7 @@
     <cpp option="include">#include &lt;cli/file_device.h&gt;</cpp>
     <cpp option="include">#include "io_device_impl.h"</cpp>
 
-    <cpp>using namespace cli;</cpp>
+    <cpp>CLI_NS_USE(cli)</cpp>
 
     <cpp>OutputDevice* pcli_Device = NULL;</cpp>
     <cpp>STREAM_TYPE e_Use = OUTPUT_STREAM;</cpp>

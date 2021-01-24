@@ -30,7 +30,10 @@
 #ifndef _CLI_CONSISTENCY_H_
 #define _CLI_CONSISTENCY_H_
 
-namespace cli {
+#include "cli/namespace.h"
+
+
+CLI_NS_BEGIN(cli)
 
     //! @brief Ensures common input / output devices creation.
     //!
@@ -46,6 +49,6 @@ namespace cli {
     //! even in their destructor.
     void EnsureTraces(void);
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_CONSISTENCY_H_

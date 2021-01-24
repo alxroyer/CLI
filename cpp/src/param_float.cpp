@@ -23,16 +23,18 @@
 */
 
 
+#include "cli/pch.h"
+
 #include <stdlib.h>
 #include <math.h>
 
 #include "cli/param_float.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 ParamFloat::ParamFloat(const Help& CLI_Help)
-  : ParamT<double>("<float>", CLI_Help)
+  : ParamT<double>("<float>", 0.0, CLI_Help)
 {
 }
 
@@ -40,9 +42,9 @@ ParamFloat::~ParamFloat(void)
 {
 }
 
-const bool ParamFloat::SetstrValue(const std::string& STR_Value) const
+const bool ParamFloat::SetstrValue(const char* const STR_Value) const
 {
-    SetValue(STR_Value, atof(STR_Value.c_str()));
+    SetValue(STR_Value, atof(STR_Value));
     return true;
 }
 

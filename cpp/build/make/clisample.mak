@@ -21,44 +21,18 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-# Variables computation
+# Includes
+SRC_DIR = $(ROOT_DIR)/samples/clisample
 CLI_XML_RES = $(SRC_DIR)/clisample.xml
-CLI_XSL = $(CPP_DIR)/xsl/cppclic.xsl
-CLI_CPP = $(patsubst $(SRC_DIR)/%.xml,$(INT_DIR)/%.cpp,$(CLI_XML_RES))
-CLI_OBJ = $(patsubst $(SRC_DIR)/%.xml,$(INT_DIR)/%.o,$(CLI_XML_RES))
-CLI_TEST_SAMPLE_CPP = $(SRC_DIR)/clisample_main.cpp
-CLI_TEST_SAMPLE_OBJ = $(INT_DIR)/clisample_main.o
-CLI_EXE = $(patsubst $(SRC_DIR)/%.xml,$(OUT_DIR)/%$(BIN_SUFFIX),$(CLI_XML_RES))
+CLI_MAIN_CPP = $(SRC_DIR)/clisample_main.cpp
+include mkres.mak
 
-include vars.mak
+# Debug and help
+include $(ROOT_DIR)/build/make/help.mak
 
-# Default variables overriding
-PROJECT = clisample
-AUTO_DEPS = no
-CPP_DIR = ../..
-SRC_DIR = $(CPP_DIR)/tests/sample
-CPP_FILES = $(CLI_CPP) $(CLI_TEST_SAMPLE_CPP)
-OBJS = $(CLI_OBJ) $(CLI_TEST_SAMPLE_OBJ)
-PROJ_INCLUDES = -I$(CPP_DIR)/include
-PROJ_DEPS = $(OUT_DIR)/libclicpp.a
-PROJ_LIBS = $(OUT_DIR)/libclicpp.a /usr/lib/libncurses.a
-PROJ_CLEAN = $(CLI_CPP) $(CLI_LOG)
-PRODUCT_TYPE = BIN
-PRODUCT = $(OUT_DIR)/$(PROJECT)$(BIN_SUFFIX)
+.PHONY: $(CPP_DIR)/build/make/clisample.help
+$(CPP_DIR)/build/make/clisample.help: ;
 
-
-# Rules
-include rules.mak
-
-$(OUT_DIR)/libclicpp.a:
-	make -f libclicpp.mak
-
-$(CLI_CPP): $(CLI_XML_RES) $(CLI_XSL)
-	xsltproc $(CLI_XSL) $(CLI_XML_RES) > $(CLI_CPP)
-
-$(CLI_OBJ):
-	$(CXX) $(CPP_FLAGS) $(INCLUDES) -Wno-unused-label -c $< -o $@
-
-# Dependencies
-$(CLI_OBJ): $(CLI_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(CLI_TEST_SAMPLE_OBJ): $(CLI_TEST_SAMPLE_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
+.PHONY: $(CPP_DIR)/build/make/clisample.vars
+$(CPP_DIR)/build/make/clisample.vars:
+	$(call ShowVariables,)

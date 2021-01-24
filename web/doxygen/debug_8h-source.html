@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_8f01d9b4589024334dc9ddb77b167b80.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_8a599c2cb6f1d7bd0e0805e56078a760.html">cli</a></div>
+<a class="el" href="dir_1478fa2896c71a852f24f40b9ae7a523.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ee510e0e819a9187a5b85fd01d9d2bcf.html">cli</a></div>
 <h1>debug.h</h1><a href="debug_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -49,47 +49,53 @@
 <a name="l00030"></a>00030 <span class="preprocessor">#ifndef _CLI_DEBUG_H_</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_DEBUG_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00034"></a>00034 
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="keyword">namespace </span>cli {
+<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;<a class="code" href="namespace_8h.html">cli/namespace.h</a>&gt;</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;<a class="code" href="object_8h.html">cli/object.h</a>&gt;</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;<a class="code" href="tk_8h.html">cli/tk.h</a>&gt;</span>
+<a name="l00036"></a>00036 
 <a name="l00037"></a>00037 
-<a name="l00039"></a><a class="code" href="classcli_1_1CallInfo.html">00039</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1CallInfo.html">CallInfo</a>
-<a name="l00040"></a>00040     {
-<a name="l00041"></a>00041     <span class="keyword">private</span>:
-<a name="l00043"></a>00043         <a class="code" href="classcli_1_1CallInfo.html">CallInfo</a>(<span class="keywordtype">void</span>);
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045     <span class="keyword">public</span>:
-<a name="l00048"></a>00048         <a class="code" href="classcli_1_1CallInfo.html">CallInfo</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1CallInfo.html">CallInfo</a>&amp;);
-<a name="l00049"></a>00049 
-<a name="l00051"></a>00051         <a class="code" href="classcli_1_1CallInfo.html">CallInfo</a>(
-<a name="l00052"></a>00052             <span class="keyword">const</span> std::string&amp; STR_File,    
-<a name="l00053"></a>00053             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> I_Line,      
-<a name="l00054"></a>00054             <span class="keyword">const</span> std::string&amp; STR_Function 
-<a name="l00055"></a>00055             );
-<a name="l00056"></a>00056 
-<a name="l00058"></a>00058         <a class="code" href="classcli_1_1CallInfo.html#ca6f92727cc6ad610942c88ede6728e6">~CallInfo</a>(<span class="keywordtype">void</span>);
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060     <span class="keyword">public</span>:
-<a name="l00062"></a>00062         <span class="keyword">const</span> std::string&amp; <a class="code" href="classcli_1_1CallInfo.html#c22e746234f92a28c7a6cbb11955bcf2">GetFile</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00063"></a>00063 
-<a name="l00065"></a>00065         <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classcli_1_1CallInfo.html#67224908137713717e8572f393446286">GetLine</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00066"></a>00066 
-<a name="l00068"></a>00068         <span class="keyword">const</span> std::string&amp; <a class="code" href="classcli_1_1CallInfo.html#8d783e4913db34ab7572e9aa6855d225">GetFunction</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00038"></a>00038 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040     
+<a name="l00041"></a><a class="code" href="classCallInfo.html">00041</a>     class <a class="code" href="classCallInfo.html">CallInfo</a> : public <a class="code" href="classObject.html">Object</a>
+<a name="l00042"></a>00042     {
+<a name="l00043"></a>00043     <span class="keyword">private</span>:
+<a name="l00045"></a>00045         <a class="code" href="classCallInfo.html">CallInfo</a>(<span class="keywordtype">void</span>);
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047     <span class="keyword">public</span>:
+<a name="l00050"></a>00050         <a class="code" href="classCallInfo.html">CallInfo</a>(<span class="keyword">const</span> <a class="code" href="classCallInfo.html">CallInfo</a>&amp;);
+<a name="l00051"></a>00051 
+<a name="l00053"></a>00053         <a class="code" href="classCallInfo.html">CallInfo</a>(
+<a name="l00054"></a>00054             <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_File,     
+<a name="l00055"></a>00055             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> I_Line,      
+<a name="l00056"></a>00056             <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Function  
+<a name="l00057"></a>00057             );
+<a name="l00058"></a>00058 
+<a name="l00060"></a>00060         ~<a class="code" href="classCallInfo.html">CallInfo</a>(<span class="keywordtype">void</span>);
+<a name="l00061"></a>00061 
+<a name="l00062"></a>00062     <span class="keyword">private</span>:
+<a name="l00064"></a>00064         <a class="code" href="classCallInfo.html">CallInfo</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classCallInfo.html">CallInfo</a>&amp;);
+<a name="l00065"></a>00065 
+<a name="l00066"></a>00066     <span class="keyword">public</span>:
+<a name="l00068"></a>00068         <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> GetFile(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070     <span class="keyword">private</span>:
-<a name="l00071"></a>00071         <span class="keyword">const</span> std::string&amp; m_strFile;       
-<a name="l00072"></a>00072         <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> m_iLine;         
-<a name="l00073"></a>00073         <span class="keyword">const</span> std::string&amp; m_strFunction;   
-<a name="l00074"></a>00074     };
+<a name="l00071"></a>00071         <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> GetLine(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00072"></a>00072 
+<a name="l00074"></a>00074         <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> GetFunction(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00075"></a>00075 
-<a name="l00079"></a><a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">00079</a> <span class="preprocessor">    #define __CALL_INFO__ cli::CallInfo(__FILE__, __LINE__, __FUNCTION__)</span>
-<a name="l00080"></a>00080 <span class="preprocessor"></span>
-<a name="l00081"></a>00081 };
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083 <span class="preprocessor">#endif // _CLI_DEBUG_H_</span>
-<a name="l00084"></a>00084 <span class="preprocessor"></span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:29 2007 for CLI by&nbsp;
+<a name="l00076"></a>00076     <span class="keyword">private</span>:
+<a name="l00077"></a>00077         <span class="keyword">const</span> tk::String m_strFile;         
+<a name="l00078"></a>00078         <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> m_iLine;         
+<a name="l00079"></a>00079         <span class="keyword">const</span> tk::String m_strFunction;     
+<a name="l00080"></a>00080     };
+<a name="l00081"></a>00081 
+<a name="l00085"></a><a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">00085</a> <span class="preprocessor">    #define __CALL_INFO__ cli::CallInfo(__FILE__, __LINE__, __FUNCTION__)</span>
+<a name="l00086"></a>00086 <span class="preprocessor"></span>
+<a name="l00087"></a>00087 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089 <span class="preprocessor">#endif // _CLI_DEBUG_H_</span>
+<a name="l00090"></a>00090 <span class="preprocessor"></span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:29 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

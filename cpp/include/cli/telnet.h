@@ -30,21 +30,27 @@
 #ifndef _CLI_TELNET_H_
 #define _CLI_TELNET_H_
 
-#include <string>
-#include <deque>
-
+#include <cli/namespace.h>
+#include <cli/object.h>
 #include <cli/io_device.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Shell;
 
 
     //! @brief Telnet server class.
-    class TelnetServer
+    class TelnetServer : public Object
     {
+    private:
+        //! @brief No default constructor.
+        TelnetServer(void);
+        //! @brief No copy constructor.
+        TelnetServer(const TelnetServer&);
+
     public:
         //! @brief Constructor.
         TelnetServer(
@@ -54,6 +60,10 @@ namespace cli {
 
         //! @brief Destructor.
         virtual ~TelnetServer(void);
+
+    private:
+        //! @brief No assignment operator.
+        TelnetServer& operator=(const TelnetServer&);
 
     public:
         //! @brief Starts the server.
@@ -76,6 +86,12 @@ namespace cli {
     //! @brief Telnet connection input/output device.
     class TelnetConnection : public IODevice
     {
+    private:
+        //! @brief No default constructor.
+        TelnetConnection(void);
+        //! @brief No copy constructor.
+        TelnetConnection(const TelnetConnection&);
+
     public:
         //! @brief Constructor.
         TelnetConnection(
@@ -87,6 +103,10 @@ namespace cli {
         //! @brief Destructor.
         virtual ~TelnetConnection(void);
 
+    private:
+        //! @brief No assignment operator.
+        TelnetConnection& operator=(const TelnetConnection&);
+
     protected:
         //! @brief Open device handler.
         virtual const bool OpenDevice(void);
@@ -96,9 +116,14 @@ namespace cli {
         //! @brief Character input handler.
         virtual const KEY GetKey(void) const;
         //! @brief Output handler.
-        virtual void PutString(const std::string& STR_Out) const;
+        virtual void PutString(const char* const STR_Out) const;
         //! @brief Beep handler.
         virtual void Beep(void) const;
+
+    protected:
+        //! @brief Error device selection.
+        //! @note It is better not to report error to the device which has caused the error.
+        const OutputDevice& GetErrorStream(void) const;
 
     private:
         //! Shell reference.
@@ -106,10 +131,10 @@ namespace cli {
         //! Connection socket handler.
         const int m_iSocket;
         //! Character input buffer.
-        mutable std::deque<int> m_qiChars;
+        mutable tk::Queue<int> m_qChars;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_TELNET_H_
 

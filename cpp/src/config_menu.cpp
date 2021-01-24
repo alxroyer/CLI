@@ -23,20 +23,26 @@
 */
 
 
-#include "config_menu.h"
+#include "cli/pch.h"
+
+#include <stdlib.h>
+
 #include "cli/keyword.h"
 #include "cli/endl.h"
 #include "cli/command_line.h"
 #include "cli/shell.h"
+#include "config_menu.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 ConfigMenu::ConfigMenu(void)
   : Menu("cli-config", Help()
-        .AddHelp(Help::LANG_EN, "CLI settings menu")),
+        .AddHelp(Help::LANG_EN, "CLI settings menu")
+        .AddHelp(Help::LANG_FR, "Menu de configuration du CLI")),
     m_pcliEcho(NULL), m_pcliEchoOn(NULL), m_pcliEchoOff(NULL),
-    m_pcliBeep(NULL), m_pcliBeepOn(NULL), m_pcliBeepOff(NULL)
+    m_pcliBeep(NULL), m_pcliBeepOn(NULL), m_pcliBeepOff(NULL),
+    m_pcliLang(NULL), m_pcliEnglishLang(NULL), m_pcliFrenchLang(NULL)
 {
 }
 
@@ -47,74 +53,117 @@ ConfigMenu::~ConfigMenu(void)
 void ConfigMenu::SetCli(Cli& CLI_Cli)
 {
     Menu::SetCli(CLI_Cli);
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Modify echo behavior"));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Modify echo behavior")
+            .AddHelp(Help::LANG_FR, "Configuration de l'écho"));
         m_pcliEcho = dynamic_cast<Keyword*>(& AddElement(new Keyword("echo", cli_Help)));
-        {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Set echo on"));
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "Set echo on")
+                .AddHelp(Help::LANG_FR, "Activation de l'écho"));
             m_pcliEchoOn = dynamic_cast<Keyword*>(& m_pcliEcho->AddElement(new Keyword("on", cli_Help)));
             m_pcliEchoOn->AddElement(new Endl(cli_Help)); }
-        {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Set echo off"));
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "Set echo off")
+                .AddHelp(Help::LANG_FR, "Désactivation de l'écho"));
             m_pcliEchoOff = dynamic_cast<Keyword*>(& m_pcliEcho->AddElement(new Keyword("off", cli_Help)));
             m_pcliEchoOff->AddElement(new Endl(cli_Help)); }}
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Modify beep behavior"));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Modify beep behavior")
+            .AddHelp(Help::LANG_FR, "Configuration du bip"));
         m_pcliBeep = dynamic_cast<Keyword*>(& AddElement(new Keyword("beep", cli_Help)));
-        {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Set beep on"));
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "Set beep on")
+                .AddHelp(Help::LANG_FR, "Activation du bip"));
             m_pcliBeepOn = dynamic_cast<Keyword*>(& m_pcliBeep->AddElement(new Keyword("on", cli_Help)));
             m_pcliBeepOn->AddElement(new Endl(cli_Help)); }
-        {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Set beep off"));
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "Set beep off")
+                .AddHelp(Help::LANG_FR, "Désactivation du bip"));
             m_pcliBeepOff = dynamic_cast<Keyword*>(& m_pcliBeep->AddElement(new Keyword("off", cli_Help)));
             m_pcliBeepOff->AddElement(new Endl(cli_Help)); }}
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Language setting")
+            .AddHelp(Help::LANG_FR, "Modification de la langue"));
+        m_pcliLang = dynamic_cast<Keyword*>(& AddElement(new Keyword("lang", cli_Help)));
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "English language")
+                .AddHelp(Help::LANG_FR, "Langue anglaise"));
+            m_pcliEnglishLang = dynamic_cast<Keyword*>(& m_pcliLang->AddElement(new Keyword("english", cli_Help)));
+            m_pcliEnglishLang->AddElement(new Endl(cli_Help)); }
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "French language")
+                .AddHelp(Help::LANG_FR, "Langue française"));
+            m_pcliFrenchLang = dynamic_cast<Keyword*>(& m_pcliLang->AddElement(new Keyword("french", cli_Help)));
+            m_pcliFrenchLang->AddElement(new Endl(cli_Help)); }}
 }
 
 const bool ConfigMenu::ExecuteReserved(const CommandLine& CLI_CmdLine) const
 {
-    int i_CmdLineIndex = 0;
-    const cli::Element* pcli_Element = NULL;
-    #define CLI_STEP_IT() do { if (i_CmdLineIndex >= CLI_CmdLine.GetElementCount()) return false; pcli_Element = & CLI_CmdLine[i_CmdLineIndex++]; } while(0)
+    CommandLineIterator it(CLI_CmdLine);
 
-    CLI_STEP_IT();
-    if (0) {}
-    else if (pcli_Element == & GetEchoNode())
+    if (! it.StepIt()) { return false; }
+    else if (it == GetEchoNode())
     {
-        CLI_STEP_IT();
-        if (0) {}
-        else if (pcli_Element == & GetEchoOnNode())
+        if (! it.StepIt()) { return false; }
+        else if (it == GetEchoOnNode())
         {
-            CLI_STEP_IT();
-            if (dynamic_cast<const Endl*>(pcli_Element))
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
             {
                 EchoOn();
                 return true;
             }
         }
-        else if (pcli_Element == & GetEchoOffNode())
+        else if (it == GetEchoOffNode())
         {
-            CLI_STEP_IT();
-            if (dynamic_cast<const Endl*>(pcli_Element))
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
             {
                 EchoOff();
                 return true;
             }
         }
     }
-    else if (pcli_Element == & GetBeepNode())
+    else if (it == GetBeepNode())
     {
-        CLI_STEP_IT();
-        if (0) {}
-        else if (pcli_Element == & GetBeepOnNode())
+        if (! it.StepIt()) { return false; }
+        else if (it == GetBeepOnNode())
         {
-            CLI_STEP_IT();
-            if (dynamic_cast<const Endl*>(pcli_Element))
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
             {
                 BeepOn();
                 return true;
             }
         }
-        else if (pcli_Element == & GetBeepOffNode())
+        else if (it == GetBeepOffNode())
         {
-            CLI_STEP_IT();
-            if (dynamic_cast<const Endl*>(pcli_Element))
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
             {
                 BeepOff();
+                return true;
+            }
+        }
+    }
+    else if (it == GetLangNode())
+    {
+        if (! it.StepIt()) { return false; }
+        else if (it == GetEnglishLangNode())
+        {
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
+            {
+                SetLang(ResourceString::LANG_EN);
+                return true;
+            }
+        }
+        else if (it == GetFrenchLangNode())
+        {
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
+            {
+                SetLang(ResourceString::LANG_FR);
                 return true;
             }
         }
@@ -131,25 +180,46 @@ const bool ConfigMenu::Execute(const CommandLine& CLI_CmdLine) const
 void ConfigMenu::EchoOn(void) const
 {
     GetShell().EnableStream(ECHO_STREAM, true);
-    GetOutputStream() << "echo is on" << endl;
+    const ResourceString cli_EchoOn = ResourceString()
+        .SetString(ResourceString::LANG_EN, "echo is on")
+        .SetString(ResourceString::LANG_FR, "écho activé");
+    GetOutputStream() << cli_EchoOn.GetString(GetShell().GetLang()) << endl;
 }
 
 void ConfigMenu::EchoOff(void) const
 {
     GetShell().EnableStream(ECHO_STREAM, false);
-    GetOutputStream() << "echo is off" << endl;
+    const ResourceString cli_EchoOff = ResourceString()
+        .SetString(ResourceString::LANG_EN, "echo is off")
+        .SetString(ResourceString::LANG_FR, "écho désactivé");
+    GetOutputStream() << cli_EchoOff.GetString(GetShell().GetLang()) << endl;
 }
 
 void ConfigMenu::BeepOn(void) const
 {
     GetShell().SetBeep(true);
-    GetOutputStream() << "beep is on" << endl;
+    const ResourceString cli_BeepOn = ResourceString()
+        .SetString(ResourceString::LANG_EN, "beep is on")
+        .SetString(ResourceString::LANG_FR, "bip activé");
+    GetOutputStream() << cli_BeepOn.GetString(GetShell().GetLang()) << endl;
 }
 
 void ConfigMenu::BeepOff(void) const
 {
     GetShell().SetBeep(false);
-    GetOutputStream() << "beep is off" << endl;
+    const ResourceString cli_BeepOff = ResourceString()
+        .SetString(ResourceString::LANG_EN, "beep is off")
+        .SetString(ResourceString::LANG_FR, "bip désactivé");
+    GetOutputStream() << cli_BeepOff.GetString(GetShell().GetLang()) << endl;
+}
+
+void ConfigMenu::SetLang(const ResourceString::LANG E_Lang) const
+{
+    GetShell().SetLang(E_Lang);
+    const ResourceString cli_SelectedLanguage = ResourceString()
+        .SetString(ResourceString::LANG_EN, "English language")
+        .SetString(ResourceString::LANG_FR, "Langue française");
+    GetOutputStream() << cli_SelectedLanguage.GetString(GetShell().GetLang()) << endl;
 }
 
 Keyword& ConfigMenu::GetEchoNode(void)
@@ -210,4 +280,34 @@ Keyword& ConfigMenu::GetBeepOffNode(void)
 const Keyword& ConfigMenu::GetBeepOffNode(void) const
 {
     return *m_pcliBeepOff;
+}
+
+Keyword& ConfigMenu::GetLangNode(void)
+{
+    return *m_pcliLang;
+}
+
+const Keyword& ConfigMenu::GetLangNode(void) const
+{
+    return *m_pcliLang;
+}
+
+Keyword& ConfigMenu::GetEnglishLangNode(void)
+{
+    return *m_pcliEnglishLang;
+}
+
+const Keyword& ConfigMenu::GetEnglishLangNode(void) const
+{
+    return *m_pcliEnglishLang;
+}
+
+Keyword& ConfigMenu::GetFrenchLangNode(void)
+{
+    return *m_pcliFrenchLang;
+}
+
+const Keyword& ConfigMenu::GetFrenchLangNode(void) const
+{
+    return *m_pcliFrenchLang;
 }

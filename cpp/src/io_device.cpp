@@ -23,26 +23,39 @@
 */
 
 
-#include <iostream>
+#include "cli/pch.h"
+
+#include <stdio.h>
+
 #include "cli/io_device.h"
 #include "cli/cli.h"
 #include "cli/traces.h"
+#include "cli/assert.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
+#ifndef CLI_NO_NAMESPACE
 const IOEndl cli::endl;
+#else
+const IOEndl endl;
+#endif
 
-static const TraceClass TRACE_IO_DEVICE_INSTANCES("IO_DEVICE_INSTANCES", "IO device instance management");
-static const TraceClass TRACE_IO_DEVICE_OPENING("IO_DEVICE_OPENING", "IO device opening management");
+static const TraceClass TRACE_IO_DEVICE_INSTANCES("CLI_IO_DEVICE_INSTANCES", Help()
+    .AddHelp(Help::LANG_EN, "IO device instance management")
+    .AddHelp(Help::LANG_FR, "Gestion des intances de périphériques d'entrée/sortie"));
+static const TraceClass TRACE_IO_DEVICE_OPENING("CLI_IO_DEVICE_OPENING", Help()
+    .AddHelp(Help::LANG_EN, "IO device opening management")
+    .AddHelp(Help::LANG_FR, "Gestion de l'ouverture des périphériques d'entrée/sortie"));
 
 
 OutputDevice::OutputDevice(
-        const std::string& STR_DbgName,
-        const std::string& STR_Endl,
+        const char* const STR_DbgName,
+        const char* const STR_Endl,
         const bool B_AutoDelete)
-  : m_strDbgName(STR_DbgName),
-    m_strEndl(STR_Endl),
+  : m_strDbgName(MAX_DEVICE_NAME_LENGTH, STR_DbgName),
+    m_strEndl(MAX_WORD_LENGTH, STR_Endl),
     m_iInstanceLock(B_AutoDelete ? 0 : 1), m_iOpenLock(0)
 {
     // Please, no traces in constructor for consistency reasons.
@@ -80,7 +93,7 @@ const int OutputDevice::FreeInstance(const CallInfo& CLI_CallInfo)
     else
     {
         m_iInstanceLock --;
-        assert(m_iInstanceLock > 0);
+        CLI_ASSERT(m_iInstanceLock > 0);
         return m_iInstanceLock;
     }
 }
@@ -151,7 +164,7 @@ const int OutputDevice::GetOpenUsers(void) const
     return m_iOpenLock;
 }
 
-const OutputDevice& OutputDevice::operator <<(const std::string& STR_Out) const
+const OutputDevice& OutputDevice::operator <<(const tk::String& STR_Out) const
 {
     PutString(STR_Out);
     return *this;
@@ -173,7 +186,8 @@ const OutputDevice& OutputDevice::operator <<(const unsigned char UC_Out) const
 
 const OutputDevice& OutputDevice::operator <<(const char C_Out) const
 {
-    PutString(std::string() += C_Out);
+    char arc_String[] = { C_Out, '\0' };
+    PutString(arc_String);
     return *this;
 }
 
@@ -252,7 +266,7 @@ OutputDevice& OutputDevice::GetNullDevice(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const std::string& STR_Out) const {}
+        virtual void PutString(const char* const STR_Out) const {}
         virtual void Beep(void) const {}
     };
 
@@ -272,7 +286,7 @@ OutputDevice& OutputDevice::GetStdOut(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const std::string& STR_Out) const { std::cout << STR_Out; }
+        virtual void PutString(const char* const STR_Out) const { fprintf(stdout, "%s", STR_Out); }
         virtual void Beep(void) const {}
     };
 
@@ -292,7 +306,7 @@ OutputDevice& OutputDevice::GetStdErr(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const std::string& STR_Out) const { std::cerr << STR_Out; }
+        virtual void PutString(const char* const STR_Out) const { fprintf(stderr, "%s", STR_Out); }
         virtual void Beep(void) const {}
     };
 
@@ -302,8 +316,8 @@ OutputDevice& OutputDevice::GetStdErr(void)
 
 
 IODevice::IODevice(
-        const std::string& STR_DbgName,
-        const std::string& STR_Endl,
+        const char* const STR_DbgName,
+        const char* const STR_Endl,
         const bool B_AutoDelete)
   : OutputDevice(STR_DbgName, STR_Endl, B_AutoDelete)
 {
@@ -325,7 +339,7 @@ IODevice& IODevice::GetNullDevice(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const std::string& STR_Out) const {}
+        virtual void PutString(const char* const STR_Out) const {}
         virtual void Beep(void) const {}
         virtual const KEY GetKey(void) const { return NULL_KEY; }
     };
@@ -355,29 +369,16 @@ IODevice& IODevice::GetStdIn(void)
             return b_Res;
         }
     public:
-        virtual void PutString(const std::string& STR_Out) const {
+        virtual void PutString(const char* const STR_Out) const {
             OutputDevice::GetStdOut().PutString(STR_Out);
         }
         virtual void Beep(void) const {
             OutputDevice::GetStdOut().Beep();
         }
         virtual const KEY GetKey(void) const {
-            if (! m_strInput.empty())
-            {
-                const char c_Char = m_strInput[0];
-                m_strInput.erase(m_strInput.begin());
+            const char c_Char = (char) getchar();
                 return IODevice::GetKey(c_Char);
             }
-            else
-            {
-                std::cin >> m_strInput;
-                m_strInput += "\n";
-                return StdInDevice::GetKey();
-            }
-        }
-
-    private:
-        mutable std::string m_strInput;
     };
 
     static StdInDevice cli_StdIn;

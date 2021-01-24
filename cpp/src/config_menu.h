@@ -30,10 +30,11 @@
 #ifndef _CLI_CONFIG_MENU_H_
 #define _CLI_CONFIG_MENU_H_
 
+#include "cli/namespace.h"
 #include "cli/menu.h"
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Keyword;
@@ -71,6 +72,9 @@ namespace cli {
         //! @brief 'beep off' command.
         void BeepOff(void) const;
 
+        //! @brief Language setting.
+        void SetLang(const ResourceString::LANG E_Lang) const;
+
     private:
         //! @brief Echo node access.
         Keyword& GetEchoNode(void);
@@ -98,6 +102,19 @@ namespace cli {
         //! @brief Beep off node access (read-only).
         const Keyword& GetBeepOffNode(void) const;
 
+        //! @brief Language node access.
+        Keyword& GetLangNode(void);
+        //! @brief Language node access (read-only).
+        const Keyword& GetLangNode(void) const;
+        //! @brief English language node access.
+        Keyword& GetEnglishLangNode(void);
+        //! @brief English language node access (read-only).
+        const Keyword& GetEnglishLangNode(void) const;
+        //! @brief French language node access.
+        Keyword& GetFrenchLangNode(void);
+        //! @brief French language node access (read-only).
+        const Keyword& GetFrenchLangNode(void) const;
+
     private:
         //! Echo node.
         Keyword* m_pcliEcho;
@@ -112,8 +129,15 @@ namespace cli {
         Keyword* m_pcliBeepOn;
         //! Beep off node.
         Keyword* m_pcliBeepOff;
+
+        //! Lang node.
+        Keyword* m_pcliLang;
+        //! English language node.
+        Keyword* m_pcliEnglishLang;
+        //! French language node.
+        Keyword* m_pcliFrenchLang;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_CONFIG_MENU_H_

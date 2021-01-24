@@ -23,11 +23,15 @@
 */
 
 
+#include "cli/pch.h"
+
+#include <stdlib.h>
+
 #include "cli/endl.h"
 #include "cli/cli.h"
 #include "cli/menu.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 Endl::Endl(const Help& CLI_Help)

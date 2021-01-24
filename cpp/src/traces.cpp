@@ -23,24 +23,41 @@
 */
 
 
+#include "cli/pch.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "cli/element.h"
 #include "cli/io_device.h"
 #include "cli/traces.h"
+#include "cli/assert.h"
 #include "consistency.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-static const TraceClass TRACE_TRACES("TRACES", "Traces about traces.");
+#ifndef CLI_NO_NAMESPACE
+const TraceClass cli::INTERNAL_ERROR("CLI_INTERNAL_ERROR", Help()
+#else
+const TraceClass INTERNAL_ERROR("CLI_INTERNAL_ERROR", Help()
+#endif
+    .AddHelp(Help::LANG_EN, "Internal error traces")
+    .AddHelp(Help::LANG_FR, "Traces d'erreurs internes"));
+
+static const TraceClass TRACE_TRACES("CLI_TRACES", Help()
+    .AddHelp(Help::LANG_EN, "Traces about traces")
+    .AddHelp(Help::LANG_FR, "Traces du système de traces"));
 
 
 TraceClass::TraceClass(const TraceClass& CLI_Class)
-  : m_strName(CLI_Class.GetName()), m_strDescription(CLI_Class.GetDescription())
+  : m_strName(CLI_Class.GetName()), m_cliHelp(CLI_Class.GetHelp())
 {
 }
 
-TraceClass::TraceClass(const std::string& STR_ClassName, const std::string& STR_Description)
-  : m_strName(STR_ClassName), m_strDescription(STR_Description)
+TraceClass::TraceClass(const char* const STR_ClassName, const Help& CLI_Help)
+  : m_strName(MAX_TRACE_CLASS_NAME_LENGTH, STR_ClassName), m_cliHelp(CLI_Help)
 {
 }
 
@@ -48,20 +65,20 @@ TraceClass::~TraceClass(void)
 {
 }
 
-const std::string& TraceClass::GetName(void) const
+const tk::String TraceClass::GetName(void) const
 {
     return m_strName;
 }
 
-const std::string& TraceClass::GetDescription(void) const
+const Help& TraceClass::GetHelp(void) const
 {
-    return m_strDescription;
+    return m_cliHelp;
 }
 
 TraceClass& TraceClass::operator=(const TraceClass& CLI_Class)
 {
-    m_strName = CLI_Class.GetName();
-    m_strDescription = CLI_Class.GetDescription();
+    m_strName.Set(CLI_Class.GetName());
+    m_cliHelp = CLI_Class.GetHelp();
     return *this;
 }
 
@@ -85,23 +102,23 @@ Traces& Traces::GetInstance(void)
 
 
 Traces::Traces(void)
-  : m_bTraceAll(false),
+  : m_mapClasses(MAX_TRACE_CLASS_COUNT),
+    m_bTraceAll(false),
     m_pcliStream(NULL)
 {
     EnsureCommonDevices();
 
     // Register TRACE_TRACES.
-    m_mapClasses[TRACE_TRACES.GetName()] = TraceClassFlag(TRACE_TRACES, m_bTraceAll);
+    m_mapClasses.SetAt(TRACE_TRACES.GetName(), TraceClassFlag(TRACE_TRACES, m_bTraceAll));
+
+    // Register INTERNAL_ERROR
+    Declare(INTERNAL_ERROR); SetFilter(INTERNAL_ERROR, true);
 }
 
 Traces::~Traces(void)
 {
-    if (cli::OutputDevice* const pcli_Stream = m_pcliStream)
-    {
-        m_pcliStream = NULL;
-        pcli_Stream->CloseDown(__CALL_INFO__);
-        pcli_Stream->FreeInstance(__CALL_INFO__);
-    }
+    // If the assertion below occures, you might call UnsetStream() before program termination.
+    CLI_ASSERT(m_pcliStream == NULL);
 }
 
 const OutputDevice& Traces::GetStream(void) const
@@ -117,9 +134,8 @@ const OutputDevice& Traces::GetStream(void) const
     }
 }
 
-const bool Traces::SetStream(OutputDevice& CLI_Stream)
+const bool Traces::UnsetStream(void)
 {
-    // Free previous reference.
     if (cli::OutputDevice* const pcli_Stream = m_pcliStream)
     {
         bool b_Res = true;
@@ -139,6 +155,17 @@ const bool Traces::SetStream(OutputDevice& CLI_Stream)
         }
     }
 
+    return true;
+}
+
+const bool Traces::SetStream(OutputDevice& CLI_Stream)
+{
+    // Free previous reference.
+    if (! UnsetStream())
+    {
+        return false;
+    }
+
     // Store next reference.
     {
         CLI_Stream.UseInstance(__CALL_INFO__);
@@ -155,15 +182,48 @@ const bool Traces::SetStream(OutputDevice& CLI_Stream)
     return true;
 }
 
+const bool Traces::Declare(const TraceClass& CLI_Class)
+{
+    if (m_mapClasses.GetAt(CLI_Class.GetName()) != NULL)
+    {
+        // Already declared.
+        // Nothing else to do.
+        return true;
+    }
+    else
+    {
+        // Show this new trace class depending on the trace all configuration.
+        const bool b_ShowTrace = m_bTraceAll;
+
+        // Remember this new class.
+        if (m_mapClasses.SetAt(CLI_Class.GetName(), TraceClassFlag(CLI_Class, b_ShowTrace)))
+        {
+            TraceFilterState(CLI_Class, b_ShowTrace);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
 const TraceClass::List Traces::GetAllClasses(void) const
 {
     // Retrieve current filter.
-    TraceClass::List q_Classes;
-    for (   ClassMap::const_iterator it = m_mapClasses.begin();
-            it != m_mapClasses.end();
-            it ++)
+    TraceClass::List q_Classes(MAX_TRACE_CLASS_COUNT);
+    for (   ClassMap::Iterator it = m_mapClasses.GetIterator();
+            m_mapClasses.IsValid(it);
+            m_mapClasses.MoveNext(it))
     {
-        q_Classes.push_back(it->second);
+        if (! q_Classes.AddTail(m_mapClasses.GetAt(it)))
+        {
+            GetTraces().Trace(INTERNAL_ERROR)
+                << "Traces::GetAllClasses(): "
+                << "Could not had '" << m_mapClasses.GetAt(it).GetName() << "' trace class "
+                << "to q_Classes"
+                << endl;
+        }
     }
     return q_Classes;
 }
@@ -171,14 +231,21 @@ const TraceClass::List Traces::GetAllClasses(void) const
 const TraceClass::List Traces::GetCurrentFilter(void) const
 {
     // Retrieve current filter.
-    TraceClass::List q_CurrentFilter;
-    for (   ClassMap::const_iterator it = m_mapClasses.begin();
-            it != m_mapClasses.end();
-            it ++)
+    TraceClass::List q_CurrentFilter(MAX_TRACE_CLASS_COUNT);
+    for (   ClassMap::Iterator it = m_mapClasses.GetIterator();
+            m_mapClasses.IsValid(it);
+            m_mapClasses.MoveNext(it))
     {
-        if (it->second.IsVisible())
+        if (m_mapClasses.GetAt(it).IsVisible())
         {
-            q_CurrentFilter.push_back(it->second);
+            if (! q_CurrentFilter.AddTail(m_mapClasses.GetAt(it)))
+            {
+                GetTraces().Trace(INTERNAL_ERROR)
+                    << "Traces::GetCurrentFilter(): "
+                    << "Could not had '" << m_mapClasses.GetAt(it).GetName() << "' trace class "
+                    << "to q_CurrentFilter"
+                    << endl;
+            }
         }
     }
     return q_CurrentFilter;
@@ -187,13 +254,12 @@ const TraceClass::List Traces::GetCurrentFilter(void) const
 const bool Traces::SetFilter(const TraceClass& CLI_Class, const bool B_ShowTraces)
 {
     // Check the class exists.
-    ClassMap::const_iterator it = m_mapClasses.find(CLI_Class.GetName());
-    if (it != m_mapClasses.end())
+    if (const TraceClassFlag* const pcli_Flags = m_mapClasses.GetAt(CLI_Class.GetName()))
     {
-        if (it->second.IsVisible() != B_ShowTraces)
+        if (pcli_Flags->IsVisible() != B_ShowTraces)
         {
             // Set the flag.
-            m_mapClasses[CLI_Class.GetName()] = TraceClassFlag(it->second, B_ShowTraces);
+            m_mapClasses.SetAt(CLI_Class.GetName(), TraceClassFlag(*pcli_Flags, B_ShowTraces));
             TraceFilterState(CLI_Class, B_ShowTraces);
         }
         return true;
@@ -212,11 +278,11 @@ const bool Traces::SetAllFilter(const bool B_ShowTraces)
     SetFilter(TRACE_TRACES, true);
 
     // Then adapt every filter configuration.
-    for (   ClassMap::const_iterator it = m_mapClasses.begin();
-            it != m_mapClasses.end();
-            it ++)
+    for (   ClassMap::Iterator it = m_mapClasses.GetIterator();
+            m_mapClasses.IsValid(it);
+            m_mapClasses.MoveNext(it))
     {
-        if (! SetFilter(it->second, B_ShowTraces))
+        if (! SetFilter(m_mapClasses.GetAt(it), B_ShowTraces))
         {
             return false;
         }
@@ -230,21 +296,12 @@ const bool Traces::SetAllFilter(const bool B_ShowTraces)
 
 const OutputDevice& Traces::Trace(const TraceClass& CLI_Class)
 {
+    Declare(CLI_Class);
     bool b_ShowTrace = false;
 
-    ClassMap::const_iterator it = m_mapClasses.find(CLI_Class.GetName());
-    if (it != m_mapClasses.end())
+    if (const TraceClassFlag* const pcli_Flags = m_mapClasses.GetAt(CLI_Class.GetName()))
     {
-        b_ShowTrace = it->second.IsVisible();
-    }
-    else
-    {
-        // Show this new trace class depending on the trace all configuration.
-        b_ShowTrace = m_bTraceAll;
-
-        // Remember this new class.
-        m_mapClasses[CLI_Class.GetName()] = TraceClassFlag(CLI_Class, b_ShowTrace);
-        TraceFilterState(CLI_Class, b_ShowTrace);
+        b_ShowTrace = pcli_Flags->IsVisible();
     }
 
     if (b_ShowTrace)
@@ -274,7 +331,7 @@ const bool Traces::TraceFilterState(const TraceClass& CLI_Class, const bool B_Sh
 
 
 Traces::TraceClassFlag::TraceClassFlag(void)
-  : TraceClass("", ""), m_bShow(false)
+  : TraceClass("", Help()), m_bShow(false)
 {
 }
 
@@ -285,6 +342,10 @@ Traces::TraceClassFlag::TraceClassFlag(const TraceClass& CLI_Source, const bool 
 
 Traces::TraceClassFlag::TraceClassFlag(const TraceClassFlag& CLI_Source)
   : TraceClass(CLI_Source), m_bShow(CLI_Source.IsVisible())
+{
+}
+
+Traces::TraceClassFlag::~TraceClassFlag(void)
 {
 }
 

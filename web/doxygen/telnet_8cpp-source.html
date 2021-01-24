@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>telnet.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,232 +45,323 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;sys/types.h&gt;</span> <span class="comment">// socket, bind, listen</span>
-<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;sys/socket.h&gt;</span> <span class="comment">// socket, bind, listen</span>
-<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;netinet/in.h&gt;</span> <span class="comment">// sockaddr_in</span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;stdio.h&gt;</span> <span class="comment">// close</span>
-<a name="l00030"></a>00030 <span class="preprocessor">#include &lt;iostream&gt;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
+<a name="l00027"></a>00027 
 <a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="preprocessor">#include "<a class="code" href="telnet_8h.html">cli/telnet.h</a>"</span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="shell_8h.html">cli/shell.h</a>"</span>
-<a name="l00034"></a>00034 
-<a name="l00035"></a>00035 <span class="keyword">using namespace </span>cli;
-<a name="l00036"></a>00036 
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038 <span class="preprocessor">#ifndef CLI_TELNET_MULTI_CLIENT</span>
-<a name="l00039"></a>00039 <span class="preprocessor"></span><span class="preprocessor">    #define CLI_TELNET_MULTI_CLIENT 0</span>
-<a name="l00040"></a>00040 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00041"></a>00041 <span class="preprocessor"></span>
+<a name="l00032"></a>00032 <span class="preprocessor">#ifndef CLI_WIN_NETWORK</span>
+<a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#include &lt;sys/types.h&gt;</span> <span class="comment">// socket, bind, listen</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;sys/socket.h&gt;</span> <span class="comment">// socket, bind, listen</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;netinet/in.h&gt;</span> <span class="comment">// sockaddr_in</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#else</span>
+<a name="l00037"></a>00037 <span class="preprocessor"></span><span class="preprocessor">#include &lt;winsock2.h&gt;</span> <span class="comment">// Windows sockets</span>
+<a name="l00038"></a>00038 <span class="preprocessor">#endif</span>
+<a name="l00039"></a>00039 <span class="preprocessor"></span><span class="preprocessor">#include &lt;stdio.h&gt;</span> <span class="comment">// close</span>
+<a name="l00040"></a>00040 <span class="preprocessor">#include &lt;unistd.h&gt;</span> <span class="comment">// getpid</span>
+<a name="l00041"></a>00041 <span class="preprocessor">#include &lt;string.h&gt;</span>
 <a name="l00042"></a>00042 
-<a name="l00043"></a><a class="code" href="classcli_1_1TelnetServer.html#a03b3b93ae9347ca19f0fbc8f65aff96">00043</a> TelnetServer::TelnetServer(<a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; CLI_Shell, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> UL_TcpPort)
-<a name="l00044"></a>00044   : m_cliShell(CLI_Shell),
-<a name="l00045"></a>00045     m_ulTcpPort(UL_TcpPort)
-<a name="l00046"></a>00046 {
-<a name="l00047"></a>00047 }
+<a name="l00043"></a>00043 <span class="preprocessor">#include "<a class="code" href="telnet_8h.html">cli/telnet.h</a>"</span>
+<a name="l00044"></a>00044 <span class="preprocessor">#include "<a class="code" href="shell_8h.html">cli/shell.h</a>"</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include "<a class="code" href="traces_8h.html">cli/traces.h</a>"</span>
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
 <a name="l00048"></a>00048 
-<a name="l00049"></a><a class="code" href="classcli_1_1TelnetServer.html#10e43d3833714e792f20b3ae5494ae57">00049</a> <a class="code" href="classcli_1_1TelnetServer.html#10e43d3833714e792f20b3ae5494ae57">TelnetServer::~TelnetServer</a>(<span class="keywordtype">void</span>)
-<a name="l00050"></a>00050 {
-<a name="l00051"></a>00051 }
-<a name="l00052"></a>00052 
-<a name="l00053"></a><a class="code" href="classcli_1_1TelnetServer.html#97520ee0f8761c9827cb13addc8ffd68">00053</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1TelnetServer.html#97520ee0f8761c9827cb13addc8ffd68">TelnetServer::StartServer</a>(<span class="keywordtype">void</span>)
-<a name="l00054"></a>00054 {
-<a name="l00055"></a>00055     <span class="keyword">const</span> <span class="keywordtype">int</span> i_ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
-<a name="l00056"></a>00056     <span class="keywordflow">if</span> (i_ServerSocket &lt; 0)
-<a name="l00057"></a>00057     {
-<a name="l00058"></a>00058         m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>) &lt;&lt; <span class="stringliteral">"socket failed"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00059"></a>00059         <span class="keywordflow">return</span>;
-<a name="l00060"></a>00060     }
+<a name="l00049"></a>00049 
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 <span class="preprocessor">#ifndef CLI_TELNET_MULTI_CLIENT</span>
+<a name="l00053"></a>00053 <span class="preprocessor"></span><span class="preprocessor">    #define CLI_TELNET_MULTI_CLIENT 0</span>
+<a name="l00054"></a>00054 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#ifndef CLI_TELNET_INPUT_BUFFER_SIZE</span>
+<a name="l00058"></a>00058 <span class="preprocessor"></span><span class="preprocessor">    #define CLI_TELNET_INPUT_BUFFER_SIZE 1024</span>
+<a name="l00059"></a>00059 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00060"></a>00060 <span class="preprocessor"></span>
 <a name="l00061"></a>00061 
-<a name="l00062"></a>00062     <span class="keyword">struct </span>sockaddr_in s_SockAddr;
-<a name="l00063"></a>00063     s_SockAddr.sin_family = AF_INET;
-<a name="l00064"></a>00064     s_SockAddr.sin_port = htons((<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>) m_ulTcpPort);
-<a name="l00065"></a>00065     s_SockAddr.sin_addr.s_addr = INADDR_ANY;
-<a name="l00066"></a>00066 
-<a name="l00067"></a>00067     <span class="keywordflow">if</span> (bind(i_ServerSocket, (<span class="keyword">struct</span> sockaddr*) &amp; s_SockAddr, <span class="keyword">sizeof</span>(s_SockAddr)) &lt; 0)
-<a name="l00068"></a>00068     {
-<a name="l00069"></a>00069         close(i_ServerSocket);
-<a name="l00070"></a>00070         m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>) &lt;&lt; <span class="stringliteral">"bind failed"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00071"></a>00071         <span class="keywordflow">return</span>;
-<a name="l00072"></a>00072     }
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074     <span class="keywordflow">if</span> (listen(i_ServerSocket, 5) &lt; 0)
-<a name="l00075"></a>00075     {
-<a name="l00076"></a>00076         close(i_ServerSocket);
-<a name="l00077"></a>00077         m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>) &lt;&lt; <span class="stringliteral">"listen failed"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00078"></a>00078         <span class="keywordflow">return</span>;
-<a name="l00079"></a>00079     }
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="keywordflow">while</span> (1)
-<a name="l00082"></a>00082     {
-<a name="l00083"></a>00083         std::cout &lt;&lt; <span class="stringliteral">"Waiting for clients..."</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">std::endl</a>;
-<a name="l00084"></a>00084         <span class="keyword">const</span> <span class="keywordtype">int</span> i_ConnectionSocket = accept(i_ServerSocket, NULL, NULL);
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086         <span class="keywordflow">if</span> (i_ConnectionSocket &lt; 0)
-<a name="l00087"></a>00087         {
-<a name="l00088"></a>00088             close(i_ServerSocket);
-<a name="l00089"></a>00089             m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>) &lt;&lt; <span class="stringliteral">"accept failed"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00090"></a>00090             <span class="keywordflow">return</span>;
-<a name="l00091"></a>00091         }
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093         std::cout &lt;&lt; <span class="stringliteral">"Accepting telnet connection"</span> &lt;&lt; std::endl;
-<a name="l00094"></a>00094         <span class="keywordflow">if</span> (! AcceptConnection(i_ConnectionSocket))
-<a name="l00095"></a>00095         {
-<a name="l00096"></a>00096             <span class="keywordflow">return</span>;
-<a name="l00097"></a>00097         }
+<a name="l00062"></a>00062 
+<a name="l00063"></a><a class="code" href="classTelnetServer.html#a03b3b93ae9347ca19f0fbc8f65aff96">00063</a> TelnetServer::TelnetServer(<a class="code" href="classShell.html">Shell</a>&amp; CLI_Shell, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> UL_TcpPort)
+<a name="l00064"></a>00064   : m_cliShell(CLI_Shell),
+<a name="l00065"></a>00065     m_ulTcpPort(UL_TcpPort)
+<a name="l00066"></a>00066 {
+<a name="l00067"></a>00067 }
+<a name="l00068"></a>00068 
+<a name="l00069"></a><a class="code" href="classTelnetServer.html#10e43d3833714e792f20b3ae5494ae57">00069</a> <a class="code" href="classTelnetServer.html#10e43d3833714e792f20b3ae5494ae57">TelnetServer::~TelnetServer</a>(<span class="keywordtype">void</span>)
+<a name="l00070"></a>00070 {
+<a name="l00071"></a>00071 }
+<a name="l00072"></a>00072 
+<a name="l00073"></a><a class="code" href="classTelnetServer.html#97520ee0f8761c9827cb13addc8ffd68">00073</a> <span class="keywordtype">void</span> <a class="code" href="classTelnetServer.html#97520ee0f8761c9827cb13addc8ffd68">TelnetServer::StartServer</a>(<span class="keywordtype">void</span>)
+<a name="l00074"></a>00074 {
+<a name="l00075"></a>00075     <span class="keyword">const</span> <span class="keywordtype">int</span> i_ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
+<a name="l00076"></a>00076     <span class="keywordflow">if</span> (i_ServerSocket &lt; 0)
+<a name="l00077"></a>00077     {
+<a name="l00078"></a>00078         <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_Error = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00079"></a>00079             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"socket() failed"</span>)
+<a name="l00080"></a>00080             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Echec de la fonction socket()"</span>);
+<a name="l00081"></a>00081         m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e">ERROR_STREAM</a>) &lt;&lt; cli_Error.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00082"></a>00082         <span class="keywordflow">return</span>;
+<a name="l00083"></a>00083     }
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085     <span class="keyword">struct </span>sockaddr_in s_SockAddr;
+<a name="l00086"></a>00086     s_SockAddr.sin_family = AF_INET;
+<a name="l00087"></a>00087     s_SockAddr.sin_port = htons((<span class="keywordtype">unsigned</span> <span class="keywordtype">short</span>) m_ulTcpPort);
+<a name="l00088"></a>00088     s_SockAddr.sin_addr.s_addr = INADDR_ANY;
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090     <span class="keywordflow">if</span> (bind(i_ServerSocket, (<span class="keyword">struct</span> sockaddr*) &amp; s_SockAddr, <span class="keyword">sizeof</span>(s_SockAddr)) &lt; 0)
+<a name="l00091"></a>00091     {
+<a name="l00092"></a>00092         close(i_ServerSocket);
+<a name="l00093"></a>00093         <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_Error = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00094"></a>00094             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"bind() failed"</span>)
+<a name="l00095"></a>00095             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Echec de la fonction bind()"</span>);
+<a name="l00096"></a>00096         m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e">ERROR_STREAM</a>) &lt;&lt; cli_Error.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00097"></a>00097         <span class="keywordflow">return</span>;
 <a name="l00098"></a>00098     }
-<a name="l00099"></a>00099 }
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101 <span class="keyword">const</span> <span class="keywordtype">bool</span> TelnetServer::AcceptConnection(<span class="keyword">const</span> <span class="keywordtype">int</span> I_ConnectionSocket)
-<a name="l00102"></a>00102 {
-<a name="l00103"></a>00103 <span class="preprocessor">#if CLI_TELNET_MULTI_CLIENT</span>
-<a name="l00104"></a>00104 <span class="preprocessor"></span>    <span class="keywordflow">if</span> (<span class="keywordtype">int</span> i_Pid = fork())
-<a name="l00105"></a>00105     {
-<a name="l00106"></a>00106         <span class="comment">// Server side.</span>
-<a name="l00107"></a>00107         <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100     <span class="keywordflow">if</span> (listen(i_ServerSocket, 5) &lt; 0)
+<a name="l00101"></a>00101     {
+<a name="l00102"></a>00102         close(i_ServerSocket);
+<a name="l00103"></a>00103         <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_Error = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00104"></a>00104             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"listen() failed"</span>)
+<a name="l00105"></a>00105             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Echec de la fonction listen()"</span>);
+<a name="l00106"></a>00106         m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e">ERROR_STREAM</a>) &lt;&lt; cli_Error.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00107"></a>00107         <span class="keywordflow">return</span>;
 <a name="l00108"></a>00108     }
-<a name="l00109"></a>00109     <span class="keywordflow">else</span>
-<a name="l00110"></a>00110 <span class="preprocessor">#endif</span>
-<a name="l00111"></a>00111 <span class="preprocessor"></span>    {
-<a name="l00112"></a>00112         <span class="comment">// Connection side.</span>
-<a name="l00113"></a>00113         std::cout &lt;&lt; <span class="stringliteral">"Connection "</span> &lt;&lt; getpid() &lt;&lt; <span class="stringliteral">" started"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">std::endl</a>;
-<a name="l00114"></a>00114         <a class="code" href="classcli_1_1TelnetConnection.html">TelnetConnection</a>* <span class="keyword">const</span> pcli_Connection = <span class="keyword">new</span> <a class="code" href="classcli_1_1TelnetConnection.html">TelnetConnection</a>(m_cliShell, I_ConnectionSocket, <span class="keyword">true</span>);
-<a name="l00115"></a>00115         m_cliShell.<a class="code" href="classcli_1_1Shell.html#678c17eba603acfa45838a710b50a76c">Run</a>(*pcli_Connection);
-<a name="l00116"></a>00116         std::cout &lt;&lt; <span class="stringliteral">"Connection "</span> &lt;&lt; getpid() &lt;&lt; <span class="stringliteral">" done"</span> &lt;&lt; std::endl;
-<a name="l00117"></a>00117 <span class="preprocessor">#if CLI_TELNET_MULTI_CLIENT</span>
-<a name="l00118"></a>00118 <span class="preprocessor"></span>        exit(0);
-<a name="l00119"></a>00119 <span class="preprocessor">#endif</span>
-<a name="l00120"></a>00120 <span class="preprocessor"></span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00121"></a>00121     }
-<a name="l00122"></a>00122 }
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124 
-<a name="l00125"></a><a class="code" href="classcli_1_1TelnetConnection.html#38ae9bf9e1e6ee47d2fedc325287c413">00125</a> <a class="code" href="classcli_1_1TelnetConnection.html#38ae9bf9e1e6ee47d2fedc325287c413">TelnetConnection::TelnetConnection</a>(
-<a name="l00126"></a>00126         <a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; CLI_Shell,
-<a name="l00127"></a>00127         <span class="keyword">const</span> <span class="keywordtype">int</span> I_ConnectionSocket,
-<a name="l00128"></a>00128         <span class="keyword">const</span> <span class="keywordtype">bool</span> B_AutoDelete)
-<a name="l00129"></a>00129   : <a class="code" href="classcli_1_1IODevice.html">IODevice</a>(<span class="stringliteral">"telnet"</span>, <span class="stringliteral">"\r\n"</span>, B_AutoDelete),
-<a name="l00130"></a>00130     m_cliShell(CLI_Shell),
-<a name="l00131"></a>00131     m_iSocket(I_ConnectionSocket)
-<a name="l00132"></a>00132 {
-<a name="l00133"></a>00133 }
-<a name="l00134"></a>00134 
-<a name="l00135"></a><a class="code" href="classcli_1_1TelnetConnection.html#3a113a953d9120738f05f1900e1e8edb">00135</a> <a class="code" href="classcli_1_1TelnetConnection.html#3a113a953d9120738f05f1900e1e8edb">TelnetConnection::~TelnetConnection</a>(<span class="keywordtype">void</span>)
-<a name="l00136"></a>00136 {
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110     <span class="keywordflow">while</span> (1)
+<a name="l00111"></a>00111     {
+<a name="l00112"></a>00112         <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_InfoWaiting = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00113"></a>00113             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"Waiting for clients..."</span>)
+<a name="l00114"></a>00114             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"En attente de clients..."</span>);
+<a name="l00115"></a>00115         m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9">OUTPUT_STREAM</a>) &lt;&lt; cli_InfoWaiting.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00116"></a>00116         <span class="keyword">const</span> <span class="keywordtype">int</span> i_ConnectionSocket = accept(i_ServerSocket, NULL, NULL);
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118         <span class="keywordflow">if</span> (i_ConnectionSocket &lt; 0)
+<a name="l00119"></a>00119         {
+<a name="l00120"></a>00120             close(i_ServerSocket);
+<a name="l00121"></a>00121             <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_Error = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00122"></a>00122                 .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"accept() failed"</span>)
+<a name="l00123"></a>00123                 .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Echec de la fonction accept()"</span>);
+<a name="l00124"></a>00124             m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e">ERROR_STREAM</a>) &lt;&lt; cli_Error.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00125"></a>00125             <span class="keywordflow">return</span>;
+<a name="l00126"></a>00126         }
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128         <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_InfoClient = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00129"></a>00129             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"Accepting telnet connection"</span>)
+<a name="l00130"></a>00130             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Connexion telnet acceptée"</span>);
+<a name="l00131"></a>00131         m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9">OUTPUT_STREAM</a>) &lt;&lt; cli_InfoClient.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00132"></a>00132         <span class="keywordflow">if</span> (! AcceptConnection(i_ConnectionSocket))
+<a name="l00133"></a>00133         {
+<a name="l00134"></a>00134             <span class="keywordflow">return</span>;
+<a name="l00135"></a>00135         }
+<a name="l00136"></a>00136     }
 <a name="l00137"></a>00137 }
 <a name="l00138"></a>00138 
-<a name="l00139"></a><a class="code" href="classcli_1_1TelnetConnection.html#f33c0144e429bb9f65a4d94c466c7bfa">00139</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1TelnetConnection.html#f33c0144e429bb9f65a4d94c466c7bfa">TelnetConnection::OpenDevice</a>(<span class="keywordtype">void</span>)
+<a name="l00139"></a>00139 <span class="keyword">const</span> <span class="keywordtype">bool</span> TelnetServer::AcceptConnection(<span class="keyword">const</span> <span class="keywordtype">int</span> I_ConnectionSocket)
 <a name="l00140"></a>00140 {
-<a name="l00141"></a>00141     <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00142"></a>00142 }
-<a name="l00143"></a>00143 
-<a name="l00144"></a><a class="code" href="classcli_1_1TelnetConnection.html#49d5d04442baa1a99f1c7d077b33827f">00144</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1TelnetConnection.html#49d5d04442baa1a99f1c7d077b33827f">TelnetConnection::CloseDevice</a>(<span class="keywordtype">void</span>)
-<a name="l00145"></a>00145 {
-<a name="l00146"></a>00146 <span class="preprocessor">#if CLI_TELNET_MULTI_CLIENT</span>
-<a name="l00147"></a>00147 <span class="preprocessor"></span>    close(m_iSocket);
-<a name="l00148"></a>00148 <span class="preprocessor">#endif</span>
-<a name="l00149"></a>00149 <span class="preprocessor"></span>    <span class="keyword">delete</span> <span class="keyword">this</span>;
-<a name="l00150"></a>00150     <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00151"></a>00151 }
-<a name="l00152"></a>00152 
-<a name="l00153"></a><a class="code" href="classcli_1_1TelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">00153</a> <span class="keyword">const</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff">KEY</a> <a class="code" href="classcli_1_1TelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">TelnetConnection::GetKey</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00154"></a>00154 <span class="keyword"></span>{
-<a name="l00155"></a>00155     <span class="keywordflow">if</span> (! m_qiChars.empty())
-<a name="l00156"></a>00156     {
-<a name="l00157"></a>00157         <span class="comment">// Dequeue the received characters</span>
-<a name="l00158"></a>00158         <span class="keyword">const</span> <span class="keywordtype">int</span> i_Front = m_qiChars.front();
-<a name="l00159"></a>00159         m_qiChars.pop_front();
-<a name="l00160"></a>00160 
-<a name="l00161"></a>00161         <span class="comment">// Special character management.</span>
-<a name="l00162"></a>00162         <span class="keywordflow">switch</span> (i_Front)
-<a name="l00163"></a>00163         {
-<a name="l00164"></a>00164         <span class="keywordflow">case</span> 27:
-<a name="l00165"></a>00165             <span class="keywordflow">if</span> (! m_qiChars.empty())
-<a name="l00166"></a>00166             {
-<a name="l00167"></a>00167                 <span class="keywordflow">if</span> ((m_qiChars.front() == 91) &amp;&amp; (m_qiChars.size() &gt;= 2))
-<a name="l00168"></a>00168                 {
-<a name="l00169"></a>00169                     m_qiChars.pop_front();
-<a name="l00170"></a>00170                     <span class="keyword">const</span> <span class="keywordtype">int</span> i_Special = m_qiChars.front();
-<a name="l00171"></a>00171                     m_qiChars.pop_front();
-<a name="l00172"></a>00172 
-<a name="l00173"></a>00173                     <span class="keywordflow">switch</span> (i_Special)
-<a name="l00174"></a>00174                     {
-<a name="l00175"></a>00175                     <span class="keywordflow">case</span> 65: <span class="keywordflow">return</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff6cfeb5100c882910d08af7e538cab409">KEY_UP</a>;
-<a name="l00176"></a>00176                     <span class="keywordflow">case</span> 66: <span class="keywordflow">return</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff310e369d3ee0f6e2d1a5deeba4200795">KEY_DOWN</a>;
-<a name="l00177"></a>00177                     <span class="keywordflow">case</span> 67: <span class="keywordflow">return</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effc84a1d65c17a94c9a35fbeadbd903dbd">KEY_RIGHT</a>;
-<a name="l00178"></a>00178                     <span class="keywordflow">case</span> 68: <span class="keywordflow">return</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effbdaee303676db32f13cb6ef9e81c48ee">KEY_LEFT</a>;
-<a name="l00179"></a>00179                     <span class="keywordflow">default</span>:
-<a name="l00180"></a>00180                         <span class="comment">// Unhandled.</span>
-<a name="l00181"></a>00181                         m_qiChars.push_front(i_Special);
-<a name="l00182"></a>00182                         m_qiChars.push_front(91);
-<a name="l00183"></a>00183                     }
-<a name="l00184"></a>00184                 }
-<a name="l00185"></a>00185             }
-<a name="l00186"></a>00186             <span class="keywordflow">break</span>;
-<a name="l00187"></a>00187 
-<a name="l00188"></a>00188         <span class="keywordflow">case</span> 8:
-<a name="l00189"></a>00189             <span class="keywordflow">return</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effa87f933c4705369c5f734de07b074e8c">BACKSPACE</a>;
-<a name="l00190"></a>00190         }
-<a name="l00191"></a>00191 
-<a name="l00192"></a>00192         <span class="keyword">const</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff">KEY</a> e_Char = <a class="code" href="classcli_1_1IODevice.html#9a6f9df87b7109ba77b651fce0224311">IODevice::GetKey</a>(i_Front);
-<a name="l00193"></a>00193         <span class="keywordflow">if</span> (e_Char != <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff190ee79e864e3dca3f3d84b7bcf094db">NULL_KEY</a>)
-<a name="l00194"></a>00194         {
-<a name="l00195"></a>00195             <span class="keywordflow">return</span> e_Char;
-<a name="l00196"></a>00196         }
-<a name="l00197"></a>00197         <span class="keywordflow">else</span>
-<a name="l00198"></a>00198         {
-<a name="l00199"></a>00199             <span class="keywordflow">return</span> <a class="code" href="classcli_1_1TelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">GetKey</a>();
-<a name="l00200"></a>00200         }
-<a name="l00201"></a>00201     }
-<a name="l00202"></a>00202     <span class="keywordflow">else</span>
-<a name="l00203"></a>00203     {
-<a name="l00204"></a>00204         <span class="comment">// Wait for characters</span>
-<a name="l00205"></a>00205         <span class="keywordtype">char</span> str_Buffer[256];
-<a name="l00206"></a>00206         <span class="keyword">const</span> <span class="keywordtype">int</span> i_Len = recv(m_iSocket, str_Buffer, 256, 0);
-<a name="l00207"></a>00207         <span class="keywordflow">if</span> (i_Len &lt;= 0)
-<a name="l00208"></a>00208         {
-<a name="l00209"></a>00209             m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>) &lt;&lt; <span class="stringliteral">"recv failed"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00210"></a>00210             <span class="keywordflow">return</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff190ee79e864e3dca3f3d84b7bcf094db">NULL_KEY</a>;
-<a name="l00211"></a>00211         }
-<a name="l00212"></a>00212         <span class="keywordflow">else</span>
-<a name="l00213"></a>00213         {
-<a name="l00214"></a>00214             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;i_Len; i++)
-<a name="l00215"></a>00215             {
-<a name="l00216"></a>00216                 <span class="keywordflow">if</span> (str_Buffer[i] != <span class="charliteral">'\0'</span>)
-<a name="l00217"></a>00217                 {
-<a name="l00218"></a>00218                     m_qiChars.push_back(str_Buffer[i]);
-<a name="l00219"></a>00219                 }
-<a name="l00220"></a>00220             }
-<a name="l00221"></a>00221             <span class="keywordflow">return</span> <a class="code" href="classcli_1_1TelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">GetKey</a>();
-<a name="l00222"></a>00222         }
-<a name="l00223"></a>00223     }
-<a name="l00224"></a>00224 }
-<a name="l00225"></a>00225 
-<a name="l00226"></a><a class="code" href="classcli_1_1TelnetConnection.html#1dcf8f3588f733594cd263af3833a5d9">00226</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1TelnetConnection.html#1dcf8f3588f733594cd263af3833a5d9">TelnetConnection::PutString</a>(<span class="keyword">const</span> std::string&amp; STR_Out)<span class="keyword"> const</span>
-<a name="l00227"></a>00227 <span class="keyword"></span>{
-<a name="l00228"></a>00228     <span class="keyword">const</span> <span class="keywordtype">int</span> i_Len = send(m_iSocket, STR_Out.c_str(), STR_Out.size(), 0);
-<a name="l00229"></a>00229     <span class="keywordflow">if</span> (i_Len &lt; 0)
-<a name="l00230"></a>00230     {
-<a name="l00231"></a>00231         m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>) &lt;&lt; <span class="stringliteral">"send failed"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00232"></a>00232     }
-<a name="l00233"></a>00233     <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((<span class="keywordtype">unsigned</span>) i_Len &lt; STR_Out.size())
-<a name="l00234"></a>00234     {
-<a name="l00235"></a>00235         m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>)
-<a name="l00236"></a>00236             &lt;&lt; <span class="stringliteral">"send uncomplete"</span>
-<a name="l00237"></a>00237             &lt;&lt; <span class="stringliteral">" (only "</span> &lt;&lt; i_Len &lt;&lt; <span class="stringliteral">" characters sent"</span>
-<a name="l00238"></a>00238             &lt;&lt; <span class="stringliteral">" over "</span> &lt;&lt; STR_Out.size() &lt;&lt; <span class="stringliteral">")"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00239"></a>00239     }
-<a name="l00240"></a>00240     <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((<span class="keywordtype">unsigned</span>) i_Len &gt; STR_Out.size())
-<a name="l00241"></a>00241     {
-<a name="l00242"></a>00242         m_cliShell.<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>)
-<a name="l00243"></a>00243             &lt;&lt; <span class="stringliteral">"weird send return value"</span>
-<a name="l00244"></a>00244             &lt;&lt; <span class="stringliteral">" ("</span> &lt;&lt; i_Len &lt;&lt; <span class="stringliteral">" for "</span> &lt;&lt; STR_Out.size() &lt;&lt; <span class="stringliteral">" characters sent)"</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">endl</a>;
-<a name="l00245"></a>00245     }
-<a name="l00246"></a>00246 }
+<a name="l00141"></a>00141     <span class="keywordtype">int</span> i_Pid = 0;
+<a name="l00142"></a>00142 
+<a name="l00143"></a>00143 <span class="preprocessor">#if CLI_TELNET_MULTI_CLIENT</span>
+<a name="l00144"></a>00144 <span class="preprocessor"></span>    <span class="keywordflow">if</span> (i_Pid = fork())
+<a name="l00145"></a>00145     {
+<a name="l00146"></a>00146         <span class="comment">// Server side.</span>
+<a name="l00147"></a>00147         <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00148"></a>00148     }
+<a name="l00149"></a>00149     <span class="keywordflow">else</span>
+<a name="l00150"></a>00150 <span class="preprocessor">#endif</span>
+<a name="l00151"></a>00151 <span class="preprocessor"></span>    {
+<a name="l00152"></a>00152         <span class="comment">// Connection side.</span>
+<a name="l00153"></a>00153 <span class="preprocessor">#ifndef CLI_WIN_NETWORK</span>
+<a name="l00154"></a>00154 <span class="preprocessor"></span>        i_Pid = getpid();
+<a name="l00155"></a>00155 <span class="preprocessor">#else</span>
+<a name="l00156"></a>00156 <span class="preprocessor"></span>        i_Pid = GetCurrentThreadId();
+<a name="l00157"></a>00157 <span class="preprocessor">#endif</span>
+<a name="l00158"></a>00158 <span class="preprocessor"></span>        <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_InfoStart = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00159"></a>00159             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"Connection started"</span>)
+<a name="l00160"></a>00160             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Début de connexion"</span>);
+<a name="l00161"></a>00161         m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9">OUTPUT_STREAM</a>)
+<a name="l00162"></a>00162             &lt;&lt; cli_InfoStart.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>())
+<a name="l00163"></a>00163             &lt;&lt; <span class="stringliteral">" "</span> &lt;&lt; i_Pid &lt;&lt; cli::endl;
+<a name="l00164"></a>00164         <a class="code" href="classTelnetConnection.html">TelnetConnection</a>* <span class="keyword">const</span> pcli_Connection = <span class="keyword">new</span> <a class="code" href="classTelnetConnection.html">TelnetConnection</a>(m_cliShell, I_ConnectionSocket, <span class="keyword">true</span>);
+<a name="l00165"></a>00165         m_cliShell.<a class="code" href="classShell.html#678c17eba603acfa45838a710b50a76c">Run</a>(*pcli_Connection);
+<a name="l00166"></a>00166         <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_InfoEnd = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00167"></a>00167             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"Connection done"</span>)
+<a name="l00168"></a>00168             .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Début de connexion"</span>);
+<a name="l00169"></a>00169         m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9">OUTPUT_STREAM</a>)
+<a name="l00170"></a>00170             &lt;&lt; cli_InfoEnd.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>())
+<a name="l00171"></a>00171             &lt;&lt; <span class="stringliteral">" "</span> &lt;&lt; i_Pid &lt;&lt; cli::endl;
+<a name="l00172"></a>00172 <span class="preprocessor">#if CLI_TELNET_MULTI_CLIENT</span>
+<a name="l00173"></a>00173 <span class="preprocessor"></span>        exit(0);
+<a name="l00174"></a>00174 <span class="preprocessor">#endif</span>
+<a name="l00175"></a>00175 <span class="preprocessor"></span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00176"></a>00176     }
+<a name="l00177"></a>00177 }
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179 
+<a name="l00180"></a><a class="code" href="classTelnetConnection.html#38ae9bf9e1e6ee47d2fedc325287c413">00180</a> TelnetConnection::TelnetConnection(
+<a name="l00181"></a>00181         <a class="code" href="classShell.html">Shell</a>&amp; CLI_Shell,
+<a name="l00182"></a>00182         <span class="keyword">const</span> <span class="keywordtype">int</span> I_ConnectionSocket,
+<a name="l00183"></a>00183         <span class="keyword">const</span> <span class="keywordtype">bool</span> B_AutoDelete)
+<a name="l00184"></a>00184   : <a class="code" href="classIODevice.html">IODevice</a>(<span class="stringliteral">"telnet"</span>, <span class="stringliteral">"\r\n"</span>, B_AutoDelete),
+<a name="l00185"></a>00185     m_cliShell(CLI_Shell),
+<a name="l00186"></a>00186     m_iSocket(I_ConnectionSocket),
+<a name="l00187"></a>00187     m_qChars(CLI_TELNET_INPUT_BUFFER_SIZE)
+<a name="l00188"></a>00188 {
+<a name="l00189"></a>00189 }
+<a name="l00190"></a>00190 
+<a name="l00191"></a><a class="code" href="classTelnetConnection.html#3a113a953d9120738f05f1900e1e8edb">00191</a> <a class="code" href="classTelnetConnection.html#3a113a953d9120738f05f1900e1e8edb">TelnetConnection::~TelnetConnection</a>(<span class="keywordtype">void</span>)
+<a name="l00192"></a>00192 {
+<a name="l00193"></a>00193 }
+<a name="l00194"></a>00194 
+<a name="l00195"></a><a class="code" href="classTelnetConnection.html#f33c0144e429bb9f65a4d94c466c7bfa">00195</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTelnetConnection.html#f33c0144e429bb9f65a4d94c466c7bfa">TelnetConnection::OpenDevice</a>(<span class="keywordtype">void</span>)
+<a name="l00196"></a>00196 {
+<a name="l00197"></a>00197     <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00198"></a>00198 }
+<a name="l00199"></a>00199 
+<a name="l00200"></a><a class="code" href="classTelnetConnection.html#49d5d04442baa1a99f1c7d077b33827f">00200</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTelnetConnection.html#49d5d04442baa1a99f1c7d077b33827f">TelnetConnection::CloseDevice</a>(<span class="keywordtype">void</span>)
+<a name="l00201"></a>00201 {
+<a name="l00202"></a>00202 <span class="preprocessor">#if CLI_TELNET_MULTI_CLIENT</span>
+<a name="l00203"></a>00203 <span class="preprocessor"></span>    close(m_iSocket);
+<a name="l00204"></a>00204 <span class="preprocessor">#endif</span>
+<a name="l00205"></a>00205 <span class="preprocessor"></span>    <span class="keyword">delete</span> <span class="keyword">this</span>;
+<a name="l00206"></a>00206     <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00207"></a>00207 }
+<a name="l00208"></a>00208 
+<a name="l00209"></a><a class="code" href="classTelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">00209</a> <span class="keyword">const</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">KEY</a> <a class="code" href="classTelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">TelnetConnection::GetKey</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00210"></a>00210 <span class="keyword"></span>{
+<a name="l00211"></a>00211     <span class="keywordflow">if</span> (! m_qChars.IsEmpty())
+<a name="l00212"></a>00212     {
+<a name="l00213"></a>00213         <span class="comment">// Dequeue the received characters</span>
+<a name="l00214"></a>00214         <span class="keyword">const</span> <span class="keywordtype">int</span> i_Front = m_qChars.RemoveHead();
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216         <span class="comment">// Special character management.</span>
+<a name="l00217"></a>00217         <span class="keywordflow">switch</span> (i_Front)
+<a name="l00218"></a>00218         {
+<a name="l00219"></a>00219         <span class="keywordflow">case</span> 27:
+<a name="l00220"></a>00220             <span class="keywordflow">if</span> (! m_qChars.IsEmpty())
+<a name="l00221"></a>00221             {
+<a name="l00222"></a>00222                 <span class="keywordflow">if</span> ((m_qChars.GetHead() == 91) &amp;&amp; (m_qChars.GetCount() &gt;= 2))
+<a name="l00223"></a>00223                 {
+<a name="l00224"></a>00224                     m_qChars.RemoveHead();
+<a name="l00225"></a>00225                     <span class="keyword">const</span> <span class="keywordtype">int</span> i_Special = m_qChars.RemoveHead();
+<a name="l00226"></a>00226 
+<a name="l00227"></a>00227                     <span class="keywordflow">switch</span> (i_Special)
+<a name="l00228"></a>00228                     {
+<a name="l00229"></a>00229                     <span class="keywordflow">case</span> 65: <span class="keywordflow">return</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d60848a442d907968b211b97bc2bd88acd">KEY_UP</a>;
+<a name="l00230"></a>00230                     <span class="keywordflow">case</span> 66: <span class="keywordflow">return</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6a9cdac7967bf7d88fdb761138a2a3416">KEY_DOWN</a>;
+<a name="l00231"></a>00231                     <span class="keywordflow">case</span> 67: <span class="keywordflow">return</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d66504370d9c6391e1a9da6a1a529b089d">KEY_RIGHT</a>;
+<a name="l00232"></a>00232                     <span class="keywordflow">case</span> 68: <span class="keywordflow">return</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6612120b69c7dfd46086db7aaebdbcf65">KEY_LEFT</a>;
+<a name="l00233"></a>00233                     <span class="keywordflow">default</span>:
+<a name="l00234"></a>00234                         <span class="comment">// Unhandled.</span>
+<a name="l00235"></a>00235                         <span class="keywordflow">if</span> ((! m_qChars.AddHead(i_Special))
+<a name="l00236"></a>00236                             || (! m_qChars.AddHead(91)))
+<a name="l00237"></a>00237                         {
+<a name="l00238"></a>00238                             <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>)
+<a name="l00239"></a>00239                                 &lt;&lt; <span class="stringliteral">"TelnetConnection::GetKey(): "</span>
+<a name="l00240"></a>00240                                 &lt;&lt; <span class="stringliteral">"Unable to restore previously removed character from m_qChars"</span>
+<a name="l00241"></a>00241                                 &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00242"></a>00242                     }
+<a name="l00243"></a>00243                 }
+<a name="l00244"></a>00244             }
+<a name="l00245"></a>00245             }
+<a name="l00246"></a>00246             <span class="keywordflow">break</span>;
 <a name="l00247"></a>00247 
-<a name="l00248"></a><a class="code" href="classcli_1_1TelnetConnection.html#4bc02e5835282a5e36633d70d195b74f">00248</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1TelnetConnection.html#4bc02e5835282a5e36633d70d195b74f">TelnetConnection::Beep</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00249"></a>00249 <span class="keyword"></span>{
-<a name="l00250"></a>00250 }
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:32 2007 for CLI by&nbsp;
+<a name="l00248"></a>00248         <span class="keywordflow">case</span> 8:
+<a name="l00249"></a>00249             <span class="keywordflow">return</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6d2534cebcf6f430484b7c931dd657ddc">BACKSPACE</a>;
+<a name="l00250"></a>00250         }
+<a name="l00251"></a>00251 
+<a name="l00252"></a>00252         <span class="keyword">const</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">KEY</a> e_Char = <a class="code" href="classIODevice.html#7bafac5c500746f742aa289f33e38feb">IODevice::GetKey</a>(i_Front);
+<a name="l00253"></a>00253         <span class="keywordflow">if</span> (e_Char != <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6e42682039e1a584113718465a202d0c0">NULL_KEY</a>)
+<a name="l00254"></a>00254         {
+<a name="l00255"></a>00255             <span class="keywordflow">return</span> e_Char;
+<a name="l00256"></a>00256         }
+<a name="l00257"></a>00257         <span class="keywordflow">else</span>
+<a name="l00258"></a>00258         {
+<a name="l00259"></a>00259             <span class="keywordflow">return</span> <a class="code" href="classTelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">GetKey</a>();
+<a name="l00260"></a>00260         }
+<a name="l00261"></a>00261     }
+<a name="l00262"></a>00262     <span class="keywordflow">else</span>
+<a name="l00263"></a>00263     {
+<a name="l00264"></a>00264         <span class="comment">// Wait for characters</span>
+<a name="l00265"></a>00265         <span class="keywordtype">char</span> str_Buffer[256];
+<a name="l00266"></a>00266         <span class="keyword">const</span> <span class="keywordtype">int</span> i_Len = recv(m_iSocket, str_Buffer, 256, 0);
+<a name="l00267"></a>00267         <span class="keywordflow">if</span> (i_Len &lt;= 0)
+<a name="l00268"></a>00268         {
+<a name="l00269"></a>00269             <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_Error = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00270"></a>00270                 .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"recv() failed"</span>)
+<a name="l00271"></a>00271                 .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Echec de la fonction recv()"</span>);
+<a name="l00272"></a>00272             <a class="code" href="classTelnetConnection.html#6942a0c86083043d80650f0a4e8066d4">GetErrorStream</a>() &lt;&lt; cli_Error.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00273"></a>00273             <span class="keywordflow">return</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6e42682039e1a584113718465a202d0c0">NULL_KEY</a>;
+<a name="l00274"></a>00274         }
+<a name="l00275"></a>00275         <span class="keywordflow">else</span>
+<a name="l00276"></a>00276         {
+<a name="l00277"></a>00277             <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;i_Len; i++)
+<a name="l00278"></a>00278             {
+<a name="l00279"></a>00279                 <span class="keywordflow">if</span> (str_Buffer[i] != <span class="charliteral">'\0'</span>)
+<a name="l00280"></a>00280                 {
+<a name="l00281"></a>00281                     <span class="keywordflow">if</span> (! m_qChars.AddTail(str_Buffer[i]))
+<a name="l00282"></a>00282                     {
+<a name="l00283"></a>00283                         <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>)
+<a name="l00284"></a>00284                             &lt;&lt; <span class="stringliteral">"TelnetConnection::GetKey(): "</span>
+<a name="l00285"></a>00285                             &lt;&lt; <span class="stringliteral">"Could not append character '"</span> &lt;&lt; str_Buffer[i] &lt;&lt; <span class="stringliteral">"' "</span>
+<a name="l00286"></a>00286                             &lt;&lt; <span class="stringliteral">"to m_qChars"</span> &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00287"></a>00287                 }
+<a name="l00288"></a>00288             }
+<a name="l00289"></a>00289             }
+<a name="l00290"></a>00290             <span class="keywordflow">return</span> <a class="code" href="classTelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">GetKey</a>();
+<a name="l00291"></a>00291         }
+<a name="l00292"></a>00292     }
+<a name="l00293"></a>00293 }
+<a name="l00294"></a>00294 
+<a name="l00295"></a><a class="code" href="classTelnetConnection.html#bc955e90046bde6f5db39fa089441a3c">00295</a> <span class="keywordtype">void</span> <a class="code" href="classTelnetConnection.html#bc955e90046bde6f5db39fa089441a3c">TelnetConnection::PutString</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Out)<span class="keyword"> const</span>
+<a name="l00296"></a>00296 <span class="keyword"></span>{
+<a name="l00297"></a>00297     <span class="keywordflow">if</span> (STR_Out != NULL)
+<a name="l00298"></a>00298     {
+<a name="l00299"></a>00299         <span class="keyword">const</span> <span class="keywordtype">int</span> i_Len = send(m_iSocket, STR_Out, strlen(STR_Out), 0);
+<a name="l00300"></a>00300         <span class="keywordflow">if</span> (i_Len != (<span class="keywordtype">signed</span>) strlen(STR_Out))
+<a name="l00301"></a>00301         {
+<a name="l00302"></a>00302             <span class="keyword">const</span> <a class="code" href="classResourceString.html">ResourceString</a> cli_Error = <a class="code" href="classResourceString.html">ResourceString</a>()
+<a name="l00303"></a>00303                 .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">ResourceString::LANG_EN</a>, <span class="stringliteral">"send() failed"</span>)
+<a name="l00304"></a>00304                 .SetString(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">ResourceString::LANG_FR</a>, <span class="stringliteral">"Echec de la fonction send()"</span>);
+<a name="l00305"></a>00305             <a class="code" href="classTelnetConnection.html#6942a0c86083043d80650f0a4e8066d4">GetErrorStream</a>() &lt;&lt; cli_Error.<a class="code" href="classResourceString.html#9810e21c1e7ec3ab7f45c099f15fd7f7">GetString</a>(m_cliShell.<a class="code" href="classShell.html#fae8f69c25a41e89d184e3c49b1b3918">GetLang</a>()) &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00306"></a>00306 
+<a name="l00307"></a>00307             <span class="keywordflow">if</span> (i_Len &lt; 0)
+<a name="l00308"></a>00308             {
+<a name="l00309"></a>00309                 <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>) &lt;&lt; <span class="stringliteral">"send failed"</span> &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00310"></a>00310             }
+<a name="l00311"></a>00311             <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((<span class="keywordtype">unsigned</span>) i_Len &lt; strlen(STR_Out))
+<a name="l00312"></a>00312             {
+<a name="l00313"></a>00313                 <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>)
+<a name="l00314"></a>00314                     &lt;&lt; <span class="stringliteral">"send uncomplete"</span>
+<a name="l00315"></a>00315                     &lt;&lt; <span class="stringliteral">" (only "</span> &lt;&lt; i_Len &lt;&lt; <span class="stringliteral">" characters sent"</span>
+<a name="l00316"></a>00316                     &lt;&lt; <span class="stringliteral">" over "</span> &lt;&lt; strlen(STR_Out) &lt;&lt; <span class="stringliteral">")"</span> &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00317"></a>00317             }
+<a name="l00318"></a>00318             <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((<span class="keywordtype">unsigned</span>) i_Len &gt; strlen(STR_Out))
+<a name="l00319"></a>00319             {
+<a name="l00320"></a>00320                 <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>)
+<a name="l00321"></a>00321                     &lt;&lt; <span class="stringliteral">"strange send return value"</span>
+<a name="l00322"></a>00322                     &lt;&lt; <span class="stringliteral">" ("</span> &lt;&lt; i_Len &lt;&lt; <span class="stringliteral">" for "</span> &lt;&lt; strlen(STR_Out) &lt;&lt; <span class="stringliteral">" characters sent)"</span> &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00323"></a>00323             }
+<a name="l00324"></a>00324         }
+<a name="l00325"></a>00325     }
+<a name="l00326"></a>00326 }
+<a name="l00327"></a>00327 
+<a name="l00328"></a><a class="code" href="classTelnetConnection.html#4bc02e5835282a5e36633d70d195b74f">00328</a> <span class="keywordtype">void</span> <a class="code" href="classTelnetConnection.html#4bc02e5835282a5e36633d70d195b74f">TelnetConnection::Beep</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00329"></a>00329 <span class="keyword"></span>{
+<a name="l00330"></a>00330 }
+<a name="l00331"></a>00331 
+<a name="l00332"></a><a class="code" href="classTelnetConnection.html#6942a0c86083043d80650f0a4e8066d4">00332</a> <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classTelnetConnection.html#6942a0c86083043d80650f0a4e8066d4">TelnetConnection::GetErrorStream</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00333"></a>00333 <span class="keyword"></span>{
+<a name="l00334"></a>00334     <span class="comment">// First try to send error to the device set in the shell.</span>
+<a name="l00335"></a>00335     <span class="keywordflow">if</span> (<span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>* <span class="keyword">const</span> pcli_ErrorDevice = &amp; m_cliShell.<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e">ERROR_STREAM</a>))
+<a name="l00336"></a>00336     {
+<a name="l00337"></a>00337         <span class="keywordflow">if</span> (pcli_ErrorDevice != <span class="keyword">this</span>)
+<a name="l00338"></a>00338         {
+<a name="l00339"></a>00339             <span class="comment">// Do not report error to this device which has caused the error.</span>
+<a name="l00340"></a>00340             <span class="keywordflow">return</span> *pcli_ErrorDevice;
+<a name="l00341"></a>00341         }
+<a name="l00342"></a>00342     }
+<a name="l00343"></a>00343 
+<a name="l00344"></a>00344     <span class="comment">// Default to standard error.</span>
+<a name="l00345"></a>00345     <span class="keywordflow">return</span> <a class="code" href="classOutputDevice.html#74a42b8f2149c02775c834676f70cc5c">OutputDevice::GetStdErr</a>();
+<a name="l00346"></a>00346 }
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:33 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

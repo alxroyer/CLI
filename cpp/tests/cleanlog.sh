@@ -40,14 +40,19 @@ do
     CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/.\^H ^H//")
 done
 
-# Remove the first line
-#CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/^\^\[7\^\[\[?47h\^\[\[0;10m\^\[\[4l\^\[\[H\^\[\[J//")
+# Windows-like end of lines
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/\^M//g")
 
-# Remove the last line
-#CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/^\^\[\[..;1H\^\[\[2J\^\[\[?47l\^\[8//")
+# Special characters
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/M-g/ç/g")
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/M-i/é/g")
 
 # Remove traces menu (debug mode)
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "traces          Traces menu")
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "traces          Menu de configuration de traces")
+
+# Check line endings
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/\r\n/\n/g")
 
 # Overwrite the log file
 echo "$CLI_LOG_DATA" > "$CLI_LOG"

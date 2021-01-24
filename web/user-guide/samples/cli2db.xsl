@@ -50,15 +50,13 @@
         <xsl:apply-templates select="@*"/>
         <xsl:text>&gt;</xsl:text>
     <xsl:choose>
-        <xsl:when test="count(cli:cpp) = 0"><xsl:apply-templates/></xsl:when>
-        <xsl:when test="count(cli:cpp) = 1"><xsl:apply-templates select="cli:cpp"/></xsl:when>
+        <xsl:when test="count(cli:cpp) + count(cli:java) = 0"><xsl:apply-templates/></xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="$STR_Endl"/>
-            <xsl:for-each select="cli:cpp">
-                <xsl:call-template name="T_Indent"/>
+            <xsl:for-each select="cli:cpp|cli:java">
                 <xsl:apply-templates select="."/>
-                <xsl:value-of select="$STR_Endl"/>
             </xsl:for-each>
+            <xsl:call-template name="T_Indent"/>
         </xsl:otherwise>
     </xsl:choose>
     <xsl:text>&lt;/endl&gt;</xsl:text>
@@ -73,20 +71,16 @@
     <xsl:text>&lt;/help&gt;</xsl:text>
 </xsl:template>
 
-<xsl:template match="cli:cpp">
-    <xsl:if test="not(parent::cli:endl)">
-        <xsl:call-template name="T_Indent"/>
-    </xsl:if>
+<xsl:template match="cli:cpp|cli:java">
+    <xsl:call-template name="T_Indent"/>
 
-    <xsl:text>&lt;cpp</xsl:text>
+    <xsl:text>&lt;</xsl:text><xsl:value-of select="local-name()"/>
         <xsl:apply-templates select="@*"/>
         <xsl:text>&gt;</xsl:text>
     <xsl:apply-templates/>
-    <xsl:text>&lt;/cpp&gt;</xsl:text>
+    <xsl:text>&lt;/</xsl:text><xsl:value-of select="local-name()"/><xsl:text>&gt;</xsl:text>
 
-    <xsl:if test="not(parent::cli:endl)">
-        <xsl:value-of select="$STR_Endl"/>
-    </xsl:if>
+    <xsl:value-of select="$STR_Endl"/>
 </xsl:template>
 
 <xsl:template match="cli:out">

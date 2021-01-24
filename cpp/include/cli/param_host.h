@@ -30,18 +30,25 @@
 #ifndef _CLI_PARAM_HOST_H_
 #define _CLI_PARAM_HOST_H_
 
-#include <cli/param.h>
+#include <cli/namespace.h>
+#include <cli/param_string.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Help;
 
 
     //! @brief Host names, IP adresses parameter element class.
-    class ParamHost : public ParamT<std::string>
+    class ParamHost : public ParamString
     {
+    private:
+        //! @brief No default constructor.
+        ParamHost(void);
+        //! @brief No copy constructor.
+        ParamHost(const ParamHost&);
+
     public:
         //! @brief Constructor.
         ParamHost(
@@ -51,14 +58,15 @@ namespace cli {
         //! @brief Destructor.
         virtual ~ParamHost(void);
 
-    public:
-        //! @brief Value setting handler.
-        virtual const bool SetstrValue(const std::string& STR_Value) const;
+    private:
+        //! @brief No assignment operator.
+        ParamHost& operator=(const ParamHost&);
 
+    public:
         //! @brief Parameter cloning handler.
         virtual const Param* const Clone(void) const;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_PARAM_HOST_H_

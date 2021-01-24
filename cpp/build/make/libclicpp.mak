@@ -21,18 +21,24 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-# Variables
-include vars.mak
+# Includes
 PROJECT = libclicpp
-CPP_DIR = ../..
+STATIC_LIB_PREFIX =
+PRODUCT_TYPE = STATIC_LIB
 SRC_DIR = $(CPP_DIR)/src
-#PROJ_CPP_FLAGS = -g
+CPP_FILES = $(filter-out $(SRC_DIR)/win_console.cpp,$(wildcard $(SRC_DIR)/*.cpp))
 PROJ_INCLUDES = -I$(CPP_DIR)/include
-PRODUCT_TYPE = LIB
-PRODUCT = $(OUT_DIR)/$(PROJECT).a
+include build.mak
 
-# Rules
-include rules.mak
+# Debug and help
+include $(ROOT_DIR)/build/make/help.mak
+
+.PHONY: $(CPP_DIR)/build/make/libclicpp.help
+$(CPP_DIR)/build/make/libclicpp.help: ;
+
+.PHONY: $(CPP_DIR)/build/make/libclicpp.vars
+$(CPP_DIR)/build/make/libclicpp.vars:
+	$(call ShowVariables,)
 
 # Dependencies
-include $(DEPS)
+include $(AUTO_DEPS_FILE)

@@ -23,9 +23,11 @@
 */
 
 
+#include "cli/pch.h"
+
 #include "cli/help.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 Help::Help(void)
@@ -33,7 +35,7 @@ Help::Help(void)
 }
 
 Help::Help(const Help& CLI_Help)
-  : m_mstrHelps(CLI_Help.m_mstrHelps)
+  : ResourceString(CLI_Help)
 {
 }
 
@@ -41,35 +43,14 @@ Help::~Help(void)
 {
 }
 
-Help& Help::AddHelp(const Help::LANG E_Lang, const std::string& STR_Help)
+Help& Help::operator=(const Help& CLI_Help)
 {
-    m_mstrHelps[E_Lang] = STR_Help;
+    ResourceString::operator=(CLI_Help);
     return *this;
 }
 
-const bool Help::HasHelp(const Help::LANG E_Lang) const
+Help& Help::AddHelp(const LANG E_Lang, const char* const STR_Help)
 {
-    HelpMap::const_iterator it = m_mstrHelps.find(E_Lang);
-    return (it != m_mstrHelps.end());
-}
-
-const std::string Help::GetHelp(const Help::LANG E_Lang) const
-{
-    HelpMap::const_iterator it = m_mstrHelps.find(E_Lang);
-    if (it != m_mstrHelps.end())
-    {
-        return it->second;
-    }
-    else
-    {
-        it = m_mstrHelps.begin();
-        if (it != m_mstrHelps.end())
-        {
-            return it->second;
-        }
-        else
-        {
-            return "";
-        }
-    }
+    this->SetString(E_Lang, STR_Help);
+    return *this;
 }

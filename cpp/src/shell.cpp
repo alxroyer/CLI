@@ -23,9 +23,10 @@
 */
 
 
+#include "cli/pch.h"
+
 #include <stdio.h>
-#include <assert.h>
-#include <algorithm>
+#include <string.h>
 
 #include "cli/shell.h"
 #include "cli/io_device.h"
@@ -36,9 +37,11 @@
 #include "cli/endl.h"
 #include "cli/param.h"
 #include "cli/traces.h"
+#include "cli/assert.h"
 #include "consistency.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 static const unsigned int HELP_MARGIN = 2;
@@ -46,12 +49,17 @@ static const unsigned int HELP_OFFSET = 15;
 static const unsigned int HISTORY_PAGE = 5;
 static const unsigned int HISTORY_STACK_SIZE = 100;
 
-static const TraceClass TRACE_SHELL("SHELL", "Shell traces");
+static const TraceClass TRACE_SHELL("CLI_SHELL", Help()
+    .AddHelp(Help::LANG_EN, "Shell traces")
+    .AddHelp(Help::LANG_FR, "Traces du shell"));
 
 
 Shell::Shell(const Cli& CLI_Cli)
   : m_pcliCli(& CLI_Cli), m_pcliInput(NULL),
     m_eLang(Help::LANG_EN), m_bBeep(true),
+    m_qMenus(MAX_MENU_PER_CLI),
+    m_strLine(MAX_CMD_LINE_LENGTH),
+    m_qHistory(HISTORY_STACK_SIZE),
     m_iHistoryIndex(0)
 {
     EnsureCommonDevices();
@@ -63,17 +71,19 @@ Shell::Shell(const Cli& CLI_Cli)
         m_artStream[i].bEnable = true;
     }
 
-    m_vstrHistory.insert(m_vstrHistory.begin(), m_strLine);
-
-    m_vpcliMenus.push_back(& CLI_Cli);
+    if ((! m_qMenus.AddHead(& CLI_Cli))
+        || (! m_qHistory.AddHead(m_strLine)))
+    {
+        GetTraces().Trace(INTERNAL_ERROR) << "Could not set initial shell status." << endl;
+    }
     CLI_Cli.SetShell(*this);
 
-    GetTraces().Trace(TRACE_SHELL) << "New shell for CLI '" << GetCli().GetKeyword() << "'." << cli::endl;
+    GetTraces().Trace(TRACE_SHELL) << "New shell for CLI '" << GetCli().GetKeyword() << "'." << endl;
 }
 
 Shell::~Shell(void)
 {
-    GetTraces().Trace(TRACE_SHELL) << "Shell deleted for CLI '" << GetCli().GetKeyword() << "'." << cli::endl;
+    GetTraces().Trace(TRACE_SHELL) << "Shell deleted for CLI '" << GetCli().GetKeyword() << "'." << endl;
 
     if (m_pcliInput != NULL)
     {
@@ -93,7 +103,7 @@ Shell::~Shell(void)
 
 const Cli& Shell::GetCli(void) const
 {
-    assert(m_pcliCli != NULL);
+    CLI_ASSERT(m_pcliCli != NULL);
     return *m_pcliCli;
 }
 
@@ -195,27 +205,27 @@ const bool Shell::EnableStream(const STREAM_TYPE E_StreamType, const bool B_Enab
     }
 }
 
-void Shell::SetWelcomeMessage(const std::string& STR_WelcomeMessage)
+void Shell::SetWelcomeMessage(const ResourceString& CLI_WelcomeMessage)
 {
-    m_strWelcomeMessage = STR_WelcomeMessage;
+    m_cliWelcomeMessage = CLI_WelcomeMessage;
 }
 
-void Shell::SetByeMessage(const std::string& STR_ByeMessage)
+void Shell::SetByeMessage(const ResourceString& CLI_ByeMessage)
 {
-    m_strByeMessage = STR_ByeMessage;
+    m_cliByeMessage = CLI_ByeMessage;
 }
 
-void Shell::SetPrompt(const std::string& STR_Prompt)
+void Shell::SetPrompt(const ResourceString& CLI_Prompt)
 {
-    m_strNoDefaultPrompt = STR_Prompt;
+    m_cliNoDefaultPrompt = CLI_Prompt;
 }
 
-void Shell::SetLang(const Help::LANG E_Lang)
+void Shell::SetLang(const ResourceString::LANG E_Lang)
 {
     m_eLang = E_Lang;
 }
 
-const Help::LANG Shell::GetLang(void) const
+const ResourceString::LANG Shell::GetLang(void) const
 {
     return m_eLang;
 }
@@ -232,17 +242,15 @@ const bool Shell::GetBeep(void) const
 
 void Shell::Run(IODevice& CLI_IODevice)
 {
-    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' starts running." << cli::endl;
+    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' starts running." << endl;
     if (OpenDevices(CLI_IODevice))
     {
-        if (! m_vpcliMenus.empty())
+        // Check the CLI is the first menu, and remember the reference.
+        if (const Cli* const pcli_Cli = dynamic_cast<const Cli*>(m_qMenus.GetHead()))
         {
-            // Remember the CLI reference.
-            const Cli* const pcli_Cli = dynamic_cast<const Cli*>(m_vpcliMenus[0]);
-
             PromptWelcomeMessage();
             PromptMenu();
-            while (! m_vpcliMenus.empty())
+            while (! m_qMenus.IsEmpty())
             {
                 const KEY e_Key = CLI_IODevice.GetKey();
                 if (e_Key != NULL_KEY)
@@ -251,22 +259,23 @@ void Shell::Run(IODevice& CLI_IODevice)
                 }
                 else
                 {
-                    m_vpcliMenus.erase(m_vpcliMenus.begin(), m_vpcliMenus.end());
+                    while (! m_qMenus.IsEmpty())
+                    {
+                        m_qMenus.RemoveTail();
+                    }
                 }
             }
             PromptByeMessage();
 
             // Restore the CLI reference.
-            m_vpcliMenus.push_back(pcli_Cli);
-        }
-        else
-        {
-            assert(false);
-            GetStream(ERROR_STREAM) << "No current menu!" << endl;
+            if (! m_qMenus.AddTail(pcli_Cli))
+            {
+                GetTraces().Trace(INTERNAL_ERROR) << "Could not restore a valid status on shell exit." << endl;
+            }
         }
     }
     CloseDevices(CLI_IODevice);
-    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' end of run." << cli::endl;
+    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' end of run." << endl;
 }
 
 const bool Shell::IsRunning(void) const
@@ -286,7 +295,7 @@ const unsigned int Shell::GetHelpOffset(void) const
 
 const bool Shell::OpenDevices(IODevice& CLI_IODevice)
 {
-    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' opening devices." << cli::endl;
+    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' opening devices." << endl;
 
     bool b_Res = true;
 
@@ -339,7 +348,7 @@ const bool Shell::OpenDevices(IODevice& CLI_IODevice)
 
 const bool Shell::CloseDevices(IODevice& CLI_IODevice)
 {
-    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' closing devices." << cli::endl;
+    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' closing devices." << endl;
 
     bool b_Res = true;
 
@@ -388,9 +397,10 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
 
 void Shell::PromptWelcomeMessage(void) const
 {
-    if (! m_strWelcomeMessage.empty())
+    const tk::String str_WelcomeMessage = m_cliWelcomeMessage.GetString(GetLang());
+    if (! str_WelcomeMessage.IsEmpty())
     {
-        GetStream(WELCOME_STREAM) << m_strWelcomeMessage;
+        GetStream(WELCOME_STREAM) << str_WelcomeMessage;
     }
     else
     {
@@ -409,9 +419,10 @@ void Shell::PromptWelcomeMessage(void) const
 
 void Shell::PromptByeMessage(void) const
 {
-    if (! m_strByeMessage.empty())
+    const tk::String str_ByeMessage = m_cliByeMessage.GetString(GetLang());
+    if (! str_ByeMessage.IsEmpty())
     {
-        GetStream(WELCOME_STREAM) << m_strByeMessage;
+        GetStream(WELCOME_STREAM) << str_ByeMessage;
     }
     else
     {
@@ -421,31 +432,40 @@ void Shell::PromptByeMessage(void) const
 
 void Shell::PromptMenu(void) const
 {
-    if (! m_strNoDefaultPrompt.empty())
+    // Show the prompt.
+    const tk::String str_NoDefaultPrompt = m_cliNoDefaultPrompt.GetString(GetLang());
+    if (! str_NoDefaultPrompt.IsEmpty())
     {
-        GetStream(PROMPT_STREAM) << m_strNoDefaultPrompt << m_strLine;
+        GetStream(PROMPT_STREAM) << str_NoDefaultPrompt;
     }
     else
     {
-        if (! m_vpcliMenus.empty())
+        if (! m_qMenus.IsEmpty())
         {
-            GetStream(PROMPT_STREAM) << m_vpcliMenus.back()->GetKeyword() << ">";
-            GetStream(ECHO_STREAM) << m_strLine;
+            if (const Menu* const pcli_Menu = m_qMenus.GetTail())
+            {
+                GetStream(PROMPT_STREAM) << pcli_Menu->GetKeyword() << ">";
+            }
         }
     }
+
+    // Eventually echo the current 
+    GetStream(ECHO_STREAM) << m_strLine;
 }
 
 void Shell::ExitMenu(void)
 {
-    std::string str_Mem = m_strLine;
-    m_strLine.erase();
+    tk::String str_Mem = m_strLine;
+    if (! m_strLine.Set(""))
+        GetTraces().Trace(INTERNAL_ERROR) << "Shell::ExitMenu(): Could not reset m_strLine" << endl;
     OnExit(false);
-    m_strLine = str_Mem;
+    if (! m_strLine.Set(str_Mem))
+        GetTraces().Trace(INTERNAL_ERROR) << "Shell::ExitMenu(): Could not restore str_Mem in m_strLine" << endl;
 }
 
 void Shell::Quit(void)
 {
-    while (! m_vpcliMenus.empty())
+    while (! m_qMenus.IsEmpty())
     {
         ExitMenu();
     }
@@ -453,17 +473,14 @@ void Shell::Quit(void)
 
 void Shell::DisplayHelp(void)
 {
-    if (! m_vpcliMenus.empty())
+    if (! m_qMenus.IsEmpty())
     {
-        const std::string str_Mem = m_strLine;
-        m_strLine.erase();
+        const tk::String str_Mem = m_strLine;
+        if (! m_strLine.Set(""))
+            GetTraces().Trace(INTERNAL_ERROR) << "Shell::DisplayHelp(): Could not reset m_strLine" << endl;
         OnHelp(false, true);
-        m_strLine = str_Mem;
-    }
-    else
-    {
-        assert(false);
-        GetStream(ERROR_STREAM) << "No current menu!" << endl;
+        if (! m_strLine.Set(str_Mem))
+            GetTraces().Trace(INTERNAL_ERROR) << "Shell::DisplayHelp(): Could not reset str_Mem in m_strLine" << endl;
     }
 }
 
@@ -474,17 +491,28 @@ void Shell::PrintWorkingMenu(void)
     {
         GetStream(OUTPUT_STREAM) << " ";
     }
-    for (i=0; i<m_vpcliMenus.size(); i++)
+    for (   tk::Queue<const Menu*>::Iterator it = m_qMenus.GetIterator();
+            m_qMenus.IsValid(it);
+            m_qMenus.MoveNext(it))
     {
-        GetStream(OUTPUT_STREAM) << "/" << m_vpcliMenus[i]->GetKeyword();
+        if (const Menu* const pcli_Menu = m_qMenus.GetAt(it))
+        {
+            GetStream(OUTPUT_STREAM) << "/" << pcli_Menu->GetKeyword();
+        }
     }
     GetStream(OUTPUT_STREAM) << endl;
 }
 
 void Shell::EnterMenu(const Menu& CLI_Menu)
 {
-    m_vpcliMenus.push_back(& CLI_Menu);
-    PromptMenu();
+    if (! m_qMenus.AddTail(& CLI_Menu))
+    {
+        GetStream(ERROR_STREAM)
+            << "Too many menus. "
+            << "Cannot enter '" << CLI_Menu.GetName() << "'."
+            << endl;
+    }
+    //  PromptMenu();
 }
 
 void Shell::OnKey(const KEY E_KeyCode)
@@ -510,7 +538,7 @@ void Shell::OnKey(const KEY E_KeyCode)
     case LOGOUT:    OnExit(true);                   break;
     case TAB:       OnHelp(true, false);            break;
     case QUESTION:
-        if (m_strLine[m_strLine.size() - 1] == '\\')
+        if (m_strLine.GetChar(m_strLine.GetLength() - 1) == '\\')
             OnPrintableChar(E_KeyCode);
         else
             OnHelp(true, true);
@@ -583,31 +611,25 @@ void Shell::OnBackspace(void)
 
 void Shell::OnEscape(void)
 {
-    m_strLine.erase();
+    m_strLine.Set("");
     GetStream(ECHO_STREAM) << endl;
-    if (! m_vpcliMenus.empty())
+    if (! m_qMenus.IsEmpty())
     {
         PromptMenu();
-    }
-    else
-    {
-        assert(false);
-        GetStream(ERROR_STREAM) << "No current menu!" << endl;
     }
 }
 
 void Shell::OnExit(const bool B_Edition)
 {
-    if (m_strLine.empty())
+    if (m_strLine.IsEmpty())
     {
         if (B_Edition)
         {
             GetStream(ECHO_STREAM) << endl;
         }
-        if (! m_vpcliMenus.empty())
+        if (const Menu* const pcli_Menu = m_qMenus.RemoveTail())
         {
-            m_vpcliMenus.back()->OnExit();
-            m_vpcliMenus.pop_back();
+            pcli_Menu->OnExit();
         }
         if (B_Edition)
         {
@@ -622,14 +644,14 @@ void Shell::OnExit(const bool B_Edition)
 
 void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
 {
-    if (! m_vpcliMenus.empty())
+    if (! m_qMenus.IsEmpty())
     {
         // Parse the command line.
         CommandLine cli_CommandLine;
-        if (cli_CommandLine.Parse(*m_vpcliMenus.back(), m_strLine, false))
+        if (cli_CommandLine.Parse(*m_qMenus.GetTail(), m_strLine, false))
         {
             // Research matching elements.
-            ElementList cli_Exact, cli_Elements;
+            Element::List cli_Exact(MAX_WORDS_PER_NODE), cli_Elements(MAX_WORDS_PER_NODE);
             if (! cli_CommandLine.GetLastElement().FindElements(
                     cli_Exact, cli_Elements, cli_CommandLine.GetLastWord()))
             {
@@ -637,7 +659,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
             }
 
             // Initialize completion so far.
-            std::string str_CompletionSoFar;
+            tk::String str_CompletionSoFar(MAX_WORD_LENGTH);
             // Determine whether help should be printed, and completion activated.
             bool b_PrintHelpList = false;
 
@@ -649,49 +671,52 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
             else
             {
                 // Print help and do completion depending on the possible nodes.
-                if (cli_Elements.empty())
+                if (cli_Elements.IsEmpty())
                 {
                     // No matching element.
                     Beep();
                 }
-                else if ((cli_Elements.size() == 1)
-                        && (! dynamic_cast<const Endl*>(cli_Elements.front()))
-                        && (! dynamic_cast<const Param*>(cli_Elements.front())))
+                else if ((cli_Elements.GetCount() == 1)
+                        && (! dynamic_cast<const Endl*>(cli_Elements.GetHead()))
+                        && (! dynamic_cast<const Param*>(cli_Elements.GetHead())))
                 {
                     // Straight forward completion.
                     Backspace(cli_CommandLine.GetNumBackspacesForCompletion());
-                    PrintLine(cli_Elements.front()->GetKeyword() + " ");
+                    PrintLine(cli_Elements.GetHead()->GetKeyword());
+                    PrintLine(" ");
                 }
                 else
                 {
                     // Look for completion so far.
                     bool b_InitCompletionSoFar = true;
-                    for (   ElementList::const_iterator it = cli_Elements.begin();
-                            it != cli_Elements.end();
-                            it ++)
+                    for (   Element::List::Iterator it = cli_Elements.GetIterator();
+                            cli_Elements.IsValid(it);
+                            cli_Elements.MoveNext(it))
                     {
-                        if (dynamic_cast<const Param*>(*it)
-                            || dynamic_cast<const Endl*>(*it))
+                        if (dynamic_cast<const Param*>(cli_Elements.GetAt(it))
+                            || dynamic_cast<const Endl*>(cli_Elements.GetAt(it)))
                         {
                             // No completion for parameters and end of lines.
-                            str_CompletionSoFar.erase();
+                            str_CompletionSoFar.Set("");
                             break;
                         }
-                        else if (const Element* const pcli_Element = dynamic_cast<const Element*>(*it))
+                        else if (const Element* const pcli_Element = dynamic_cast<const Element*>(cli_Elements.GetAt(it)))
                         {
                             if (b_InitCompletionSoFar)
                             {
                                 // First initialization of str_CompletionSoFar.
-                                str_CompletionSoFar = pcli_Element->GetKeyword();
+                                if (! str_CompletionSoFar.Set(pcli_Element->GetKeyword()))
+                                    GetTraces().Trace(INTERNAL_ERROR) << "Shell::OnHelp(): Could not store completion so far" << endl;
                                 b_InitCompletionSoFar = false;
                             }
                             else
                             {
                                 // Remove last character of str_CompletionSoFar till it matches the current keyword.
-                                while ( (! str_CompletionSoFar.empty())
-                                        && (pcli_Element->GetKeyword().compare(0, str_CompletionSoFar.size(), str_CompletionSoFar) != 0))
+                                while ( (! str_CompletionSoFar.IsEmpty())
+                                        && (pcli_Element->GetKeyword().SubString(0, str_CompletionSoFar.GetLength()) != str_CompletionSoFar))
                                 {
-                                    str_CompletionSoFar = str_CompletionSoFar.substr(0, str_CompletionSoFar.size() - 1);
+                                    if (! str_CompletionSoFar.Set(str_CompletionSoFar.SubString(0, str_CompletionSoFar.GetLength() - 1)))
+                                        GetTraces().Trace(INTERNAL_ERROR) << "Shell::OnHelp(): Could not store completion so far" << endl;
                                 }
                             }
                         }
@@ -711,14 +736,16 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
             {
                 // First of all, sort help elements on keywords.
                 class _ { public:
-                    static const bool cmp(
-                            const Element* const PCLI_1,
-                            const Element* const PCLI_2)
+                    static const int cmp(const Element* const& PCLI_1, const Element* const& PCLI_2)
                     {
-                        return (PCLI_1->GetKeyword() < PCLI_2->GetKeyword());
+                        if (PCLI_1->GetKeyword() < PCLI_2->GetKeyword())
+                            return 1;
+                        if (PCLI_1->GetKeyword() > PCLI_2->GetKeyword())
+                            return -1;
+                        return 0;
                     }
                 };
-                std::sort(cli_Elements.begin(), cli_Elements.end(), _::cmp);
+                cli_Elements.Sort(_::cmp);
 
                 if (B_Edition)
                 {
@@ -726,12 +753,12 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
                 }
 
                 // For each matching keyword...
-                for (   ElementList::const_iterator it = cli_Elements.begin();
-                        it != cli_Elements.end();
-                        it ++)
+                for (   Element::List::Iterator it = cli_Elements.GetIterator();
+                        cli_Elements.IsValid(it);
+                        cli_Elements.MoveNext(it))
                 {
                     // Print the corresponding help.
-                    PrintHelp(**it);
+                    PrintHelp(*cli_Elements.GetAt(it));
                 }
 
                 if (B_Edition)
@@ -740,7 +767,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
                 }
             }
             // Completion so far.
-            else if ((! B_HelpOnly) && (! str_CompletionSoFar.empty()))
+            else if ((! B_HelpOnly) && (! str_CompletionSoFar.IsEmpty()))
             {
                 Backspace(cli_CommandLine.GetNumBackspacesForCompletion());
                 PrintLine(str_CompletionSoFar);
@@ -752,17 +779,12 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
             {
                 GetStream(ECHO_STREAM) << endl;
             }
-            GetStream(ERROR_STREAM) << cli_CommandLine.GetLastError() << endl;
+            GetStream(ERROR_STREAM) << cli_CommandLine.GetLastError().GetString(GetLang()) << endl;
             if (B_Edition)
             {
                 PromptMenu();
             }
         }
-    }
-    else
-    {
-        assert(false);
-        GetStream(ERROR_STREAM) << "No current menu!" << endl;
     }
 }
 
@@ -770,18 +792,24 @@ void Shell::OnExecute(void)
 {
     GetStream(ECHO_STREAM) << endl;
 
-    if (! m_vpcliMenus.empty())
+    if (! m_qMenus.IsEmpty())
     {
         // First of all, store the line in history stack.
         PushHistory(m_strLine);
 
+        // Append "\n" to the line and parse it.
+        tk::String str_Line(MAX_CMD_LINE_LENGTH + 1);
         CommandLine cli_CommandLine;
-        if (cli_CommandLine.Parse(*m_vpcliMenus.back(), m_strLine + "\n", true))
+        if (str_Line.Set(m_strLine) && str_Line.Append("\n")
+            && cli_CommandLine.Parse(*m_qMenus.GetTail(), str_Line, true))
         {
             bool b_Executed = false;
-            if (cli_CommandLine.GetElementCount() > 1)
+            // No need to execute unless there are at least one word and one endl elements in the command line.
+            CommandLineIterator it(cli_CommandLine);
+            if (it.StepIt() && it.StepIt())
             {
-                if (const Menu* const pcli_Menu = m_vpcliMenus.back())
+                // Command line execution.
+                if (const Menu* const pcli_Menu = m_qMenus.GetTail())
                 {
                     if (pcli_Menu->ExecuteReserved(cli_CommandLine))
                         b_Executed = true;
@@ -789,33 +817,33 @@ void Shell::OnExecute(void)
                         b_Executed = true;
                 }
 
+                // Post-execution.
                 if (b_Executed)
                 {
-                    if (const Endl* pendl = dynamic_cast<const Endl*>(& cli_CommandLine.GetLastElement()))
+                    // Entering a sub-menu.
+                    if (const Endl* pcli_Endl = dynamic_cast<const Endl*>(& cli_CommandLine.GetLastElement()))
                     {
-                        if (pendl->GetMenuRef() != NULL)
+                        if (pcli_Endl->GetMenuRef() != NULL)
                         {
-                            m_vpcliMenus.push_back(& pendl->GetMenuRef()->GetMenu());
+                            EnterMenu(pcli_Endl->GetMenuRef()->GetMenu());
                         }
                     }
                 }
                 else
                 {
-                    GetStream(ERROR_STREAM) << "Execution error" << endl;
+                    const ResourceString cli_ExecutionError = ResourceString()
+                        .SetString(ResourceString::LANG_EN, "Execution error")
+                        .SetString(ResourceString::LANG_FR, "Erreur d'exécution");
+                    GetStream(ERROR_STREAM) << cli_ExecutionError.GetString(GetLang()) << endl;
                 }
             }
         }
         else
         {
-            GetStream(ERROR_STREAM) << cli_CommandLine.GetLastError() << endl;
+            GetStream(ERROR_STREAM) << cli_CommandLine.GetLastError().GetString(GetLang()) << endl;
         }
-        m_strLine.erase();
+        m_strLine.Set("");
         PromptMenu();
-    }
-    else
-    {
-        assert(false);
-        GetStream(ERROR_STREAM) << "No current menu!" << endl;
     }
 }
 
@@ -823,19 +851,19 @@ void Shell::OnHistory(const int I_Translation)
 {
     // First check the translation remains in bounds of the history stack.
     if ((m_iHistoryIndex + I_Translation >= 0)
-        && (m_iHistoryIndex + I_Translation < (signed) m_vstrHistory.size()))
+        && (m_iHistoryIndex + I_Translation < (signed) m_qHistory.GetCount()))
     {
         // If this is the current line, save it into the history stack.
         if (m_iHistoryIndex == 0)
         {
-            m_vstrHistory[0] = m_strLine;
+            m_qHistory.GetHead().Set(m_strLine);
         }
         // Clean up the current line.
-        Backspace(m_strLine.size());
+        Backspace(m_strLine.GetLength());
         // Translate the history index.
         m_iHistoryIndex += I_Translation;
         // Print out this line.
-        PrintLine(m_vstrHistory[m_iHistoryIndex]);
+        PrintLine(GetHistoryLine(m_iHistoryIndex));
     }
     else
     {
@@ -844,27 +872,39 @@ void Shell::OnHistory(const int I_Translation)
     }
 }
 
-void Shell::PrintLine(const std::string& STR_Append)
+void Shell::PrintLine(const char* const STR_Append)
 {
-    m_strLine += STR_Append;
-    GetStream(ECHO_STREAM) << STR_Append;
+    if (m_strLine.Append(STR_Append))
+    {
+        GetStream(ECHO_STREAM) << STR_Append;
+    }
+    else
+    {
+        const ResourceString cli_LineError = ResourceString()
+            .SetString(ResourceString::LANG_EN, "Line too long")
+            .SetString(ResourceString::LANG_FR, "Ligne trop longue");
+        GetStream(ERROR_STREAM) << endl << cli_LineError.GetString(GetLang()) << endl;
+        PromptMenu();
+    }
 }
 
 void Shell::PrintLine(const char C_Append)
 {
-    PrintLine(std::string() += C_Append);
+    char arc_Buffer[] = { C_Append, '\0' };
+    PrintLine(arc_Buffer);
 }
 
 void Shell::Backspace(const int I_BackspaceCount)
 {
     unsigned int i_BackspaceCount = I_BackspaceCount;
-    if (i_BackspaceCount > m_strLine.size())
+    if (i_BackspaceCount > m_strLine.GetLength())
     {
         Beep();
-        i_BackspaceCount = m_strLine.size();
+        i_BackspaceCount = m_strLine.GetLength();
     }
 
-    m_strLine = m_strLine.substr(0, m_strLine.size() - i_BackspaceCount);
+    if (! m_strLine.Set(m_strLine.SubString(0, m_strLine.GetLength() - i_BackspaceCount)))
+        GetTraces().Trace(INTERNAL_ERROR) << "Shell::Backspace(): Could not reduce m_strLine" << endl;
     for (unsigned int i=0; i<i_BackspaceCount; i++)
     {
         GetStream(ECHO_STREAM) << "\b" << " " << "\b";
@@ -874,23 +914,29 @@ void Shell::Backspace(const int I_BackspaceCount)
 void Shell::PrintHelp(const Element& CLI_Element)
 {
     // Retrieve basic information.
-    std::string str_Keyword = CLI_Element.GetKeyword();
-    std::string str_Help = CLI_Element.GetHelp().GetHelp(GetLang());
+    tk::String str_Keyword = CLI_Element.GetKeyword();
+    tk::String str_Help = CLI_Element.GetHelp().GetString(GetLang());
 
     // Optional corrections.
     if (dynamic_cast<const Endl*>(& CLI_Element))
     {
-        str_Keyword = "<cr>";
+        str_Keyword.Set("<cr>");
     }
     else if (const Param* const pcli_Param = dynamic_cast<const Param*>(& CLI_Element))
     {
         if (const Param* const pcli_Clone = pcli_Param->Clone())
         {
             pcli_Clone->SetstrValue("");
-            str_Keyword = pcli_Clone->GetKeyword();
-            if (! pcli_Param->GetstrValue().empty())
+            if (! str_Keyword.Set(pcli_Clone->GetKeyword()))
+                GetTraces().Trace(INTERNAL_ERROR) << "Shell::PrintHelp(): Could not review str_Keyword for the parameter" << endl;
+            if (! pcli_Param->GetstrValue().IsEmpty())
             {
-                str_Keyword += ("(" + pcli_Param->GetstrValue() + ")");
+                if (! str_Keyword.Append("("))
+                    GetTraces().Trace(INTERNAL_ERROR) << "Shell::PrintHelp(): Could not review str_Keyword for the parameter" << endl;
+                if (! str_Keyword.Append(pcli_Param->GetstrValue()))
+                    GetTraces().Trace(INTERNAL_ERROR) << "Shell::PrintHelp(): Could not review str_Keyword for the parameter" << endl;
+                if (! str_Keyword.Append(")"))
+                    GetTraces().Trace(INTERNAL_ERROR) << "Shell::PrintHelp(): Could not review str_Keyword for the parameter" << endl;
             }
             delete pcli_Clone;
         }
@@ -903,7 +949,7 @@ void Shell::PrintHelp(const Element& CLI_Element)
         GetStream(OUTPUT_STREAM) << " ";
     }
     GetStream(OUTPUT_STREAM) << str_Keyword << " ";
-    for (i = str_Keyword.size(); i < HELP_OFFSET; i++)
+    for (i = str_Keyword.GetLength(); i < HELP_OFFSET; i++)
     {
         GetStream(OUTPUT_STREAM) << " ";
     }
@@ -919,19 +965,40 @@ void Shell::Beep(void)
     }
 }
 
-void Shell::PushHistory(const std::string& STR_Line)
+void Shell::PushHistory(const char* const STR_Line)
 {
     if (// Check the line is not empty.
-        (! STR_Line.empty())
+        (STR_Line != NULL) && (strlen(STR_Line) > 0)
         // Check it is not the same as the previous one.
-        && ((m_vstrHistory.size() < 2) || (STR_Line != m_vstrHistory[1])))
+        && (STR_Line != GetHistoryLine(1)))
     {
-        while (m_vstrHistory.size() > HISTORY_STACK_SIZE)
+        // Limit to HISTORY_STACK_SIZE.
+        while (m_qHistory.GetCount() > HISTORY_STACK_SIZE)
         {
-            m_vstrHistory.pop_back();
+            m_qHistory.RemoveTail();
         }
-        m_vstrHistory[0] = STR_Line;
-        m_vstrHistory.insert(m_vstrHistory.begin(), "");
+        // Ensure there is at least one element.
+        if (m_qHistory.IsEmpty())
+        {
+            m_qHistory.AddTail(tk::String(MAX_CMD_LINE_LENGTH));
+        }
+        m_qHistory.GetHead().Set(STR_Line);
+        m_qHistory.AddHead(tk::String(MAX_CMD_LINE_LENGTH, ""));
     }
     m_iHistoryIndex = 0;
+}
+
+const tk::String Shell::GetHistoryLine(const unsigned int UI_BackwardIndex) const
+{
+    tk::Queue<tk::String>::Iterator it = m_qHistory.GetIterator();
+    for (unsigned int ui=UI_BackwardIndex; ui>0; ui--)
+    {
+        if ((! m_qHistory.MoveNext(it))
+            || (! m_qHistory.IsValid(it)))
+        {
+            return tk::String(MAX_CMD_LINE_LENGTH);
+        }
+    }
+
+    return m_qHistory.GetAt(it);
 }

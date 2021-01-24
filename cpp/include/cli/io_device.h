@@ -30,16 +30,18 @@
 #ifndef _CLI_IO_DEVICE_H_
 #define _CLI_IO_DEVICE_H_
 
-#include <string>
-
+#include <cli/namespace.h>
+#include <cli/object.h>
 #include <cli/debug.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief End of line for input/output devices.
     //! @see endl
-    class IOEndl {
+    class IOEndl : public Object
+    {
     public:
         //! @brief Default constructor.
         IOEndl(void) {}
@@ -47,6 +49,8 @@ namespace cli {
     private:
         //! @brief No copy constructor.
         IOEndl(const IOEndl&);
+        //! @brief No assignment operator.
+        IOEndl& operator=(const IOEndl&);
     };
 
     //! The common IOEndl object.
@@ -59,7 +63,7 @@ namespace cli {
 
     //! @brief Generic output device.
     //! @see endl
-    class OutputDevice
+    class OutputDevice : public Object
     {
     private:
         //! @brief No default constructor.
@@ -70,13 +74,17 @@ namespace cli {
     protected:
         //! @brief Constructor.
         OutputDevice(
-            const std::string& STR_DbgName, //!< Debug name. Useful for traces only.
-            const std::string& STR_Endl,    //!< Carriage return pattern.
+            const char* const STR_DbgName,  //!< Debug name. Useful for traces only.
+            const char* const STR_Endl,     //!< Carriage return pattern.
             const bool B_AutoDelete         //!< Auto-deletion flag.
             );
 
         //! @brief Destructor.
         virtual ~OutputDevice(void);
+
+    private:
+        //! @brief No assignment operator.
+        OutputDevice& operator=(const OutputDevice&);
 
     public:
         //! @brief Ensures instance validity.
@@ -136,7 +144,7 @@ namespace cli {
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            const std::string& STR_Out  //!< Output string object.
+            const tk::String& STR_Out  //!< Output string object.
             ) const;
 
         //! @brief Output operator.
@@ -230,7 +238,7 @@ namespace cli {
     public:
         //! @brief Output handler.
         virtual void PutString(
-            const std::string& STR_Out  //!< Output string.
+            const char* const STR_Out   //!< Output string.
             ) const = 0;
 
         //! @brief Beep handler.
@@ -238,10 +246,10 @@ namespace cli {
 
     private:
         //! Debug name. Useful for traces only.
-        const std::string m_strDbgName;
+        const tk::String m_strDbgName;
 
         //! Carriage return pattern.
-        const std::string m_strEndl;
+        const tk::String m_strEndl;
 
         //! Instance lock count.
         int m_iInstanceLock;
@@ -318,8 +326,8 @@ namespace cli {
         KEY_RIGHT = 1004,          //!< Right arrow key.
         PAGE_UP = 1005,            //!< Page up arrow key.
         PAGE_DOWN = 1006,          //!< Page down arrow key.
-        //KEY_BEGIN = 1007,          //!< Begin key.
-        //KEY_END = 1008,            //!< End key.
+        KEY_BEGIN = 1007,          //!< Begin key.
+        KEY_END = 1008,            //!< End key.
         //INSERT = 1009,             //!< Insert key.
 
         //COPY,               //!< Copy.
@@ -344,13 +352,17 @@ namespace cli {
     public:
         //! @brief Constructor.
         IODevice(
-            const std::string& STR_DbgName, //!< Debug name.
-            const std::string& STR_Endl,    //!< Carriage return pattern.
+            const char* const STR_DbgName,  //!< Debug name.
+            const char* const STR_Endl,     //!< Carriage return pattern.
             const bool B_AutoDelete         //!< Auto-deletion flag.
             );
 
         //! @brief Destructor.
         virtual ~IODevice(void);
+
+    private:
+        //! @brief No assignment operator.
+        IODevice& operator=(const IODevice&);
 
     public:
         //! @brief Input key capture handler.
@@ -368,7 +380,7 @@ namespace cli {
         const KEY GetKey(const int I_Char) const;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_IO_DEVICE_H_
 

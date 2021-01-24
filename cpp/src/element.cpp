@@ -23,17 +23,21 @@
 */
 
 
-#include <assert.h>
+#include "cli/pch.h"
+
+#include <stdlib.h>
 
 #include "cli/cli.h"
 #include "cli/shell.h"
 #include "cli/element.h"
+#include "cli/assert.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-Element::Element(const std::string& STR_Keyword, const Help& CLI_Help)
-  : m_strKeyword(STR_Keyword),
+Element::Element(const char* const STR_Keyword, const Help& CLI_Help)
+  : m_strKeyword(MAX_WORD_LENGTH, STR_Keyword),
     m_cliHelp(CLI_Help),
     m_pcliCli(NULL)
 {
@@ -43,7 +47,7 @@ Element::~Element(void)
 {
 }
 
-const std::string Element::GetKeyword(void) const
+const tk::String Element::GetKeyword(void) const
 {
     return m_strKeyword;
 }
@@ -54,13 +58,13 @@ const Help& Element::GetHelp(void) const
 }
 
 const bool Element::FindElements(
-        ElementList& CLI_ExactList,
-        ElementList& CLI_NearList,
+        Element::List& CLI_ExactList,
+        Element::List& CLI_NearList,
         const char* const STR_Keyword
         ) const
 {
     // Should be overridden.
-    assert(false);
+    CLI_ASSERT(false);
     return false;
 }
 
@@ -71,13 +75,13 @@ void Element::SetCli(Cli& CLI_Cli)
 
 Cli& Element::GetCli(void)
 {
-    assert(m_pcliCli != NULL);
+    CLI_ASSERT(m_pcliCli != NULL);
     return *m_pcliCli;
 }
 
 const Cli& Element::GetCli(void) const
 {
-    assert(m_pcliCli != NULL);
+    CLI_ASSERT(m_pcliCli != NULL);
     return *m_pcliCli;
 }
 

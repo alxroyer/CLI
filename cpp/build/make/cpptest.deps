@@ -1,9 +1,12 @@
-$(INT_DIR)/cli_test.o: ../../tests/cpp/cli_test.cpp \
-  ../../include/cli/cli.h ../../include/cli/menu.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h ../../include/cli/keyword.h \
-  ../../include/cli/param_int.h ../../include/cli/param.h \
-  ../../include/cli/endl.h ../../include/cli/syntax_tag.h \
-  ../../include/cli/shell.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h ../../include/cli/console.h \
-  ../../include/cli/telnet.h
+$(INT_DIR)/cli_test.o: ../../../cpp/tests/cpp/cli_test.cpp \
+  ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/keyword.h ../../../cpp/include/cli/param_int.h \
+  ../../../cpp/include/cli/param.h ../../../cpp/include/cli/endl.h \
+  ../../../cpp/include/cli/syntax_tag.h ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/console.h ../../../cpp/include/cli/telnet.h

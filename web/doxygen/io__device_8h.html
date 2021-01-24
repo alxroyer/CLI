@@ -19,94 +19,169 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_8f01d9b4589024334dc9ddb77b167b80.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_8a599c2cb6f1d7bd0e0805e56078a760.html">cli</a></div>
-<h1>io_device.h File Reference</h1>OutputDevice, IODevice and IOEndl classes defintion. <a href="#_details">More...</a>
+<a class="el" href="dir_1478fa2896c71a852f24f40b9ae7a523.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ee510e0e819a9187a5b85fd01d9d2bcf.html">cli</a></div>
+<h1>io_device.h File Reference</h1><a class="el" href="classOutputDevice.html">OutputDevice</a>, <a class="el" href="classIODevice.html">IODevice</a> and <a class="el" href="classIOEndl.html">IOEndl</a> classes defintion. <a href="#_details">More...</a>
 <p>
-<code>#include &lt;string&gt;</code><br>
+<code>#include &lt;<a class="el" href="namespace_8h-source.html">cli/namespace.h</a>&gt;</code><br>
+<code>#include &lt;<a class="el" href="object_8h-source.html">cli/object.h</a>&gt;</code><br>
 <code>#include &lt;<a class="el" href="debug_8h-source.html">cli/debug.h</a>&gt;</code><br>
+<code>#include &lt;<a class="el" href="tk_8h-source.html">cli/tk.h</a>&gt;</code><br>
 
 <p>
 Include dependency graph for io_device.h:<p><center><img src="io__device_8h__incl.png" border="0" usemap="#io_device.h_map" alt=""></center>
 <map name="io_device.h_map">
-<area href="debug_8h.html" shape="rect" coords="148,58,233,85" alt="">
+<area href="namespace_8h.html" shape="rect" coords="657,134,774,161" alt="">
+<area href="object_8h.html" shape="rect" coords="522,109,608,135" alt="">
+<area href="debug_8h.html" shape="rect" coords="148,134,233,161" alt="">
+<area href="tk_8h.html" shape="rect" coords="284,210,342,237" alt="">
+<area href="tk__stl_8h.html" shape="rect" coords="393,210,473,237" alt="">
 </map>
 
 <p>
 This graph shows which files directly or indirectly include this file:<p><center><img src="io__device_8h__dep__incl.png" border="0" usemap="#io_device.hdep_map" alt=""></center>
 <map name="io_device.hdep_map">
-<area href="common_8h.html" shape="rect" coords="362,87,448,114" alt="">
-<area href="console_8h.html" shape="rect" coords="176,594,253,621" alt="">
-<area href="file__device_8h.html" shape="rect" coords="166,645,262,671" alt="">
-<area href="io__mux_8h.html" shape="rect" coords="368,138,442,165" alt="">
-<area href="shell_8cpp-source.html" shape="rect" coords="536,138,610,165" alt="">
-<area href="shell_8h.html" shape="rect" coords="184,341,245,367" alt="">
-<area href="menu_8cpp-source.html" shape="rect" coords="365,442,445,469" alt="">
-<area href="traces__menu_8cpp-source.html" shape="rect" coords="342,543,468,570" alt="">
-<area href="single__command_8h.html" shape="rect" coords="148,695,281,722" alt="">
-<area href="telnet_8h.html" shape="rect" coords="181,493,248,519" alt="">
-<area href="command__line_8cpp-source.html" shape="rect" coords="148,746,281,773" alt="">
-<area href="consistency_8cpp-source.html" shape="rect" coords="156,797,273,823" alt="">
-<area href="io__device_8cpp-source.html" shape="rect" coords="162,847,266,874" alt="">
-<area href="traces_8cpp-source.html" shape="rect" coords="172,898,257,925" alt="">
-<area href="console_8cpp-source.html" shape="rect" coords="358,594,452,621" alt="">
-<area href="file__device_8cpp-source.html" shape="rect" coords="349,645,461,671" alt="">
-<area href="io__mux_8cpp-source.html" shape="rect" coords="528,290,618,317" alt="">
-<area href="cli_8cpp-source.html" shape="rect" coords="376,189,434,215" alt="">
-<area href="config__menu_8cpp-source.html" shape="rect" coords="344,239,466,266" alt="">
-<area href="element_8cpp-source.html" shape="rect" coords="358,290,452,317" alt="">
-<area href="telnet_8cpp-source.html" shape="rect" coords="365,493,445,519" alt="">
-<area href="single__command_8cpp-source.html" shape="rect" coords="332,695,478,722" alt="">
+<area href="common_8h.html" shape="rect" coords="357,58,442,85" alt="">
+<area href="console_8h.html" shape="rect" coords="178,312,256,338" alt="">
+<area href="file__device_8h.html" shape="rect" coords="169,362,265,389" alt="">
+<area href="io__mux_8h.html" shape="rect" coords="362,109,437,136" alt="">
+<area href="shell_8cpp-source.html" shape="rect" coords="512,109,586,136" alt="">
+<area href="shell_8h.html" shape="rect" coords="186,160,248,186" alt="">
+<area href="menu_8cpp-source.html" shape="rect" coords="360,210,440,237" alt="">
+<area href="traces__menu_8cpp-source.html" shape="rect" coords="337,261,462,288" alt="">
+<area href="single__command_8h.html" shape="rect" coords="150,413,284,440" alt="">
+<area href="telnet_8h.html" shape="rect" coords="184,464,250,490" alt="">
+<area href="command__line_8cpp-source.html" shape="rect" coords="150,514,284,541" alt="">
+<area href="consistency_8cpp-source.html" shape="rect" coords="158,565,276,592" alt="">
+<area href="io__device_8cpp-source.html" shape="rect" coords="165,616,269,642" alt="">
+<area href="param_8cpp-source.html" shape="rect" coords="174,666,260,693" alt="">
+<area href="param__string_8cpp-source.html" shape="rect" coords="154,717,280,744" alt="">
+<area href="resource__string_8cpp-source.html" shape="rect" coords="148,768,286,794" alt="">
+<area href="syntax__node_8cpp-source.html" shape="rect" coords="156,818,278,845" alt="">
+<area href="syntax__tag_8cpp-source.html" shape="rect" coords="161,869,273,896" alt="">
+<area href="traces_8cpp-source.html" shape="rect" coords="174,920,260,946" alt="">
 </map>
 
 <p>
 <a href="io__device_8h-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecli.html">cli</a></td></tr>
-
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcli_1_1IOEndl.html">cli::IOEndl</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIOEndl.html">IOEndl</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">End of line for input/output devices.  <a href="classcli_1_1IOEndl.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcli_1_1OutputDevice.html">cli::OutputDevice</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">End of line for input/output devices.  <a href="classIOEndl.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOutputDevice.html">OutputDevice</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generic output device.  <a href="classcli_1_1OutputDevice.html#_details">More...</a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcli_1_1IODevice.html">cli::IODevice</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generic output device.  <a href="classOutputDevice.html#_details">More...</a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIODevice.html">IODevice</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generic input/output device.  <a href="classcli_1_1IODevice.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Generic input/output device.  <a href="classIODevice.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Enumerations</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff">cli::KEY</a> { <br>
-&nbsp;&nbsp;<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff190ee79e864e3dca3f3d84b7bcf094db">cli::NULL_KEY</a> =  '\0', 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff23a1d1c13df3a29e86d6340babbefe26">cli::BREAK</a> =  3, 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effccf4098bb522978292e706bce46f91e2">cli::LOGOUT</a> =  4, 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff98bdeafc8dc981b055c7fb152e6eac01">cli::ENTER</a> =  13, 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">KEY</a> { <br>
+&nbsp;&nbsp;<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6e42682039e1a584113718465a202d0c0">NULL_KEY</a> =  '\0', 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d69524d094809858b9e4f778763913568a">BREAK</a> =  3, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d686d6ca369e69a3a0f0c9bd063dd39a70">LOGOUT</a> =  4, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6951ab68bb8f7daafb78951107080904e">ENTER</a> =  13, 
 <br>
-&nbsp;&nbsp;<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effdea78238cf4050cd6dc27b059e9880aa">cli::ESCAPE</a> =  27, 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff0734a54b0eb197345399619b243280a7">cli::SPACE</a> =  32, 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effa87f933c4705369c5f734de07b074e8c">cli::BACKSPACE</a> =  '\b'
-, <a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff6cfeb5100c882910d08af7e538cab409">cli::KEY_UP</a> =  1001, 
+&nbsp;&nbsp;<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d60a311695a4f6c56869245418bebeb33d">ESCAPE</a> =  27, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6c08dae7edcb5c5bb959fee5971fbad95">SPACE</a> =  32, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6d2534cebcf6f430484b7c931dd657ddc">BACKSPACE</a> =  '\b'
+, <a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d60848a442d907968b211b97bc2bd88acd">KEY_UP</a> =  1001, 
 <br>
-&nbsp;&nbsp;<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff310e369d3ee0f6e2d1a5deeba4200795">cli::KEY_DOWN</a> =  1002, 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effbdaee303676db32f13cb6ef9e81c48ee">cli::KEY_LEFT</a> =  1003, 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83effc84a1d65c17a94c9a35fbeadbd903dbd">cli::KEY_RIGHT</a> =  1004, 
-<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff792851baf3b9f23cebb727e46dafea9d">cli::PAGE_UP</a> =  1005, 
+&nbsp;&nbsp;<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6a9cdac7967bf7d88fdb761138a2a3416">KEY_DOWN</a> =  1002, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6612120b69c7dfd46086db7aaebdbcf65">KEY_LEFT</a> =  1003, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d66504370d9c6391e1a9da6a1a529b089d">KEY_RIGHT</a> =  1004, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d60442824c041b9618cd7c512205e7e6dc">PAGE_UP</a> =  1005, 
 <br>
-&nbsp;&nbsp;<a class="el" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff363b95a9e3afb7cc4f7789f02bd488de">cli::PAGE_DOWN</a> =  1006
+&nbsp;&nbsp;<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6714c5d27586a8bcbab274d9176da1539">PAGE_DOWN</a> =  1006, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6eed3bac3a74a2eaf9a84d1a9774b67c1">KEY_BEGIN</a> =  1007, 
+<a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6a8adb6fcb92dec58fb19410eacfdd403">KEY_END</a> =  1008
 <br>
  }</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Input characters.  <a href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Input characters.  <a href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Variables</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classcli_1_1IOEndl.html">IOEndl</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">cli::endl</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classIOEndl.html">IOEndl</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-OutputDevice, IODevice and IOEndl classes defintion. 
+<a class="el" href="classOutputDevice.html">OutputDevice</a>, <a class="el" href="classIODevice.html">IODevice</a> and <a class="el" href="classIOEndl.html">IOEndl</a> classes defintion. 
 <p>
 <dl class="author" compact><dt><b>Author:</b></dt><dd>Alexis Royer </dd></dl>
 
 <p>
-Definition in file <a class="el" href="io__device_8h-source.html">io_device.h</a>.<hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:12:49 2007 for CLI by&nbsp;
+Definition in file <a class="el" href="io__device_8h-source.html">io_device.h</a>.<hr><h2>Enumeration Type Documentation</h2>
+<a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6"></a><!-- doxytag: member="io_device.h::KEY" ref="6ae70ce7b1b294c469f11cbabb8f30d6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">KEY</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Input characters. 
+<p>
+<dl compact><dt><b>Enumerator: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6e42682039e1a584113718465a202d0c0"></a><!-- doxytag: member="NULL_KEY" ref="6ae70ce7b1b294c469f11cbabb8f30d6e42682039e1a584113718465a202d0c0" args="" -->NULL_KEY</em>&nbsp;</td><td>
+Null key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d69524d094809858b9e4f778763913568a"></a><!-- doxytag: member="BREAK" ref="6ae70ce7b1b294c469f11cbabb8f30d69524d094809858b9e4f778763913568a" args="" -->BREAK</em>&nbsp;</td><td>
+Break (Ctrl+C). </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d686d6ca369e69a3a0f0c9bd063dd39a70"></a><!-- doxytag: member="LOGOUT" ref="6ae70ce7b1b294c469f11cbabb8f30d686d6ca369e69a3a0f0c9bd063dd39a70" args="" -->LOGOUT</em>&nbsp;</td><td>
+Logout (Ctrl+D). </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6951ab68bb8f7daafb78951107080904e"></a><!-- doxytag: member="ENTER" ref="6ae70ce7b1b294c469f11cbabb8f30d6951ab68bb8f7daafb78951107080904e" args="" -->ENTER</em>&nbsp;</td><td>
+Enter. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d60a311695a4f6c56869245418bebeb33d"></a><!-- doxytag: member="ESCAPE" ref="6ae70ce7b1b294c469f11cbabb8f30d60a311695a4f6c56869245418bebeb33d" args="" -->ESCAPE</em>&nbsp;</td><td>
+Escape. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6c08dae7edcb5c5bb959fee5971fbad95"></a><!-- doxytag: member="SPACE" ref="6ae70ce7b1b294c469f11cbabb8f30d6c08dae7edcb5c5bb959fee5971fbad95" args="" -->SPACE</em>&nbsp;</td><td>
+Space. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6d2534cebcf6f430484b7c931dd657ddc"></a><!-- doxytag: member="BACKSPACE" ref="6ae70ce7b1b294c469f11cbabb8f30d6d2534cebcf6f430484b7c931dd657ddc" args="" -->BACKSPACE</em>&nbsp;</td><td>
+Backspace. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d60848a442d907968b211b97bc2bd88acd"></a><!-- doxytag: member="KEY_UP" ref="6ae70ce7b1b294c469f11cbabb8f30d60848a442d907968b211b97bc2bd88acd" args="" -->KEY_UP</em>&nbsp;</td><td>
+Up arrow key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6a9cdac7967bf7d88fdb761138a2a3416"></a><!-- doxytag: member="KEY_DOWN" ref="6ae70ce7b1b294c469f11cbabb8f30d6a9cdac7967bf7d88fdb761138a2a3416" args="" -->KEY_DOWN</em>&nbsp;</td><td>
+Down arrow key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6612120b69c7dfd46086db7aaebdbcf65"></a><!-- doxytag: member="KEY_LEFT" ref="6ae70ce7b1b294c469f11cbabb8f30d6612120b69c7dfd46086db7aaebdbcf65" args="" -->KEY_LEFT</em>&nbsp;</td><td>
+Left arrow key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d66504370d9c6391e1a9da6a1a529b089d"></a><!-- doxytag: member="KEY_RIGHT" ref="6ae70ce7b1b294c469f11cbabb8f30d66504370d9c6391e1a9da6a1a529b089d" args="" -->KEY_RIGHT</em>&nbsp;</td><td>
+Right arrow key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d60442824c041b9618cd7c512205e7e6dc"></a><!-- doxytag: member="PAGE_UP" ref="6ae70ce7b1b294c469f11cbabb8f30d60442824c041b9618cd7c512205e7e6dc" args="" -->PAGE_UP</em>&nbsp;</td><td>
+Page up arrow key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6714c5d27586a8bcbab274d9176da1539"></a><!-- doxytag: member="PAGE_DOWN" ref="6ae70ce7b1b294c469f11cbabb8f30d6714c5d27586a8bcbab274d9176da1539" args="" -->PAGE_DOWN</em>&nbsp;</td><td>
+Page down arrow key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6eed3bac3a74a2eaf9a84d1a9774b67c1"></a><!-- doxytag: member="KEY_BEGIN" ref="6ae70ce7b1b294c469f11cbabb8f30d6eed3bac3a74a2eaf9a84d1a9774b67c1" args="" -->KEY_BEGIN</em>&nbsp;</td><td>
+Begin key. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="6ae70ce7b1b294c469f11cbabb8f30d6a8adb6fcb92dec58fb19410eacfdd403"></a><!-- doxytag: member="KEY_END" ref="6ae70ce7b1b294c469f11cbabb8f30d6a8adb6fcb92dec58fb19410eacfdd403" args="" -->KEY_END</em>&nbsp;</td><td>
+End key. </td></tr>
+</table>
+</dl>
+
+<p>
+Definition at line <a class="el" href="io__device_8h-source.html#l00263">263</a> of file <a class="el" href="io__device_8h-source.html">io_device.h</a>.
+</div>
+</div><p>
+<hr><h2>Variable Documentation</h2>
+<a class="anchor" name="d6d7d55b8cc249130097ce4007a1162a"></a><!-- doxytag: member="io_device.h::endl" ref="d6d7d55b8cc249130097ce4007a1162a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classIOEndl.html">IOEndl</a> <a class="el" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+The common <a class="el" href="classIOEndl.html">IOEndl</a> object. endl can be passed to <a class="el" href="classOutputDevice.html">OutputDevice</a> to print carriage returns.<p>
+It is better to use endl rather to print "\n" or "\r\n" since this should depend on the <a class="el" href="classOutputDevice.html">OutputDevice</a>. 
+<p>
+Referenced by <a class="el" href="menu_8cpp-source.html#l00166">Menu::Execute()</a>, <a class="el" href="syntax__node_8cpp-source.html#l00085">SyntaxNode::FindElements()</a>, <a class="el" href="traces_8cpp-source.html#l00211">Traces::GetAllClasses()</a>, <a class="el" href="traces_8cpp-source.html#l00231">Traces::GetCurrentFilter()</a>, <a class="el" href="telnet_8cpp-source.html#l00209">TelnetConnection::GetKey()</a>, <a class="el" href="syntax__tag_8cpp-source.html#l00081">SyntaxRef::GetKeyword()</a>, <a class="el" href="syntax__tag_8cpp-source.html#l00051">SyntaxTag::GetKeyword()</a>, <a class="el" href="command__line_8cpp-source.html#l00073">CommandLine::Parse()</a>, <a class="el" href="telnet_8cpp-source.html#l00295">TelnetConnection::PutString()</a>, <a class="el" href="shell_8cpp-source.html#l00243">Shell::Run()</a>, <a class="el" href="traces_8cpp-source.html#l00271">Traces::SetAllFilter()</a>, <a class="el" href="resource__string_8cpp-source.html#l00068">ResourceString::SetString()</a>, <a class="el" href="param__string_8cpp-source.html#l00057">ParamString::SetstrValue()</a>, <a class="el" href="param_8cpp-source.html#l00087">Param::SetValue()</a>, <a class="el" href="shell_8cpp-source.html#l00057">Shell::Shell()</a>, <a class="el" href="telnet_8cpp-source.html#l00073">TelnetServer::StartServer()</a>, and <a class="el" href="shell_8cpp-source.html#l00084">Shell::~Shell()</a>.
+</div>
+</div><p>
+<hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:09:45 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

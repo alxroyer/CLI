@@ -1,0 +1,16 @@
+base referer
+rect $command__line_8h.html 418,261 538,288
+rect $help_8h.html 181,210 240,237
+rect $resource__string_8cpp-source.html 588,8 726,34
+rect $common_8h.html 614,160 700,186
+rect $cli_8cpp-source.html 628,210 686,237
+rect $command__line_8cpp-source.html 590,109 724,136
+rect $config__menu_8cpp-source.html 596,312 718,338
+rect $menu_8cpp-source.html 617,413 697,440
+rect $shell_8cpp-source.html 620,261 694,288
+rect $traces__menu_8cpp-source.html 594,362 720,389
+rect $element_8h.html 289,261 369,288
+rect $shell_8h.html 448,312 509,338
+rect $traces_8h.html 444,160 513,186
+rect $syntax__tag_8cpp-source.html 601,58 713,85
+rect $help_8cpp-source.html 293,58 365,85

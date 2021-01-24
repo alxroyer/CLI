@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_8f01d9b4589024334dc9ddb77b167b80.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_8a599c2cb6f1d7bd0e0805e56078a760.html">cli</a></div>
+<a class="el" href="dir_1478fa2896c71a852f24f40b9ae7a523.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ee510e0e819a9187a5b85fd01d9d2bcf.html">cli</a></div>
 <h1>io_mux.h</h1><a href="io__mux_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -50,76 +50,91 @@
 <a name="l00031"></a>00031 <span class="preprocessor">#ifndef _CLI_IO_MUX_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_IO_MUX_H_</span>
 <a name="l00033"></a>00033 <span class="preprocessor"></span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;deque&gt;</span>
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;<a class="code" href="io__device_8h.html">cli/io_device.h</a>&gt;</span>
-<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;<a class="code" href="shell_8h.html">cli/shell.h</a>&gt;</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;<a class="code" href="namespace_8h.html">cli/namespace.h</a>&gt;</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;<a class="code" href="io__device_8h.html">cli/io_device.h</a>&gt;</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;<a class="code" href="shell_8h.html">cli/shell.h</a>&gt;</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#include &lt;<a class="code" href="tk_8h.html">cli/tk.h</a>&gt;</span>
 <a name="l00038"></a>00038 
 <a name="l00039"></a>00039 
-<a name="l00040"></a>00040 <span class="keyword">namespace </span>cli {
+<a name="l00040"></a>00040 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
 <a name="l00041"></a>00041 
-<a name="l00050"></a><a class="code" href="classcli_1_1IOMux.html">00050</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1IOMux.html">IOMux</a> : <span class="keyword">public</span> <a class="code" href="classcli_1_1IODevice.html">IODevice</a>
+<a name="l00042"></a>00042     
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049 
+<a name="l00050"></a><a class="code" href="classIOMux.html">00050</a>     class <a class="code" href="classIOMux.html">IOMux</a> : public <a class="code" href="classIODevice.html">IODevice</a>
 <a name="l00051"></a>00051     {
-<a name="l00052"></a>00052     <span class="keyword">public</span>:
-<a name="l00054"></a>00054         <a class="code" href="classcli_1_1IOMux.html#f5fe7d3e50fbc33cc8c585d26d31f1cc">IOMux</a>(
-<a name="l00055"></a>00055             <span class="keyword">const</span> <span class="keywordtype">bool</span> AutoDelete               
-<a name="l00056"></a>00056             );
+<a name="l00052"></a>00052     <span class="keyword">private</span>:
+<a name="l00054"></a>00054         <a class="code" href="classIOMux.html">IOMux</a>(<span class="keywordtype">void</span>);
+<a name="l00056"></a>00056         <a class="code" href="classIOMux.html">IOMux</a>(<span class="keyword">const</span> <a class="code" href="classIOMux.html">IOMux</a>&amp;);
 <a name="l00057"></a>00057 
-<a name="l00059"></a>00059         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1IOMux.html#147345562679513fec0f188d6a6e7caa">~IOMux</a>(<span class="keywordtype">void</span>);
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061     <span class="keyword">protected</span>:
-<a name="l00062"></a>00062         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1IOMux.html#2de07303f8a679cadc7391214fe845ba">OpenDevice</a>(<span class="keywordtype">void</span>);
-<a name="l00063"></a>00063         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1IOMux.html#925205ef73c1829589ce756dee1b9af2">CloseDevice</a>(<span class="keywordtype">void</span>);
-<a name="l00064"></a>00064     <span class="keyword">public</span>:
-<a name="l00065"></a>00065         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1IOMux.html#53de8ed4800710c830a64c9deb67530d">PutString</a>(<span class="keyword">const</span> std::string&amp; STR_Out) <span class="keyword">const</span>;
-<a name="l00066"></a>00066         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1IOMux.html#4c006fc5130eda805e4366d1c859f298">Beep</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00067"></a>00067         <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff">KEY</a> <a class="code" href="classcli_1_1IOMux.html#c6ecef6ac300da8e4f151c5ab6663294">GetKey</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069     <span class="keyword">public</span>:
-<a name="l00071"></a>00071         <span class="keyword">const</span> <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classcli_1_1IOMux.html#0de5bf0975e58d0274a92a5a4d3db573">GetOutput</a>(
-<a name="l00072"></a>00072             <span class="keyword">const</span> <a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087">STREAM_TYPE</a> E_StreamType          
-<a name="l00073"></a>00073             ) <span class="keyword">const</span>;
-<a name="l00074"></a>00074 
-<a name="l00076"></a>00076         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1IOMux.html#e02bd01963f42aee6a768302f75cf678">SetOutput</a>(
-<a name="l00077"></a>00077             <span class="keyword">const</span> <a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087">STREAM_TYPE</a> E_StreamType,         
-<a name="l00078"></a>00078             <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>* <span class="keyword">const</span> PCLI_Welcome        
-<a name="l00079"></a>00079             );
-<a name="l00080"></a>00080 
-<a name="l00082"></a>00082         <span class="keyword">const</span> <a class="code" href="classcli_1_1IODevice.html">IODevice</a>* <span class="keyword">const</span> <a class="code" href="classcli_1_1IOMux.html#0eb40954bd04a766bc895cca1cb4258a">GetInput</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00083"></a>00083 
-<a name="l00085"></a>00085         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1IOMux.html#e16ff50f9fd19ab3a99e6495b940284c">AddInput</a>(
-<a name="l00086"></a>00086             <a class="code" href="classcli_1_1IODevice.html">IODevice</a>* <span class="keyword">const</span> PCLI_Input          
-<a name="l00087"></a>00087             );
-<a name="l00088"></a>00088 
-<a name="l00090"></a>00090         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1IOMux.html#3e1392508301c98ff145ce3478df79ea">NextInput</a>(<span class="keywordtype">void</span>);
-<a name="l00091"></a>00091 
-<a name="l00093"></a>00093         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1IOMux.html#1bc78627d3ef097773a634696d5f2174">ResetInputList</a>(<span class="keywordtype">void</span>);
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095     <span class="keyword">protected</span>:
-<a name="l00100"></a>00100         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1IODevice.html">IODevice</a>* <span class="keyword">const</span> <a class="code" href="classcli_1_1IOMux.html#1885d97288d460f692d632efc269405a">CreateInputDevice</a>(<span class="keywordtype">void</span>);
+<a name="l00058"></a>00058     <span class="keyword">public</span>:
+<a name="l00060"></a>00060         <a class="code" href="classIOMux.html">IOMux</a>(
+<a name="l00061"></a>00061             <span class="keyword">const</span> <span class="keywordtype">bool</span> AutoDelete               
+<a name="l00062"></a>00062             );
+<a name="l00063"></a>00063 
+<a name="l00065"></a>00065         <span class="keyword">virtual</span> ~<a class="code" href="classIOMux.html">IOMux</a>(<span class="keywordtype">void</span>);
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067     <span class="keyword">private</span>:
+<a name="l00069"></a>00069         <a class="code" href="classIOMux.html">IOMux</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classIOMux.html">IOMux</a>&amp;);
+<a name="l00070"></a>00070 
+<a name="l00071"></a>00071     <span class="keyword">protected</span>:
+<a name="l00072"></a>00072         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> OpenDevice(<span class="keywordtype">void</span>);
+<a name="l00073"></a>00073         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> CloseDevice(<span class="keywordtype">void</span>);
+<a name="l00074"></a>00074     <span class="keyword">public</span>:
+<a name="l00075"></a>00075         <span class="keyword">virtual</span> <span class="keywordtype">void</span> PutString(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Out) <span class="keyword">const</span>;
+<a name="l00076"></a>00076         <span class="keyword">virtual</span> <span class="keywordtype">void</span> Beep(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00077"></a>00077         <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">KEY</a> GetKey(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00078"></a>00078 
+<a name="l00079"></a>00079     <span class="keyword">public</span>:
+<a name="l00081"></a>00081         <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; GetOutput(
+<a name="l00082"></a>00082             <span class="keyword">const</span> <a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492">STREAM_TYPE</a> E_StreamType          
+<a name="l00083"></a>00083             ) <span class="keyword">const</span>;
+<a name="l00084"></a>00084 
+<a name="l00086"></a>00086         <span class="keyword">const</span> <span class="keywordtype">bool</span> SetOutput(
+<a name="l00087"></a>00087             <span class="keyword">const</span> <a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492">STREAM_TYPE</a> E_StreamType,         
+<a name="l00088"></a>00088             <a class="code" href="classOutputDevice.html">OutputDevice</a>* <span class="keyword">const</span> PCLI_Stream         
+<a name="l00089"></a>00089             );
+<a name="l00090"></a>00090 
+<a name="l00092"></a>00092         <span class="keyword">const</span> IODevice* <span class="keyword">const</span> GetInput(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00093"></a>00093 
+<a name="l00095"></a>00095         <span class="keyword">const</span> <span class="keywordtype">bool</span> AddInput(
+<a name="l00096"></a>00096             IODevice* <span class="keyword">const</span> PCLI_Input          
+<a name="l00097"></a>00097             );
+<a name="l00098"></a>00098 
+<a name="l00100"></a>00100         <span class="keyword">const</span> <span class="keywordtype">bool</span> NextInput(<span class="keywordtype">void</span>);
 <a name="l00101"></a>00101 
-<a name="l00102"></a>00102     <span class="keyword">private</span>:
-<a name="l00107"></a>00107         <span class="keyword">const</span> <span class="keywordtype">bool</span> CheckInput(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00108"></a>00108 
-<a name="l00113"></a>00113         <span class="keyword">const</span> <span class="keywordtype">bool</span> ReleaseFirstInputDevice(<span class="keywordtype">void</span>);
-<a name="l00114"></a>00114 
-<a name="l00119"></a>00119         <span class="keyword">const</span> <span class="keywordtype">bool</span> ReleaseOutputDevice(
-<a name="l00120"></a>00120             <span class="keyword">const</span> <a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087">STREAM_TYPE</a> E_StreamType, 
-<a name="l00121"></a>00121             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Delete             
-<a name="l00122"></a>00122             );
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124     <span class="keyword">private</span>:
-<a name="l00126"></a>00126         <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>* m_arpcliOutputs[<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb508787af255a61560f26044e4f38f7997043">STREAM_TYPES_COUNT</a>];
-<a name="l00127"></a>00127 
-<a name="l00129"></a>00129         std::deque&lt;IODevice*&gt; m_qInputs;
-<a name="l00130"></a>00130 
-<a name="l00132"></a>00132         <span class="keyword">mutable</span> <span class="keywordtype">bool</span> m_bIOLocked;
-<a name="l00133"></a>00133     };
-<a name="l00134"></a>00134 
-<a name="l00135"></a>00135 };
-<a name="l00136"></a>00136 
-<a name="l00137"></a>00137 <span class="preprocessor">#endif // _CLI_IO_MUX_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:30 2007 for CLI by&nbsp;
+<a name="l00103"></a>00103         <span class="keyword">const</span> <span class="keywordtype">bool</span> ResetInputList(<span class="keywordtype">void</span>);
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105     <span class="keyword">protected</span>:
+<a name="l00110"></a>00110         <span class="keyword">virtual</span> IODevice* <span class="keyword">const</span> CreateInputDevice(<span class="keywordtype">void</span>);
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112     <span class="keyword">private</span>:
+<a name="l00117"></a>00117         <span class="keyword">const</span> <span class="keywordtype">bool</span> CheckInput(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00118"></a>00118 
+<a name="l00123"></a>00123         <span class="keyword">const</span> <span class="keywordtype">bool</span> ReleaseFirstInputDevice(<span class="keywordtype">void</span>);
+<a name="l00124"></a>00124 
+<a name="l00129"></a>00129         <span class="keyword">const</span> <span class="keywordtype">bool</span> ReleaseOutputDevice(
+<a name="l00130"></a>00130             <span class="keyword">const</span> <a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492">STREAM_TYPE</a> E_StreamType, 
+<a name="l00131"></a>00131             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Delete             
+<a name="l00132"></a>00132             );
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134     <span class="keyword">private</span>:
+<a name="l00136"></a>00136         <a class="code" href="classOutputDevice.html">OutputDevice</a>* m_arpcliOutputs[<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c14928bb89aa87bc8aca527770d9191a809e8">STREAM_TYPES_COUNT</a>];
+<a name="l00137"></a>00137 
+<a name="l00139"></a>00139         tk::Queue&lt;IODevice*&gt; m_qInputs;
+<a name="l00140"></a>00140 
+<a name="l00142"></a>00142         <span class="keyword">mutable</span> <span class="keywordtype">bool</span> m_bIOLocked;
+<a name="l00143"></a>00143     };
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147 <span class="preprocessor">#endif // _CLI_IO_MUX_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:30 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -23,18 +23,21 @@
 */
 
 
+#include "cli/pch.h"
+
 #include "cli/single_command.h"
 #include "consistency.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 SingleCommand::SingleCommand(
-        const std::string& STR_Command,
+        const char* const STR_Command,
         OutputDevice& CLI_Output,
         const bool B_AutoDelete)
-  : IODevice("cmd[" + STR_Command + "]", "\n", B_AutoDelete), m_cliOutput(CLI_Output),
-    m_strCommand(STR_Command), m_iPosition(-1)
+  : IODevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "cmd[", STR_Command, "]"), "\n", B_AutoDelete), m_cliOutput(CLI_Output),
+    m_strCommand(MAX_CMD_LINE_LENGTH, STR_Command), m_iPosition(-1)
 {
     EnsureCommonDevices();
 
@@ -46,7 +49,7 @@ SingleCommand::~SingleCommand(void)
     m_cliOutput.FreeInstance(__CALL_INFO__);
 }
 
-const std::string& SingleCommand::GetCommand(void) const
+const tk::String SingleCommand::GetCommand(void) const
 {
     return m_strCommand;
 }
@@ -78,13 +81,13 @@ const bool SingleCommand::CloseDevice(void)
 
 const KEY SingleCommand::GetKey(void) const
 {
-    if ((m_iPosition >= 0) && (m_iPosition < (signed) m_strCommand.size()))
+    if ((m_iPosition >= 0) && (m_iPosition < (signed) m_strCommand.GetLength()))
     {
         const char c_Char = m_strCommand[m_iPosition];
         m_iPosition ++;
         return IODevice::GetKey(c_Char);
     }
-    else if (m_iPosition == (signed) m_strCommand.size())
+    else if (m_iPosition == (signed) m_strCommand.GetLength())
     {
         m_iPosition ++;
         return IODevice::GetKey('\n');
@@ -95,7 +98,7 @@ const KEY SingleCommand::GetKey(void) const
     }
 }
 
-void SingleCommand::PutString(const std::string& STR_Out) const
+void SingleCommand::PutString(const char* const STR_Out) const
 {
     m_cliOutput.PutString(STR_Out);
 }
@@ -104,3 +107,5 @@ void SingleCommand::Beep(void) const
 {
     m_cliOutput.Beep();
 }
+
+

@@ -21,26 +21,46 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+# Default goal
+.DEFAULT_GOAL ?= tests
+.PHONY: cpptests.default
+cpptests.default: tests ;
+
+
+# Variables
 include vars.mak
+XML_FILES = $(patsubst %.check,%.xml,$(CHECK_FILES))
+TEST_FILES = $(patsubst %.xml,%.test,$(XML_FILES))
+CHECK_FILES = $(shell find $(SAMPLES_DIR) -name "*.check")
 
 
-.PHONY: default
-default: $(patsubst %.check,%.cmp,$(shell find ../../../web -iname "*.check"))
-	@#
-
-.PHONY: %.cmp
-%.cmp:
-	@echo "-> $(patsubst %.cmp,%.xml,$@)"
-	@make -s -f test.mak CLI_XML_RES=$(patsubst %.cmp,%.xml,$@)
+# Rules
+DoTestDefault = $(MAKE) -s --no-print-directory -f test.mak CLI_XML_RES=$(1)
+.PHONY: tests
+tests: dirs
+	$(call Map,DoTestDefault,$(XML_FILES))
 
 .PHONY: dirs
 dirs:
-	mkdir -p $(OUT_DIR)/test
+	@mkdir -p $(OUT_DIR)/__test
 
 .PHONY: clean
 clean:
-	rm -rf $(OUT_DIR)/test/*
+	$(RM) -r $(OUT_DIR)/__test
 
 .PHONY: deps
-deps:
-	@# nothing to do
+deps: ;
+
+# Debug and help
+include $(ROOT_DIR)/build/make/help.mak
+
+.PHONY: $(CPP_DIR)/build/make/tests.help
+$(CPP_DIR)/build/make/tests.help:
+	$(call PrintHelp, tests, Launch tests on each sample file)
+	$(call PrintHelp, dirs, Create intermediate directories)
+	$(call PrintHelp, clean, Clean intermediate files)
+
+.PHONY: $(CPP_DIR)/build/make/tests.vars
+$(CPP_DIR)/build/make/tests.vars:
+	$(call ShowVariables,XML_FILES TEST_FILES CHECK_FILES)
+

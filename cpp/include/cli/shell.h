@@ -30,13 +30,14 @@
 #ifndef _CLI_SHELL_H_
 #define _CLI_SHELL_H_
 
-#include <vector>
-
+#include <cli/namespace.h>
+#include <cli/object.h>
 #include <cli/help.h>
 #include <cli/io_device.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Cli;
@@ -61,8 +62,14 @@ namespace cli {
 
 
     //! @brief Shell management.
-    class Shell
+    class Shell : public Object
     {
+    private:
+        //! @brief No default constructor.
+        Shell(void);
+        //! @brief No copy constructor.
+        Shell(const Shell&);
+
     public:
         //! @brief Constructor.
         Shell(
@@ -71,6 +78,10 @@ namespace cli {
 
         //! @brief Destructor.
         virtual ~Shell(void);
+
+    private:
+        //! @brief No assignment operator.
+        Shell& operator=(const Shell&);
 
     public:
         //! @brief CLI access.
@@ -102,16 +113,16 @@ namespace cli {
             );
 
         //! @brief Welcome message setting.
-        void SetWelcomeMessage(const std::string& STR_WelcomeMessage);
+        void SetWelcomeMessage(const ResourceString& CLI_WelcomeMessage);
         //! @brief Bye message setting.
-        void SetByeMessage(const std::string& STR_ByeMessage);
+        void SetByeMessage(const ResourceString& CLI_ByeMessage);
         //! @brief Prompt message positionning.
-        void SetPrompt(const std::string& STR_Prompt);
+        void SetPrompt(const ResourceString& CLI_Prompt);
 
         //! @brief Language setting.
-        void SetLang(const Help::LANG E_Lang);
+        void SetLang(const ResourceString::LANG E_Lang);
         //! @brief Language access.
-        const Help::LANG GetLang(void) const;
+        const ResourceString::LANG GetLang(void) const;
 
         //! @brief Beep configuration setting.
         void SetBeep(const bool B_Enable);
@@ -195,7 +206,7 @@ namespace cli {
     private:
         //! @brief Appends the current line.
         void PrintLine(
-            const std::string& STR_Append   //!< String to append.
+            const char* const STR_Append    //!< String to append.
             );
         //! @brief Appends the current line.
         void PrintLine(
@@ -213,8 +224,13 @@ namespace cli {
         void Beep(void);
         //! @brief Pushes a command line in the history stack.
         void PushHistory(
-            const std::string& STR_Line     //!< Command line to push.
+            const char* const STR_Line      //!< Command line to push.
             );
+        //! @brief History line retrieval.
+        const tk::String GetHistoryLine(
+            const unsigned int UI_BackwardIndex //!< Backward index in history lines.
+                                                //!< 0 means the current line.
+            ) const;
 
     private:
         //! CLI reference.
@@ -227,26 +243,26 @@ namespace cli {
             bool bEnable;
         } m_artStream[STREAM_TYPES_COUNT];
         //! Welcome message.
-        std::string m_strWelcomeMessage;
+        ResourceString m_cliWelcomeMessage;
         //! Bye message.
-        std::string m_strByeMessage;
+        ResourceString m_cliByeMessage;
         //! Non-default Prompt.
-        std::string m_strNoDefaultPrompt;
+        ResourceString m_cliNoDefaultPrompt;
         //! Current language.
-        Help::LANG m_eLang;
+        ResourceString::LANG m_eLang;
         //! Beep enabled.
         bool m_bBeep;
         //! Menu stack.
-        std::vector<const Menu*> m_vpcliMenus;
+        tk::Queue<const Menu*> m_qMenus;
         //! Current line.
-        std::string m_strLine;
+        tk::String m_strLine;
         //! History.
-        std::vector<std::string> m_vstrHistory;
+        tk::Queue<tk::String> m_qHistory;
         //! History index.
         int m_iHistoryIndex;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_SHELL_H_
 

@@ -23,7 +23,12 @@
 */
 
 
+#include "cli/pch.h"
+
+#ifndef CLI_NO_REGEX
 #include <regex.h>
+#include <string.h>
+#endif
 
 #include "cli/cli.h"
 #include "cli/menu.h"
@@ -32,22 +37,25 @@
 #include "cli/endl.h"
 #include "cli/command_line.h"
 #include "cli/traces.h"
+#include "cli/assert.h"
 #include "config_menu.h"
-#ifdef _DEBUG
 #include "traces_menu.h"
-#endif
 #include "consistency.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-static const TraceClass TRACE_CLI("CLI", "CLI traces");
+static const TraceClass TRACE_CLI("CLI", Help()
+    .AddHelp(Help::LANG_EN, "CLI traces")
+    .AddHelp(Help::LANG_FR, "Traces de CLI"));
 
-static CliList M_CLIList;
+static Cli::List M_CliRegistry(MAX_CLI_REGISTRY_COUNT);
 
-Cli::Cli(const std::string& STR_Name, const Help& CLI_Help)
+Cli::Cli(const char* const STR_Name, const Help& CLI_Help)
   : Menu(STR_Name, CLI_Help),
     m_pcliShell(NULL),
+    m_qMenus(MAX_MENU_PER_CLI),
     m_pcliConfigMenu(NULL), m_pcliConfigMenuNode(NULL)
 {
     EnsureCommonDevices();
@@ -57,9 +65,14 @@ Cli::Cli(const std::string& STR_Name, const Help& CLI_Help)
     SetCli(*this);
 
     // Register this new CLI in the global CLI list.
-    M_CLIList.push_back(this);
-
-    GetTraces().Trace(TRACE_CLI) << "New CLI '" << GetName() << "'." << cli::endl;
+    if (M_CliRegistry.AddTail(this))
+    {
+        GetTraces().Trace(TRACE_CLI) << "New CLI '" << GetName() << "'." << cli::endl;
+    }
+    else
+    {
+        GetTraces().Trace(TRACE_CLI) << "Error: New CLI '" << GetName() << "' could not be registered." << cli::endl;
+    }
 }
 
 Cli::~Cli(void)
@@ -67,62 +80,80 @@ Cli::~Cli(void)
     GetTraces().Trace(TRACE_CLI) << "Deletion of CLI '" << GetName() << "'." << cli::endl;
 
     // Remove this CLI from the global CLI list.
-    for (   CliList::iterator it = M_CLIList.begin();
-            it != M_CLIList.end();
-            it ++)
+    for (   Cli::List::Iterator it = M_CliRegistry.GetIterator();
+            M_CliRegistry.IsValid(it);
+            M_CliRegistry.MoveNext(it))
     {
-        if (*it == this)
+        if (M_CliRegistry.GetAt(it) == this)
         {
-            it = M_CLIList.erase(it);
+            M_CliRegistry.Remove(it);
             break;
         }
     }
 
     // Destroy menus.
-    while (! m_vpcliMenus.empty())
+    while (! m_qMenus.IsEmpty())
     {
-        delete m_vpcliMenus.back();
-        m_vpcliMenus.pop_back();
+        if (const Menu* const pcli_Menu = m_qMenus.RemoveTail())
+        {
+            delete pcli_Menu;
+        }
     }
 }
 
-const int Cli::FindFromName(CliList& CLI_CliList, const std::string& STR_RegExp)
+const int Cli::FindFromName(Cli::List& CLI_CliList, const char* const STR_RegExp)
 {
+#ifndef CLI_NO_REGEX
     // Compile the regular expression.
     regex_t s_RegExp;
     memset(& s_RegExp, '\0', sizeof(regex_t));
-    if (regcomp(& s_RegExp, STR_RegExp.c_str(), 0) != 0)
+    if (regcomp(& s_RegExp, STR_RegExp, 0) != 0)
     {
         return -1;
     }
+#endif
 
     // Check the name for each CLI instance.
-    const int i_InitialCount = CLI_CliList.size();
-    for (   CliList::iterator it = M_CLIList.begin();
-            it != M_CLIList.end();
-            it ++)
+    const int i_InitialCount = CLI_CliList.GetCount();
+    for (   Cli::List::Iterator it = M_CliRegistry.GetIterator();
+            M_CliRegistry.IsValid(it);
+            M_CliRegistry.MoveNext(it))
     {
-        if (regexec(& s_RegExp, (*it)->GetName().c_str(), 0, NULL, 0) == 0)
+        if (const Cli* const pcli_Cli = M_CliRegistry.GetAt(it))
         {
-            CLI_CliList.push_back(*it);
+#ifndef CLI_NO_REGEX
+            if (regexec(& s_RegExp, pcli_Cli->GetName(), 0, NULL, 0) == 0)
+#endif
+            {
+                if (! CLI_CliList.AddTail(pcli_Cli))
+                {
+                    CLI_ASSERT(false);
+                }
+            }
         }
     }
 
+#ifndef CLI_NO_REGEX
     // Free.
     regfree(& s_RegExp);
+#endif
 
-    return (CLI_CliList.size() - i_InitialCount);
-}
-
-const std::string Cli::GetName(void) const
-{
-    return GetKeyword();
+    return ((int) CLI_CliList.GetCount() - i_InitialCount);
 }
 
 Menu& Cli::AddMenu(Menu* const PCLI_Menu)
 {
-    PCLI_Menu->SetCli(*this);
-    m_vpcliMenus.push_back(PCLI_Menu);
+    if (PCLI_Menu != NULL)
+    {
+        PCLI_Menu->SetCli(*this);
+        if (! m_qMenus.AddTail(PCLI_Menu))
+        {
+            GetTraces().Trace(INTERNAL_ERROR)
+                << "Could not add '" << PCLI_Menu->GetKeyword() << "' "
+                << "to CLI '" << GetName() << "'." << cli::endl;
+        }
+    }
+    CLI_ASSERT(PCLI_Menu != NULL);
     return *PCLI_Menu;
 }
 
@@ -146,38 +177,38 @@ Shell& Cli::GetShell(void) const
 
 ConfigMenu& Cli::GetConfigMenu(void)
 {
-    assert(m_pcliConfigMenu != NULL);
+    CLI_ASSERT(m_pcliConfigMenu != NULL);
     return *m_pcliConfigMenu;
 }
 
 const ConfigMenu& Cli::GetConfigMenu(void) const
 {
-    assert(m_pcliConfigMenu != NULL);
+    CLI_ASSERT(m_pcliConfigMenu != NULL);
     return *m_pcliConfigMenu;
 }
 
 const Keyword& Cli::GetConfigMenuNode(void) const
 {
-    assert(m_pcliConfigMenuNode != NULL);
+    CLI_ASSERT(m_pcliConfigMenuNode != NULL);
     return *m_pcliConfigMenuNode;
 }
 
 #ifdef _DEBUG
 TracesMenu& Cli::GetTracesMenu(void)
 {
-    assert(m_pcliTracesMenu != NULL);
+    CLI_ASSERT(m_pcliTracesMenu != NULL);
     return *m_pcliTracesMenu;
 }
 
 const TracesMenu& Cli::GetTracesMenu(void) const
 {
-    assert(m_pcliTracesMenu != NULL);
+    CLI_ASSERT(m_pcliTracesMenu != NULL);
     return *m_pcliTracesMenu;
 }
 
 const Keyword& Cli::GetTracesMenuNode(void) const
 {
-    assert(m_pcliTracesMenuNode != NULL);
+    CLI_ASSERT(m_pcliTracesMenuNode != NULL);
     return *m_pcliTracesMenuNode;
 }
 #endif
@@ -187,13 +218,17 @@ void Cli::SetCli(Cli& CLI_Cli)
     Menu::SetCli(CLI_Cli);
 
     m_pcliConfigMenu = dynamic_cast<ConfigMenu*>(& AddMenu(new ConfigMenu()));
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "CLI configuration menu"));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "CLI configuration menu")
+            .AddHelp(Help::LANG_FR, "Menu de configuration du CLI"));
         m_pcliConfigMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("cli-config", cli_Help)));
         Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliConfigMenuNode->AddElement(new Endl(cli_Help)));
         pcli_Endl->SetMenuRef(new MenuRef(*m_pcliConfigMenu)); }
     #ifdef _DEBUG
     m_pcliTracesMenu = dynamic_cast<TracesMenu*>(& AddMenu(new TracesMenu()));
-    {   Help cli_Help(Help().AddHelp(Help::LANG_EN, "Traces menu"));
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Traces menu")
+            .AddHelp(Help::LANG_FR, "Menu de configuration de traces"));
         m_pcliTracesMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("traces", cli_Help)));
         Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliTracesMenuNode->AddElement(new Endl(cli_Help)));
         pcli_Endl->SetMenuRef(new MenuRef(*m_pcliTracesMenu)); }
@@ -202,19 +237,23 @@ void Cli::SetCli(Cli& CLI_Cli)
 
 const bool Cli::ExecuteReserved(const CommandLine& CLI_CommandLine) const
 {
-    if (0) {}
-    else if (& CLI_CommandLine[0] == & GetConfigMenuNode())
+    CommandLineIterator it(CLI_CommandLine);
+
+    if (! it.StepIt()) { return false; }
+    else if (it == GetConfigMenuNode())
     {
-        if (dynamic_cast<const Endl*>(& CLI_CommandLine[1]))
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
         {
             // Do nothing but return true so that an execution error is not detected.
             return true;
         }
     }
     #ifdef _DEBUG
-    else if (& CLI_CommandLine[0] == & GetTracesMenuNode())
+    else if (it == GetTracesMenuNode())
     {
-        if (dynamic_cast<const Endl*>(& CLI_CommandLine[1]))
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
         {
             // Do nothing but return true so that an execution error is not detected.
             return true;

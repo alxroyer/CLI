@@ -21,44 +21,18 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-# Variables computation
-CLI_XML_RES = $(SAMPLES_DIR)/empty.xml
-CLI_XSL = $(CPP_DIR)/xsl/cppclic.xsl
-CLI_CPP = $(patsubst $(SAMPLES_DIR)/%.xml,$(INT_DIR)/%.cpp,$(CLI_XML_RES))
-CLI_OBJ = $(patsubst $(SAMPLES_DIR)/%.xml,$(INT_DIR)/%.o,$(CLI_XML_RES))
-CLI_GO_CPP = $(SRC_DIR)/goempty.cpp
-CLI_GO_OBJ = $(INT_DIR)/goempty.o
-
-include vars.mak
-
-# Default variables overriding
-PROJECT = empty
-AUTO_DEPS = no
-CPP_DIR = ../..
-SAMPLES_DIR = $(CPP_DIR)/../web/user-guide/samples
+# Includes
+CLI_XML_RES = $(SAMPLES_DIR)/user-guide/empty.xml
 SRC_DIR = $(CPP_DIR)/tests/empty
-CPP_FILES = $(CLI_CPP) $(CLI_GO_CPP)
-OBJS = $(CLI_OBJ) $(CLI_GO_OBJ)
-PROJ_INCLUDES = -I$(CPP_DIR)/include
-PROJ_DEPS = $(OUT_DIR)/libclicpp.a
-PROJ_LIBS = $(OUT_DIR)/libclicpp.a /usr/lib/libncurses.a
-PROJ_CLEAN = $(CLI_CPP)
-PRODUCT_TYPE = BIN
-PRODUCT = $(OUT_DIR)/$(PROJECT)$(BIN_SUFFIX)
+CLI_MAIN_CPP = $(SRC_DIR)/goempty.cpp
+include mkres.mak
 
+# Debug and help
+include $(ROOT_DIR)/build/make/help.mak
 
-# Rules
-include rules.mak
+.PHONY: $(CPP_DIR)/build/make/empty.help
+$(CPP_DIR)/build/make/empty.help: ;
 
-$(OUT_DIR)/libclicpp.a:
-	make -f libclicpp.mak
-
-$(CLI_CPP): $(CLI_XML_RES) $(CLI_XSL)
-	xsltproc $(CLI_XSL) $(CLI_XML_RES) > $(CLI_CPP)
-
-$(CLI_OBJ):
-	$(CXX) $(CPP_FLAGS) $(INCLUDES) -Wno-unused-label -c $< -o $@
-
-# Dependencies
-$(CLI_OBJ): $(CLI_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(CLI_GO_OBJ): $(CLI_GO_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
+.PHONY: $(CPP_DIR)/build/make/empty.vars
+$(CPP_DIR)/build/make/empty.vars:
+	$(call ShowVariables,)

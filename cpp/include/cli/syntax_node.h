@@ -30,10 +30,12 @@
 #ifndef _CLI_SYNTAX_NODE_H_
 #define _CLI_SYNTAX_NODE_H_
 
+#include <cli/namespace.h>
 #include <cli/element.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Help;
@@ -46,15 +48,25 @@ namespace cli {
     //! and offer operations based on this list.
     class SyntaxNode : public Element
     {
+    private:
+        //! @brief No default constructor.
+        SyntaxNode(void);
+        //! @brief No copy constructor.
+        SyntaxNode(const SyntaxNode&);
+
     public:
         //! @brief Constructor.
         SyntaxNode(
-            const std::string& STR_Keyword, //!< Keyword of the element.
+            const char* const STR_Keyword,  //!< Keyword of the element.
             const Help& CLI_Help            //!< Corresponding help.
             );
 
         //! @brief Destructor.
         virtual ~SyntaxNode(void);
+
+    private:
+        //! @brief No assignment operator.
+        SyntaxNode& operator=(const SyntaxNode&);
 
     public:
         //! @brief Possible element addition.
@@ -65,17 +77,17 @@ namespace cli {
         //! @brief Returns the list of child elements coresponding to a keyword
         //!         or the beginning of a keyword.
         virtual const bool FindElements(
-            ElementList& CLI_ExactList,     //!< Exact matching keywords output list.
-            ElementList& CLI_NearList,      //!< All matching keywords output list.
+            Element::List& CLI_ExactList,   //!< Exact matching keywords output list.
+            Element::List& CLI_NearList,    //!< All matching keywords output list.
             const char* const STR_Keyword   //!< Keyword or beginning of a keyword.
                                             //!< NULL means no keyword begun.
             ) const;
 
     private:
         //! List of possible child elements.
-        ElementMap m_cliElements;
+        Element::List m_cliElements;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_SYNTAX_NODE_H_

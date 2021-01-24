@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>syntax_tag.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,63 +45,90 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="syntax__tag_8h.html">cli/syntax_tag.h</a>"</span>
-<a name="l00027"></a>00027 <span class="preprocessor">#include "<a class="code" href="help_8h.html">cli/help.h</a>"</span>
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029 <span class="keyword">using namespace </span>cli;
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;string.h&gt;</span>
 <a name="l00030"></a>00030 
-<a name="l00031"></a>00031 
-<a name="l00032"></a><a class="code" href="classcli_1_1SyntaxTag.html#96fe6b8a62b271009d55c8c63f7cba89">00032</a> SyntaxTag::SyntaxTag(<span class="keyword">const</span> <span class="keywordtype">bool</span> B_Hollow)
-<a name="l00033"></a>00033   : <a class="code" href="classcli_1_1SyntaxNode.html">SyntaxNode</a>(<span class="stringliteral">""</span>, <a class="code" href="classcli_1_1Help.html">Help</a>()),
-<a name="l00034"></a>00034     m_bHollow(B_Hollow)
-<a name="l00035"></a>00035 {
-<a name="l00036"></a>00036 }
+<a name="l00031"></a>00031 <span class="preprocessor">#include "<a class="code" href="syntax__tag_8h.html">cli/syntax_tag.h</a>"</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include "<a class="code" href="help_8h.html">cli/help.h</a>"</span>
+<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="traces_8h.html">cli/traces.h</a>"</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include "<a class="code" href="io__device_8h.html">cli/io_device.h</a>"</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include "<a class="code" href="assert_8h.html">cli/assert.h</a>"</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include "<a class="code" href="constraints_8h.html">constraints.h</a>"</span>
 <a name="l00037"></a>00037 
-<a name="l00038"></a><a class="code" href="classcli_1_1SyntaxTag.html#403ddb87106e6bb6f89cd21e7ac3138a">00038</a> <a class="code" href="classcli_1_1SyntaxTag.html#403ddb87106e6bb6f89cd21e7ac3138a">SyntaxTag::~SyntaxTag</a>(<span class="keywordtype">void</span>)
-<a name="l00039"></a>00039 {
-<a name="l00040"></a>00040 }
-<a name="l00041"></a>00041 
-<a name="l00042"></a><a class="code" href="classcli_1_1SyntaxTag.html#4cdc6b040b9c158c9bcdd28f87a7c1f0">00042</a> <span class="keyword">const</span> std::string <a class="code" href="classcli_1_1SyntaxTag.html#4cdc6b040b9c158c9bcdd28f87a7c1f0">SyntaxTag::GetKeyword</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00043"></a>00043 <span class="keyword"></span>{
-<a name="l00044"></a>00044     <span class="keyword">static</span> <span class="keywordtype">char</span> str_Buffer[256];
-<a name="l00045"></a>00045     memset(str_Buffer, <span class="charliteral">'\0'</span>, <span class="keyword">sizeof</span>(str_Buffer));
-<a name="l00046"></a>00046     snprintf(str_Buffer, <span class="keyword">sizeof</span>(str_Buffer) - 1, <span class="stringliteral">"tag[0x%08x]"</span>, (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>) <span class="keyword">this</span>);
-<a name="l00047"></a>00047     <span class="keywordflow">return</span> str_Buffer;
-<a name="l00048"></a>00048 }
-<a name="l00049"></a>00049 
-<a name="l00050"></a><a class="code" href="classcli_1_1SyntaxTag.html#787d2803ffd5df0ce7e25de5815f3c8e">00050</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1SyntaxTag.html#787d2803ffd5df0ce7e25de5815f3c8e">SyntaxTag::GetbHollow</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00051"></a>00051 <span class="keyword"></span>{
-<a name="l00052"></a>00052     <span class="keywordflow">return</span> m_bHollow;
-<a name="l00053"></a>00053 }
-<a name="l00054"></a>00054 
-<a name="l00055"></a>00055 
-<a name="l00056"></a><a class="code" href="classcli_1_1SyntaxRef.html#8dd20cd0b0b07286f0e93f98fc8041e6">00056</a> <a class="code" href="classcli_1_1SyntaxRef.html#8dd20cd0b0b07286f0e93f98fc8041e6">SyntaxRef::SyntaxRef</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1SyntaxTag.html">SyntaxTag</a>&amp; CLI_Tag)
-<a name="l00057"></a>00057   : <a class="code" href="classcli_1_1Element.html">Element</a>(<span class="stringliteral">""</span>, <a class="code" href="classcli_1_1Help.html">Help</a>()),
-<a name="l00058"></a>00058     m_pcliTag(&amp; CLI_Tag)
-<a name="l00059"></a>00059 {
-<a name="l00060"></a>00060 }
-<a name="l00061"></a>00061 
-<a name="l00062"></a><a class="code" href="classcli_1_1SyntaxRef.html#698516a8b60bc92ade7f2bb30c9644db">00062</a> <a class="code" href="classcli_1_1SyntaxRef.html#698516a8b60bc92ade7f2bb30c9644db">SyntaxRef::~SyntaxRef</a>(<span class="keywordtype">void</span>)
-<a name="l00063"></a>00063 {
-<a name="l00064"></a>00064 }
-<a name="l00065"></a>00065 
-<a name="l00066"></a><a class="code" href="classcli_1_1SyntaxRef.html#27255e603c295961cc4dd8a105bac6a1">00066</a> <span class="keyword">const</span> std::string <a class="code" href="classcli_1_1SyntaxRef.html#27255e603c295961cc4dd8a105bac6a1">SyntaxRef::GetKeyword</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00067"></a>00067 <span class="keyword"></span>{
-<a name="l00068"></a>00068     <span class="keyword">static</span> <span class="keywordtype">char</span> str_Buffer[256];
-<a name="l00069"></a>00069     memset(str_Buffer, <span class="charliteral">'\0'</span>, <span class="keyword">sizeof</span>(str_Buffer));
-<a name="l00070"></a>00070     snprintf(str_Buffer, <span class="keyword">sizeof</span>(str_Buffer) - 1, <span class="stringliteral">"ref[0x%08x]"</span>, (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>) <span class="keyword">this</span>);
-<a name="l00071"></a>00071 
-<a name="l00072"></a>00072     assert(<a class="code" href="classcli_1_1SyntaxRef.html#16d81258a0cf03d80c9c7c352809f789">m_pcliTag</a> != NULL);
-<a name="l00073"></a>00073     <span class="keywordflow">return</span> (std::string(str_Buffer) + std::string(<span class="stringliteral">" -&gt; "</span>) + <a class="code" href="classcli_1_1SyntaxRef.html#16d81258a0cf03d80c9c7c352809f789">m_pcliTag</a>-&gt;<a class="code" href="classcli_1_1SyntaxTag.html#4cdc6b040b9c158c9bcdd28f87a7c1f0">GetKeyword</a>());
-<a name="l00074"></a>00074 }
-<a name="l00075"></a>00075 
-<a name="l00076"></a><a class="code" href="classcli_1_1SyntaxRef.html#c7fbaf276d2925a0190f49eb17ce13f4">00076</a> <span class="keyword">const</span> <a class="code" href="classcli_1_1SyntaxTag.html">SyntaxTag</a>&amp; <a class="code" href="classcli_1_1SyntaxRef.html#c7fbaf276d2925a0190f49eb17ce13f4">SyntaxRef::GetTag</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00077"></a>00077 <span class="keyword"></span>{
-<a name="l00078"></a>00078     assert(<a class="code" href="classcli_1_1SyntaxRef.html#16d81258a0cf03d80c9c7c352809f789">m_pcliTag</a> != NULL);
-<a name="l00079"></a>00079     <span class="keywordflow">return</span> *<a class="code" href="classcli_1_1SyntaxRef.html#16d81258a0cf03d80c9c7c352809f789">m_pcliTag</a>;
-<a name="l00080"></a>00080 }
-<a name="l00081"></a>00081 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:32 2007 for CLI by&nbsp;
+<a name="l00038"></a>00038 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040 
+<a name="l00041"></a><a class="code" href="classSyntaxTag.html#96fe6b8a62b271009d55c8c63f7cba89">00041</a> <a class="code" href="classSyntaxTag.html">SyntaxTag</a>::<a class="code" href="classSyntaxTag.html">SyntaxTag</a>(const <span class="keywordtype">bool</span> B_Hollow)
+<a name="l00042"></a>00042   : <a class="code" href="classSyntaxNode.html">SyntaxNode</a>("", <a class="code" href="classHelp.html">Help</a>()),
+<a name="l00043"></a>00043     m_bHollow(B_Hollow)
+<a name="l00044"></a>00044 {
+<a name="l00045"></a>00045 }
+<a name="l00046"></a>00046 
+<a name="l00047"></a><a class="code" href="classSyntaxTag.html#403ddb87106e6bb6f89cd21e7ac3138a">00047</a> <a class="code" href="classSyntaxTag.html#403ddb87106e6bb6f89cd21e7ac3138a">SyntaxTag::~SyntaxTag</a>(<span class="keywordtype">void</span>)
+<a name="l00048"></a>00048 {
+<a name="l00049"></a>00049 }
+<a name="l00050"></a>00050 
+<a name="l00051"></a><a class="code" href="classSyntaxTag.html#fa55155ad6383b86fb2bd8e3f3e076e7">00051</a> <span class="keyword">const</span> tk::String <a class="code" href="classSyntaxTag.html#fa55155ad6383b86fb2bd8e3f3e076e7">SyntaxTag::GetKeyword</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00052"></a>00052 <span class="keyword"></span>{
+<a name="l00053"></a>00053     <span class="keyword">static</span> <span class="keywordtype">char</span> str_Buffer[256];
+<a name="l00054"></a>00054     memset(str_Buffer, <span class="charliteral">'\0'</span>, <span class="keyword">sizeof</span>(str_Buffer));
+<a name="l00055"></a>00055     snprintf(str_Buffer, <span class="keyword">sizeof</span>(str_Buffer) - 1, <span class="stringliteral">"tag[0x%08x]"</span>, (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>) <span class="keyword">this</span>);
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057     tk::String str_Keyword(MAX_WORD_LENGTH);
+<a name="l00058"></a>00058     <span class="keywordflow">if</span> (! str_Keyword.Set(str_Buffer))
+<a name="l00059"></a>00059     {
+<a name="l00060"></a>00060         <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>) &lt;&lt; <span class="stringliteral">"SyntaxTag::GetKeyword() could not constructor the SyntaxTag keyword"</span> &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062     <span class="keywordflow">return</span> str_Keyword;
+<a name="l00063"></a>00063 }
+<a name="l00064"></a>00064 
+<a name="l00065"></a><a class="code" href="classSyntaxTag.html#787d2803ffd5df0ce7e25de5815f3c8e">00065</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classSyntaxTag.html#787d2803ffd5df0ce7e25de5815f3c8e">SyntaxTag::GetbHollow</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00066"></a>00066 <span class="keyword"></span>{
+<a name="l00067"></a>00067     <span class="keywordflow">return</span> m_bHollow;
+<a name="l00068"></a>00068 }
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070 
+<a name="l00071"></a><a class="code" href="classSyntaxRef.html#8dd20cd0b0b07286f0e93f98fc8041e6">00071</a> SyntaxRef::SyntaxRef(<span class="keyword">const</span> <a class="code" href="classSyntaxTag.html">SyntaxTag</a>&amp; CLI_Tag)
+<a name="l00072"></a>00072   : <a class="code" href="classElement.html">Element</a>(<span class="stringliteral">""</span>, <a class="code" href="classHelp.html">Help</a>()),
+<a name="l00073"></a>00073     m_pcliTag(&amp; CLI_Tag)
+<a name="l00074"></a>00074 {
+<a name="l00075"></a>00075 }
+<a name="l00076"></a>00076 
+<a name="l00077"></a><a class="code" href="classSyntaxRef.html#698516a8b60bc92ade7f2bb30c9644db">00077</a> <a class="code" href="classSyntaxRef.html#698516a8b60bc92ade7f2bb30c9644db">SyntaxRef::~SyntaxRef</a>(<span class="keywordtype">void</span>)
+<a name="l00078"></a>00078 {
+<a name="l00079"></a>00079 }
+<a name="l00080"></a>00080 
+<a name="l00081"></a><a class="code" href="classSyntaxRef.html#6f35004b0549b9c8e94012ef5045a1ea">00081</a> <span class="keyword">const</span> tk::String <a class="code" href="classSyntaxRef.html#6f35004b0549b9c8e94012ef5045a1ea">SyntaxRef::GetKeyword</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00082"></a>00082 <span class="keyword"></span>{
+<a name="l00083"></a>00083     <span class="keyword">static</span> <span class="keywordtype">char</span> str_Buffer[256];
+<a name="l00084"></a>00084     memset(str_Buffer, <span class="charliteral">'\0'</span>, <span class="keyword">sizeof</span>(str_Buffer));
+<a name="l00085"></a>00085     snprintf(str_Buffer, <span class="keyword">sizeof</span>(str_Buffer) - 1, <span class="stringliteral">"ref[0x%08x]"</span>, (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>) <span class="keyword">this</span>);
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087     tk::String str_Keyword(MAX_WORD_LENGTH);
+<a name="l00088"></a>00088     <span class="keywordflow">if</span> (! str_Keyword.Set(str_Buffer))
+<a name="l00089"></a>00089     {
+<a name="l00090"></a>00090         <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>) &lt;&lt; <span class="stringliteral">"SyntaxRef::GetKeyword() could not constructor the SyntaxRef keyword"</span> &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00091"></a>00091 }
+<a name="l00092"></a>00092     <span class="keywordflow">if</span> (<a class="code" href="classSyntaxRef.html#16748220536cf9801961c9dbe74b60e3">m_pcliTag</a> != NULL)
+<a name="l00093"></a>00093     {
+<a name="l00094"></a>00094         <span class="keywordflow">if</span> ((! str_Keyword.Append(<span class="stringliteral">" -&gt; "</span>))
+<a name="l00095"></a>00095             || (! str_Keyword.Append(<a class="code" href="classSyntaxRef.html#16748220536cf9801961c9dbe74b60e3">m_pcliTag</a>-&gt;<a class="code" href="classSyntaxTag.html#fa55155ad6383b86fb2bd8e3f3e076e7">GetKeyword</a>())))
+<a name="l00096"></a>00096         {
+<a name="l00097"></a>00097             <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>) &lt;&lt; <span class="stringliteral">"SyntaxRef::GetKeyword() could not constructor the SyntaxRef keyword"</span> &lt;&lt; <a class="code" href="io__device_8h.html#d6d7d55b8cc249130097ce4007a1162a">endl</a>;
+<a name="l00098"></a>00098         }
+<a name="l00099"></a>00099     }
+<a name="l00100"></a>00100     <span class="keywordflow">return</span> str_Keyword;
+<a name="l00101"></a>00101 }
+<a name="l00102"></a>00102 
+<a name="l00103"></a><a class="code" href="classSyntaxRef.html#c7fbaf276d2925a0190f49eb17ce13f4">00103</a> <span class="keyword">const</span> <a class="code" href="classSyntaxTag.html">SyntaxTag</a>&amp; <a class="code" href="classSyntaxRef.html#c7fbaf276d2925a0190f49eb17ce13f4">SyntaxRef::GetTag</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00104"></a>00104 <span class="keyword"></span>{
+<a name="l00105"></a>00105     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(<a class="code" href="classSyntaxRef.html#16748220536cf9801961c9dbe74b60e3">m_pcliTag</a> != NULL);
+<a name="l00106"></a>00106     <span class="keywordflow">return</span> *<a class="code" href="classSyntaxRef.html#16748220536cf9801961c9dbe74b60e3">m_pcliTag</a>;
+<a name="l00107"></a>00107 }
+<a name="l00108"></a>00108 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:32 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

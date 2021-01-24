@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_8f01d9b4589024334dc9ddb77b167b80.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_8a599c2cb6f1d7bd0e0805e56078a760.html">cli</a></div>
+<a class="el" href="dir_1478fa2896c71a852f24f40b9ae7a523.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ee510e0e819a9187a5b85fd01d9d2bcf.html">cli</a></div>
 <h1>telnet.h</h1><a href="telnet_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -49,72 +49,89 @@
 <a name="l00030"></a>00030 <span class="preprocessor">#ifndef _CLI_TELNET_H_</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_TELNET_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;deque&gt;</span>
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;<a class="code" href="io__device_8h.html">cli/io_device.h</a>&gt;</span>
+<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;<a class="code" href="namespace_8h.html">cli/namespace.h</a>&gt;</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;<a class="code" href="object_8h.html">cli/object.h</a>&gt;</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;<a class="code" href="io__device_8h.html">cli/io_device.h</a>&gt;</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;<a class="code" href="tk_8h.html">cli/tk.h</a>&gt;</span>
 <a name="l00037"></a>00037 
 <a name="l00038"></a>00038 
-<a name="l00039"></a>00039 <span class="keyword">namespace </span>cli {
+<a name="l00039"></a>00039 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
 <a name="l00040"></a>00040 
 <a name="l00041"></a>00041     <span class="comment">// Forward declarations.</span>
-<a name="l00042"></a>00042     <span class="keyword">class </span>Shell;
+<a name="l00042"></a>00042     class <a class="code" href="classShell.html">Shell</a>;
 <a name="l00043"></a>00043 
 <a name="l00044"></a>00044 
-<a name="l00046"></a><a class="code" href="classcli_1_1TelnetServer.html">00046</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1TelnetServer.html">TelnetServer</a>
+<a name="l00046"></a><a class="code" href="classTelnetServer.html">00046</a>     class <a class="code" href="classTelnetServer.html">TelnetServer</a> : public <a class="code" href="classObject.html">Object</a>
 <a name="l00047"></a>00047     {
-<a name="l00048"></a>00048     <span class="keyword">public</span>:
-<a name="l00050"></a>00050         <a class="code" href="classcli_1_1TelnetServer.html#a03b3b93ae9347ca19f0fbc8f65aff96">TelnetServer</a>(
-<a name="l00051"></a>00051             <a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; CLI_Shell,               
-<a name="l00052"></a>00052             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> UL_TcpPort  
-<a name="l00053"></a>00053             );
-<a name="l00054"></a>00054 
-<a name="l00056"></a>00056         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1TelnetServer.html#10e43d3833714e792f20b3ae5494ae57">~TelnetServer</a>(<span class="keywordtype">void</span>);
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058     <span class="keyword">public</span>:
-<a name="l00060"></a>00060         <span class="keywordtype">void</span> <a class="code" href="classcli_1_1TelnetServer.html#97520ee0f8761c9827cb13addc8ffd68">StartServer</a>(<span class="keywordtype">void</span>);
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062     <span class="keyword">private</span>:
-<a name="l00064"></a>00064         <span class="keyword">const</span> <span class="keywordtype">bool</span> AcceptConnection(
-<a name="l00065"></a>00065             <span class="keyword">const</span> <span class="keywordtype">int</span> I_Socket      
-<a name="l00066"></a>00066             );
+<a name="l00048"></a>00048     <span class="keyword">private</span>:
+<a name="l00050"></a>00050         <a class="code" href="classTelnetServer.html">TelnetServer</a>(<span class="keywordtype">void</span>);
+<a name="l00052"></a>00052         <a class="code" href="classTelnetServer.html">TelnetServer</a>(<span class="keyword">const</span> <a class="code" href="classTelnetServer.html">TelnetServer</a>&amp;);
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054     <span class="keyword">public</span>:
+<a name="l00056"></a>00056         <a class="code" href="classTelnetServer.html">TelnetServer</a>(
+<a name="l00057"></a>00057             Shell&amp; CLI_Shell,               
+<a name="l00058"></a>00058             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> UL_TcpPort  
+<a name="l00059"></a>00059             );
+<a name="l00060"></a>00060 
+<a name="l00062"></a>00062         <span class="keyword">virtual</span> ~<a class="code" href="classTelnetServer.html">TelnetServer</a>(<span class="keywordtype">void</span>);
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064     <span class="keyword">private</span>:
+<a name="l00066"></a>00066         <a class="code" href="classTelnetServer.html">TelnetServer</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classTelnetServer.html">TelnetServer</a>&amp;);
 <a name="l00067"></a>00067 
-<a name="l00068"></a>00068     <span class="keyword">private</span>:
-<a name="l00070"></a>00070         <a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; m_cliShell;
-<a name="l00072"></a>00072         <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> m_ulTcpPort;
-<a name="l00073"></a>00073     };
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 
-<a name="l00077"></a><a class="code" href="classcli_1_1TelnetConnection.html">00077</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1TelnetConnection.html">TelnetConnection</a> : <span class="keyword">public</span> <a class="code" href="classcli_1_1IODevice.html">IODevice</a>
-<a name="l00078"></a>00078     {
-<a name="l00079"></a>00079     <span class="keyword">public</span>:
-<a name="l00081"></a>00081         <a class="code" href="classcli_1_1TelnetConnection.html#38ae9bf9e1e6ee47d2fedc325287c413">TelnetConnection</a>(
-<a name="l00082"></a>00082             <a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; CLI_Shell,       
-<a name="l00083"></a>00083             <span class="keyword">const</span> <span class="keywordtype">int</span> I_Socket,     
-<a name="l00084"></a>00084             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_AutoDelete 
-<a name="l00085"></a>00085             );
-<a name="l00086"></a>00086 
-<a name="l00088"></a>00088         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1TelnetConnection.html#3a113a953d9120738f05f1900e1e8edb">~TelnetConnection</a>(<span class="keywordtype">void</span>);
-<a name="l00089"></a>00089 
-<a name="l00090"></a>00090     <span class="keyword">protected</span>:
-<a name="l00092"></a>00092         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1TelnetConnection.html#f33c0144e429bb9f65a4d94c466c7bfa">OpenDevice</a>(<span class="keywordtype">void</span>);
-<a name="l00094"></a>00094         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1TelnetConnection.html#49d5d04442baa1a99f1c7d077b33827f">CloseDevice</a>(<span class="keywordtype">void</span>);
+<a name="l00068"></a>00068     <span class="keyword">public</span>:
+<a name="l00070"></a>00070         <span class="keywordtype">void</span> StartServer(<span class="keywordtype">void</span>);
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072     <span class="keyword">private</span>:
+<a name="l00074"></a>00074         <span class="keyword">const</span> <span class="keywordtype">bool</span> AcceptConnection(
+<a name="l00075"></a>00075             <span class="keyword">const</span> <span class="keywordtype">int</span> I_Socket      
+<a name="l00076"></a>00076             );
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078     <span class="keyword">private</span>:
+<a name="l00080"></a>00080         Shell&amp; m_cliShell;
+<a name="l00082"></a>00082         <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> m_ulTcpPort;
+<a name="l00083"></a>00083     };
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085 
+<a name="l00087"></a><a class="code" href="classTelnetConnection.html">00087</a>     <span class="keyword">class </span><a class="code" href="classTelnetConnection.html">TelnetConnection</a> : <span class="keyword">public</span> <a class="code" href="classIODevice.html">IODevice</a>
+<a name="l00088"></a>00088     {
+<a name="l00089"></a>00089     <span class="keyword">private</span>:
+<a name="l00091"></a>00091         <a class="code" href="classTelnetConnection.html">TelnetConnection</a>(<span class="keywordtype">void</span>);
+<a name="l00093"></a>00093         <a class="code" href="classTelnetConnection.html">TelnetConnection</a>(<span class="keyword">const</span> <a class="code" href="classTelnetConnection.html">TelnetConnection</a>&amp;);
+<a name="l00094"></a>00094 
 <a name="l00095"></a>00095     <span class="keyword">public</span>:
-<a name="l00097"></a>00097         <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff">KEY</a> <a class="code" href="classcli_1_1TelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">GetKey</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00099"></a>00099         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1TelnetConnection.html#1dcf8f3588f733594cd263af3833a5d9">PutString</a>(<span class="keyword">const</span> std::string&amp; STR_Out) <span class="keyword">const</span>;
-<a name="l00101"></a>00101         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1TelnetConnection.html#4bc02e5835282a5e36633d70d195b74f">Beep</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00097"></a>00097         <a class="code" href="classTelnetConnection.html">TelnetConnection</a>(
+<a name="l00098"></a>00098             <a class="code" href="classShell.html">Shell</a>&amp; CLI_Shell,       
+<a name="l00099"></a>00099             <span class="keyword">const</span> <span class="keywordtype">int</span> I_Socket,     
+<a name="l00100"></a>00100             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_AutoDelete 
+<a name="l00101"></a>00101             );
 <a name="l00102"></a>00102 
-<a name="l00103"></a>00103     <span class="keyword">private</span>:
-<a name="l00105"></a>00105         <a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; m_cliShell;
-<a name="l00107"></a>00107         <span class="keyword">const</span> <span class="keywordtype">int</span> m_iSocket;
-<a name="l00109"></a>00109         <span class="keyword">mutable</span> std::deque&lt;int&gt; m_qiChars;
-<a name="l00110"></a>00110     };
-<a name="l00111"></a>00111 
-<a name="l00112"></a>00112 };
-<a name="l00113"></a>00113 
-<a name="l00114"></a>00114 <span class="preprocessor">#endif // _CLI_TELNET_H_</span>
-<a name="l00115"></a>00115 <span class="preprocessor"></span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:32 2007 for CLI by&nbsp;
+<a name="l00104"></a>00104         <span class="keyword">virtual</span> <a class="code" href="classTelnetConnection.html#3a113a953d9120738f05f1900e1e8edb">~TelnetConnection</a>(<span class="keywordtype">void</span>);
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106     <span class="keyword">private</span>:
+<a name="l00108"></a>00108         <a class="code" href="classTelnetConnection.html">TelnetConnection</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classTelnetConnection.html">TelnetConnection</a>&amp;);
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110     <span class="keyword">protected</span>:
+<a name="l00112"></a>00112         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTelnetConnection.html#f33c0144e429bb9f65a4d94c466c7bfa">OpenDevice</a>(<span class="keywordtype">void</span>);
+<a name="l00114"></a>00114         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTelnetConnection.html#49d5d04442baa1a99f1c7d077b33827f">CloseDevice</a>(<span class="keywordtype">void</span>);
+<a name="l00115"></a>00115     <span class="keyword">public</span>:
+<a name="l00117"></a>00117         <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">KEY</a> <a class="code" href="classTelnetConnection.html#9d2d01f68ea63e9bb3ec5b516b2f15e9">GetKey</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00119"></a>00119         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classTelnetConnection.html#bc955e90046bde6f5db39fa089441a3c">PutString</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Out) <span class="keyword">const</span>;
+<a name="l00121"></a>00121         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classTelnetConnection.html#4bc02e5835282a5e36633d70d195b74f">Beep</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123     <span class="keyword">protected</span>:
+<a name="l00126"></a>00126         <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classTelnetConnection.html#6942a0c86083043d80650f0a4e8066d4">GetErrorStream</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128     <span class="keyword">private</span>:
+<a name="l00130"></a>00130         <a class="code" href="classShell.html">Shell</a>&amp; m_cliShell;
+<a name="l00132"></a>00132         <span class="keyword">const</span> <span class="keywordtype">int</span> m_iSocket;
+<a name="l00134"></a>00134         <span class="keyword">mutable</span> tk::Queue&lt;int&gt; m_qChars;
+<a name="l00135"></a>00135     };
+<a name="l00136"></a>00136 
+<a name="l00137"></a>00137 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00138"></a>00138 
+<a name="l00139"></a>00139 <span class="preprocessor">#endif // _CLI_TELNET_H_</span>
+<a name="l00140"></a>00140 <span class="preprocessor"></span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:33 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

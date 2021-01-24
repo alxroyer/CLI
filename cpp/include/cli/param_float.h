@@ -30,10 +30,12 @@
 #ifndef _CLI_PARAM_FLOAT_H_
 #define _CLI_PARAM_FLOAT_H_
 
+#include <cli/namespace.h>
 #include <cli/param.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Help;
@@ -42,6 +44,12 @@ namespace cli {
     //! @brief Float parameter element class.
     class ParamFloat : public ParamT<double>
     {
+    private:
+        //! @brief No default constructor.
+        ParamFloat(void);
+        //! @brief No copy constructor.
+        ParamFloat(const ParamFloat&);
+
     public:
         //! @brief Constructor.
         ParamFloat(
@@ -51,15 +59,19 @@ namespace cli {
         //! @brief Destructor.
         virtual ~ParamFloat(void);
 
+    private:
+        //! @brief No assignment operator.
+        ParamFloat& operator=(const ParamFloat&);
+
     public:
         //! @brief Value setting handler.
-        virtual const bool SetstrValue(const std::string& STR_Value) const;
+        virtual const bool SetstrValue(const char* const STR_Value) const;
 
         //! @brief Parameter cloning handler.
         virtual const Param* const Clone(void) const;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_PARAM_FLOAT_H_
 

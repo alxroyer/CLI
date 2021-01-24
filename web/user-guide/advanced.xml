@@ -29,13 +29,13 @@
 
     <para>
     Some of you may have special needs.
-    Here is some further additional information for advanced users.
+    Here is some further additional information for C++ advanced users.
     </para>
 
     <section id="adv.iodevices"><title>Define your own input/output device</title>
 
         <para>
-        The CLI library has a generic C++ classes defining input/output devices:
+        The CLI library has generic C++ classes defining input/output devices:
         <classname>cli::OutputDevice</classname> and <classname>cli::IODevice</classname>.
         The CLI library gives several implementations of this generic class:
         <variablelist>

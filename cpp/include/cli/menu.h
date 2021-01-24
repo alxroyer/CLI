@@ -30,11 +30,12 @@
 #ifndef _CLI_MENU_H_
 #define _CLI_MENU_H_
 
-#include <string>
+#include <cli/namespace.h>
 #include <cli/syntax_node.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Cli;
@@ -47,15 +48,29 @@ namespace cli {
     //! @brief Menu definition.
     class Menu : public SyntaxNode
     {
+    private:
+        //! @brief No default constructor.
+        Menu(void);
+        //! @brief No copy constructor.
+        Menu(const Menu&);
+
     public:
         //! @brief Constructor.
         Menu(
-            const std::string& STR_Name,    //!< Menu name.
+            const char* const STR_Name,     //!< Menu name.
             const Help& CLI_Help            //!< Corresponding help.
             );
 
         //! @brief Destructor.
         virtual ~Menu(void);
+
+    private:
+        //! @brief No assignment operator.
+        Menu& operator=(const Menu&);
+
+    public:
+        //! @brief Menu name access.
+        const tk::String GetName(void) const;
 
     public:
         //! @brief CLI reference setting.
@@ -100,6 +115,12 @@ namespace cli {
     //! @brief Menu reference element.
     class MenuRef : public Element
     {
+    private:
+        //! @brief No default constructor.
+        MenuRef(void);
+        //! @brief No copy constructor.
+        MenuRef(const MenuRef&);
+
     public:
         //! @brief Constructor.
         MenuRef(
@@ -108,6 +129,10 @@ namespace cli {
 
         //! @brief Destructor.
         virtual ~MenuRef(void);
+
+    private:
+        //! @brief No assignment operator.
+        MenuRef& operator=(const MenuRef&);
 
     public:
         //! @brief Referenced menu access.
@@ -118,6 +143,6 @@ namespace cli {
         const Menu* const m_pcliMenu;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_MENU_H_

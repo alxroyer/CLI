@@ -23,13 +23,17 @@
 */
 
 
+#include "cli/pch.h"
+
+#include <stdlib.h>
+
 #include "cli/param_int.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 ParamInt::ParamInt(const Help& CLI_Help)
-  : ParamT<int>("<int>", CLI_Help)
+  : ParamT<int>("<int>", 0, CLI_Help)
 {
 }
 
@@ -37,9 +41,9 @@ ParamInt::~ParamInt(void)
 {
 }
 
-const bool ParamInt::SetstrValue(const std::string& STR_Value) const
+const bool ParamInt::SetstrValue(const char* const STR_Value) const
 {
-    SetValue(STR_Value, atoi(STR_Value.c_str()));
+    SetValue(STR_Value, atoi(STR_Value));
     return true;
 }
 

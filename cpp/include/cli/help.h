@@ -30,17 +30,18 @@
 #ifndef _CLI_HELP_H_
 #define _CLI_HELP_H_
 
-#include <string>
-#include <map>
+#include <cli/namespace.h>
+#include <cli/resource_string.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief Help container class.
     //!
     //! Objects of this class permits help definition of different languages.
     //! An object of this class is owned by each CLI element.
-    class Help
+    class Help : public ResourceString
     {
     public:
         //! @brief Default constructor.
@@ -55,42 +56,20 @@ namespace cli {
         virtual ~Help(void);
 
     public:
-        //! @brief Languages identifiers.
-        typedef enum
-        {
-            LANG_EN,        //!< English.
-            LANG_FR,        //!< French.
-            LANG_COUNT      //!< Languages count.
-        } LANG;
-
-    public:
-        //! @brief Adds help for a given language.
-        //!
-        //! If help already exists for the given language,
-        //! then it is overwritten.
-        Help& AddHelp(
-            const LANG E_Lang,              //!< Language identifier.
-            const std::string& STR_Help     //!< Help string.
+        //! @brief Assignment operator.
+        Help& operator=(
+            const Help& CLI_Help    //!< Source help object.
             );
 
-        //! @brief Determines whether help exists for a given language.
-        const bool HasHelp(
-            const LANG E_Lang               //!< Language identifier.
-            ) const;
-
-        //! @brief Access to the help of a given language.
-        const std::string GetHelp(
-            const LANG E_Lang               //!< Language identifier.
-            ) const;
-
-    private:
-        //! Help map type shortcut.
-        typedef std::map<const LANG, std::string> HelpMap;
-        //! Help map.
-        HelpMap m_mstrHelps;
+    public:
+        //! @brief Help extension.
+        Help& AddHelp(
+            const LANG E_Lang,          //!< Language.
+            const char* const STR_Help  //!< Help message.
+            );
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_HELP_H_
 

@@ -21,7 +21,19 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-PROJECTS = libclicpp.mak cpptest.mak empty.mak clisample.mak tests.mak io_device.mak
+ROOT_DIR ?= ../../..
 
-include all.mak
+# Includes
+PROJECTS = libclicpp.mak tktest.mak cpptest.mak empty.mak hello.mak clisample.mak tests.mak io_device.mak
+include $(ROOT_DIR)/build/make/all.mak
+
+# Debug and help
+include $(ROOT_DIR)/build/make/help.mak
+
+.PHONY: $(CPP_DIR)/build/make/Makefile.help
+$(CPP_DIR)/build/make/Makefile.help: ;
+
+.PHONY: $(CPP_DIR)/build/make/Makefile.vars
+$(CPP_DIR)/build/make/Makefile.vars:
+	$(call ShowVariables,)
 

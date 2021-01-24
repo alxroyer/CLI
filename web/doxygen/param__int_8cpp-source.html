@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>param_int.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,32 +45,36 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="param__int_8h.html">cli/param_int.h</a>"</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="keyword">using namespace </span>cli;
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;stdlib.h&gt;</span>
 <a name="l00029"></a>00029 
-<a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="classcli_1_1ParamInt.html#cfb9e06d6e57bf1df0655a95a3129201">00031</a> ParamInt::ParamInt(<span class="keyword">const</span> <a class="code" href="classcli_1_1Help.html">Help</a>&amp; CLI_Help)
-<a name="l00032"></a>00032   : <a class="code" href="classcli_1_1ParamT.html">ParamT</a>&lt;int&gt;(<span class="stringliteral">"&lt;int&gt;"</span>, CLI_Help)
-<a name="l00033"></a>00033 {
-<a name="l00034"></a>00034 }
-<a name="l00035"></a>00035 
-<a name="l00036"></a><a class="code" href="classcli_1_1ParamInt.html#9bce5475b3d570509a5a6a226df62834">00036</a> <a class="code" href="classcli_1_1ParamInt.html#9bce5475b3d570509a5a6a226df62834">ParamInt::~ParamInt</a>(<span class="keywordtype">void</span>)
+<a name="l00030"></a>00030 <span class="preprocessor">#include "<a class="code" href="param__int_8h.html">cli/param_int.h</a>"</span>
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 
+<a name="l00035"></a><a class="code" href="classParamInt.html#cfb9e06d6e57bf1df0655a95a3129201">00035</a> <a class="code" href="classParamInt.html">ParamInt</a>::<a class="code" href="classParamInt.html">ParamInt</a>(const <a class="code" href="classHelp.html">Help</a>&amp; CLI_Help)
+<a name="l00036"></a>00036   : <a class="code" href="classParamT.html">ParamT</a>&lt;<span class="keywordtype">int</span>&gt;("&lt;<span class="keywordtype">int</span>&gt;", 0, CLI_Help)
 <a name="l00037"></a>00037 {
 <a name="l00038"></a>00038 }
 <a name="l00039"></a>00039 
-<a name="l00040"></a><a class="code" href="classcli_1_1ParamInt.html#325862464f9e5ac608b5707f123fbcb7">00040</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1ParamInt.html#325862464f9e5ac608b5707f123fbcb7">ParamInt::SetstrValue</a>(<span class="keyword">const</span> std::string&amp; STR_Value)<span class="keyword"> const</span>
-<a name="l00041"></a>00041 <span class="keyword"></span>{
-<a name="l00042"></a>00042     <a class="code" href="classcli_1_1ParamT.html#c4164a1d1bd22874542bc2660f74c82c">SetValue</a>(STR_Value, atoi(STR_Value.c_str()));
-<a name="l00043"></a>00043     <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00044"></a>00044 }
-<a name="l00045"></a>00045 
-<a name="l00046"></a><a class="code" href="classcli_1_1ParamInt.html#0f83b977a044061ad9f6917f985d85a0">00046</a> <span class="keyword">const</span> <a class="code" href="classcli_1_1Param.html">Param</a>* <span class="keyword">const</span> <a class="code" href="classcli_1_1ParamInt.html#0f83b977a044061ad9f6917f985d85a0">ParamInt::Clone</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00047"></a>00047 <span class="keyword"></span>{
-<a name="l00048"></a>00048     <span class="keywordflow">return</span> <a class="code" href="classcli_1_1Param.html#b9a92d5bfddcc1c0daa66e5afcfb0f0a">InitClone</a>(* <span class="keyword">new</span> <a class="code" href="classcli_1_1ParamInt.html#cfb9e06d6e57bf1df0655a95a3129201">ParamInt</a>(<a class="code" href="classcli_1_1Element.html#ecdac061bf30d63c2baf3f08bf0dfa49">GetHelp</a>()));
-<a name="l00049"></a>00049 }
-<a name="l00050"></a>00050 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:31 2007 for CLI by&nbsp;
+<a name="l00040"></a><a class="code" href="classParamInt.html#9bce5475b3d570509a5a6a226df62834">00040</a> <a class="code" href="classParamInt.html#9bce5475b3d570509a5a6a226df62834">ParamInt::~ParamInt</a>(<span class="keywordtype">void</span>)
+<a name="l00041"></a>00041 {
+<a name="l00042"></a>00042 }
+<a name="l00043"></a>00043 
+<a name="l00044"></a><a class="code" href="classParamInt.html#4f70c3eea3dce315d109cb28d9748044">00044</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classParamInt.html#4f70c3eea3dce315d109cb28d9748044">ParamInt::SetstrValue</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Value)<span class="keyword"> const</span>
+<a name="l00045"></a>00045 <span class="keyword"></span>{
+<a name="l00046"></a>00046     <a class="code" href="classParamT.html#884b7eac2474d969a4d8998cc5265301">SetValue</a>(STR_Value, atoi(STR_Value));
+<a name="l00047"></a>00047     <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00048"></a>00048 }
+<a name="l00049"></a>00049 
+<a name="l00050"></a><a class="code" href="classParamInt.html#0f83b977a044061ad9f6917f985d85a0">00050</a> <span class="keyword">const</span> <a class="code" href="classParam.html">Param</a>* <span class="keyword">const</span> <a class="code" href="classParamInt.html#0f83b977a044061ad9f6917f985d85a0">ParamInt::Clone</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00051"></a>00051 <span class="keyword"></span>{
+<a name="l00052"></a>00052     <span class="keywordflow">return</span> <a class="code" href="classParam.html#b9a92d5bfddcc1c0daa66e5afcfb0f0a">InitClone</a>(* <span class="keyword">new</span> <a class="code" href="classParamInt.html">ParamInt</a>(<a class="code" href="classElement.html#ecdac061bf30d63c2baf3f08bf0dfa49">GetHelp</a>()));
+<a name="l00053"></a>00053 }
+<a name="l00054"></a>00054 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:31 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

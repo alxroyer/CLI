@@ -30,11 +30,12 @@
 #ifndef _CLI_TRACES_MENU_H_
 #define _CLI_TRACES_MENU_H_
 
+#include "cli/namespace.h"
 #include "cli/menu.h"
 #include "cli/traces.h"
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class ParamString;
@@ -71,8 +72,8 @@ namespace cli {
 
         //! @brief Filter modification.
         void SetFilter(
-            const std::string& STR_ClassName,
-            const bool B_Show
+            const char* const STR_ClassName,    //!< Filter name.
+            const bool B_Show                   //!< Show flag.
             ) const;
 
         //! @brief Global filter modification.
@@ -118,6 +119,6 @@ namespace cli {
         Keyword* m_pcliAllFilterNode;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_TRACES_MENU_H_

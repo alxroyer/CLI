@@ -1,112 +1,270 @@
-$(INT_DIR)/cli.o: ../../src/cli.cpp ../../include/cli/cli.h \
-  ../../include/cli/menu.h ../../include/cli/syntax_node.h \
-  ../../include/cli/element.h ../../include/cli/help.h \
-  ../../include/cli/shell.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h ../../include/cli/keyword.h \
-  ../../include/cli/endl.h ../../include/cli/command_line.h \
-  ../../include/cli/traces.h ../../src/config_menu.h \
-  ../../src/consistency.h
-$(INT_DIR)/command_line.o: ../../src/command_line.cpp \
-  ../../include/cli/command_line.h ../../include/cli/element.h \
-  ../../include/cli/help.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h ../../include/cli/menu.h \
-  ../../include/cli/syntax_node.h ../../include/cli/endl.h \
-  ../../include/cli/param.h ../../include/cli/traces.h \
-  ../../src/consistency.h
-$(INT_DIR)/config_menu.o: ../../src/config_menu.cpp \
-  ../../src/config_menu.h ../../include/cli/menu.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h ../../include/cli/keyword.h \
-  ../../include/cli/endl.h ../../include/cli/command_line.h \
-  ../../include/cli/shell.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h
-$(INT_DIR)/consistency.o: ../../src/consistency.cpp \
-  ../../include/cli/io_device.h ../../include/cli/debug.h \
-  ../../include/cli/traces.h ../../src/consistency.h
-$(INT_DIR)/console.o: ../../src/console.cpp ../../include/cli/console.h \
-  ../../include/cli/io_device.h ../../include/cli/debug.h
-$(INT_DIR)/debug.o: ../../src/debug.cpp ../../include/cli/debug.h
-$(INT_DIR)/element.o: ../../src/element.cpp ../../include/cli/cli.h \
-  ../../include/cli/menu.h ../../include/cli/syntax_node.h \
-  ../../include/cli/element.h ../../include/cli/help.h \
-  ../../include/cli/shell.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h
-$(INT_DIR)/endl.o: ../../src/endl.cpp ../../include/cli/endl.h \
-  ../../include/cli/element.h ../../include/cli/help.h \
-  ../../include/cli/cli.h ../../include/cli/menu.h \
-  ../../include/cli/syntax_node.h
-$(INT_DIR)/file_device.o: ../../src/file_device.cpp \
-  ../../include/cli/file_device.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h ../../src/consistency.h
-$(INT_DIR)/help.o: ../../src/help.cpp ../../include/cli/help.h
-$(INT_DIR)/io_device.o: ../../src/io_device.cpp \
-  ../../include/cli/io_device.h ../../include/cli/debug.h \
-  ../../include/cli/cli.h ../../include/cli/menu.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h ../../include/cli/traces.h
-$(INT_DIR)/io_mux.o: ../../src/io_mux.cpp ../../include/cli/io_mux.h \
-  ../../include/cli/io_device.h ../../include/cli/debug.h \
-  ../../include/cli/shell.h ../../include/cli/help.h \
-  ../../src/consistency.h
-$(INT_DIR)/keyword.o: ../../src/keyword.cpp ../../include/cli/keyword.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h
-$(INT_DIR)/menu.o: ../../src/menu.cpp ../../include/cli/menu.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h ../../include/cli/keyword.h \
-  ../../include/cli/endl.h ../../include/cli/shell.h \
-  ../../include/cli/io_device.h ../../include/cli/debug.h \
-  ../../include/cli/command_line.h
-$(INT_DIR)/param.o: ../../src/param.cpp ../../include/cli/param.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h
-$(INT_DIR)/param_float.o: ../../src/param_float.cpp \
-  ../../include/cli/param_float.h ../../include/cli/param.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h
-$(INT_DIR)/param_host.o: ../../src/param_host.cpp \
-  ../../include/cli/param_host.h ../../include/cli/param.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h
-$(INT_DIR)/param_int.o: ../../src/param_int.cpp \
-  ../../include/cli/param_int.h ../../include/cli/param.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h
-$(INT_DIR)/param_string.o: ../../src/param_string.cpp \
-  ../../include/cli/param_string.h ../../include/cli/param.h \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h
-$(INT_DIR)/shell.o: ../../src/shell.cpp ../../include/cli/shell.h \
-  ../../include/cli/help.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h ../../include/cli/io_mux.h \
-  ../../include/cli/shell.h ../../include/cli/cli.h \
-  ../../include/cli/menu.h ../../include/cli/syntax_node.h \
-  ../../include/cli/element.h ../../include/cli/command_line.h \
-  ../../include/cli/endl.h ../../include/cli/param.h \
-  ../../include/cli/traces.h ../../src/consistency.h
-$(INT_DIR)/single_command.o: ../../src/single_command.cpp \
-  ../../include/cli/single_command.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h ../../src/consistency.h
-$(INT_DIR)/syntax_node.o: ../../src/syntax_node.cpp \
-  ../../include/cli/syntax_node.h ../../include/cli/element.h \
-  ../../include/cli/help.h ../../include/cli/syntax_tag.h \
-  ../../include/cli/syntax_node.h ../../include/cli/param.h
-$(INT_DIR)/syntax_tag.o: ../../src/syntax_tag.cpp \
-  ../../include/cli/syntax_tag.h ../../include/cli/syntax_node.h \
-  ../../include/cli/element.h ../../include/cli/help.h
-$(INT_DIR)/telnet.o: ../../src/telnet.cpp ../../include/cli/telnet.h \
-  ../../include/cli/io_device.h ../../include/cli/debug.h \
-  ../../include/cli/shell.h ../../include/cli/help.h
-$(INT_DIR)/traces.o: ../../src/traces.cpp ../../include/cli/element.h \
-  ../../include/cli/help.h ../../include/cli/io_device.h \
-  ../../include/cli/debug.h ../../include/cli/traces.h \
-  ../../src/consistency.h
-$(INT_DIR)/traces_menu.o: ../../src/traces_menu.cpp \
-  ../../include/cli/keyword.h ../../include/cli/syntax_node.h \
-  ../../include/cli/element.h ../../include/cli/help.h \
-  ../../include/cli/param_string.h ../../include/cli/param.h \
-  ../../include/cli/syntax_tag.h ../../include/cli/endl.h \
-  ../../include/cli/command_line.h ../../include/cli/shell.h \
-  ../../include/cli/io_device.h ../../include/cli/debug.h \
-  ../../src/traces_menu.h ../../include/cli/menu.h \
-  ../../include/cli/traces.h ../../src/consistency.h
+$(INT_DIR)/cli.o: ../../../cpp/src/cli.cpp ../../../cpp/include/cli/pch.h \
+  ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/keyword.h \
+  ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/command_line.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/config_menu.h ../../../cpp/src/traces_menu.h \
+  ../../../cpp/src/consistency.h ../../../cpp/src/constraints.h
+$(INT_DIR)/command_line.o: ../../../cpp/src/command_line.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/command_line.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/param.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/consistency.h ../../../cpp/src/constraints.h
+$(INT_DIR)/config_menu.o: ../../../cpp/src/config_menu.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/keyword.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/command_line.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/src/config_menu.h \
+  ../../../cpp/include/cli/menu.h
+$(INT_DIR)/consistency.o: ../../../cpp/src/consistency.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/src/consistency.h
+$(INT_DIR)/debug.o: ../../../cpp/src/debug.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/src/constraints.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h
+$(INT_DIR)/element.o: ../../../cpp/src/element.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/cli.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/menu.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/constraints.h ../../../cpp/include/cli/traces.h
+$(INT_DIR)/endl.o: ../../../cpp/src/endl.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/endl.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/element.h \
+  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/menu.h \
+  ../../../cpp/include/cli/syntax_node.h
+$(INT_DIR)/file_device.o: ../../../cpp/src/file_device.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/file_device.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/consistency.h ../../../cpp/src/constraints.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h
+$(INT_DIR)/help.o: ../../../cpp/src/help.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h
+$(INT_DIR)/io_device.o: ../../../cpp/src/io_device.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h ../../../cpp/include/cli/cli.h \
+  ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/constraints.h
+$(INT_DIR)/io_mux.o: ../../../cpp/src/io_mux.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_mux.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/src/consistency.h ../../../cpp/src/constraints.h \
+  ../../../cpp/include/cli/traces.h
+$(INT_DIR)/keyword.o: ../../../cpp/src/keyword.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/keyword.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h
+$(INT_DIR)/menu.o: ../../../cpp/src/menu.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/menu.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/keyword.h ../../../cpp/include/cli/endl.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/command_line.h
+$(INT_DIR)/ncurses_console.o: ../../../cpp/src/ncurses_console.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/console.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h
+$(INT_DIR)/object.o: ../../../cpp/src/object.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/namespace.h
+$(INT_DIR)/param.o: ../../../cpp/src/param.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/param.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/src/constraints.h
+$(INT_DIR)/param_float.o: ../../../cpp/src/param_float.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/param_float.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/param.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h
+$(INT_DIR)/param_host.o: ../../../cpp/src/param_host.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/param_host.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/param_string.h \
+  ../../../cpp/include/cli/param.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/src/constraints.h ../../../cpp/include/cli/traces.h
+$(INT_DIR)/param_int.o: ../../../cpp/src/param_int.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/param_int.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/param.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h
+$(INT_DIR)/param_string.o: ../../../cpp/src/param_string.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/param_string.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/param.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/src/constraints.h
+$(INT_DIR)/resource_string.o: ../../../cpp/src/resource_string.cpp \
+  ../../../cpp/include/cli/pch.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/src/constraints.h
+$(INT_DIR)/shell.o: ../../../cpp/src/shell.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/io_mux.h ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/menu.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h \
+  ../../../cpp/include/cli/command_line.h ../../../cpp/include/cli/endl.h \
+  ../../../cpp/include/cli/param.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/include/cli/assert.h ../../../cpp/src/consistency.h \
+  ../../../cpp/src/constraints.h
+$(INT_DIR)/single_command.o: ../../../cpp/src/single_command.cpp \
+  ../../../cpp/include/cli/pch.h \
+  ../../../cpp/include/cli/single_command.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h ../../../cpp/src/consistency.h \
+  ../../../cpp/src/constraints.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h
+$(INT_DIR)/syntax_node.o: ../../../cpp/src/syntax_node.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/element.h \
+  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/syntax_tag.h \
+  ../../../cpp/include/cli/syntax_node.h ../../../cpp/include/cli/param.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/src/constraints.h
+$(INT_DIR)/syntax_tag.o: ../../../cpp/src/syntax_tag.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/syntax_tag.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/constraints.h
+$(INT_DIR)/telnet.o: ../../../cpp/src/telnet.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/telnet.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/traces.h
+$(INT_DIR)/tk.o: ../../../cpp/src/tk.cpp ../../../cpp/include/cli/pch.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/tk_stl.h ../../../cpp/include/cli/object.h
+$(INT_DIR)/traces.o: ../../../cpp/src/traces.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/element.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/consistency.h ../../../cpp/src/constraints.h
+$(INT_DIR)/traces_menu.o: ../../../cpp/src/traces_menu.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/keyword.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/param_string.h \
+  ../../../cpp/include/cli/param.h ../../../cpp/include/cli/syntax_tag.h \
+  ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/command_line.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/traces_menu.h ../../../cpp/include/cli/menu.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/src/consistency.h

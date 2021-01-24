@@ -135,7 +135,7 @@
 
     </section>
 
-    <section><title><sgmltag class="element">cpp</sgmltag>...
+    <section><title><sgmltag class="element">cpp</sgmltag>, <sgmltag class="element">java</sgmltag>
                 - Insert target language directly in the resource file</title>
 
         <para>
@@ -144,87 +144,77 @@
         through target language tags:
             <itemizedlist>
             <listitem><sgmltag class="element">cpp</sgmltag> for C++</listitem>
+            <listitem><sgmltag class="element">java</sgmltag> for C++</listitem>
             <listitem>...</listitem>
             </itemizedlist>
         </para>
 
         <para>
-        Commonly, these tags are located in <sgmltag class="element">endl</sgmltag> elements.
-        It allows you define what is executed
+        Basically, these tags are located in <sgmltag class="element">endl</sgmltag> elements.
+        It allows you to define what is executed
         when a command line has been successfully parsed.
         </para>
 
-        <example><title>Insert target language instructions (C++).</title>
-        Let's say you have a function <function>sayHello</function>,
-        and you would like it to be called when the user types <command>say hello</command>.
-        This is how you would do it in C++:
+        <example><title>Insert target language instructions.</title>
+        Let's say you have a C++ function <function>sayHello</function>,
+        or a Java class <classname>HelloApi</classname>,
+        and you would like those to be called when the user types <command>say hello</command>.
+        This is how you would do it:
             &sample-cpp;
-        If you try to transform and compile the sample as is,
-        it should not work.
-        Since <function>helloWorld</function> is not declared,
-        the output does not compile.
+        If you try to transform and compile the sample as is in C++, it should not work straight forward.
+        Since <function>helloWorld</function> is not declared, the output does not compile.
         The trick is to use special sections as below:
             &sample-cpp-full;
-        Have a <function>sayHello</function> function declaration
+        Have a C++ <function>sayHello</function> function declaration
         in a <filename class="headerfile">hello_api.h</filename> file,
         and it should work.
         </example>
 
-        <note>
+        <para>
+        Note that you give straight away user code to be executed in the XML resource file.
+        This may seem weird firstly, but it is however a nice way to do to my point of view.
+        You've got everything in a single readable file.
+        Though, it's easy to maintain.
+        On the other hand, it's easy to understand what is executed on each command.
+        And if you indent your XML resource file elegantly,
+        it could look like a piece of code somehow.
+        </para>
+
+        <para>
         Here is how sections are organized for C++ generation:
         <orderedlist>
         <listitem><sgmltag class="attvalue">head</sgmltag> section:
                     you may use this section for very first includes
                     or for pre-processing for instance</listitem>
 
-        <listitem>(auto-generated) CLI includes.</listitem>
-        <listitem><sgmltag class="attvalue">include</sgmltag> section:
-                    this section basically receives user includes.</listitem>
+        <listitem>(auto-generated) CLI imports.</listitem>
+        <listitem><sgmltag class="attvalue">import</sgmltag> section:
+                    this section basically receives user imports.</listitem>
 
-        <listitem>(auto-generated) CLI menu classes declaration:
-                    menus you have defined in the XML resource file are managed as derived classes.
-                    These classes definitions are generated here.</listitem>
-        <listitem><sgmltag class="attvalue">types</sgmltag> section:
-                    you have the opportunity to declare additional types or functions here,
-                    only available to this file.</listitem>
-
-        <listitem>(auto-generated) All CLI elements you have described in the XML resource file
-                    are now created as global variables.</listitem>
-        <listitem><sgmltag class="attvalue">vars</sgmltag> section:
-                    declare additional variables here.</listitem>
-
-        <listitem>(auto-generated) CLI execution is now implemented in menu methods.</listitem>
-        <listitem><sgmltag class="attvalue">body</sgmltag> section:
-                    you may implement local functions here.</listitem>
+        <listitem>(auto-generated) CLI definition:
+                    the static CLI structure, and the related command executions are defined here.</listitem>
 
         <listitem><sgmltag class="attvalue">tail</sgmltag> section:
                     very last section.</listitem>
         </orderedlist>
-        </note>
+
+        Java sections look the same except for include section, which is named import section in Java.
+        </para>
 
         <note>
         <para>
-        Note that you give straight away user code to be executed
-        in the XML resource file.
-        This may seem weird firstly,
-        but it is however a nice way to do to my point of view.
-        You've got everything in a single readable file.
-        Though, it's easy to maintain.
-        </para>
-
-        <para>
-        On the other hand, it's easy to understand what is executed on each command.
-        And if you indent your XML resource file elegantly,
-        it could look like a piece of code somehow.
+        C++ sections have changed a lot in version 2.1,
+        being greatly improved thanks to Java experience.
         </para>
         </note>
 
         <para>
         Now you may need to print out results.
         Use the <sgmltag class="element">out</sgmltag>
-        and <sgmltag class="element">err</sgmltag> elements in C++ for that.
-        Use them like <varname>std::cout</varname> and <varname>std::cerr</varname>
+        and <sgmltag class="element">err</sgmltag> elements for that.
+        Use them like <varname>std::cout</varname> and <varname>std::cerr</varname> in C++,
         and use the <varname>cli::endl</varname> constant for carriage returns.
+        Use <function>put</function> and <function>endl</function> methods in Java.
         </para>
 
         <example><title>Output</title>
@@ -283,10 +273,10 @@
         of <sgmltag class="element">value-of</sgmltag> elements.
         </para>
 
-        <note>
+        <!--<note>
         In C++, <sgmltag class="element">value-of</sgmltag> elements
         generate implicit casts to the types corresponding to the parameters.
-        </note>
+        </note>-->
 
         <blockquote>
         Well, I can do lots of things now,
@@ -619,6 +609,8 @@
         <para>
         Consider the following object class:
             <programlisting>&sample-circle-cpp;</programlisting>
+        or:
+            <programlisting>&sample-circle-java;</programlisting>
         </para>
 
         <para>
@@ -635,18 +627,25 @@
 
 
 
+
 ,-&gt;
 |
 |
 |
 |
+|
+|
+|
+|
 +--
 |
 |
 |
 |
 |
+|
 +--
+|
 |
 |
 |
@@ -699,13 +698,11 @@
 
 (1)
 
+
+
 (2)
 
 
-(3)
-
-
-
 
 
 (3)
@@ -714,7 +711,16 @@
 
 
 
+
 (3)
+
+
+
+
+
+
+(3)
+
 
 
 
@@ -768,18 +774,26 @@ add circle x_position -1 y_position -1 radius 3
 
 
 
-
 ,--
 |
 |
 |
+|
 +--
+|
+|
+|
+|
++--
+|
 |
 |
 |
 +--
 |
 `-&gt;
+
+
 
 
 
@@ -826,23 +840,31 @@ add circle x_position -1 y_position -1 radius 3
 
 (1)
 
-(2)
-
-
 
 (2)
 
 
 
+
+(2)
+
+
+
+
 (2)
 
 
 
+
 (2)
+
+
 
 
 
 (3)
+
+
 
 
 
@@ -965,6 +987,10 @@ add circle green
 
 
 
+
+
+
+
 </programlisting>
             </entry>
             <entry><!-- Vertical spacing --></entry>
@@ -984,7 +1010,7 @@ add circle green
         The base <command>exit</command> command
         allows the user to quit the current menu
         and to come back to the previous one.
-        The base <command>quit</command> directly quits the CLI.
+        The base <command>quit</command> command directly quits the CLI.
         </note>
 
         <note>
@@ -995,6 +1021,15 @@ add circle green
         in a UNIX shells,
         this command gives you the current working menu,
         and the current stack of menus.
+        </note>
+
+        <note>
+        You may have native code being executed when a menu exit.
+        This is done with native tags (<sgmltag class="element">cpp</sgmltag> or <sgmltag class="element">java</sgmltag>)
+        within a <sgmltag class="element">handler</sgmltag> element
+        with the attribute <sgmltag class="attribute">name</sgmltag>
+        set to <sgmltag class="attvalue">exit</sgmltag>.
+        See the example above.
         </note>
 
     </section>

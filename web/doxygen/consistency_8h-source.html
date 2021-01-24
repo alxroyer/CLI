@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>consistency.h</h1><a href="consistency_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -49,16 +49,24 @@
 <a name="l00030"></a>00030 <span class="preprocessor">#ifndef _CLI_CONSISTENCY_H_</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_CONSISTENCY_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00033"></a>00033 <span class="keyword">namespace </span>cli {
+<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="namespace_8h.html">cli/namespace.h</a>"</span>
 <a name="l00034"></a>00034 
-<a name="l00040"></a>00040     <span class="keywordtype">void</span> <a class="code" href="namespacecli.html#fbb2657ad8b08490e44f8f0d6591cf98">EnsureCommonDevices</a>(<span class="keywordtype">void</span>);
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
+<a name="l00037"></a>00037 
+<a name="l00038"></a>00038     
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040 
 <a name="l00041"></a>00041 
-<a name="l00047"></a>00047     <span class="keywordtype">void</span> <a class="code" href="namespacecli.html#9fea54c32b3c0e2b062437d18ee95b35">EnsureTraces</a>(<span class="keywordtype">void</span>);
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049 };
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051 <span class="preprocessor">#endif // _CLI_CONSISTENCY_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:29 2007 for CLI by&nbsp;
+<a name="l00042"></a>00042 
+<a name="l00043"></a>00043     void EnsureCommonDevices(<span class="keywordtype">void</span>);
+<a name="l00044"></a>00044 
+<a name="l00050"></a>00050     <span class="keywordtype">void</span> EnsureTraces(<span class="keywordtype">void</span>);
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054 <span class="preprocessor">#endif // _CLI_CONSISTENCY_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:29 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

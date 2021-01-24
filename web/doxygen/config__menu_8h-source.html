@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>config_menu.h</h1><a href="config__menu_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -49,66 +49,80 @@
 <a name="l00030"></a>00030 <span class="preprocessor">#ifndef _CLI_CONFIG_MENU_H_</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_CONFIG_MENU_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="menu_8h.html">cli/menu.h</a>"</span>
-<a name="l00034"></a>00034 
+<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="namespace_8h.html">cli/namespace.h</a>"</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include "<a class="code" href="menu_8h.html">cli/menu.h</a>"</span>
 <a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="keyword">namespace </span>cli {
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038     <span class="comment">// Forward declarations.</span>
-<a name="l00039"></a>00039     <span class="keyword">class </span>Keyword;
-<a name="l00040"></a>00040     <span class="keyword">class </span>OutputDevice;
-<a name="l00041"></a>00041 
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039     <span class="comment">// Forward declarations.</span>
+<a name="l00040"></a>00040     class <a class="code" href="classKeyword.html">Keyword</a>;
+<a name="l00041"></a>00041     class <a class="code" href="classOutputDevice.html">OutputDevice</a>;
 <a name="l00042"></a>00042 
-<a name="l00044"></a><a class="code" href="classcli_1_1ConfigMenu.html">00044</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1ConfigMenu.html">ConfigMenu</a> : <span class="keyword">public</span> <a class="code" href="classcli_1_1Menu.html">Menu</a>
-<a name="l00045"></a>00045     {
-<a name="l00046"></a>00046     <span class="keyword">public</span>:
-<a name="l00048"></a>00048         <a class="code" href="classcli_1_1ConfigMenu.html#0a1aca1b76b56cbc0ffa6c2306e378ee">ConfigMenu</a>(<span class="keywordtype">void</span>);
-<a name="l00049"></a>00049 
-<a name="l00051"></a>00051         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1ConfigMenu.html#9aa4c46939f214400c44a4f3659331d9">~ConfigMenu</a>(<span class="keywordtype">void</span>);
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053     <span class="keyword">public</span>:
-<a name="l00055"></a>00055         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1ConfigMenu.html#1dc94da49c9cf1e3f0fc7b8b4fb3f83c">SetCli</a>(<a class="code" href="classcli_1_1Cli.html">Cli</a>&amp; CLI_Cli);
-<a name="l00057"></a>00057         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1ConfigMenu.html#a81bad13f76a529fce7992e270ebdb3c">ExecuteReserved</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1CommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
-<a name="l00059"></a>00059         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1ConfigMenu.html#d572d4a7a520233015f374866628c469">Execute</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1CommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061     <span class="keyword">private</span>:
-<a name="l00063"></a>00063         <span class="keywordtype">void</span> EchoOn(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00064"></a>00064 
-<a name="l00066"></a>00066         <span class="keywordtype">void</span> EchoOff(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00067"></a>00067 
-<a name="l00069"></a>00069         <span class="keywordtype">void</span> BeepOn(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00070"></a>00070 
-<a name="l00072"></a>00072         <span class="keywordtype">void</span> BeepOff(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074     <span class="keyword">private</span>:
-<a name="l00076"></a>00076         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetEchoNode(<span class="keywordtype">void</span>);
-<a name="l00078"></a>00078         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetEchoNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00080"></a>00080         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetEchoOnNode(<span class="keywordtype">void</span>);
-<a name="l00082"></a>00082         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetEchoOnNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00084"></a>00084         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetEchoOffNode(<span class="keywordtype">void</span>);
-<a name="l00086"></a>00086         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetEchoOffNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00087"></a>00087 
-<a name="l00089"></a>00089         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetBeepNode(<span class="keywordtype">void</span>);
-<a name="l00091"></a>00091         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetBeepNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00093"></a>00093         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetBeepOnNode(<span class="keywordtype">void</span>);
-<a name="l00095"></a>00095         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetBeepOnNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00097"></a>00097         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetBeepOffNode(<span class="keywordtype">void</span>);
-<a name="l00099"></a>00099         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetBeepOffNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101     <span class="keyword">private</span>:
-<a name="l00103"></a>00103         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliEcho;
-<a name="l00105"></a>00105         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliEchoOn;
-<a name="l00107"></a>00107         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliEchoOff;
-<a name="l00108"></a>00108 
-<a name="l00110"></a>00110         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliBeep;
-<a name="l00112"></a>00112         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliBeepOn;
-<a name="l00114"></a>00114         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliBeepOff;
-<a name="l00115"></a>00115     };
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117 };
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119 <span class="preprocessor">#endif // _CLI_CONFIG_MENU_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:29 2007 for CLI by&nbsp;
+<a name="l00043"></a>00043 
+<a name="l00045"></a><a class="code" href="classConfigMenu.html">00045</a>     class <a class="code" href="classConfigMenu.html">ConfigMenu</a> : public <a class="code" href="classMenu.html">Menu</a>
+<a name="l00046"></a>00046     {
+<a name="l00047"></a>00047     <span class="keyword">public</span>:
+<a name="l00049"></a>00049         <a class="code" href="classConfigMenu.html">ConfigMenu</a>(<span class="keywordtype">void</span>);
+<a name="l00050"></a>00050 
+<a name="l00052"></a>00052         <span class="keyword">virtual</span> ~<a class="code" href="classConfigMenu.html">ConfigMenu</a>(<span class="keywordtype">void</span>);
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054     <span class="keyword">public</span>:
+<a name="l00056"></a>00056         <span class="keyword">virtual</span> <span class="keywordtype">void</span> SetCli(<a class="code" href="classCli.html">Cli</a>&amp; CLI_Cli);
+<a name="l00058"></a>00058         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> ExecuteReserved(<span class="keyword">const</span> <a class="code" href="classCommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
+<a name="l00060"></a>00060         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> Execute(<span class="keyword">const</span> <a class="code" href="classCommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
+<a name="l00061"></a>00061 
+<a name="l00062"></a>00062     <span class="keyword">private</span>:
+<a name="l00064"></a>00064         <span class="keywordtype">void</span> EchoOn(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00065"></a>00065 
+<a name="l00067"></a>00067         <span class="keywordtype">void</span> EchoOff(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00068"></a>00068 
+<a name="l00070"></a>00070         <span class="keywordtype">void</span> BeepOn(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00071"></a>00071 
+<a name="l00073"></a>00073         <span class="keywordtype">void</span> BeepOff(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00074"></a>00074 
+<a name="l00076"></a>00076         <span class="keywordtype">void</span> SetLang(<span class="keyword">const</span> <a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3">ResourceString::LANG</a> E_Lang) <span class="keyword">const</span>;
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078     <span class="keyword">private</span>:
+<a name="l00080"></a>00080         Keyword&amp; GetEchoNode(<span class="keywordtype">void</span>);
+<a name="l00082"></a>00082         <span class="keyword">const</span> Keyword&amp; GetEchoNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00084"></a>00084         Keyword&amp; GetEchoOnNode(<span class="keywordtype">void</span>);
+<a name="l00086"></a>00086         <span class="keyword">const</span> Keyword&amp; GetEchoOnNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00088"></a>00088         Keyword&amp; GetEchoOffNode(<span class="keywordtype">void</span>);
+<a name="l00090"></a>00090         <span class="keyword">const</span> Keyword&amp; GetEchoOffNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00091"></a>00091 
+<a name="l00093"></a>00093         Keyword&amp; GetBeepNode(<span class="keywordtype">void</span>);
+<a name="l00095"></a>00095         <span class="keyword">const</span> Keyword&amp; GetBeepNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00097"></a>00097         Keyword&amp; GetBeepOnNode(<span class="keywordtype">void</span>);
+<a name="l00099"></a>00099         <span class="keyword">const</span> Keyword&amp; GetBeepOnNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00101"></a>00101         Keyword&amp; GetBeepOffNode(<span class="keywordtype">void</span>);
+<a name="l00103"></a>00103         <span class="keyword">const</span> Keyword&amp; GetBeepOffNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00104"></a>00104 
+<a name="l00106"></a>00106         Keyword&amp; GetLangNode(<span class="keywordtype">void</span>);
+<a name="l00108"></a>00108         <span class="keyword">const</span> Keyword&amp; GetLangNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00110"></a>00110         Keyword&amp; GetEnglishLangNode(<span class="keywordtype">void</span>);
+<a name="l00112"></a>00112         <span class="keyword">const</span> Keyword&amp; GetEnglishLangNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00114"></a>00114         Keyword&amp; GetFrenchLangNode(<span class="keywordtype">void</span>);
+<a name="l00116"></a>00116         <span class="keyword">const</span> Keyword&amp; GetFrenchLangNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118     <span class="keyword">private</span>:
+<a name="l00120"></a>00120         Keyword* m_pcliEcho;
+<a name="l00122"></a>00122         Keyword* m_pcliEchoOn;
+<a name="l00124"></a>00124         Keyword* m_pcliEchoOff;
+<a name="l00125"></a>00125 
+<a name="l00127"></a>00127         Keyword* m_pcliBeep;
+<a name="l00129"></a>00129         Keyword* m_pcliBeepOn;
+<a name="l00131"></a>00131         Keyword* m_pcliBeepOff;
+<a name="l00132"></a>00132 
+<a name="l00134"></a>00134         Keyword* m_pcliLang;
+<a name="l00136"></a>00136         Keyword* m_pcliEnglishLang;
+<a name="l00138"></a>00138         Keyword* m_pcliFrenchLang;
+<a name="l00139"></a>00139     };
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00142"></a>00142 
+<a name="l00143"></a>00143 <span class="preprocessor">#endif // _CLI_CONFIG_MENU_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:29 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

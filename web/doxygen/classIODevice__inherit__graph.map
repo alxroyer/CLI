@@ -1,0 +1,8 @@
+base referer
+rect $classConsole.html 7,232 77,258
+rect $classInputFileDevice.html 101,232 215,258
+rect $classIOMux.html 239,232 301,258
+rect $classSingleCommand.html 325,232 445,258
+rect $classTelnetConnection.html 469,232 597,258
+rect $classOutputDevice.html 218,82 322,109
+rect $classObject.html 239,8 301,34

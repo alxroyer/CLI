@@ -30,35 +30,66 @@
 #ifndef _CLI_PARAM_STRING_H_
 #define _CLI_PARAM_STRING_H_
 
+#include <cli/namespace.h>
 #include <cli/param.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Help;
 
 
     //! @brief String parameter element class.
-    class ParamString : public ParamT<std::string>
+    class ParamString : public Param
     {
+    private:
+        //! @brief No default constructor.
+        ParamString(void);
+        //! @brief No copy constructor.
+        ParamString(const ParamString&);
+
     public:
         //! @brief Constructor.
         ParamString(
             const Help& CLI_Help    //!< Corresponding help.
             );
 
+    protected:
+        //! @brief Sub-classes constructor.
+        ParamString(
+            const char* const STR_Keyword,  //!< Keyword.
+            const Help& CLI_Help            //!< Corresponding help.
+            );
+
+    public:
         //! @brief Destructor.
         virtual ~ParamString(void);
 
+    private:
+        //! @brief No assignment operator.
+        ParamString& operator=(const ParamString&);
+
+    public:
+        //! @brief Implicit cast operator.
+        operator const char* const(void) const;
+
     public:
         //! @brief Value setting handler.
-        virtual const bool SetstrValue(const std::string& STR_Value) const;
+        virtual const bool SetstrValue(const char* const STR_Value) const;
+
+        //! @brief Typed value copy handler.
+        virtual const Param& CopyValue(const Param& CLI_Param) const;
 
         //! @brief Parameter cloning handler.
         virtual const Param* const Clone(void) const;
+
+    private:
+        //! Controlled value.
+        mutable tk::String m_strValue;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_PARAM_STRING_H_

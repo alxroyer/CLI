@@ -1,4 +1,8 @@
 base referer
-rect $syntax__node_8h.html 122,83 247,110
-rect $element_8h.html 297,109 393,135
-rect $help_8h.html 442,159 517,186
+rect $namespace_8h.html 889,160 1006,186
+rect $syntax__node_8h.html 122,185 248,212
+rect $tk_8h.html 768,337 826,364
+rect $element_8h.html 297,185 393,212
+rect $object_8h.html 754,160 840,186
+rect $help_8h.html 442,236 517,262
+rect $resource__string_8h.html 565,261 706,288

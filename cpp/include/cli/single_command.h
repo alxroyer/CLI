@@ -30,20 +30,26 @@
 #ifndef _CLI_SINGLE_COMMAND_H_
 #define _CLI_SINGLE_COMMAND_H_
 
-#include <string>
-
+#include <cli/namespace.h>
 #include <cli/io_device.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief Single command device.
     class SingleCommand : public IODevice
     {
+    private:
+        //! @brief No default constructor.
+        SingleCommand(void);
+        //! @brief No copy constructor.
+        SingleCommand(const SingleCommand&);
+
     public:
         //! @brief Constructor.
         SingleCommand(
-            const std::string& STR_Command,     //!< Command.
+            const char* const STR_Command,      //!< Command.
             OutputDevice& CLI_Output,           //!< Output.
             const bool B_AutoDelete             //!< Auto-deletion flag.
             );
@@ -51,16 +57,20 @@ namespace cli {
         //! @brief Destructor.
         virtual ~SingleCommand(void);
 
+    private:
+        //! @brief No assignment operator.
+        SingleCommand& operator=(const SingleCommand&);
+
     public:
         //! @brief Command accessor.
-        const std::string& GetCommand(void) const;
+        const tk::String GetCommand(void) const;
 
     protected:
         virtual const bool OpenDevice(void);
         virtual const bool CloseDevice(void);
     public:
         virtual const KEY GetKey(void) const;
-        virtual void PutString(const std::string& STR_Out) const;
+        virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
 
     private:
@@ -68,12 +78,12 @@ namespace cli {
         OutputDevice& m_cliOutput;
 
         //! The command.
-        const std::string m_strCommand;
+        const tk::String m_strCommand;
 
         //! Current position in the command.
         mutable int m_iPosition;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_SINGLE_COMMAND_H_

@@ -1,0 +1,20 @@
+(ab)*>
+  <cr>            
+  a               
+  cli-config      CLI configuration menu
+  exit            Exit menu '(ab)*'
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+(ab)*>a 
+  b               
+(ab)*>a b 
+  <cr>            
+  a               
+(ab)*>a b a 
+  b               
+(ab)*>a b a b 
+  <cr>            
+  a               
+(ab)*>a b a b 
+(ab)*>exit

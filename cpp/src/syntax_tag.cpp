@@ -23,10 +23,19 @@
 */
 
 
+#include "cli/pch.h"
+
+#include <stdio.h>
+#include <string.h>
+
 #include "cli/syntax_tag.h"
 #include "cli/help.h"
+#include "cli/traces.h"
+#include "cli/io_device.h"
+#include "cli/assert.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 SyntaxTag::SyntaxTag(const bool B_Hollow)
@@ -39,12 +48,18 @@ SyntaxTag::~SyntaxTag(void)
 {
 }
 
-const std::string SyntaxTag::GetKeyword(void) const
+const tk::String SyntaxTag::GetKeyword(void) const
 {
     static char str_Buffer[256];
     memset(str_Buffer, '\0', sizeof(str_Buffer));
     snprintf(str_Buffer, sizeof(str_Buffer) - 1, "tag[0x%08x]", (unsigned int) this);
-    return str_Buffer;
+
+    tk::String str_Keyword(MAX_WORD_LENGTH);
+    if (! str_Keyword.Set(str_Buffer))
+    {
+        GetTraces().Trace(INTERNAL_ERROR) << "SyntaxTag::GetKeyword() could not constructor the SyntaxTag keyword" << endl;
+}
+    return str_Keyword;
 }
 
 const bool SyntaxTag::GetbHollow(void) const
@@ -63,19 +78,31 @@ SyntaxRef::~SyntaxRef(void)
 {
 }
 
-const std::string SyntaxRef::GetKeyword(void) const
+const tk::String SyntaxRef::GetKeyword(void) const
 {
     static char str_Buffer[256];
     memset(str_Buffer, '\0', sizeof(str_Buffer));
     snprintf(str_Buffer, sizeof(str_Buffer) - 1, "ref[0x%08x]", (unsigned int) this);
 
-    assert(m_pcliTag != NULL);
-    return (std::string(str_Buffer) + std::string(" -> ") + m_pcliTag->GetKeyword());
+    tk::String str_Keyword(MAX_WORD_LENGTH);
+    if (! str_Keyword.Set(str_Buffer))
+    {
+        GetTraces().Trace(INTERNAL_ERROR) << "SyntaxRef::GetKeyword() could not constructor the SyntaxRef keyword" << endl;
+}
+    if (m_pcliTag != NULL)
+    {
+        if ((! str_Keyword.Append(" -> "))
+            || (! str_Keyword.Append(m_pcliTag->GetKeyword())))
+        {
+            GetTraces().Trace(INTERNAL_ERROR) << "SyntaxRef::GetKeyword() could not constructor the SyntaxRef keyword" << endl;
+        }
+    }
+    return str_Keyword;
 }
 
 const SyntaxTag& SyntaxRef::GetTag(void) const
 {
-    assert(m_pcliTag != NULL);
+    CLI_ASSERT(m_pcliTag != NULL);
     return *m_pcliTag;
 }
 

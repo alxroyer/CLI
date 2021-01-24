@@ -22,15 +22,20 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+#include "cli/pch.h"
+
 #include <cli/io_mux.h>
 #include <cli/shell.h>
 #include "consistency.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 IOMux::IOMux(const bool B_AutoDelete)
   : IODevice("mux", "\n", B_AutoDelete),
+    m_qInputs(MAX_IO_MUX_INPUTS),
     m_bIOLocked(false)
 {
     EnsureCommonDevices();
@@ -54,13 +59,13 @@ const bool IOMux::OpenDevice(void)
     IODevice* pcli_Input = NULL;
 
     // Input.
-    if ((! CheckInput()) || (m_qInputs.empty()))
+    if ((! CheckInput()) || (m_qInputs.IsEmpty()))
     {
         b_Res = false;
     }
     else
     {
-        if ((pcli_Input = m_qInputs.front()))
+        if ((pcli_Input = m_qInputs.GetHead()))
         {
             if (! pcli_Input->OpenUp(__CALL_INFO__))
             {
@@ -124,7 +129,7 @@ const bool IOMux::CloseDevice(void)
     }
 
     // Inputs.
-    while (! m_qInputs.empty())
+    while (! m_qInputs.IsEmpty())
     {
         if (! ReleaseFirstInputDevice())
         {
@@ -135,7 +140,7 @@ const bool IOMux::CloseDevice(void)
     return b_Res;
 }
 
-void IOMux::PutString(const std::string& STR_Out) const
+void IOMux::PutString(const char* const STR_Out) const
 {
     //! @warning This method should not be called. However, we redirect the call to output stream.
     if ((m_arpcliOutputs[OUTPUT_STREAM] != NULL)
@@ -163,9 +168,9 @@ void IOMux::Beep(void) const
 
 const KEY IOMux::GetKey(void) const
 {
-    if (CheckInput() && (! m_qInputs.empty()))
+    if (CheckInput() && (! m_qInputs.IsEmpty()))
     {
-        if (IODevice* const pcli_Input = m_qInputs.front())
+        if (IODevice* const pcli_Input = m_qInputs.GetHead())
         {
             // Protection against infinite loop.
             if (! m_bIOLocked)
@@ -235,9 +240,9 @@ const bool IOMux::SetOutput(const STREAM_TYPE E_StreamType, OutputDevice* const 
 
 const IODevice* const IOMux::GetInput(void) const
 {
-    if (! m_qInputs.empty())
+    if (! m_qInputs.IsEmpty())
     {
-        return m_qInputs.front();
+        return m_qInputs.GetHead();
     }
 
     return NULL;
@@ -247,8 +252,11 @@ const bool IOMux::AddInput(IODevice* const PCLI_Input)
 {
     if (PCLI_Input != NULL)
     {
-        m_qInputs.push_back(PCLI_Input);
-        PCLI_Input->UseInstance(__CALL_INFO__);
+        if (m_qInputs.AddTail(PCLI_Input))
+        {
+            PCLI_Input->UseInstance(__CALL_INFO__);
+            return false;
+        }
     }
 
     return true;
@@ -257,7 +265,7 @@ const bool IOMux::AddInput(IODevice* const PCLI_Input)
 const bool IOMux::NextInput(void)
 {
     // Terminate head device.
-    if (! m_qInputs.empty())
+    if (! m_qInputs.IsEmpty())
     {
         if (! ReleaseFirstInputDevice())
         {
@@ -266,9 +274,9 @@ const bool IOMux::NextInput(void)
     }
 
     // Prepare next device.
-    if (CheckInput() && (! m_qInputs.empty()))
+    if (CheckInput() && (! m_qInputs.IsEmpty()))
     {
-        if (IODevice* const pcli_Input = m_qInputs.front())
+        if (IODevice* const pcli_Input = m_qInputs.GetHead())
         {
             if (GetOpenUsers() > 0)
             {
@@ -292,7 +300,7 @@ const bool IOMux::ResetInputList(void)
 {
     bool b_Res = true;
 
-    while (! m_qInputs.empty())
+    while (! m_qInputs.IsEmpty())
     {
         if (! ReleaseFirstInputDevice())
         {
@@ -310,7 +318,7 @@ IODevice* const IOMux::CreateInputDevice(void)
 
 const bool IOMux::CheckInput(void) const
 {
-    if (m_qInputs.empty())
+    if (m_qInputs.IsEmpty())
     {
         // Input needed.
         if (IODevice* const pcli_Input = const_cast<IOMux*>(this)->CreateInputDevice())
@@ -326,7 +334,7 @@ const bool IOMux::CheckInput(void) const
                 }
             }
         }
-        else if (m_qInputs.empty())
+        else if (m_qInputs.IsEmpty())
         {
             // No more input.
             return false;
@@ -339,11 +347,11 @@ const bool IOMux::CheckInput(void) const
 
 const bool IOMux::ReleaseFirstInputDevice(void)
 {
-    if (! m_qInputs.empty())
+    if (! m_qInputs.IsEmpty())
     {
         bool b_Res = true;
 
-        if (IODevice* const pcli_Input = m_qInputs.front())
+        if (IODevice* const pcli_Input = m_qInputs.RemoveHead())
         {
             if (GetOpenUsers() > 0)
             {
@@ -356,9 +364,6 @@ const bool IOMux::ReleaseFirstInputDevice(void)
             // Free the device instance.
             pcli_Input->FreeInstance(__CALL_INFO__);
         }
-
-        // Remove device reference.
-        m_qInputs.pop_front();
 
         return b_Res;
     }

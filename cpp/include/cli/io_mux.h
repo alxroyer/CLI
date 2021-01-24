@@ -31,13 +31,13 @@
 #ifndef _CLI_IO_MUX_H_
 #define _CLI_IO_MUX_H_
 
-#include <deque>
-
+#include <cli/namespace.h>
 #include <cli/io_device.h>
 #include <cli/shell.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief Input / output device multiplexer.
     //!
@@ -49,8 +49,14 @@ namespace cli {
     //! The null device and standard devices are not subject to this remark.
     class IOMux : public IODevice
     {
+    private:
+        //! @brief No default constructor.
+        IOMux(void);
+        //! @brief No copy constructor.
+        IOMux(const IOMux&);
+
     public:
-        //! @brief Default constructor.
+        //! @brief Main constructor.
         IOMux(
             const bool AutoDelete               //!< Auto-deletion flag.
             );
@@ -58,11 +64,15 @@ namespace cli {
         //! @brief Destructor.
         virtual ~IOMux(void);
 
+    private:
+        //! @brief No assignment operator.
+        IOMux& operator=(const IOMux&);
+
     protected:
         virtual const bool OpenDevice(void);
         virtual const bool CloseDevice(void);
     public:
-        virtual void PutString(const std::string& STR_Out) const;
+        virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
         virtual const KEY GetKey(void) const;
 
@@ -75,7 +85,7 @@ namespace cli {
         //! @brief Output stream setting.
         const bool SetOutput(
             const STREAM_TYPE E_StreamType,         //!< Output stream identifier.
-            OutputDevice* const PCLI_Welcome        //!< Welcome stream.
+            OutputDevice* const PCLI_Stream         //!< Device reference.
             );
 
         //! @brief Current input device accessor.
@@ -126,12 +136,12 @@ namespace cli {
         OutputDevice* m_arpcliOutputs[STREAM_TYPES_COUNT];
 
         //! Input device list.
-        std::deque<IODevice*> m_qInputs;
+        tk::Queue<IODevice*> m_qInputs;
 
         //! Protection against infinite loop on output device.
         mutable bool m_bIOLocked;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_IO_MUX_H_

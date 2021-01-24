@@ -23,12 +23,16 @@
 */
 
 
+#include "cli/pch.h"
+
+#include <stdlib.h>
+
 #include "cli/keyword.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-Keyword::Keyword(const std::string& STR_Keyword, const Help& CLI_Help)
+Keyword::Keyword(const char* const STR_Keyword, const Help& CLI_Help)
   : SyntaxNode(STR_Keyword, CLI_Help)
 {
 }

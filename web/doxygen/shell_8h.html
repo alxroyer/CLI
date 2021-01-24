@@ -19,19 +19,26 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_8f01d9b4589024334dc9ddb77b167b80.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_8a599c2cb6f1d7bd0e0805e56078a760.html">cli</a></div>
-<h1>shell.h File Reference</h1>Shell class definition. <a href="#_details">More...</a>
+<a class="el" href="dir_1478fa2896c71a852f24f40b9ae7a523.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ee510e0e819a9187a5b85fd01d9d2bcf.html">cli</a></div>
+<h1>shell.h File Reference</h1><a class="el" href="classShell.html">Shell</a> class definition. <a href="#_details">More...</a>
 <p>
-<code>#include &lt;vector&gt;</code><br>
+<code>#include &lt;<a class="el" href="namespace_8h-source.html">cli/namespace.h</a>&gt;</code><br>
+<code>#include &lt;<a class="el" href="object_8h-source.html">cli/object.h</a>&gt;</code><br>
 <code>#include &lt;<a class="el" href="help_8h-source.html">cli/help.h</a>&gt;</code><br>
 <code>#include &lt;<a class="el" href="io__device_8h-source.html">cli/io_device.h</a>&gt;</code><br>
+<code>#include &lt;<a class="el" href="tk_8h-source.html">cli/tk.h</a>&gt;</code><br>
 
 <p>
 Include dependency graph for shell.h:<p><center><img src="shell_8h__incl.png" border="0" usemap="#shell.h_map" alt=""></center>
 <map name="shell.h_map">
-<area href="help_8h.html" shape="rect" coords="133,58,208,85" alt="">
-<area href="io__device_8h.html" shape="rect" coords="118,109,222,136" alt="">
-<area href="debug_8h.html" shape="rect" coords="273,160,358,186" alt="">
+<area href="namespace_8h.html" shape="rect" coords="836,210,953,237" alt="">
+<area href="object_8h.html" shape="rect" coords="701,210,786,237" alt="">
+<area href="help_8h.html" shape="rect" coords="133,362,208,389" alt="">
+<area href="tk_8h.html" shape="rect" coords="462,210,521,237" alt="">
+<area href="io__device_8h.html" shape="rect" coords="118,159,222,186" alt="">
+<area href="resource__string_8h.html" shape="rect" coords="272,362,413,389" alt="">
+<area href="tk__stl_8h.html" shape="rect" coords="572,362,652,389" alt="">
+<area href="debug_8h.html" shape="rect" coords="300,109,385,135" alt="">
 </map>
 
 <p>
@@ -52,35 +59,70 @@ This graph shows which files directly or indirectly include this file:<p><center
 <p>
 <a href="shell_8h-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecli.html">cli</a></td></tr>
-
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcli_1_1Shell.html">cli::Shell</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html">Shell</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classcli_1_1Shell.html">Shell</a> management.  <a href="classcli_1_1Shell.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classShell.html">Shell</a> management.  <a href="classShell.html#_details">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Enumerations</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecli.html#65001714a679b48224858916d7cb5087">cli::STREAM_TYPE</a> { <br>
-&nbsp;&nbsp;<a class="el" href="namespacecli.html#65001714a679b48224858916d7cb5087227241aea2bf5cd35717af5e4e692899">cli::ALL_STREAMS</a> =  -1, 
-<a class="el" href="namespacecli.html#65001714a679b48224858916d7cb50877099c20673473bb05224e315299070e5">cli::WELCOME_STREAM</a> =  0, 
-<a class="el" href="namespacecli.html#65001714a679b48224858916d7cb508733887019e3f7cf7366668cf7ed393cbe">cli::PROMPT_STREAM</a>, 
-<a class="el" href="namespacecli.html#65001714a679b48224858916d7cb50870cb6d8ca66f0c93fe876b1e00b23de9b">cli::ECHO_STREAM</a>, 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c1492">STREAM_TYPE</a> { <br>
+&nbsp;&nbsp;<a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c14924a3d58d84486a4d788ec5e59ccd21b27">ALL_STREAMS</a> =  -1, 
+<a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c14925947dfbf1d626b225b608bd19613abe0">WELCOME_STREAM</a> =  0, 
+<a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c149257c744739e5f87c99f41fb01fb794b42">PROMPT_STREAM</a>, 
+<a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c1492eadaf8b38ba63c1978ff9dcc8b9069d7">ECHO_STREAM</a>, 
 <br>
-&nbsp;&nbsp;<a class="el" href="namespacecli.html#65001714a679b48224858916d7cb508763e9f9b065f3a1ad471b6fae2a8bd0af">cli::OUTPUT_STREAM</a>, 
-<a class="el" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">cli::ERROR_STREAM</a>, 
-<a class="el" href="namespacecli.html#65001714a679b48224858916d7cb508787af255a61560f26044e4f38f7997043">cli::STREAM_TYPES_COUNT</a>
+&nbsp;&nbsp;<a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9">OUTPUT_STREAM</a>, 
+<a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e">ERROR_STREAM</a>, 
+<a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c14928bb89aa87bc8aca527770d9191a809e8">STREAM_TYPES_COUNT</a>
 <br>
  }</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Output stream enumeration.  <a href="namespacecli.html#65001714a679b48224858916d7cb5087">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Output stream enumeration.  <a href="shell_8h.html#950d7a62f48d194fd7463162541c1492">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Shell class definition. 
+<a class="el" href="classShell.html">Shell</a> class definition. 
 <p>
 <dl class="author" compact><dt><b>Author:</b></dt><dd>Alexis Royer </dd></dl>
 
 <p>
-Definition in file <a class="el" href="shell_8h-source.html">shell.h</a>.<hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:14:00 2007 for CLI by&nbsp;
+Definition in file <a class="el" href="shell_8h-source.html">shell.h</a>.<hr><h2>Enumeration Type Documentation</h2>
+<a class="anchor" name="950d7a62f48d194fd7463162541c1492"></a><!-- doxytag: member="shell.h::STREAM_TYPE" ref="950d7a62f48d194fd7463162541c1492" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="shell_8h.html#950d7a62f48d194fd7463162541c1492">STREAM_TYPE</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Output stream enumeration. 
+<p>
+<dl compact><dt><b>Enumerator: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" name="950d7a62f48d194fd7463162541c14924a3d58d84486a4d788ec5e59ccd21b27"></a><!-- doxytag: member="ALL_STREAMS" ref="950d7a62f48d194fd7463162541c14924a3d58d84486a4d788ec5e59ccd21b27" args="" -->ALL_STREAMS</em>&nbsp;</td><td>
+All streams. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="950d7a62f48d194fd7463162541c14925947dfbf1d626b225b608bd19613abe0"></a><!-- doxytag: member="WELCOME_STREAM" ref="950d7a62f48d194fd7463162541c14925947dfbf1d626b225b608bd19613abe0" args="" -->WELCOME_STREAM</em>&nbsp;</td><td>
+Welcome stream. Useful for bye too. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="950d7a62f48d194fd7463162541c149257c744739e5f87c99f41fb01fb794b42"></a><!-- doxytag: member="PROMPT_STREAM" ref="950d7a62f48d194fd7463162541c149257c744739e5f87c99f41fb01fb794b42" args="" -->PROMPT_STREAM</em>&nbsp;</td><td>
+Prompt stream. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="950d7a62f48d194fd7463162541c1492eadaf8b38ba63c1978ff9dcc8b9069d7"></a><!-- doxytag: member="ECHO_STREAM" ref="950d7a62f48d194fd7463162541c1492eadaf8b38ba63c1978ff9dcc8b9069d7" args="" -->ECHO_STREAM</em>&nbsp;</td><td>
+Echo stream. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9"></a><!-- doxytag: member="OUTPUT_STREAM" ref="950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9" args="" -->OUTPUT_STREAM</em>&nbsp;</td><td>
+Output stream. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e"></a><!-- doxytag: member="ERROR_STREAM" ref="950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e" args="" -->ERROR_STREAM</em>&nbsp;</td><td>
+Error stream. </td></tr>
+<tr><td valign="top"><em><a class="anchor" name="950d7a62f48d194fd7463162541c14928bb89aa87bc8aca527770d9191a809e8"></a><!-- doxytag: member="STREAM_TYPES_COUNT" ref="950d7a62f48d194fd7463162541c14928bb89aa87bc8aca527770d9191a809e8" args="" -->STREAM_TYPES_COUNT</em>&nbsp;</td><td>
+Number of streams. </td></tr>
+</table>
+</dl>
+
+<p>
+Definition at line <a class="el" href="shell_8h-source.html#l00051">51</a> of file <a class="el" href="shell_8h-source.html">shell.h</a>.
+</div>
+</div><p>
+<hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:14:40 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

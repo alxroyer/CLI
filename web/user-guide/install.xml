@@ -46,7 +46,7 @@
 
     </section>
 
-    <section id="compilation"><title id="compilation.title">Compilation</title>
+    <section id="build"><title id="build.title">Build</title>
 
         <para>
         Once you have downloaded the archive, unpack it on your disk:
@@ -54,16 +54,39 @@
         </para>
 
         <para>
-        Go to <filename class="directory">cpp/build/make</filename>:
-            <programlisting>cd cpp/build/make</programlisting>
-        And compile:
+        Go to <filename class="directory">build/make</filename>:
+            <programlisting>cd build/make</programlisting>
+        and build:
             <programlisting>make</programlisting>
+        or (debug version):
+            <programlisting>make _DEBUG=</programlisting>
         This compilation will run over the following steps:
             <orderedlist>
-            <listitem>Compilation of the CLI library for C++</listitem>
-            <listitem>Compilation of program samples: cpptest, empty, clisample</listitem>
-            <listitem>User guide samples testing: all samples of this user guide are compiled, executed, and checked</listitem>
-            <listitem>Additional unit tests: io_device</listitem>
+            <listitem>C++:
+                <orderedlist>
+                <listitem>C++ CLI library compilation</listitem>
+                <listitem>Program samples compilation:
+                            tktest, cpptest, empty, hello, clisample</listitem>
+                <listitem>User guide samples testing:
+                            all samples of this user guide are compiled, executed, and checked</listitem>
+                <listitem>Additional unit tests:
+                            io_device</listitem>
+                </orderedlist>
+            </listitem>
+            <listitem>Java:
+                <orderedlist>
+                <listitem>Java CLI library compilation</listitem>
+                <listitem>JNI generation</listitem>
+                <listitem>Native C++ library compilation</listitem>
+                <listitem>User guide samples testing:
+                            all samples of this user guide are compiled, executed, and checked</listitem>
+                </orderedlist>
+            </listitem>
+            <listitem>User-guide:
+                <orderedlist>
+                <listitem>User-guide update (if DOCBOOK_XSL_HTML variable is set)</listitem>
+                </orderedlist>
+            </listitem>
             </orderedlist>
         </para>
 

@@ -30,14 +30,22 @@
 #ifndef _CLI_CONSOLE_H_
 #define _CLI_CONSOLE_H_
 
+#include <cli/namespace.h>
 #include <cli/io_device.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief Console intput/output device class.
     class Console : public IODevice
     {
+    private:
+        //! @brief No default constructor.
+        Console(void);
+        //! @brief No copy constructor.
+        Console(const Console&);
+
     public:
         //! @brief Constructor.
         Console(
@@ -46,6 +54,10 @@ namespace cli {
 
         //! @brief Destructor.
         virtual ~Console(void);
+
+    private:
+        //! @brief No assignment operator.
+        Console& operator=(const Console&);
 
     protected:
         //! @brief Open device handler.
@@ -58,15 +70,16 @@ namespace cli {
 
     public:
         //! @brief Output handler.
-        virtual void PutString(const std::string& STR_Out) const;
+        virtual void PutString(const char* const STR_Out) const;
         //! @brief Beep handler.
         virtual void Beep(void) const;
 
     private:
-        void* m_pWindow;
+        //! Internal data.
+        void* m_pData;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_CONSOLE_H_
 

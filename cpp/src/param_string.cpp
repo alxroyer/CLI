@@ -23,13 +23,25 @@
 */
 
 
-#include "cli/param_string.h"
+#include "cli/pch.h"
 
-using namespace cli;
+#include "cli/param_string.h"
+#include "cli/traces.h"
+#include "cli/io_device.h"
+#include "constraints.h"
+
+CLI_NS_USE(cli)
 
 
 ParamString::ParamString(const Help& CLI_Help)
-  : ParamT<std::string>("<string>", CLI_Help)
+  : Param("<string>", CLI_Help),
+    m_strValue(MAX_WORD_LENGTH)
+{
+}
+
+ParamString::ParamString(const char* const STR_Keyword, const Help& CLI_Help)
+  : Param(STR_Keyword, CLI_Help),
+    m_strValue(MAX_WORD_LENGTH)
 {
 }
 
@@ -37,10 +49,32 @@ ParamString::~ParamString(void)
 {
 }
 
-const bool ParamString::SetstrValue(const std::string& STR_Value) const
+ParamString::operator const char* const(void) const
 {
-    SetValue(STR_Value, STR_Value);
+    return m_strValue;
+}
+
+const bool ParamString::SetstrValue(const char* const STR_Value) const
+{
+    bool b_Result = false;
+    if (Param::SetValue(STR_Value))
+    {
+        if (m_strValue.Set(STR_Value))
+        {
+            b_Result = true;
+        }
+        else
+        {
+            GetTraces().Trace(INTERNAL_ERROR) << "Not enough space for string parameter" << endl;
+        }
+    }
     return true;
+}
+
+const Param& ParamString::CopyValue(const Param& CLI_Param) const
+{
+    SetstrValue(CLI_Param.GetKeyword());
+    return *this;
 }
 
 const Param* const ParamString::Clone(void) const

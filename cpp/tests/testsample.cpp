@@ -23,12 +23,9 @@
 */
 
 
-#include <iostream>
-
 #include "cli/common.h"
 #include "cli/shell.h"
 #include "cli/file_device.h"
-#include "cli/telnet.h"
 
 
 int main(int I_Args, char** ARSTR_Args)
@@ -36,26 +33,26 @@ int main(int I_Args, char** ARSTR_Args)
     // Check arguments.
     if (I_Args != 3)
     {
-        std::cout << "USAGE" << std::endl;
-        std::cout << "   " << ARSTR_Args[0] << " <input file> <output file>" << std::endl;
+        cli::OutputDevice::GetStdOut() << "USAGE" << cli::endl;
+        cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << " <input file> <output file>" << cli::endl;
         return -1;
     }
 
     // Look for a CLI to launch.
-    cli::CliList cli_List;
+    cli::Cli::List cli_List(10);
     cli::Cli::FindFromName(cli_List, ".*");
-    if (cli_List.size() == 0)
+    if (cli_List.IsEmpty())
     {
-        std::cerr << "No CLI found" << std::endl;
+        cli::OutputDevice::GetStdErr() << "No CLI found" << cli::endl;
         return -1;
     }
-    else if (cli_List.size() != 1)
+    else if (cli_List.GetCount() > 1)
     {
-        std::cerr << "Several CLI found" << std::endl;
+        cli::OutputDevice::GetStdErr() << "Several CLI found" << cli::endl;
     }
 
     // Create a shell.
-    cli::Shell cli_Shell(*cli_List[0]);
+    cli::Shell cli_Shell(*cli_List.GetHead());
 
     // Create devices.
     cli::OutputFileDevice cli_Output(ARSTR_Args[2], false);

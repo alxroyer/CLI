@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>cli.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,212 +45,251 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;regex.h&gt;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="preprocessor">#include "<a class="code" href="cli_8h.html">cli/cli.h</a>"</span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include "<a class="code" href="menu_8h.html">cli/menu.h</a>"</span>
-<a name="l00030"></a>00030 <span class="preprocessor">#include "<a class="code" href="shell_8h.html">cli/shell.h</a>"</span>
-<a name="l00031"></a>00031 <span class="preprocessor">#include "<a class="code" href="keyword_8h.html">cli/keyword.h</a>"</span>
-<a name="l00032"></a>00032 <span class="preprocessor">#include "<a class="code" href="endl_8h.html">cli/endl.h</a>"</span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="command__line_8h.html">cli/command_line.h</a>"</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include "<a class="code" href="traces_8h.html">cli/traces.h</a>"</span>
-<a name="l00035"></a>00035 <span class="preprocessor">#include "<a class="code" href="config__menu_8h.html">config_menu.h</a>"</span>
-<a name="l00036"></a>00036 <span class="preprocessor">#ifdef _DEBUG</span>
-<a name="l00037"></a>00037 <span class="preprocessor"></span><span class="preprocessor">#include "<a class="code" href="traces__menu_8h.html">traces_menu.h</a>"</span>
-<a name="l00038"></a>00038 <span class="preprocessor">#endif</span>
-<a name="l00039"></a>00039 <span class="preprocessor"></span><span class="preprocessor">#include "<a class="code" href="consistency_8h.html">consistency.h</a>"</span>
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041 <span class="keyword">using namespace </span>cli;
-<a name="l00042"></a>00042 
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a> TRACE_CLI(<span class="stringliteral">"CLI"</span>, <span class="stringliteral">"CLI traces"</span>);
+<a name="l00028"></a>00028 <span class="preprocessor">#ifndef CLI_NO_REGEX</span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">#include &lt;regex.h&gt;</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#include &lt;string.h&gt;</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#endif</span>
+<a name="l00032"></a>00032 <span class="preprocessor"></span>
+<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="cli_8h.html">cli/cli.h</a>"</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include "<a class="code" href="menu_8h.html">cli/menu.h</a>"</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include "<a class="code" href="shell_8h.html">cli/shell.h</a>"</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include "<a class="code" href="keyword_8h.html">cli/keyword.h</a>"</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#include "<a class="code" href="endl_8h.html">cli/endl.h</a>"</span>
+<a name="l00038"></a>00038 <span class="preprocessor">#include "<a class="code" href="command__line_8h.html">cli/command_line.h</a>"</span>
+<a name="l00039"></a>00039 <span class="preprocessor">#include "<a class="code" href="traces_8h.html">cli/traces.h</a>"</span>
+<a name="l00040"></a>00040 <span class="preprocessor">#include "<a class="code" href="assert_8h.html">cli/assert.h</a>"</span>
+<a name="l00041"></a>00041 <span class="preprocessor">#include "<a class="code" href="config__menu_8h.html">config_menu.h</a>"</span>
+<a name="l00042"></a>00042 <span class="preprocessor">#include "<a class="code" href="traces__menu_8h.html">traces_menu.h</a>"</span>
+<a name="l00043"></a>00043 <span class="preprocessor">#include "<a class="code" href="consistency_8h.html">consistency.h</a>"</span>
+<a name="l00044"></a>00044 <span class="preprocessor">#include "<a class="code" href="constraints_8h.html">constraints.h</a>"</span>
 <a name="l00045"></a>00045 
-<a name="l00046"></a>00046 <span class="keyword">static</span> <a class="code" href="namespacecli.html#699ee5ae18f44c4b96e915a3aea32194">CliList</a> M_CLIList;
+<a name="l00046"></a>00046 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
 <a name="l00047"></a>00047 
-<a name="l00048"></a><a class="code" href="classcli_1_1Cli.html#22afa1f369d71a78311efc251ff86f7b">00048</a> Cli::Cli(<span class="keyword">const</span> std::string&amp; STR_Name, <span class="keyword">const</span> <a class="code" href="classcli_1_1Help.html">Help</a>&amp; CLI_Help)
-<a name="l00049"></a>00049   : <a class="code" href="classcli_1_1Menu.html">Menu</a>(STR_Name, CLI_Help),
-<a name="l00050"></a>00050     m_pcliShell(NULL),
-<a name="l00051"></a>00051     m_pcliConfigMenu(NULL), m_pcliConfigMenuNode(NULL)
-<a name="l00052"></a>00052 {
-<a name="l00053"></a>00053     <a class="code" href="namespacecli.html#fbb2657ad8b08490e44f8f0d6591cf98">EnsureCommonDevices</a>();
-<a name="l00054"></a>00054     <a class="code" href="namespacecli.html#9fea54c32b3c0e2b062437d18ee95b35">EnsureTraces</a>();
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056     <span class="comment">// Set the CLI reference to oneself.</span>
-<a name="l00057"></a>00057     <a class="code" href="classcli_1_1Cli.html#9e333fff484fccf46d47275997e2197c">SetCli</a>(*<span class="keyword">this</span>);
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059     <span class="comment">// Register this new CLI in the global CLI list.</span>
-<a name="l00060"></a>00060     M_CLIList.push_back(<span class="keyword">this</span>);
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062     <a class="code" href="namespacecli.html#5d451db4b218a7b3bda1e1c863f93101">GetTraces</a>().<a class="code" href="classcli_1_1Traces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(TRACE_CLI) &lt;&lt; <span class="stringliteral">"New CLI '"</span> &lt;&lt; <a class="code" href="classcli_1_1Cli.html#2293d1b3cacf9d6ff6209dd9310913a0">GetName</a>() &lt;&lt; <span class="stringliteral">"'."</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">cli::endl</a>;
-<a name="l00063"></a>00063 }
-<a name="l00064"></a>00064 
-<a name="l00065"></a><a class="code" href="classcli_1_1Cli.html#e012b098749b340912c280347b7c8d7b">00065</a> <a class="code" href="classcli_1_1Cli.html#e012b098749b340912c280347b7c8d7b">Cli::~Cli</a>(<span class="keywordtype">void</span>)
-<a name="l00066"></a>00066 {
-<a name="l00067"></a>00067     <a class="code" href="namespacecli.html#5d451db4b218a7b3bda1e1c863f93101">GetTraces</a>().<a class="code" href="classcli_1_1Traces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(TRACE_CLI) &lt;&lt; <span class="stringliteral">"Deletion of CLI '"</span> &lt;&lt; <a class="code" href="classcli_1_1Cli.html#2293d1b3cacf9d6ff6209dd9310913a0">GetName</a>() &lt;&lt; <span class="stringliteral">"'."</span> &lt;&lt; <a class="code" href="namespacecli.html#e927dafbf4b3e24c3f585a0dc9425e75">cli::endl</a>;
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069     <span class="comment">// Remove this CLI from the global CLI list.</span>
-<a name="l00070"></a>00070     <span class="keywordflow">for</span> (   CliList::iterator it = M_CLIList.begin();
-<a name="l00071"></a>00071             it != M_CLIList.end();
-<a name="l00072"></a>00072             it ++)
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049 static const <a class="code" href="classTraceClass.html">TraceClass</a> TRACE_CLI("CLI", <a class="code" href="classHelp.html">Help</a>()
+<a name="l00050"></a>00050     .AddHelp(<a class="code" href="classHelp.html">Help</a>::LANG_EN, "CLI traces")
+<a name="l00051"></a>00051     .AddHelp(<a class="code" href="classHelp.html">Help</a>::LANG_FR, "<a class="code" href="classTraces.html">Traces</a> de CLI"));
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053 static <a class="code" href="classCli.html">Cli</a>::List M_CliRegistry(MAX_CLI_REGISTRY_COUNT);
+<a name="l00054"></a>00054 
+<a name="l00055"></a><a class="code" href="classCli.html#4fc1ad681f87fa2b52046f584818e3fd">00055</a> <a class="code" href="classCli.html">Cli</a>::<a class="code" href="classCli.html">Cli</a>(const <span class="keywordtype">char</span>* const STR_Name, const <a class="code" href="classHelp.html">Help</a>&amp; CLI_Help)
+<a name="l00056"></a>00056   : <a class="code" href="classMenu.html">Menu</a>(STR_Name, CLI_Help),
+<a name="l00057"></a>00057     m_pcliShell(NULL),
+<a name="l00058"></a>00058     m_qMenus(MAX_MENU_PER_CLI),
+<a name="l00059"></a>00059     m_pcliConfigMenu(NULL), m_pcliConfigMenuNode(NULL)
+<a name="l00060"></a>00060 {
+<a name="l00061"></a>00061     EnsureCommonDevices();
+<a name="l00062"></a>00062     EnsureTraces();
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064     <span class="comment">// Set the CLI reference to oneself.</span>
+<a name="l00065"></a>00065     SetCli(*<span class="keyword">this</span>);
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067     <span class="comment">// Register this new CLI in the global CLI list.</span>
+<a name="l00068"></a>00068     <span class="keywordflow">if</span> (M_CliRegistry.AddTail(<span class="keyword">this</span>))
+<a name="l00069"></a>00069     {
+<a name="l00070"></a>00070         <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(TRACE_CLI) &lt;&lt; <span class="stringliteral">"New CLI '"</span> &lt;&lt; GetName() &lt;&lt; <span class="stringliteral">"'."</span> &lt;&lt; cli::endl;
+<a name="l00071"></a>00071     }
+<a name="l00072"></a>00072     <span class="keywordflow">else</span>
 <a name="l00073"></a>00073     {
-<a name="l00074"></a>00074         <span class="keywordflow">if</span> (*it == <span class="keyword">this</span>)
-<a name="l00075"></a>00075         {
-<a name="l00076"></a>00076             it = M_CLIList.erase(it);
-<a name="l00077"></a>00077             <span class="keywordflow">break</span>;
-<a name="l00078"></a>00078         }
-<a name="l00079"></a>00079     }
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="comment">// Destroy menus.</span>
-<a name="l00082"></a>00082     <span class="keywordflow">while</span> (! m_vpcliMenus.empty())
-<a name="l00083"></a>00083     {
-<a name="l00084"></a>00084         <span class="keyword">delete</span> m_vpcliMenus.back();
-<a name="l00085"></a>00085         m_vpcliMenus.pop_back();
-<a name="l00086"></a>00086     }
-<a name="l00087"></a>00087 }
-<a name="l00088"></a>00088 
-<a name="l00089"></a><a class="code" href="classcli_1_1Cli.html#172e9ed62efa74774c3c53f7932408b1">00089</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classcli_1_1Cli.html#172e9ed62efa74774c3c53f7932408b1">Cli::FindFromName</a>(<a class="code" href="namespacecli.html#699ee5ae18f44c4b96e915a3aea32194">CliList</a>&amp; CLI_CliList, <span class="keyword">const</span> std::string&amp; STR_RegExp)
-<a name="l00090"></a>00090 {
-<a name="l00091"></a>00091     <span class="comment">// Compile the regular expression.</span>
-<a name="l00092"></a>00092     regex_t s_RegExp;
-<a name="l00093"></a>00093     memset(&amp; s_RegExp, <span class="charliteral">'\0'</span>, <span class="keyword">sizeof</span>(regex_t));
-<a name="l00094"></a>00094     <span class="keywordflow">if</span> (regcomp(&amp; s_RegExp, STR_RegExp.c_str(), 0) != 0)
-<a name="l00095"></a>00095     {
-<a name="l00096"></a>00096         <span class="keywordflow">return</span> -1;
-<a name="l00097"></a>00097     }
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099     <span class="comment">// Check the name for each CLI instance.</span>
-<a name="l00100"></a>00100     <span class="keyword">const</span> <span class="keywordtype">int</span> i_InitialCount = CLI_CliList.size();
-<a name="l00101"></a>00101     <span class="keywordflow">for</span> (   CliList::iterator it = M_CLIList.begin();
-<a name="l00102"></a>00102             it != M_CLIList.end();
-<a name="l00103"></a>00103             it ++)
-<a name="l00104"></a>00104     {
-<a name="l00105"></a>00105         <span class="keywordflow">if</span> (regexec(&amp; s_RegExp, (*it)-&gt;GetName().c_str(), 0, NULL, 0) == 0)
-<a name="l00106"></a>00106         {
-<a name="l00107"></a>00107             CLI_CliList.push_back(*it);
-<a name="l00108"></a>00108         }
-<a name="l00109"></a>00109     }
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111     <span class="comment">// Free.</span>
-<a name="l00112"></a>00112     regfree(&amp; s_RegExp);
-<a name="l00113"></a>00113 
-<a name="l00114"></a>00114     <span class="keywordflow">return</span> (CLI_CliList.size() - i_InitialCount);
-<a name="l00115"></a>00115 }
-<a name="l00116"></a>00116 
-<a name="l00117"></a><a class="code" href="classcli_1_1Cli.html#2293d1b3cacf9d6ff6209dd9310913a0">00117</a> <span class="keyword">const</span> std::string <a class="code" href="classcli_1_1Cli.html#2293d1b3cacf9d6ff6209dd9310913a0">Cli::GetName</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00118"></a>00118 <span class="keyword"></span>{
-<a name="l00119"></a>00119     <span class="keywordflow">return</span> <a class="code" href="classcli_1_1Element.html#b603ce5542679784d6c7791a9b00461f">GetKeyword</a>();
-<a name="l00120"></a>00120 }
-<a name="l00121"></a>00121 
-<a name="l00122"></a><a class="code" href="classcli_1_1Cli.html#9cd30b5d180f0f2abe918a9f01ae37f9">00122</a> <a class="code" href="classcli_1_1Menu.html">Menu</a>&amp; <a class="code" href="classcli_1_1Cli.html#9cd30b5d180f0f2abe918a9f01ae37f9">Cli::AddMenu</a>(<a class="code" href="classcli_1_1Menu.html">Menu</a>* <span class="keyword">const</span> PCLI_Menu)
-<a name="l00123"></a>00123 {
-<a name="l00124"></a>00124     PCLI_Menu-&gt;<a class="code" href="classcli_1_1Menu.html#a8cf2d236a714c5f7246accf2e0bf402">SetCli</a>(*<span class="keyword">this</span>);
-<a name="l00125"></a>00125     m_vpcliMenus.push_back(PCLI_Menu);
-<a name="l00126"></a>00126     <span class="keywordflow">return</span> *PCLI_Menu;
-<a name="l00127"></a>00127 }
-<a name="l00128"></a>00128 
-<a name="l00129"></a><a class="code" href="classcli_1_1Cli.html#4b31c55366703eba5c83cfe03951b651">00129</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1Cli.html#4b31c55366703eba5c83cfe03951b651">Cli::SetShell</a>(<a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; CLI_Shell)<span class="keyword"> const</span>
-<a name="l00130"></a>00130 <span class="keyword"></span>{
-<a name="l00131"></a>00131     m_pcliShell = &amp; CLI_Shell;
-<a name="l00132"></a>00132 }
-<a name="l00133"></a>00133 
-<a name="l00134"></a><a class="code" href="classcli_1_1Cli.html#dca36b8b9319356533b95620befaedc5">00134</a> <a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; <a class="code" href="classcli_1_1Cli.html#dca36b8b9319356533b95620befaedc5">Cli::GetShell</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00135"></a>00135 <span class="keyword"></span>{
-<a name="l00136"></a>00136     <span class="keywordflow">if</span> (m_pcliShell != NULL)
-<a name="l00137"></a>00137     {
-<a name="l00138"></a>00138         <span class="keywordflow">return</span> *m_pcliShell;
-<a name="l00139"></a>00139     }
-<a name="l00140"></a>00140     <span class="keywordflow">else</span>
-<a name="l00141"></a>00141     {
-<a name="l00142"></a>00142         <span class="keyword">static</span> <a class="code" href="classcli_1_1Shell.html">Shell</a> cli_Shell(*<span class="keyword">this</span>);
-<a name="l00143"></a>00143         <span class="keywordflow">return</span> cli_Shell;
-<a name="l00144"></a>00144     }
-<a name="l00145"></a>00145 }
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147 <a class="code" href="classcli_1_1ConfigMenu.html">ConfigMenu</a>&amp; Cli::GetConfigMenu(<span class="keywordtype">void</span>)
-<a name="l00148"></a>00148 {
-<a name="l00149"></a>00149     assert(m_pcliConfigMenu != NULL);
-<a name="l00150"></a>00150     <span class="keywordflow">return</span> *m_pcliConfigMenu;
-<a name="l00151"></a>00151 }
-<a name="l00152"></a>00152 
-<a name="l00153"></a>00153 <span class="keyword">const</span> <a class="code" href="classcli_1_1ConfigMenu.html">ConfigMenu</a>&amp; Cli::GetConfigMenu(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00154"></a>00154 <span class="keyword"></span>{
-<a name="l00155"></a>00155     assert(m_pcliConfigMenu != NULL);
-<a name="l00156"></a>00156     <span class="keywordflow">return</span> *m_pcliConfigMenu;
-<a name="l00157"></a>00157 }
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159 <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; Cli::GetConfigMenuNode(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00160"></a>00160 <span class="keyword"></span>{
-<a name="l00161"></a>00161     assert(m_pcliConfigMenuNode != NULL);
-<a name="l00162"></a>00162     <span class="keywordflow">return</span> *m_pcliConfigMenuNode;
+<a name="l00074"></a>00074         <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(TRACE_CLI) &lt;&lt; <span class="stringliteral">"Error: New CLI '"</span> &lt;&lt; GetName() &lt;&lt; <span class="stringliteral">"' could not be registered."</span> &lt;&lt; cli::endl;
+<a name="l00075"></a>00075     }
+<a name="l00076"></a>00076 }
+<a name="l00077"></a>00077 
+<a name="l00078"></a><a class="code" href="classCli.html#e012b098749b340912c280347b7c8d7b">00078</a> <a class="code" href="classCli.html#e012b098749b340912c280347b7c8d7b">Cli::~Cli</a>(<span class="keywordtype">void</span>)
+<a name="l00079"></a>00079 {
+<a name="l00080"></a>00080     <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(TRACE_CLI) &lt;&lt; <span class="stringliteral">"Deletion of CLI '"</span> &lt;&lt; <a class="code" href="classMenu.html#37410d39de4348eee3c811af1a3774cd">GetName</a>() &lt;&lt; <span class="stringliteral">"'."</span> &lt;&lt; cli::endl;
+<a name="l00081"></a>00081 
+<a name="l00082"></a>00082     <span class="comment">// Remove this CLI from the global CLI list.</span>
+<a name="l00083"></a>00083     <span class="keywordflow">for</span> (   Cli::List::Iterator it = M_CliRegistry.GetIterator();
+<a name="l00084"></a>00084             M_CliRegistry.IsValid(it);
+<a name="l00085"></a>00085             M_CliRegistry.MoveNext(it))
+<a name="l00086"></a>00086     {
+<a name="l00087"></a>00087         <span class="keywordflow">if</span> (M_CliRegistry.GetAt(it) == <span class="keyword">this</span>)
+<a name="l00088"></a>00088         {
+<a name="l00089"></a>00089             M_CliRegistry.Remove(it);
+<a name="l00090"></a>00090             <span class="keywordflow">break</span>;
+<a name="l00091"></a>00091         }
+<a name="l00092"></a>00092     }
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094     <span class="comment">// Destroy menus.</span>
+<a name="l00095"></a>00095     <span class="keywordflow">while</span> (! m_qMenus.IsEmpty())
+<a name="l00096"></a>00096     {
+<a name="l00097"></a>00097         <span class="keywordflow">if</span> (<span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>* <span class="keyword">const</span> pcli_Menu = m_qMenus.RemoveTail())
+<a name="l00098"></a>00098         {
+<a name="l00099"></a>00099             <span class="keyword">delete</span> pcli_Menu;
+<a name="l00100"></a>00100         }
+<a name="l00101"></a>00101     }
+<a name="l00102"></a>00102 }
+<a name="l00103"></a>00103 
+<a name="l00104"></a><a class="code" href="classCli.html#8b4751cc831881688082729614c35c35">00104</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="classCli.html#8b4751cc831881688082729614c35c35">Cli::FindFromName</a>(<a class="code" href="classCli.html#f9107780634f75f44dee35227cad19eb">Cli::List</a>&amp; CLI_CliList, <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_RegExp)
+<a name="l00105"></a>00105 {
+<a name="l00106"></a>00106 <span class="preprocessor">#ifndef CLI_NO_REGEX</span>
+<a name="l00107"></a>00107 <span class="preprocessor"></span>    <span class="comment">// Compile the regular expression.</span>
+<a name="l00108"></a>00108     regex_t s_RegExp;
+<a name="l00109"></a>00109     memset(&amp; s_RegExp, <span class="charliteral">'\0'</span>, <span class="keyword">sizeof</span>(regex_t));
+<a name="l00110"></a>00110     <span class="keywordflow">if</span> (regcomp(&amp; s_RegExp, STR_RegExp, 0) != 0)
+<a name="l00111"></a>00111     {
+<a name="l00112"></a>00112         <span class="keywordflow">return</span> -1;
+<a name="l00113"></a>00113     }
+<a name="l00114"></a>00114 <span class="preprocessor">#endif</span>
+<a name="l00115"></a>00115 <span class="preprocessor"></span>
+<a name="l00116"></a>00116     <span class="comment">// Check the name for each CLI instance.</span>
+<a name="l00117"></a>00117     <span class="keyword">const</span> <span class="keywordtype">int</span> i_InitialCount = CLI_CliList.GetCount();
+<a name="l00118"></a>00118     <span class="keywordflow">for</span> (   Cli::List::Iterator it = M_CliRegistry.GetIterator();
+<a name="l00119"></a>00119             M_CliRegistry.IsValid(it);
+<a name="l00120"></a>00120             M_CliRegistry.MoveNext(it))
+<a name="l00121"></a>00121     {
+<a name="l00122"></a>00122         <span class="keywordflow">if</span> (<span class="keyword">const</span> <a class="code" href="classCli.html">Cli</a>* <span class="keyword">const</span> pcli_Cli = M_CliRegistry.GetAt(it))
+<a name="l00123"></a>00123         {
+<a name="l00124"></a>00124 #ifndef CLI_NO_REGEX
+<a name="l00125"></a>00125             <span class="keywordflow">if</span> (regexec(&amp; s_RegExp, pcli_Cli-&gt;GetName(), 0, NULL, 0) == 0)
+<a name="l00126"></a>00126 <span class="preprocessor">#endif</span>
+<a name="l00127"></a>00127 <span class="preprocessor"></span>            {
+<a name="l00128"></a>00128                 <span class="keywordflow">if</span> (! CLI_CliList.AddTail(pcli_Cli))
+<a name="l00129"></a>00129                 {
+<a name="l00130"></a>00130                     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(<span class="keyword">false</span>);
+<a name="l00131"></a>00131                 }
+<a name="l00132"></a>00132             }
+<a name="l00133"></a>00133         }
+<a name="l00134"></a>00134     }
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136 <span class="preprocessor">#ifndef CLI_NO_REGEX</span>
+<a name="l00137"></a>00137 <span class="preprocessor"></span>    <span class="comment">// Free.</span>
+<a name="l00138"></a>00138     regfree(&amp; s_RegExp);
+<a name="l00139"></a>00139 <span class="preprocessor">#endif</span>
+<a name="l00140"></a>00140 <span class="preprocessor"></span>
+<a name="l00141"></a>00141     <span class="keywordflow">return</span> ((<span class="keywordtype">int</span>) CLI_CliList.GetCount() - i_InitialCount);
+<a name="l00142"></a>00142 }
+<a name="l00143"></a>00143 
+<a name="l00144"></a><a class="code" href="classCli.html#9cd30b5d180f0f2abe918a9f01ae37f9">00144</a> <a class="code" href="classMenu.html">Menu</a>&amp; <a class="code" href="classCli.html#9cd30b5d180f0f2abe918a9f01ae37f9">Cli::AddMenu</a>(<a class="code" href="classMenu.html">Menu</a>* <span class="keyword">const</span> PCLI_Menu)
+<a name="l00145"></a>00145 {
+<a name="l00146"></a>00146     <span class="keywordflow">if</span> (PCLI_Menu != NULL)
+<a name="l00147"></a>00147     {
+<a name="l00148"></a>00148         PCLI_Menu-&gt;<a class="code" href="classMenu.html#a8cf2d236a714c5f7246accf2e0bf402">SetCli</a>(*<span class="keyword">this</span>);
+<a name="l00149"></a>00149         <span class="keywordflow">if</span> (! m_qMenus.AddTail(PCLI_Menu))
+<a name="l00150"></a>00150         {
+<a name="l00151"></a>00151             <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>().<a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(<a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>)
+<a name="l00152"></a>00152                 &lt;&lt; <span class="stringliteral">"Could not add '"</span> &lt;&lt; PCLI_Menu-&gt;<a class="code" href="classElement.html#ea9add780fd41f9313c3be6ef84c3021">GetKeyword</a>() &lt;&lt; <span class="stringliteral">"' "</span>
+<a name="l00153"></a>00153                 &lt;&lt; <span class="stringliteral">"to CLI '"</span> &lt;&lt; <a class="code" href="classMenu.html#37410d39de4348eee3c811af1a3774cd">GetName</a>() &lt;&lt; <span class="stringliteral">"'."</span> &lt;&lt; cli::endl;
+<a name="l00154"></a>00154         }
+<a name="l00155"></a>00155     }
+<a name="l00156"></a>00156     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(PCLI_Menu != NULL);
+<a name="l00157"></a>00157     <span class="keywordflow">return</span> *PCLI_Menu;
+<a name="l00158"></a>00158 }
+<a name="l00159"></a>00159 
+<a name="l00160"></a><a class="code" href="classCli.html#4b31c55366703eba5c83cfe03951b651">00160</a> <span class="keywordtype">void</span> <a class="code" href="classCli.html#4b31c55366703eba5c83cfe03951b651">Cli::SetShell</a>(<a class="code" href="classShell.html">Shell</a>&amp; CLI_Shell)<span class="keyword"> const</span>
+<a name="l00161"></a>00161 <span class="keyword"></span>{
+<a name="l00162"></a>00162     m_pcliShell = &amp; CLI_Shell;
 <a name="l00163"></a>00163 }
 <a name="l00164"></a>00164 
-<a name="l00165"></a>00165 <span class="preprocessor">#ifdef _DEBUG</span>
-<a name="l00166"></a>00166 <span class="preprocessor"></span><a class="code" href="classcli_1_1TracesMenu.html">TracesMenu</a>&amp; Cli::GetTracesMenu(<span class="keywordtype">void</span>)
-<a name="l00167"></a>00167 {
-<a name="l00168"></a>00168     assert(m_pcliTracesMenu != NULL);
-<a name="l00169"></a>00169     <span class="keywordflow">return</span> *m_pcliTracesMenu;
-<a name="l00170"></a>00170 }
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172 <span class="keyword">const</span> <a class="code" href="classcli_1_1TracesMenu.html">TracesMenu</a>&amp; Cli::GetTracesMenu(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00173"></a>00173 <span class="keyword"></span>{
-<a name="l00174"></a>00174     assert(m_pcliTracesMenu != NULL);
-<a name="l00175"></a>00175     <span class="keywordflow">return</span> *m_pcliTracesMenu;
+<a name="l00165"></a><a class="code" href="classCli.html#dca36b8b9319356533b95620befaedc5">00165</a> <a class="code" href="classShell.html">Shell</a>&amp; <a class="code" href="classCli.html#dca36b8b9319356533b95620befaedc5">Cli::GetShell</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00166"></a>00166 <span class="keyword"></span>{
+<a name="l00167"></a>00167     <span class="keywordflow">if</span> (m_pcliShell != NULL)
+<a name="l00168"></a>00168     {
+<a name="l00169"></a>00169         <span class="keywordflow">return</span> *m_pcliShell;
+<a name="l00170"></a>00170     }
+<a name="l00171"></a>00171     <span class="keywordflow">else</span>
+<a name="l00172"></a>00172     {
+<a name="l00173"></a>00173         <span class="keyword">static</span> <a class="code" href="classShell.html">Shell</a> cli_Shell(*<span class="keyword">this</span>);
+<a name="l00174"></a>00174         <span class="keywordflow">return</span> cli_Shell;
+<a name="l00175"></a>00175     }
 <a name="l00176"></a>00176 }
 <a name="l00177"></a>00177 
-<a name="l00178"></a>00178 <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; Cli::GetTracesMenuNode(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00179"></a>00179 <span class="keyword"></span>{
-<a name="l00180"></a>00180     assert(m_pcliTracesMenuNode != NULL);
-<a name="l00181"></a>00181     <span class="keywordflow">return</span> *m_pcliTracesMenuNode;
+<a name="l00178"></a>00178 <a class="code" href="classConfigMenu.html">ConfigMenu</a>&amp; Cli::GetConfigMenu(<span class="keywordtype">void</span>)
+<a name="l00179"></a>00179 {
+<a name="l00180"></a>00180     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliConfigMenu != NULL);
+<a name="l00181"></a>00181     <span class="keywordflow">return</span> *m_pcliConfigMenu;
 <a name="l00182"></a>00182 }
-<a name="l00183"></a>00183 <span class="preprocessor">#endif</span>
-<a name="l00184"></a>00184 <span class="preprocessor"></span>
-<a name="l00185"></a><a class="code" href="classcli_1_1Cli.html#9e333fff484fccf46d47275997e2197c">00185</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1Cli.html#9e333fff484fccf46d47275997e2197c">Cli::SetCli</a>(<a class="code" href="classcli_1_1Cli.html">Cli</a>&amp; CLI_Cli)
-<a name="l00186"></a>00186 {
-<a name="l00187"></a>00187     <a class="code" href="classcli_1_1Menu.html#a8cf2d236a714c5f7246accf2e0bf402">Menu::SetCli</a>(CLI_Cli);
-<a name="l00188"></a>00188 
-<a name="l00189"></a>00189     m_pcliConfigMenu = dynamic_cast&lt;ConfigMenu*&gt;(&amp; <a class="code" href="classcli_1_1Cli.html#9cd30b5d180f0f2abe918a9f01ae37f9">AddMenu</a>(<span class="keyword">new</span> <a class="code" href="classcli_1_1ConfigMenu.html">ConfigMenu</a>()));
-<a name="l00190"></a>00190     {   <a class="code" href="classcli_1_1Help.html">Help</a> cli_Help(<a class="code" href="classcli_1_1Help.html">Help</a>().AddHelp(<a class="code" href="classcli_1_1Help.html#f01ce0482c317b67784fb43d71449c7d057166c7bc782537df6faa363f30900b">Help::LANG_EN</a>, <span class="stringliteral">"CLI configuration menu"</span>));
-<a name="l00191"></a>00191         m_pcliConfigMenuNode = dynamic_cast&lt;Keyword*&gt;(&amp; <a class="code" href="classcli_1_1SyntaxNode.html#999c61d32ea530e8a66c9b429144484f">AddElement</a>(<span class="keyword">new</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>(<span class="stringliteral">"cli-config"</span>, cli_Help)));
-<a name="l00192"></a>00192         <a class="code" href="classcli_1_1Endl.html">Endl</a>* <span class="keyword">const</span> pcli_Endl = dynamic_cast&lt;Endl*&gt;(&amp; m_pcliConfigMenuNode-&gt;<a class="code" href="classcli_1_1SyntaxNode.html#999c61d32ea530e8a66c9b429144484f">AddElement</a>(<span class="keyword">new</span> <a class="code" href="classcli_1_1Endl.html">Endl</a>(cli_Help)));
-<a name="l00193"></a>00193         pcli_Endl-&gt;SetMenuRef(<span class="keyword">new</span> <a class="code" href="classcli_1_1MenuRef.html">MenuRef</a>(*m_pcliConfigMenu)); }
-<a name="l00194"></a>00194 <span class="preprocessor">    #ifdef _DEBUG</span>
-<a name="l00195"></a>00195 <span class="preprocessor"></span>    m_pcliTracesMenu = dynamic_cast&lt;TracesMenu*&gt;(&amp; <a class="code" href="classcli_1_1Cli.html#9cd30b5d180f0f2abe918a9f01ae37f9">AddMenu</a>(<span class="keyword">new</span> <a class="code" href="classcli_1_1TracesMenu.html">TracesMenu</a>()));
-<a name="l00196"></a>00196     {   <a class="code" href="classcli_1_1Help.html">Help</a> cli_Help(<a class="code" href="classcli_1_1Help.html">Help</a>().AddHelp(<a class="code" href="classcli_1_1Help.html#f01ce0482c317b67784fb43d71449c7d057166c7bc782537df6faa363f30900b">Help::LANG_EN</a>, <span class="stringliteral">"Traces menu"</span>));
-<a name="l00197"></a>00197         m_pcliTracesMenuNode = dynamic_cast&lt;Keyword*&gt;(&amp; <a class="code" href="classcli_1_1SyntaxNode.html#999c61d32ea530e8a66c9b429144484f">AddElement</a>(<span class="keyword">new</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>(<span class="stringliteral">"traces"</span>, cli_Help)));
-<a name="l00198"></a>00198         <a class="code" href="classcli_1_1Endl.html">Endl</a>* <span class="keyword">const</span> pcli_Endl = dynamic_cast&lt;Endl*&gt;(&amp; m_pcliTracesMenuNode-&gt;AddElement(<span class="keyword">new</span> <a class="code" href="classcli_1_1Endl.html">Endl</a>(cli_Help)));
-<a name="l00199"></a>00199         pcli_Endl-&gt;SetMenuRef(<span class="keyword">new</span> <a class="code" href="classcli_1_1MenuRef.html">MenuRef</a>(*m_pcliTracesMenu)); }
-<a name="l00200"></a>00200 <span class="preprocessor">    #endif</span>
-<a name="l00201"></a>00201 <span class="preprocessor"></span>}
+<a name="l00183"></a>00183 
+<a name="l00184"></a>00184 <span class="keyword">const</span> <a class="code" href="classConfigMenu.html">ConfigMenu</a>&amp; Cli::GetConfigMenu(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00185"></a>00185 <span class="keyword"></span>{
+<a name="l00186"></a>00186     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliConfigMenu != NULL);
+<a name="l00187"></a>00187     <span class="keywordflow">return</span> *m_pcliConfigMenu;
+<a name="l00188"></a>00188 }
+<a name="l00189"></a>00189 
+<a name="l00190"></a>00190 <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; Cli::GetConfigMenuNode(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00191"></a>00191 <span class="keyword"></span>{
+<a name="l00192"></a>00192     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliConfigMenuNode != NULL);
+<a name="l00193"></a>00193     <span class="keywordflow">return</span> *m_pcliConfigMenuNode;
+<a name="l00194"></a>00194 }
+<a name="l00195"></a>00195 
+<a name="l00196"></a>00196 <span class="preprocessor">#ifdef _DEBUG</span>
+<a name="l00197"></a>00197 <span class="preprocessor"></span><a class="code" href="classTracesMenu.html">TracesMenu</a>&amp; Cli::GetTracesMenu(<span class="keywordtype">void</span>)
+<a name="l00198"></a>00198 {
+<a name="l00199"></a>00199     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliTracesMenu != NULL);
+<a name="l00200"></a>00200     <span class="keywordflow">return</span> *m_pcliTracesMenu;
+<a name="l00201"></a>00201 }
 <a name="l00202"></a>00202 
-<a name="l00203"></a><a class="code" href="classcli_1_1Cli.html#f547b2c2afc716e263122b2eaa9e6746">00203</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1Cli.html#f547b2c2afc716e263122b2eaa9e6746">Cli::ExecuteReserved</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1CommandLine.html">CommandLine</a>&amp; CLI_CommandLine)<span class="keyword"> const</span>
+<a name="l00203"></a>00203 <span class="keyword">const</span> <a class="code" href="classTracesMenu.html">TracesMenu</a>&amp; Cli::GetTracesMenu(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
 <a name="l00204"></a>00204 <span class="keyword"></span>{
-<a name="l00205"></a>00205     <span class="keywordflow">if</span> (0) {}
-<a name="l00206"></a>00206     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (&amp; CLI_CommandLine[0] == &amp; GetConfigMenuNode())
-<a name="l00207"></a>00207     {
-<a name="l00208"></a>00208         <span class="keywordflow">if</span> (dynamic_cast&lt;const Endl*&gt;(&amp; CLI_CommandLine[1]))
-<a name="l00209"></a>00209         {
-<a name="l00210"></a>00210             <span class="comment">// Do nothing but return true so that an execution error is not detected.</span>
-<a name="l00211"></a>00211             <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00212"></a>00212         }
-<a name="l00213"></a>00213     }
-<a name="l00214"></a>00214 <span class="preprocessor">    #ifdef _DEBUG</span>
-<a name="l00215"></a>00215 <span class="preprocessor"></span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (&amp; CLI_CommandLine[0] == &amp; GetTracesMenuNode())
-<a name="l00216"></a>00216     {
-<a name="l00217"></a>00217         <span class="keywordflow">if</span> (dynamic_cast&lt;const Endl*&gt;(&amp; CLI_CommandLine[1]))
-<a name="l00218"></a>00218         {
-<a name="l00219"></a>00219             <span class="comment">// Do nothing but return true so that an execution error is not detected.</span>
-<a name="l00220"></a>00220             <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00221"></a>00221         }
-<a name="l00222"></a>00222     }
-<a name="l00223"></a>00223 <span class="preprocessor">    #endif</span>
-<a name="l00224"></a>00224 <span class="preprocessor"></span>
-<a name="l00225"></a>00225     <span class="keywordflow">return</span> <a class="code" href="classcli_1_1Menu.html#4f8709bf19e9a8e3aa97c647255cc9c8">Menu::ExecuteReserved</a>(CLI_CommandLine);
-<a name="l00226"></a>00226 }
-<a name="l00227"></a>00227 
-<a name="l00228"></a><a class="code" href="classcli_1_1Cli.html#8ca7d78f2a3ba8a42c46207637643f1f">00228</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1Cli.html#8ca7d78f2a3ba8a42c46207637643f1f">Cli::OnExit</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00229"></a>00229 <span class="keyword"></span>{
-<a name="l00230"></a>00230 }
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:28 2007 for CLI by&nbsp;
+<a name="l00205"></a>00205     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliTracesMenu != NULL);
+<a name="l00206"></a>00206     <span class="keywordflow">return</span> *m_pcliTracesMenu;
+<a name="l00207"></a>00207 }
+<a name="l00208"></a>00208 
+<a name="l00209"></a>00209 <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; Cli::GetTracesMenuNode(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00210"></a>00210 <span class="keyword"></span>{
+<a name="l00211"></a>00211     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliTracesMenuNode != NULL);
+<a name="l00212"></a>00212     <span class="keywordflow">return</span> *m_pcliTracesMenuNode;
+<a name="l00213"></a>00213 }
+<a name="l00214"></a>00214 <span class="preprocessor">#endif</span>
+<a name="l00215"></a>00215 <span class="preprocessor"></span>
+<a name="l00216"></a><a class="code" href="classCli.html#9e333fff484fccf46d47275997e2197c">00216</a> <span class="keywordtype">void</span> <a class="code" href="classCli.html#9e333fff484fccf46d47275997e2197c">Cli::SetCli</a>(<a class="code" href="classCli.html">Cli</a>&amp; CLI_Cli)
+<a name="l00217"></a>00217 {
+<a name="l00218"></a>00218     <a class="code" href="classMenu.html#a8cf2d236a714c5f7246accf2e0bf402">Menu::SetCli</a>(CLI_Cli);
+<a name="l00219"></a>00219 
+<a name="l00220"></a>00220     m_pcliConfigMenu = dynamic_cast&lt;ConfigMenu*&gt;(&amp; <a class="code" href="classCli.html#9cd30b5d180f0f2abe918a9f01ae37f9">AddMenu</a>(<span class="keyword">new</span> <a class="code" href="classConfigMenu.html">ConfigMenu</a>()));
+<a name="l00221"></a>00221     {   <a class="code" href="classHelp.html">Help</a> cli_Help(<a class="code" href="classHelp.html">Help</a>()
+<a name="l00222"></a>00222             .AddHelp(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">Help::LANG_EN</a>, <span class="stringliteral">"CLI configuration menu"</span>)
+<a name="l00223"></a>00223             .AddHelp(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">Help::LANG_FR</a>, <span class="stringliteral">"Menu de configuration du CLI"</span>));
+<a name="l00224"></a>00224         m_pcliConfigMenuNode = dynamic_cast&lt;Keyword*&gt;(&amp; <a class="code" href="classSyntaxNode.html#999c61d32ea530e8a66c9b429144484f">AddElement</a>(<span class="keyword">new</span> <a class="code" href="classKeyword.html">Keyword</a>(<span class="stringliteral">"cli-config"</span>, cli_Help)));
+<a name="l00225"></a>00225         <a class="code" href="classEndl.html">Endl</a>* <span class="keyword">const</span> pcli_Endl = dynamic_cast&lt;Endl*&gt;(&amp; m_pcliConfigMenuNode-&gt;<a class="code" href="classSyntaxNode.html#999c61d32ea530e8a66c9b429144484f">AddElement</a>(<span class="keyword">new</span> <a class="code" href="classEndl.html">Endl</a>(cli_Help)));
+<a name="l00226"></a>00226         pcli_Endl-&gt;SetMenuRef(<span class="keyword">new</span> <a class="code" href="classMenuRef.html">MenuRef</a>(*m_pcliConfigMenu)); }
+<a name="l00227"></a>00227 <span class="preprocessor">    #ifdef _DEBUG</span>
+<a name="l00228"></a>00228 <span class="preprocessor"></span>    m_pcliTracesMenu = dynamic_cast&lt;TracesMenu*&gt;(&amp; <a class="code" href="classCli.html#9cd30b5d180f0f2abe918a9f01ae37f9">AddMenu</a>(<span class="keyword">new</span> <a class="code" href="classTracesMenu.html">TracesMenu</a>()));
+<a name="l00229"></a>00229     {   <a class="code" href="classHelp.html">Help</a> cli_Help(<a class="code" href="classHelp.html">Help</a>()
+<a name="l00230"></a>00230             .AddHelp(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3f12fbeaebaa487c3970ecc2cf837e0df">Help::LANG_EN</a>, <span class="stringliteral">"Traces menu"</span>)
+<a name="l00231"></a>00231             .AddHelp(<a class="code" href="classResourceString.html#88d585d899c8482aeb434571923739b3142a22fb5f61fe5c723693b4cc887f4f">Help::LANG_FR</a>, <span class="stringliteral">"Menu de configuration de traces"</span>));
+<a name="l00232"></a>00232         m_pcliTracesMenuNode = dynamic_cast&lt;Keyword*&gt;(&amp; <a class="code" href="classSyntaxNode.html#999c61d32ea530e8a66c9b429144484f">AddElement</a>(<span class="keyword">new</span> <a class="code" href="classKeyword.html">Keyword</a>(<span class="stringliteral">"traces"</span>, cli_Help)));
+<a name="l00233"></a>00233         <a class="code" href="classEndl.html">Endl</a>* <span class="keyword">const</span> pcli_Endl = dynamic_cast&lt;Endl*&gt;(&amp; m_pcliTracesMenuNode-&gt;AddElement(<span class="keyword">new</span> <a class="code" href="classEndl.html">Endl</a>(cli_Help)));
+<a name="l00234"></a>00234         pcli_Endl-&gt;SetMenuRef(<span class="keyword">new</span> <a class="code" href="classMenuRef.html">MenuRef</a>(*m_pcliTracesMenu)); }
+<a name="l00235"></a>00235 <span class="preprocessor">    #endif</span>
+<a name="l00236"></a>00236 <span class="preprocessor"></span>}
+<a name="l00237"></a>00237 
+<a name="l00238"></a><a class="code" href="classCli.html#f547b2c2afc716e263122b2eaa9e6746">00238</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classCli.html#f547b2c2afc716e263122b2eaa9e6746">Cli::ExecuteReserved</a>(<span class="keyword">const</span> <a class="code" href="classCommandLine.html">CommandLine</a>&amp; CLI_CommandLine)<span class="keyword"> const</span>
+<a name="l00239"></a>00239 <span class="keyword"></span>{
+<a name="l00240"></a>00240     <a class="code" href="classCommandLineIterator.html">CommandLineIterator</a> it(CLI_CommandLine);
+<a name="l00241"></a>00241 
+<a name="l00242"></a>00242     <span class="keywordflow">if</span> (! it.<a class="code" href="classCommandLineIterator.html#4840f14ccad154fa837dede5c4591ca3">StepIt</a>()) { <span class="keywordflow">return</span> <span class="keyword">false</span>; }
+<a name="l00243"></a>00243     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (it == GetConfigMenuNode())
+<a name="l00244"></a>00244     {
+<a name="l00245"></a>00245         <span class="keywordflow">if</span> (! it.<a class="code" href="classCommandLineIterator.html#4840f14ccad154fa837dede5c4591ca3">StepIt</a>()) { <span class="keywordflow">return</span> <span class="keyword">false</span>; }
+<a name="l00246"></a>00246         <span class="keywordflow">if</span> (dynamic_cast&lt;const Endl*&gt;(*it))
+<a name="l00247"></a>00247         {
+<a name="l00248"></a>00248             <span class="comment">// Do nothing but return true so that an execution error is not detected.</span>
+<a name="l00249"></a>00249             <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00250"></a>00250         }
+<a name="l00251"></a>00251     }
+<a name="l00252"></a>00252 <span class="preprocessor">    #ifdef _DEBUG</span>
+<a name="l00253"></a>00253 <span class="preprocessor"></span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (it == GetTracesMenuNode())
+<a name="l00254"></a>00254     {
+<a name="l00255"></a>00255         <span class="keywordflow">if</span> (! it.<a class="code" href="classCommandLineIterator.html#4840f14ccad154fa837dede5c4591ca3">StepIt</a>()) { <span class="keywordflow">return</span> <span class="keyword">false</span>; }
+<a name="l00256"></a>00256         <span class="keywordflow">if</span> (dynamic_cast&lt;const Endl*&gt;(*it))
+<a name="l00257"></a>00257         {
+<a name="l00258"></a>00258             <span class="comment">// Do nothing but return true so that an execution error is not detected.</span>
+<a name="l00259"></a>00259             <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00260"></a>00260         }
+<a name="l00261"></a>00261     }
+<a name="l00262"></a>00262 <span class="preprocessor">    #endif</span>
+<a name="l00263"></a>00263 <span class="preprocessor"></span>
+<a name="l00264"></a>00264     <span class="keywordflow">return</span> <a class="code" href="classMenu.html#4f8709bf19e9a8e3aa97c647255cc9c8">Menu::ExecuteReserved</a>(CLI_CommandLine);
+<a name="l00265"></a>00265 }
+<a name="l00266"></a>00266 
+<a name="l00267"></a><a class="code" href="classCli.html#8ca7d78f2a3ba8a42c46207637643f1f">00267</a> <span class="keywordtype">void</span> <a class="code" href="classCli.html#8ca7d78f2a3ba8a42c46207637643f1f">Cli::OnExit</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00268"></a>00268 <span class="keyword"></span>{
+<a name="l00269"></a>00269 }
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:29 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

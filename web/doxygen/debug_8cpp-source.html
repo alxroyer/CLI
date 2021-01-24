@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>debug.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,36 +45,44 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="debug_8h.html">cli/debug.h</a>"</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="keyword">using namespace </span>cli;
-<a name="l00029"></a>00029 
+<a name="l00028"></a>00028 <span class="preprocessor">#include "<a class="code" href="debug_8h.html">cli/debug.h</a>"</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include "<a class="code" href="constraints_8h.html">constraints.h</a>"</span>
 <a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="classcli_1_1CallInfo.html#be03c553d71a6a7c41a43b76fbaf1791">00031</a> CallInfo::CallInfo(<span class="keyword">const</span> std::string&amp; STR_File, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> I_Line, <span class="keyword">const</span> std::string&amp; STR_Function)
-<a name="l00032"></a>00032   : m_strFile(STR_File), m_iLine(I_Line), m_strFunction(STR_Function)
-<a name="l00033"></a>00033 {
-<a name="l00034"></a>00034 }
-<a name="l00035"></a>00035 
-<a name="l00036"></a><a class="code" href="classcli_1_1CallInfo.html#ca6f92727cc6ad610942c88ede6728e6">00036</a> <a class="code" href="classcli_1_1CallInfo.html#ca6f92727cc6ad610942c88ede6728e6">CallInfo::~CallInfo</a>(<span class="keywordtype">void</span>)
-<a name="l00037"></a>00037 {
-<a name="l00038"></a>00038 }
-<a name="l00039"></a>00039 
-<a name="l00040"></a><a class="code" href="classcli_1_1CallInfo.html#c22e746234f92a28c7a6cbb11955bcf2">00040</a> <span class="keyword">const</span> std::string&amp; <a class="code" href="classcli_1_1CallInfo.html#c22e746234f92a28c7a6cbb11955bcf2">CallInfo::GetFile</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00041"></a>00041 <span class="keyword"></span>{
-<a name="l00042"></a>00042     <span class="keywordflow">return</span> m_strFile;
-<a name="l00043"></a>00043 }
-<a name="l00044"></a>00044 
-<a name="l00045"></a><a class="code" href="classcli_1_1CallInfo.html#67224908137713717e8572f393446286">00045</a> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classcli_1_1CallInfo.html#67224908137713717e8572f393446286">CallInfo::GetLine</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00046"></a>00046 <span class="keyword"></span>{
-<a name="l00047"></a>00047     <span class="keywordflow">return</span> m_iLine;
-<a name="l00048"></a>00048 }
-<a name="l00049"></a>00049 
-<a name="l00050"></a><a class="code" href="classcli_1_1CallInfo.html#8d783e4913db34ab7572e9aa6855d225">00050</a> <span class="keyword">const</span> std::string&amp; <a class="code" href="classcli_1_1CallInfo.html#8d783e4913db34ab7572e9aa6855d225">CallInfo::GetFunction</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00051"></a>00051 <span class="keyword"></span>{
-<a name="l00052"></a>00052     <span class="keywordflow">return</span> m_strFunction;
-<a name="l00053"></a>00053 }
-<a name="l00054"></a>00054 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:29 2007 for CLI by&nbsp;
+<a name="l00031"></a>00031 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033 
+<a name="l00034"></a><a class="code" href="classCallInfo.html#6e5a9c05b5aa2fc1e7c90bbb71e82fbb">00034</a> <a class="code" href="classCallInfo.html">CallInfo</a>::<a class="code" href="classCallInfo.html">CallInfo</a>(
+<a name="l00035"></a>00035         const <span class="keywordtype">char</span>* const STR_File,
+<a name="l00036"></a>00036         const <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> I_Line,
+<a name="l00037"></a>00037         const <span class="keywordtype">char</span>* const STR_Function)
+<a name="l00038"></a>00038   : m_strFile(MAX_FILE_PATH_LENGTH, STR_File),
+<a name="l00039"></a>00039     m_iLine(I_Line),
+<a name="l00040"></a>00040     m_strFunction(MAX_WORD_LENGTH, STR_Function)
+<a name="l00041"></a>00041 {
+<a name="l00042"></a>00042 }
+<a name="l00043"></a>00043 
+<a name="l00044"></a><a class="code" href="classCallInfo.html#ca6f92727cc6ad610942c88ede6728e6">00044</a> <a class="code" href="classCallInfo.html#ca6f92727cc6ad610942c88ede6728e6">CallInfo::~CallInfo</a>(<span class="keywordtype">void</span>)
+<a name="l00045"></a>00045 {
+<a name="l00046"></a>00046 }
+<a name="l00047"></a>00047 
+<a name="l00048"></a><a class="code" href="classCallInfo.html#57e6164e51e777de5540404bddca4707">00048</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> <a class="code" href="classCallInfo.html#57e6164e51e777de5540404bddca4707">CallInfo::GetFile</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00049"></a>00049 <span class="keyword"></span>{
+<a name="l00050"></a>00050     <span class="keywordflow">return</span> m_strFile;
+<a name="l00051"></a>00051 }
+<a name="l00052"></a>00052 
+<a name="l00053"></a><a class="code" href="classCallInfo.html#67224908137713717e8572f393446286">00053</a> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="classCallInfo.html#67224908137713717e8572f393446286">CallInfo::GetLine</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00054"></a>00054 <span class="keyword"></span>{
+<a name="l00055"></a>00055     <span class="keywordflow">return</span> m_iLine;
+<a name="l00056"></a>00056 }
+<a name="l00057"></a>00057 
+<a name="l00058"></a><a class="code" href="classCallInfo.html#562eecfa5ccde67f2c66f1da6c7cac57">00058</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> <a class="code" href="classCallInfo.html#562eecfa5ccde67f2c66f1da6c7cac57">CallInfo::GetFunction</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00059"></a>00059 <span class="keyword"></span>{
+<a name="l00060"></a>00060     <span class="keywordflow">return</span> m_strFunction;
+<a name="l00061"></a>00061 }
+<a name="l00062"></a>00062 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:29 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

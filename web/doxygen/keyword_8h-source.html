@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_8f01d9b4589024334dc9ddb77b167b80.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_8a599c2cb6f1d7bd0e0805e56078a760.html">cli</a></div>
+<a class="el" href="dir_1478fa2896c71a852f24f40b9ae7a523.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ee510e0e819a9187a5b85fd01d9d2bcf.html">cli</a></div>
 <h1>keyword.h</h1><a href="keyword_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -49,30 +49,40 @@
 <a name="l00030"></a>00030 <span class="preprocessor">#ifndef _CLI_KEYWORD_H_</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_KEYWORD_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;<a class="code" href="syntax__node_8h.html">cli/syntax_node.h</a>&gt;</span>
-<a name="l00034"></a>00034 
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="keyword">namespace </span>cli {
+<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;<a class="code" href="namespace_8h.html">cli/namespace.h</a>&gt;</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;<a class="code" href="syntax__node_8h.html">cli/syntax_node.h</a>&gt;</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;<a class="code" href="tk_8h.html">cli/tk.h</a>&gt;</span>
+<a name="l00036"></a>00036 
 <a name="l00037"></a>00037 
-<a name="l00038"></a>00038     <span class="comment">// Forward declarations.</span>
-<a name="l00039"></a>00039     <span class="keyword">class </span>Help;
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041 
-<a name="l00043"></a><a class="code" href="classcli_1_1Keyword.html">00043</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1Keyword.html">Keyword</a> : <span class="keyword">public</span> <a class="code" href="classcli_1_1SyntaxNode.html">SyntaxNode</a>
-<a name="l00044"></a>00044     {
-<a name="l00045"></a>00045     <span class="keyword">public</span>:
-<a name="l00047"></a>00047         <a class="code" href="classcli_1_1Keyword.html#4172a56aeffe533126f52c3d73341282">Keyword</a>(
-<a name="l00048"></a>00048             <span class="keyword">const</span> std::string&amp; STR_Keyword, 
-<a name="l00049"></a>00049             <span class="keyword">const</span> <a class="code" href="classcli_1_1Help.html">Help</a>&amp; CLI_Help            
-<a name="l00050"></a>00050             );
-<a name="l00051"></a>00051 
-<a name="l00053"></a>00053         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1Keyword.html#7344279ddf79bd26186ccc0ed3f8d025">~Keyword</a>(<span class="keywordtype">void</span>);
-<a name="l00054"></a>00054     };
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 };
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058 <span class="preprocessor">#endif // _CLI_KEYWORD_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:30 2007 for CLI by&nbsp;
+<a name="l00038"></a>00038 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040     <span class="comment">// Forward declarations.</span>
+<a name="l00041"></a>00041     class <a class="code" href="classHelp.html">Help</a>;
+<a name="l00042"></a>00042 
+<a name="l00043"></a>00043 
+<a name="l00045"></a><a class="code" href="classKeyword.html">00045</a>     class <a class="code" href="classKeyword.html">Keyword</a> : public <a class="code" href="classSyntaxNode.html">SyntaxNode</a>
+<a name="l00046"></a>00046     {
+<a name="l00047"></a>00047     <span class="keyword">private</span>:
+<a name="l00049"></a>00049         <a class="code" href="classKeyword.html">Keyword</a>(<span class="keywordtype">void</span>);
+<a name="l00051"></a>00051         <a class="code" href="classKeyword.html">Keyword</a>(<span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp;);
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053     <span class="keyword">public</span>:
+<a name="l00055"></a>00055         <a class="code" href="classKeyword.html">Keyword</a>(
+<a name="l00056"></a>00056             <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Keyword,  
+<a name="l00057"></a>00057             <span class="keyword">const</span> Help&amp; CLI_Help            
+<a name="l00058"></a>00058             );
+<a name="l00059"></a>00059 
+<a name="l00061"></a>00061         <span class="keyword">virtual</span> ~<a class="code" href="classKeyword.html">Keyword</a>(<span class="keywordtype">void</span>);
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063     <span class="keyword">private</span>:
+<a name="l00064"></a>00064         <span class="comment">// @brief No assignment operator.</span>
+<a name="l00065"></a>00065         <a class="code" href="classKeyword.html">Keyword</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp;);
+<a name="l00066"></a>00066     };
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070 <span class="preprocessor">#endif // _CLI_KEYWORD_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:30 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -31,7 +31,8 @@
 #define _CLI_COMMON_H_
 
 // General includes
-#include <string>
+#include <cli/namespace.h>
+#include <cli/tk.h>
 
 // Shell and output devices
 #include <cli/shell.h>
@@ -50,6 +51,7 @@
 // CLI misc
 #include <cli/command_line.h>
 #include <cli/help.h>
+#include <cli/traces.h>
 
 #endif // _CLI_COMMON_H_
 

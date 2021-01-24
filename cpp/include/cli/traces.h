@@ -30,27 +30,27 @@
 #ifndef _CLI_TRACES_H_
 #define _CLI_TRACES_H_
 
-#include <string>
-#include <deque>
-#include <map>
+#include <cli/namespace.h>
+#include <cli/object.h>
+#include <cli/help.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
-    class Element;
     class OutputDevice;
 
 
     //! @brief Trace class object.
-    class TraceClass
+    class TraceClass : public Object
     {
     public:
         //! @brief Trace class list typedef.
-        typedef std::deque<TraceClass> List;
+        typedef tk::Queue<TraceClass> List;
 
     private:
-        //! @brief Default constructor forbidden.
+        //! @brief No default constructor.
         TraceClass(void);
 
     public:
@@ -61,8 +61,8 @@ namespace cli {
 
         //! @brief Constructor.
         TraceClass(
-            const std::string& STR_ClassName,   //!< Class name.
-            const std::string& STR_Description  //!< Description.
+            const char* const STR_ClassName,    //!< Class name.
+            const Help& CLI_Help                //!< Help description.
             );
 
         //! @brief Destructor.
@@ -70,10 +70,10 @@ namespace cli {
 
     public:
         //! @brief Class name accessor.
-        const std::string& GetName(void) const;
+        const tk::String GetName(void) const;
 
         //! @brief Description accessor.
-        const std::string& GetDescription(void) const;
+        const Help& GetHelp(void) const;
 
     protected:
         //! @brief Assignment operator.
@@ -82,10 +82,10 @@ namespace cli {
 
     private:
         //! Class name.
-        std::string m_strName;
+        tk::String m_strName;
 
         //! Description.
-        std::string m_strDescription;
+        Help m_cliHelp;
     };
 
     //! @brief Classes equivalence operator.
@@ -94,9 +94,12 @@ namespace cli {
         const TraceClass& CLI_Class2    //!< Second member.
         );
 
+    //! @brief Internal error common trace class.
+    extern const TraceClass INTERNAL_ERROR;
+
 
     //! @brief Traces service.
-    class Traces
+    class Traces : public Object
     {
     public:
         //! @brief Singleton.
@@ -106,25 +109,43 @@ namespace cli {
         //! @brief Default constructor.
         Traces(void);
 
+    private:
+        //! @brief No copy constructor.
+        Traces(const Traces&);
+
     public:
         //! @brief Destructor.
         virtual ~Traces(void);
 
+    private:
+        //! @brief No assignment operator.
+        Traces& operator=(const Traces&);
+
     public:
         //! @brief Stream access.
         const OutputDevice& GetStream(void) const;
+
         //! @brief Stream positionning.
-        //! @warning Please ensure one of the following conditions regarding the given device:
-        //!     - Either the device is an auto-deleted device,
-        //!     - or it will be destroyed after the traces system,
-        //!     - or another call to this method with the null device is done on termination.
-        //! Otherwise you could experience consistency troubles.
-        //! The null device and standard devices are not subject to this remark.
+        //! @warning For consistency reasons, if you use this method,
+        //!          you should better call UnsetStream() before program termination.
         const bool SetStream(
             OutputDevice& CLI_Stream                //!< Stream reference.
             );
 
+        //! @brief Stream dereferencing.
+        //!
+        //! This method should be called if you have previously called SetStream().
+        //! You may also call UnsetStream() even if SetStream() has been been previously called.
+        const bool UnsetStream(void);
+
     public:
+        //! @brief Trace class declaration.
+        //! @return true if the class has been declared successfully or the class was already declared.
+        //! @return false if an error as occured.
+        const bool Declare(
+            const TraceClass& CLI_Class     //!< Trace class to declare.
+            );
+
         //! @brief All classes accessor.
         const TraceClass::List GetAllClasses(void) const;
 
@@ -177,6 +198,7 @@ namespace cli {
             TraceClassFlag(void);
             TraceClassFlag(const TraceClass& CLI_Source, const bool B_Show);
             TraceClassFlag(const TraceClassFlag& CLI_Source);
+            virtual ~TraceClassFlag(void);
         public:
             TraceClassFlag& operator=(const TraceClassFlag& CLI_Class);
         public:
@@ -186,7 +208,7 @@ namespace cli {
         };
 
         //! @brief Trace class map typedef.
-        typedef std::map<std::string, TraceClassFlag> ClassMap;
+        typedef tk::Map<tk::String, TraceClassFlag> ClassMap;
 
         //! List of available classes.
         ClassMap m_mapClasses;
@@ -201,6 +223,6 @@ namespace cli {
     //! @brief Singleton.
     Traces& GetTraces(void);
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_TRACES_H_

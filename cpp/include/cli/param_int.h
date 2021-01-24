@@ -30,10 +30,12 @@
 #ifndef _CLI_PARAM_INT_H_
 #define _CLI_PARAM_INT_H_
 
+#include <cli/namespace.h>
 #include <cli/param.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Help;
@@ -42,6 +44,12 @@ namespace cli {
     //! @brief Integer parameter element class.
     class ParamInt : public ParamT<int>
     {
+    private:
+        //! @brief No default constructor.
+        ParamInt(void);
+        //! @brief No copy constructor.
+        ParamInt(const ParamInt&);
+
     public:
         //! @brief Constructor.
         ParamInt(
@@ -51,14 +59,18 @@ namespace cli {
         //! @brief Destructor.
         virtual ~ParamInt(void);
 
+    private:
+        //! @brief No assignment operator.
+        ParamInt& operator=(const ParamInt&);
+
     public:
         //! @brief Value setting handler.
-        virtual const bool SetstrValue(const std::string& STR_Value) const;
+        virtual const bool SetstrValue(const char* const STR_Value) const;
 
         //! @brief Parameter cloning handler.
         virtual const Param* const Clone(void) const;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_PARAM_INT_H_

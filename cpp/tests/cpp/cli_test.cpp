@@ -22,8 +22,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <iostream>
+#include <stdlib.h> // atoi
 
 #include "cli/cli.h"
 #include "cli/menu.h"
@@ -39,7 +38,7 @@
 class _Cli : public cli::Cli
 {
 public:
-    _Cli(const std::string& STR_Name, const cli::Help& CLI_Help)
+    _Cli(const char* const STR_Name, const cli::Help& CLI_Help)
       : Cli(STR_Name, CLI_Help)
     {
     }
@@ -84,7 +83,7 @@ int main(int I_ArgsCount, char* ARSTR_Args[])
     }
     else
     {
-        std::cout << "Running telnet server on port " << ARSTR_Args[1] << std::endl;
+        cli::OutputDevice::GetStdOut() << "Running telnet server on port " << ARSTR_Args[1] << cli::endl;
         cli::TelnetServer cli_Server(cli_Shell, atoi(ARSTR_Args[1]));
         cli_Server.StartServer();
     }

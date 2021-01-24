@@ -20,62 +20,46 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+ifndef __CPP_VARS__
+__CPP_VARS__ = 1
 
-# Common overridable variables
-#   Project name
-PROJECT = Makefile
-DEBUG = no
-#   Input sources
-SRC_DIR = .
-CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-#   Automatic dependencies (.deps files)
-AUTO_DEPS = yes
-#   C++ compilation options
-ifeq ($(DEBUG),no)
-	CPP_DEBUG_FLAG =
-else
-	CPP_DEBUG_FLAG = -g -D_DEBUG
+
+ROOT_DIR ?= ../../..
+include $(ROOT_DIR)/build/make/vars.mak
+
+
+LINUX ?= $(findstring linux,$(shell $(MAKE) --help))
+CYGWIN ?= $(findstring cygwin,$(shell $(MAKE) --help))
+CYGWIN ?= $(findstring cygwin,$(shell $(MAKE) --help))
+ifneq ($(LINUX),)
+	TARGET ?= Linux
+	BIN_PREFIX ?=
+	BIN_SUFFIX ?=
+	DYN_LIB_PREFIX ?= lib
+	DYN_LIB_SUFFIX ?= .so
+	STATIC_LIB_PREFIX ?= lib
+	STATIC_LIB_SUFFIX ?= .a
 endif
-PROJ_CPP_FLAGS =
-PROJ_INCLUDES =
-#   Link options
-PROJ_DEPS =
-PROJ_LIBS = $(PROJ_DEPS)
-#   Output
-#   PRODUCT_TYPE can be one of (LIB|BIN)
-PRODUCT_TYPE = LIB
-# Cleanup
-# Aditional cleanup items
-PROJ_CLEAN =
-
-
-# Plateform depending configuration
-#   Linux
-ifeq ($(shell echo "$$OSTYPE" | grep -i "linux" | wc -l),1)
-	OS = _LINUX
-	TARGET = Linux
-	STL_LIB = -ldl
-	BIN_SUFFIX =
+ifneq ($(CYGWIN),)
+	TARGET ?= Cygwin
+	BIN_PREFIX ?=
+	BIN_SUFFIX ?= .exe
+	DYN_LIB_PREFIX ?=
+	DYN_LIB_SUFFIX ?= .dll
+	STATIC_LIB_PREFIX ?= lib
+	STATIC_LIB_SUFFIX ?= .a
 endif
-#   Cygwin
-ifeq ($(shell echo "$$OSTYPE" | grep -i "cygwin" | wc -l),1)
-	OS = _WINDOWS
-	TARGET = Win32
-	STL_LIB =
-	BIN_SUFFIX = .exe
-endif
+OUT_DIR ?= $(TARGET)$(CXX)/$(RDX)
+CPP_LIB = $(CPP_DIR)/build/make/$(TARGET)$(CXX)/$(RDX)/libclicpp$(STATIC_LIB_SUFFIX)
 
 
-# Automatic variables computation
-ifeq ($(DEBUG),no)
-	OUT_DIR = $(TARGET)$(CXX)/Release
-else
-	OUT_DIR = $(TARGET)$(CXX)/Debug
+# Debug and help
+.PHONY: $(CPP_DIR)/build/make/vars.help
+$(CPP_DIR)/build/make/vars.help: ;
+
+.PHONY: $(CPP_DIR)/build/make/vars.vars
+$(CPP_DIR)/build/make/vars.vars:
+	$(call ShowVariables,TARGET BIN_PREFIX BIN_SUFFIX DYN_LIB_PREFIX DYN_LIB_SUFFIX STATIC_LIB_PREFIX STATIC_LIB_SUFFIX OUT_DIR CPP_LIB)
+
 endif
-INT_DIR = $(OUT_DIR)/__$(PROJECT)
-DEPS = $(PROJECT).deps
-OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(INT_DIR)/%.o,$(CPP_FILES))
-CPP_FLAGS = -Wall -O2 $(CPP_DEBUG_FLAG) -D$(OS) $(PROJ_CPP_FLAGS)
-INCLUDES = -I/usr/include $(PROJ_INCLUDES)
-LIBS = $(PROJ_LIBS) $(STL_LIB)
-PRODUCT = $(OUT_DIR)/$(PROJECT)
+# __CPP_VARS__

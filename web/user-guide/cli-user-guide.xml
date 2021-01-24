@@ -51,7 +51,8 @@
     <!ENTITY sample-tag-a-b-plus        SYSTEM "samples/tag-a-b-plus.db">
     <!ENTITY sample-tag-a-b1-b2-c       SYSTEM "samples/tag-a-b1-b2-c.db">
     <!ENTITY sample-tag-a-b1-b2-nil-c   SYSTEM "samples/tag-a-b1-b2-nil-c.db">
-    <!ENTITY sample-circle-cpp          SYSTEM "samples/circle.db">
+    <!ENTITY sample-circle-cpp          SYSTEM "samples/circle-cpp.db">
+    <!ENTITY sample-circle-java         SYSTEM "samples/circle-java.db">
     <!ENTITY sample-circle-pos-cli      SYSTEM "samples/circle-pos.db">
     <!ENTITY sample-circle-color-cli    SYSTEM "samples/circle-color.db">
     <!ENTITY sample-edit-config         SYSTEM "samples/edit-config.db">
@@ -63,7 +64,7 @@
 <artheader>
   <author><firstname>Royer</firstname><surname>Alexis</surname></author>
   <issuenum>1.0</issuenum>
-  <pubdate>Apr, 25th 2007</pubdate>
+  <pubdate>Oct, 31st 2007</pubdate>
   <title>CLI library user guide</title>
   <!--<titleabbrev></titleabbrev>-->
   <!--<revhistory>

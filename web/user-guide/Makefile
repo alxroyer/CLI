@@ -21,11 +21,21 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+# Default goal
+.DEFAULT_GOAL = html
+.PHONY: user-guide.default
+user-guide.default: html ;
+
+# Directories
+ROOT_DIR ?= ../..
+include $(ROOT_DIR)/build/make/vars.mak
+INT_DIR = ./samples
+
 # Source
 DB_USER_GUIDE = cli-user-guide.xml
 HTML_USER_GUIDE = $(patsubst %.xml, %.html, $(DB_USER_GUIDE))
-CLI_SAMPLES = $(wildcard samples/*.xml)
-DB_SAMPLES = $(patsubst %.xml, %.db, $(CLI_SAMPLES)) samples/circle.db
+CLI_SAMPLES = $(wildcard $(SAMPLES_DIR)/user-guide/*.xml)
+DB_SAMPLES = $(patsubst %.xml, $(INT_DIR)/%.db, $(notdir $(CLI_SAMPLES))) samples/circle-cpp.db samples/circle-java.db
 
 # Transformation
 # Please set DOCBOOK_XSL_HTML to a valid UNIX path.
@@ -40,15 +50,45 @@ AUTOLABEL_FLAGS = --param section.autolabel 1
 XSLT_OPTIONS = $(CSS_FLAGS) $(TOC_FLAGS) $(AUTOLABEL_FLAGS)
 
 # Rules
-$(HTML_USER_GUIDE): $(wildcard *.xml *.css) $(DB_SAMPLES)
-	xsltproc $(XSLT_OPTIONS) $(XSL_STYLESHEET) $(DB_USER_GUIDE) > $@
+html: dirs $(HTML_USER_GUIDE) ;
 
-samples/circle.db: samples/circle.h
+$(HTML_USER_GUIDE): $(wildcard *.xml *.css) $(DB_SAMPLES)
+ifneq ($(XSL_STYLESHEET),)
+	xsltproc $(XSLT_OPTIONS) $(XSL_STYLESHEET) $(DB_USER_GUIDE) > $@
+else
+	@echo "Please set DOCBOOK_XSL_HTML to have the docbook user-guide being generated"
+endif
+
+.PHONY: dirs
+dirs:
+	mkdir -p $(INT_DIR)
+
+$(INT_DIR)/circle-cpp.db: $(SAMPLES_DIR)/user-guide/circle.h
 	cat $< | sed -e "s/&/&amp;/g" > $@
 
-samples/%.db: samples/%.xml
+$(INT_DIR)/circle-java.db: $(SAMPLES_DIR)/user-guide/Circle.java
+	cat $< | sed -e "s/&/&amp;/g" > $@
+
+$(INT_DIR)/%.db: $(SAMPLES_DIR)/user-guide/%.xml samples/cli2db.xsl
 	xsltproc samples/cli2db.xsl $< > $@
+
+deps: ;
 
 .PHONY: clean
 clean:
-	rm -f $(HTML_USER_GUIDE) $(DB_SAMPLES)
+ifneq ($(XSL_STYLESHEET),)
+	$(RM) $(HTML_USER_GUIDE) $(DB_SAMPLES)
+else
+	@echo "Please set DOCBOOK_XSL_HTML to have the docbook user-guide being generated"
+endif
+
+.PHONY: $(WEB_DIR)/user-guide/Makefile.vars
+$(WEB_DIR)/user-guide/Makefile.vars:
+	$(call ShowVariables,$(WEB_DIR)/user-guide/Makefile,DB_USER_GUIDE HTML_USER_GUIDE CLI_SAMPLES DB_SAMPLES XSL_STYLESHEET CSS_FLAGS TOC_FLAGS AUTOLABEL_FLAGS XSLT_OPTIONS)
+
+.PHONY: $(WEB_DIR)/user-guide/Makefile.help
+$(WEB_DIR)/user-guide/Makefile.help:
+	$(call PrintHelp, html,      Generate user-guide)
+	$(call PrintHelp, dirs,      Check user-guide output and intermediate directory)
+	$(call PrintHelp, clean,     Clean up output and intermediate files)
+

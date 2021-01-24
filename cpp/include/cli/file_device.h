@@ -30,20 +30,28 @@
 #ifndef _CLI_FILE_DEVICE_H_
 #define _CLI_FILE_DEVICE_H_
 
-#include <fstream>
+#include <stdio.h>
 
+#include <cli/namespace.h>
 #include <cli/io_device.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief Input file device class.
     class InputFileDevice : public IODevice
     {
+    private:
+        //! @brief No default constructor.
+        InputFileDevice(void);
+        //! @brief No copy constructor.
+        InputFileDevice(const InputFileDevice&);
+
     public:
         //! @brief Constructor.
         InputFileDevice(
-            const std::string& STR_FileName,    //!< Input file name.
+            const char* const STR_FileName,     //!< Input file name.
             OutputDevice& CLI_Out,              //!< Output device.
                                                 //!< This output device will be opened automatically
                                                 //!< when the input device is opened.
@@ -53,17 +61,21 @@ namespace cli {
         //! @brief Destructor.
         virtual ~InputFileDevice(void);
 
+    private:
+        //! @brief No assignment operator.
+        InputFileDevice& operator=(const InputFileDevice&);
+
     protected:
         virtual const bool OpenDevice(void);
         virtual const bool CloseDevice(void);
     public:
         virtual const KEY GetKey(void) const;
-        virtual void PutString(const std::string& STR_Out) const;
+        virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
 
     public:
         //! @brief File name accessor.
-        const std::string& GetFileName(void) const;
+        const tk::String GetFileName(void) const;
 
         //! @brief Current line accessor.
         const int GetCurrentLine(void) const;
@@ -73,10 +85,10 @@ namespace cli {
 
     private:
         //! @brief Input file name.
-        const std::string m_strFileName;
+        const tk::String m_strFileName;
 
         //! Input file.
-        mutable std::basic_ifstream<char> m_stdFile;
+        mutable FILE* m_pfFile;
 
         //! Output device.
         OutputDevice& m_cliOutput;
@@ -97,35 +109,45 @@ namespace cli {
     //! @brief Output file device.
     class OutputFileDevice : public OutputDevice
     {
+    private:
+        //! @brief No default constructor.
+        OutputFileDevice(void);
+        //! @brief No copy constructor.
+        OutputFileDevice(const OutputFileDevice&);
+
     public:
         //! @brief Constructor.
         OutputFileDevice(
-            const std::string& STR_OutputFileName,  //!< Output file name.
+            const char* const STR_OutputFileName,   //!< Output file name.
             const bool B_AutoDelete                 //!< Auto-deletion flag.
             );
 
         //! @brief Destructor.
         virtual ~OutputFileDevice(void);
 
+    private:
+        //! @brief No assignment operator.
+        OutputFileDevice& operator=(const OutputFileDevice&);
+
     protected:
         virtual const bool OpenDevice(void);
         virtual const bool CloseDevice(void);
     public:
-        virtual void PutString(const std::string& STR_Out) const;
+        virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
 
     public:
         //! @brief File name accessor.
-        const std::string& GetFileName(void) const;
+        const tk::String GetFileName(void) const;
 
     private:
         //! @brief Output file name.
-        const std::string m_strFileName;
+        const tk::String m_strFileName;
 
         //! Output file.
-        mutable std::basic_ofstream<char> m_stdFile;
+        mutable FILE* m_pfFile;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_FILE_DEVICE_H_

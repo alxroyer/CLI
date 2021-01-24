@@ -23,20 +23,25 @@
 */
 
 
-#include <assert.h>
+#include "cli/pch.h"
+
+#include <stdio.h>
+#include <string.h>
 
 #include "cli/file_device.h"
+#include "cli/assert.h"
 #include "consistency.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 InputFileDevice::InputFileDevice(
-        const std::string& STR_FileName,
+        const char* const STR_FileName,
         OutputDevice& CLI_Output,
         const bool B_AutoDelete)
-  : IODevice("input-file[" + STR_FileName + "]", "\n", B_AutoDelete),
-    m_strFileName(STR_FileName), m_stdFile(),
+  : IODevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "input-file[", STR_FileName, "]"), "\n", B_AutoDelete),
+    m_strFileName(MAX_FILE_PATH_LENGTH, STR_FileName), m_pfFile(NULL),
     m_cliOutput(CLI_Output),
     m_iCurrentLine(0), m_iCurrentColumn(0), m_iNextLine(1), m_iNextColumn(1)
 {
@@ -52,31 +57,31 @@ InputFileDevice::~InputFileDevice(void)
 
 const bool InputFileDevice::OpenDevice(void)
 {
-    assert(& m_cliOutput != this);
+    CLI_ASSERT(& m_cliOutput != this);
     if (! m_cliOutput.OpenUp(__CALL_INFO__))
     {
         return false;
     }
 
-    if (! m_stdFile.is_open())
+    if (m_pfFile == NULL)
     {
-        m_stdFile.open(m_strFileName.c_str());
+        m_pfFile = fopen(m_strFileName, "r");
     }
 
-    return m_stdFile.is_open();
+    return (m_pfFile != NULL);
 }
 
 const bool InputFileDevice::CloseDevice(void)
 {
     bool b_Res = true;
 
-    if (m_stdFile.is_open())
+    if (m_pfFile != NULL)
     {
-        m_stdFile.close();
-        if (m_stdFile.is_open())
+        if (fclose(m_pfFile) != 0)
         {
             b_Res = false;
         }
+        m_pfFile = NULL;
     }
 
     if (! m_cliOutput.CloseDown(__CALL_INFO__))
@@ -89,14 +94,14 @@ const bool InputFileDevice::CloseDevice(void)
 
 const KEY InputFileDevice::GetKey(void) const
 {
-    if (m_stdFile.is_open())
+    if (m_pfFile != NULL)
     {
         m_iCurrentLine = m_iNextLine;
         m_iCurrentColumn = m_iNextColumn;
-        int i_Char = m_stdFile.get();
-        if (i_Char != m_stdFile.eof())
+        char c_Char = NULL_KEY;
+        if (fread(& c_Char, sizeof(char), 1, m_pfFile) == 1)
         {
-            if (i_Char == '\n')
+            if (c_Char == '\n')
             {
                 m_iNextLine ++;
                 m_iNextColumn = 1;
@@ -105,14 +110,14 @@ const KEY InputFileDevice::GetKey(void) const
             {
                 m_iNextColumn ++;
             }
-            return IODevice::GetKey(i_Char);
+            return IODevice::GetKey(c_Char);
         }
     }
 
     return NULL_KEY;
 }
 
-void InputFileDevice::PutString(const std::string& STR_Out) const
+void InputFileDevice::PutString(const char* const STR_Out) const
 {
     m_cliOutput.PutString(STR_Out);
 }
@@ -122,7 +127,7 @@ void InputFileDevice::Beep(void) const
     m_cliOutput.Beep();
 }
 
-const std::string& InputFileDevice::GetFileName(void) const
+const tk::String InputFileDevice::GetFileName(void) const
 {
     return m_strFileName;
 }
@@ -138,9 +143,9 @@ const int InputFileDevice::GetCurrentColumn(void) const
 }
 
 
-OutputFileDevice::OutputFileDevice(const std::string& STR_FileName, const bool B_AutoDelete)
-  : OutputDevice("output-file[" + STR_FileName + "]", "\n", B_AutoDelete),
-    m_strFileName(STR_FileName), m_stdFile()
+OutputFileDevice::OutputFileDevice(const char* const STR_FileName, const bool B_AutoDelete)
+  : OutputDevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "output-file[", STR_FileName, "]"), "\n", B_AutoDelete),
+    m_strFileName(MAX_FILE_PATH_LENGTH, STR_FileName), m_pfFile(NULL)
 {
 }
 
@@ -150,29 +155,35 @@ OutputFileDevice::~OutputFileDevice(void)
 
 const bool OutputFileDevice::OpenDevice(void)
 {
-    if (! m_stdFile.is_open())
+    if (m_pfFile == NULL)
     {
-        m_stdFile.open(m_strFileName.c_str());
+        m_pfFile = fopen(m_strFileName, "w");
     }
 
-    return m_stdFile.is_open();
+    return (m_pfFile != NULL);
 }
 
 const bool OutputFileDevice::CloseDevice(void)
 {
-    if (m_stdFile.is_open())
+    bool b_Res = true;
+
+    if (m_pfFile != NULL)
     {
-        m_stdFile.close();
+        if (fclose(m_pfFile) != 0)
+        {
+            b_Res = false;
+        }
+        m_pfFile = NULL;
     }
 
-    return (! m_stdFile.is_open());
+    return b_Res;
 }
 
-void OutputFileDevice::PutString(const std::string& STR_Out) const
+void OutputFileDevice::PutString(const char* const STR_Out) const
 {
-    if (m_stdFile.is_open())
+    if (m_pfFile != NULL)
     {
-        m_stdFile << STR_Out;
+        fwrite(STR_Out, sizeof(char), strlen(STR_Out), m_pfFile);
     }
 }
 
@@ -180,7 +191,7 @@ void OutputFileDevice::Beep(void) const
 {
 }
 
-const std::string& OutputFileDevice::GetFileName(void) const
+const tk::String OutputFileDevice::GetFileName(void) const
 {
     return m_strFileName;
 }

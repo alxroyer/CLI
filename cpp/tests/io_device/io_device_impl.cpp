@@ -22,28 +22,27 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-#include <iostream>
 #include <cli/cli.h>
 #include <cli/file_device.h>
 #include <cli/traces.h>
+#include <cli/assert.h>
 
 #include "io_device_impl.h"
 
 
 const cli::Cli& GetCli(void)
 {
-    cli::CliList cli_List;
+    cli::Cli::List cli_List(10);
     if ((cli::Cli::FindFromName(cli_List, ".*") > 0)
-        && (! cli_List.empty()))
+        && (! cli_List.IsEmpty()))
     {
         // Return first CLI if any.
-        return *cli_List[0];
+        return *cli_List.GetHead();
     }
     else
     {
         // Should not happen.
-        assert(false);
+        CLI_ASSERT(false);
         class MyCli : public cli::Cli { public:
             MyCli(void) : cli::Cli("", cli::Help()) {}
         };
@@ -71,16 +70,16 @@ int main(int I_Args, char* ARSTR_Args[])
 {
     if (I_Args != 3)
     {
-        std::cerr << "USAGE:" << std::endl;
-        std::cerr << "   io_device <input-file> <traces-output-file>" << std::endl;
+        cli::OutputDevice::GetStdErr() << "USAGE:" << cli::endl;
+        cli::OutputDevice::GetStdErr() << "   io_device <input-file> <traces-output-file>" << cli::endl;
         return -1;
     }
 
     // Enable traces.
-    cli::GetTraces().Trace(cli::TraceClass("IO_DEVICE_INSTANCES", ""));
-    cli::GetTraces().SetFilter(cli::TraceClass("IO_DEVICE_INSTANCES", ""), true);
-    cli::GetTraces().Trace(cli::TraceClass("IO_DEVICE_OPENING", ""));
-    cli::GetTraces().SetFilter(cli::TraceClass("IO_DEVICE_OPENING", ""), true);
+    cli::GetTraces().Trace(cli::TraceClass("CLI_IO_DEVICE_INSTANCES", cli::Help()));
+    cli::GetTraces().SetFilter(cli::TraceClass("CLI_IO_DEVICE_INSTANCES", cli::Help()), true);
+    cli::GetTraces().Trace(cli::TraceClass("CLI_IO_DEVICE_OPENING", cli::Help()));
+    cli::GetTraces().SetFilter(cli::TraceClass("CLI_IO_DEVICE_OPENING", cli::Help()), true);
     cli::GetTraces().SetStream(*new cli::OutputFileDevice(ARSTR_Args[2], true));
 
     // Input.
@@ -89,6 +88,13 @@ int main(int I_Args, char* ARSTR_Args[])
     // Execute.
     GetShell().Run(GetIOMux());
 
+    // Finish.
+    for (int i = 0; i < cli::STREAM_TYPES_COUNT; i++)
+    {
+        GetIOMux().SetOutput((cli::STREAM_TYPE) i, NULL);
+    }
+    GetIOMux().ResetInputList();
+    cli::GetTraces().UnsetStream();
     return 0;
 }
 

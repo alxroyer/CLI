@@ -50,14 +50,12 @@
 #ifndef _CLI_CLI_H_
 #define _CLI_CLI_H_
 
-#include <string>
-#include <vector>
-
+#include <cli/namespace.h>
 #include <cli/menu.h>
+#include <cli/tk.h>
 
 
-//! @brief Main namespace of the CLI library.
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations
     class Cli;
@@ -65,11 +63,6 @@ namespace cli {
     class Help;
     class ConfigMenu;
     class TracesMenu;
-
-
-    // Typedefs.
-    //! @brief CLI list type.
-    typedef std::deque<const Cli*> CliList;
 
 
     //! @brief CLI definition class.
@@ -85,10 +78,16 @@ namespace cli {
     //! That's the reason why the destructor is pure virtual.
     class Cli : public Menu
     {
+    private:
+        //! @brief No default constructor.
+        Cli(void);
+        //! @brief No copy constructor.
+        Cli(const Cli&);
+
     public:
         //! @brief Constructor.
         Cli(
-            const std::string& STR_Name,    //!< Name of the CLI.
+            const char* const STR_Name,     //!< Name of the CLI.
             const Help& CLI_Help            //!< Help object.
             );
 
@@ -97,17 +96,20 @@ namespace cli {
         //! Pure virtual. Cli class is not final.
         virtual ~Cli(void) = 0;
 
+    private:
+        //! @brief No assignment operator.
+        Cli& operator=(const Cli&);
+
     public:
+        //! @brief CLI list type.
+        typedef tk::Queue<const Cli*> List;
+
         //! @brief Retrieve CLI references from their names.
         //! @return The number of Cli instances found.
         static const int FindFromName(
-            CliList& CLI_CliList,           //!< Output list.
-            const std::string& STR_RegExp   //!< Regular expression matching the searched CLI names.
+            Cli::List& CLI_CliList,         //!< Output list.
+            const char* const STR_RegExp    //!< Regular expression matching the searched CLI names.
             );
-
-    public:
-        //! @brief CLI name access.
-        const std::string GetName(void) const;
 
     public:
         //! @brief Menu addition.
@@ -151,7 +153,7 @@ namespace cli {
         //! Shell reference.
         mutable Shell* m_pcliShell;
         //! Owned menu collection.
-        std::vector<const Menu*> m_vpcliMenus;
+        tk::Queue<const Menu*> m_qMenus;
         //! Configuration menu.
         ConfigMenu* m_pcliConfigMenu;
         //! Configuration menu node.
@@ -164,7 +166,7 @@ namespace cli {
         #endif
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_CLI_H_
 

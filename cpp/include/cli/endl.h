@@ -30,10 +30,11 @@
 #ifndef _CLI_ENDL_H_
 #define _CLI_ENDL_H_
 
+#include <cli/namespace.h>
 #include <cli/element.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Menu;
@@ -47,6 +48,12 @@ namespace cli {
     //! A menu reference can be optionally attached.
     class Endl : public Element
     {
+    private:
+        //! @brief No default constructor.
+        Endl(void);
+        //! @brief No copy constructor.
+        Endl(const Endl&);
+
     public:
         //! @brief Constructor.
         Endl(
@@ -55,6 +62,10 @@ namespace cli {
 
         //! @brief Destructor.
         virtual ~Endl(void);
+
+    private:
+        //! @brief No assignment operator.
+        Endl& operator=(const Endl&);
 
     public:
         //! @brief Attaches the optional menu.
@@ -80,7 +91,7 @@ namespace cli {
         const MenuRef* m_pcliMenuRef;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_ENDL_H_
 

@@ -1,0 +1,12 @@
+base referer
+rect $command__line_8h.html 298,58 418,85
+rect $debug_8h.html 153,210 222,237
+rect $io__device_8h.html 314,223 402,250
+rect $shell_8h.html 470,223 532,250
+rect $telnet_8h.html 468,299 534,326
+rect $element_8h.html 148,7 228,34
+rect $resource__string_8h.html 125,58 250,85
+rect $tk__inner_8h.html 146,362 229,389
+rect $tk__stl_8h.html 154,413 221,439
+rect $traces_8h.html 153,463 222,490
+rect $object_8cpp-source.html 146,514 229,541

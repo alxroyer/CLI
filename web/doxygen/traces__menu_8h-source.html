@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>traces_menu.h</h1><a href="traces__menu_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -49,71 +49,72 @@
 <a name="l00030"></a>00030 <span class="preprocessor">#ifndef _CLI_TRACES_MENU_H_</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_TRACES_MENU_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="menu_8h.html">cli/menu.h</a>"</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include "<a class="code" href="traces_8h.html">cli/traces.h</a>"</span>
-<a name="l00035"></a>00035 
+<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="namespace_8h.html">cli/namespace.h</a>"</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include "<a class="code" href="menu_8h.html">cli/menu.h</a>"</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include "<a class="code" href="traces_8h.html">cli/traces.h</a>"</span>
 <a name="l00036"></a>00036 
-<a name="l00037"></a>00037 <span class="keyword">namespace </span>cli {
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039     <span class="comment">// Forward declarations.</span>
-<a name="l00040"></a>00040     <span class="keyword">class </span>ParamString;
-<a name="l00041"></a>00041 
-<a name="l00043"></a><a class="code" href="classcli_1_1TracesMenu.html">00043</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1TracesMenu.html">TracesMenu</a> : <span class="keyword">public</span> <a class="code" href="classcli_1_1Menu.html">Menu</a>
-<a name="l00044"></a>00044     {
-<a name="l00045"></a>00045     <span class="keyword">public</span>:
-<a name="l00047"></a>00047         <a class="code" href="classcli_1_1TracesMenu.html#06831792f230bdf45dd18106bb7560a9">TracesMenu</a>(<span class="keywordtype">void</span>);
-<a name="l00048"></a>00048 
-<a name="l00050"></a>00050         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1TracesMenu.html#4280556712a31a63c1af6f4797929b86">~TracesMenu</a>(<span class="keywordtype">void</span>);
-<a name="l00051"></a>00051 
-<a name="l00052"></a>00052     <span class="keyword">public</span>:
-<a name="l00054"></a>00054         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1TracesMenu.html#5b07aca7187a6c28dcbff69d2caba11d">SetCli</a>(<a class="code" href="classcli_1_1Cli.html">Cli</a>&amp; CLI_Cli);
-<a name="l00056"></a>00056         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1TracesMenu.html#5ae931663aaa17cca0f7ca6aaac6f69e">ExecuteReserved</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1CommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
-<a name="l00058"></a>00058         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1TracesMenu.html#c4ef6a1f528127bb6cf971d9c1274169">Execute</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1CommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060     <span class="keyword">private</span>:
-<a name="l00062"></a>00062         <span class="keywordtype">void</span> ShowAllClasses(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00063"></a>00063 
-<a name="l00065"></a>00065         <span class="keywordtype">void</span> ShowCurrentFilter(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00066"></a>00066 
-<a name="l00068"></a>00068         <span class="keywordtype">void</span> DisplayClassList(
-<a name="l00069"></a>00069             <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html#0e3c10e9247734e9aad4cb9129f01b95">TraceClass::List</a>&amp; Q_Classes   
-<a name="l00070"></a>00070             ) <span class="keyword">const</span>;
-<a name="l00071"></a>00071 
-<a name="l00073"></a>00073         <span class="keywordtype">void</span> SetFilter(
-<a name="l00074"></a>00074             <span class="keyword">const</span> std::string&amp; STR_ClassName,
-<a name="l00075"></a>00075             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Show
-<a name="l00076"></a>00076             ) <span class="keyword">const</span>;
-<a name="l00077"></a>00077 
-<a name="l00079"></a>00079         <span class="keywordtype">void</span> SetAllFilter(
-<a name="l00080"></a>00080             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Show           
-<a name="l00081"></a>00081             ) <span class="keyword">const</span>;
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083     <span class="keyword">private</span>:
-<a name="l00085"></a>00085         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetShowNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00087"></a>00087         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetShowFilterNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00089"></a>00089         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetShowClassesNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00091"></a>00091         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetNoNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00093"></a>00093         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetTraceNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00095"></a>00095         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetFilterNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00097"></a>00097         <span class="keyword">const</span> <a class="code" href="classcli_1_1ParamString.html">ParamString</a>&amp; GetFilterParam(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00099"></a>00099         <span class="keyword">const</span> <a class="code" href="classcli_1_1Keyword.html">Keyword</a>&amp; GetAllFilterNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101     <span class="keyword">private</span>:
-<a name="l00103"></a>00103         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliShowNode;
-<a name="l00105"></a>00105         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliShowFilterNode;
-<a name="l00107"></a>00107         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliShowClassesNode;
-<a name="l00108"></a>00108 
-<a name="l00110"></a>00110         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliNoNode;
-<a name="l00112"></a>00112         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliTraceNode;
-<a name="l00114"></a>00114         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliTraceFilterNode;
-<a name="l00116"></a>00116         <a class="code" href="classcli_1_1ParamString.html">ParamString</a>* m_pcliFilterParam;
-<a name="l00118"></a>00118         <a class="code" href="classcli_1_1Keyword.html">Keyword</a>* m_pcliAllFilterNode;
-<a name="l00119"></a>00119     };
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121 };
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123 <span class="preprocessor">#endif // _CLI_TRACES_MENU_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:32 2007 for CLI by&nbsp;
+<a name="l00037"></a>00037 
+<a name="l00038"></a>00038 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040     <span class="comment">// Forward declarations.</span>
+<a name="l00041"></a>00041     class <a class="code" href="classParamString.html">ParamString</a>;
+<a name="l00042"></a>00042 
+<a name="l00044"></a><a class="code" href="classTracesMenu.html">00044</a>     class <a class="code" href="classTracesMenu.html">TracesMenu</a> : public <a class="code" href="classMenu.html">Menu</a>
+<a name="l00045"></a>00045     {
+<a name="l00046"></a>00046     <span class="keyword">public</span>:
+<a name="l00048"></a>00048         <a class="code" href="classTracesMenu.html">TracesMenu</a>(<span class="keywordtype">void</span>);
+<a name="l00049"></a>00049 
+<a name="l00051"></a>00051         <span class="keyword">virtual</span> ~<a class="code" href="classTracesMenu.html">TracesMenu</a>(<span class="keywordtype">void</span>);
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053     <span class="keyword">public</span>:
+<a name="l00055"></a>00055         <span class="keyword">virtual</span> <span class="keywordtype">void</span> SetCli(<a class="code" href="classCli.html">Cli</a>&amp; CLI_Cli);
+<a name="l00057"></a>00057         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> ExecuteReserved(<span class="keyword">const</span> <a class="code" href="classCommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
+<a name="l00059"></a>00059         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> Execute(<span class="keyword">const</span> <a class="code" href="classCommandLine.html">CommandLine</a>&amp; CLI_CmdLine) <span class="keyword">const</span>;
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061     <span class="keyword">private</span>:
+<a name="l00063"></a>00063         <span class="keywordtype">void</span> ShowAllClasses(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00064"></a>00064 
+<a name="l00066"></a>00066         <span class="keywordtype">void</span> ShowCurrentFilter(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00067"></a>00067 
+<a name="l00069"></a>00069         <span class="keywordtype">void</span> DisplayClassList(
+<a name="l00070"></a>00070             <span class="keyword">const</span> <a class="code" href="classTraceClass.html#982f961164bcb5ff882892a4739964e3">TraceClass::List</a>&amp; Q_Classes   
+<a name="l00071"></a>00071             ) <span class="keyword">const</span>;
+<a name="l00072"></a>00072 
+<a name="l00074"></a>00074         <span class="keywordtype">void</span> SetFilter(
+<a name="l00075"></a>00075             <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_ClassName,    
+<a name="l00076"></a>00076             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Show                   
+<a name="l00077"></a>00077             ) <span class="keyword">const</span>;
+<a name="l00078"></a>00078 
+<a name="l00080"></a>00080         <span class="keywordtype">void</span> SetAllFilter(
+<a name="l00081"></a>00081             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Show           
+<a name="l00082"></a>00082             ) <span class="keyword">const</span>;
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084     <span class="keyword">private</span>:
+<a name="l00086"></a>00086         <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; GetShowNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00088"></a>00088         <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; GetShowFilterNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00090"></a>00090         <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; GetShowClassesNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00092"></a>00092         <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; GetNoNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00094"></a>00094         <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; GetTraceNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00096"></a>00096         <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; GetFilterNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00098"></a>00098         <span class="keyword">const</span> ParamString&amp; GetFilterParam(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00100"></a>00100         <span class="keyword">const</span> <a class="code" href="classKeyword.html">Keyword</a>&amp; GetAllFilterNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102     <span class="keyword">private</span>:
+<a name="l00104"></a>00104         <a class="code" href="classKeyword.html">Keyword</a>* m_pcliShowNode;
+<a name="l00106"></a>00106         <a class="code" href="classKeyword.html">Keyword</a>* m_pcliShowFilterNode;
+<a name="l00108"></a>00108         <a class="code" href="classKeyword.html">Keyword</a>* m_pcliShowClassesNode;
+<a name="l00109"></a>00109 
+<a name="l00111"></a>00111         <a class="code" href="classKeyword.html">Keyword</a>* m_pcliNoNode;
+<a name="l00113"></a>00113         <a class="code" href="classKeyword.html">Keyword</a>* m_pcliTraceNode;
+<a name="l00115"></a>00115         <a class="code" href="classKeyword.html">Keyword</a>* m_pcliTraceFilterNode;
+<a name="l00117"></a>00117         ParamString* m_pcliFilterParam;
+<a name="l00119"></a>00119         <a class="code" href="classKeyword.html">Keyword</a>* m_pcliAllFilterNode;
+<a name="l00120"></a>00120     };
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124 <span class="preprocessor">#endif // _CLI_TRACES_MENU_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:34 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

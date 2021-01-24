@@ -23,6 +23,10 @@
 */
 
 
+#include "cli/pch.h"
+
+#include <stdlib.h>
+
 #include "cli/command_line.h"
 #include "cli/io_device.h"
 #include "cli/menu.h"
@@ -30,18 +34,25 @@
 #include "cli/endl.h"
 #include "cli/param.h"
 #include "cli/traces.h"
+#include "cli/assert.h"
 #include "consistency.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-static const TraceClass TRACE_CMD_LINE("CMD_LINE", "Command line parsing");
-static const TraceClass TRACE_CMD_LINE_SPLIT("CMD_LINE_SPLIT", "Split of command lines");
+static const TraceClass TRACE_CMD_LINE("CLI_CMD_LINE", Help()
+    .AddHelp(Help::LANG_EN, "Command line parsing")
+    .AddHelp(Help::LANG_FR, "Analyse de lignes de commande"));
+static const TraceClass TRACE_CMD_LINE_SPLIT("CLI_CMD_LINE_SPLIT", Help()
+    .AddHelp(Help::LANG_EN, "Split of command lines")
+    .AddHelp(Help::LANG_FR, "Césure de mots sur analyse de lignes de commande"));
 
 
 CommandLine::CommandLine(void)
-  : m_pcliMenu(NULL),
-    m_bLastWordValid(false),
+  : m_cliElements(MAX_CMD_LINE_WORD_COUNT), m_cliAutoDelete(MAX_CMD_LINE_WORD_COUNT),
+    m_pcliMenu(NULL),
+    m_strLastWord(MAX_WORD_LENGTH), m_bLastWordValid(false),
     m_iNumBackspacesForCompletion(0)
 {
     EnsureTraces();
@@ -49,67 +60,81 @@ CommandLine::CommandLine(void)
 
 CommandLine::~CommandLine(void)
 {
-    while (! m_cliAutoDelete.empty())
+    // Auto-deletion list.
+    while (! m_cliAutoDelete.IsEmpty())
     {
-        const Element* pcli_Front = m_cliAutoDelete.front();
-        m_cliAutoDelete.pop_front();
-        delete pcli_Front;
+        if (const Element* const pcli_Element = m_cliAutoDelete.RemoveHead())
+        {
+            delete pcli_Element;
+        }
     }
 }
 
 const bool CommandLine::Parse(
         const Menu& CLI_Menu,
-        const std::string& STR_Line,
+        const tk::String& STR_Line,
         const bool B_Execution
         )
 {
     m_pcliMenu = & CLI_Menu;
 
     // Reset the error message.
-    m_strError.erase();
+    m_cliError = ResourceString();
 
     // Split the line into words.
     const Element* pcli_Node = & CLI_Menu;
-    std::vector<std::string> vstr_Words;
+    tk::Queue<tk::String> vstr_Words(MAX_CMD_LINE_WORD_COUNT);
     int i_LastWordPosition = -1;
     if (! Split(STR_Line, vstr_Words, i_LastWordPosition))
     {
-        GetTraces().Trace(TRACE_CMD_LINE) << "Could not split '" << STR_Line << "' (" << m_strError << ")" << endl;
+        GetTraces().Trace(TRACE_CMD_LINE) << "Could not split '" << STR_Line << "' (" << m_cliError.GetString(ResourceString::LANG_EN) << ")" << endl;
         return false;
     }
 
     // Determine whether the last word should be parsed.
-    int i_WordCount = vstr_Words.size();
+    int i_WordCount = vstr_Words.GetCount();
     if ((! B_Execution)
-        && (! vstr_Words.empty())
+        && (! vstr_Words.IsEmpty())
         && (i_LastWordPosition >= 0))
     {
         i_WordCount --;
-        m_strLastWord = vstr_Words.back();
+        if (! m_strLastWord.Set(vstr_Words.GetTail()))
+        {
+            GetTraces().Trace(INTERNAL_ERROR)
+                << "CommandLine::Parse(): "
+                << "Not enough space in m_strLastWord for the word '" << vstr_Words.GetTail() << "'"
+                << endl;
+        }
         m_bLastWordValid = true;
-        m_iNumBackspacesForCompletion = (STR_Line.size() - i_LastWordPosition);
+        m_iNumBackspacesForCompletion = (STR_Line.GetLength() - i_LastWordPosition);
     }
     else
     {
-        m_strLastWord.erase();
+        m_strLastWord.Set("");
         m_bLastWordValid = false;
         m_iNumBackspacesForCompletion = 0;
     }
 
     // For each word, match the right element.
-    for (int i=0; i<i_WordCount; i++)
+    tk::Queue<tk::String>::Iterator it = vstr_Words.GetIterator();
+    for (   int i=0;
+            vstr_Words.IsValid(it) && (i < i_WordCount);
+            i ++)
     {
-        GetTraces().Trace(TRACE_CMD_LINE) << "Word " << i << " '" << vstr_Words[i] << "'" << endl;
-        ElementList cli_ExactList, cli_NearList;
-        if (! pcli_Node->FindElements(cli_ExactList, cli_NearList, vstr_Words[i].c_str()))
+        GetTraces().Trace(TRACE_CMD_LINE) << "Word " << i << " '" << vstr_Words.GetAt(it) << "'" << endl;
+        Element::List cli_ExactList(MAX_CMD_LINE_WORD_COUNT), cli_NearList(MAX_CMD_LINE_WORD_COUNT);
+        if (! pcli_Node->FindElements(cli_ExactList, cli_NearList, vstr_Words.GetAt(it)))
         {
-            m_strError =  "Internal error";
+            m_cliError
+                .SetString(ResourceString::LANG_EN, "Internal error")
+                .SetString(ResourceString::LANG_FR, "Erreur interne");
+            GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
             return false;
         }
 
-        if (cli_NearList.size() == 0)
+        if (cli_NearList.GetCount() == 0)
         {
-            if (vstr_Words[i] == "\n")
+            if (vstr_Words.GetAt(it) == "\n")
             {
                 if (i == 0)
                 {
@@ -117,37 +142,47 @@ const bool CommandLine::Parse(
                 }
                 else
                 {
-                    GetTraces().Trace(TRACE_CMD_LINE) << "Uncomplete command" << endl;
-                    m_strError = "Uncomplete command";
+                    m_cliError
+                        .SetString(ResourceString::LANG_EN, "Uncomplete command")
+                        .SetString(ResourceString::LANG_FR, "Command incomplète");
+                    GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
                     return false;
                 }
             }
             else
             {
-                GetTraces().Trace(TRACE_CMD_LINE) << "Syntax error next to " << vstr_Words[i] << endl;
-                m_strError = "Syntax error next to " + vstr_Words[i];
+                m_cliError
+                    .SetString(ResourceString::LANG_EN, ResourceString::Concat("Syntax error next to '", vstr_Words.GetAt(it), "'"))
+                    .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de syntaxe près de '", vstr_Words.GetAt(it), "'"));
+                GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
                 return false;
             }
         }
-        else if ((cli_ExactList.size() > 1)
-                || ((cli_ExactList.size() == 0) && (cli_NearList.size() > 1)))
+        else if ((cli_ExactList.GetCount() > 1)
+                || ((cli_ExactList.GetCount() == 0) && (cli_NearList.GetCount() > 1)))
         {
-            GetTraces().Trace(TRACE_CMD_LINE) << "Ambiguous syntax next to " << vstr_Words[i] << endl;
-            m_strError = "Ambiguous syntax next to " + vstr_Words[i];
+            m_cliError
+                .SetString(ResourceString::LANG_EN, ResourceString::Concat("Ambiguous syntax next to '", vstr_Words.GetAt(it), "'"))
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Ambiguïté de syntaxe près de '", vstr_Words.GetAt(it), "'"));
+            GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
             return false;
         }
         else
         {
-            pcli_Node = cli_NearList.front();
+            pcli_Node = cli_NearList.GetHead();
             AddElement(pcli_Node);
         }
+
+        vstr_Words.MoveNext(it);
     }
 
     if (B_Execution && (i_WordCount > 0)
         && (! dynamic_cast<const Endl*>(& GetLastElement())))
     {
-        GetTraces().Trace(TRACE_CMD_LINE) << "Uncomplete command" << endl;
-        m_strError = "Uncomplete command";
+        m_cliError
+            .SetString(ResourceString::LANG_EN, "Uncomplete command")
+            .SetString(ResourceString::LANG_FR, "Commande incomplète");
+        GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
         return false;
     }
 
@@ -158,33 +193,23 @@ const bool CommandLine::Parse(
     return true;
 }
 
-const Element& CommandLine::operator[](const int I_Pos) const
-{
-    return *m_cliElements[I_Pos];
-}
-
 const Element& CommandLine::GetLastElement(void) const
 {
-    if (m_cliElements.empty())
+    if (m_cliElements.IsEmpty())
     {
         return *m_pcliMenu;
     }
     else
     {
-        return *m_cliElements.back();
+        return *m_cliElements.GetTail();
     }
-}
-
-const int CommandLine::GetElementCount(void) const
-{
-    return m_cliElements.size();
 }
 
 const char* const CommandLine::GetLastWord(void) const
 {
     if (m_bLastWordValid)
     {
-        return m_strLastWord.c_str();
+        return m_strLastWord;
     }
     else
     {
@@ -197,34 +222,38 @@ const int CommandLine::GetNumBackspacesForCompletion(void) const
     return m_iNumBackspacesForCompletion;
 }
 
-const std::string CommandLine::GetLastError(void) const
+const ResourceString& CommandLine::GetLastError(void) const
 {
-    return m_strError;
+    return m_cliError;
 }
 
 const bool CommandLine::Split(
-        const std::string& STR_Line,
-        std::vector<std::string>& VSTR_Words,
+        const tk::String& STR_Line,
+        tk::Queue<tk::String>& VSTR_Words,
         int& I_LastWordPosition
         )
 {
     I_LastWordPosition = -1;
 
     class Do { public:
-        static void PushWord(
-            const Element& CLI_Element, std::vector<std::string>& VSTR_Words,
-            const int I_Position, std::string& STR_Word)
+        static const bool PushWord(
+            const Element& CLI_Element, tk::Queue<tk::String>& VSTR_Words,
+            const int I_Position, tk::String& STR_Word)
         {
-            GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Word '" << STR_Word << "' pushed at " << I_Position << endl;
-            VSTR_Words.push_back(STR_Word);
-            STR_Word.erase();
+            if (VSTR_Words.AddTail(STR_Word))
+            {
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Word '" << STR_Word << "' pushed at " << I_Position << endl;
+                STR_Word.Set("");
+                return true;
+            }
+            return false;
         }
     };
 
-    std::string str_Word;
+    tk::String str_Word(MAX_WORD_LENGTH);
     bool b_EscapeMode = false;
     bool b_QuotedWord = false;
-    for (unsigned int i=0; i<STR_Line.size(); i++)
+    for (unsigned int i=0; i<STR_Line.GetLength(); i++)
     {
         const char c = STR_Line[i];
 
@@ -233,17 +262,21 @@ const bool CommandLine::Split(
         {
             if (b_EscapeMode)
             {
-                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Unterminated escape sequence on \\n" << endl;
-                m_strError = "Unterminated escape sequence";
+                m_cliError
+                    .SetString(ResourceString::LANG_EN, "Unterminated escape sequence")
+                    .SetString(ResourceString::LANG_FR, "Séquence d'échappement incomplète");
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on \\n" << endl;
                 return false;
             }
             if (b_QuotedWord)
             {
-                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Unterminated quoted string on \\n" << endl;
-                m_strError = "Unterminated quoted string";
+                m_cliError
+                    .SetString(ResourceString::LANG_EN, "Unterminated quoted string")
+                    .SetString(ResourceString::LANG_FR, "Guillemets non fermés");
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on \\n" << endl;
                 return false;
             }
-            if (! str_Word.empty())
+            if (! str_Word.IsEmpty())
             {
                 Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to -1 on \\n" << endl;
@@ -259,7 +292,7 @@ const bool CommandLine::Split(
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Quoted string starting at " << i << endl;
                 b_QuotedWord = true;
                 // Push previous word if any.
-                if (! str_Word.empty())
+                if (! str_Word.IsEmpty())
                 {
                     Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
                 }
@@ -282,7 +315,7 @@ const bool CommandLine::Split(
         // Blank characters.
         else if (((c == ' ') || (c == '\t')) && (! b_EscapeMode) && (! b_QuotedWord))
         {
-            if (! str_Word.empty())
+            if (! str_Word.IsEmpty())
             {
                 Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to -1 on blank character" << endl;
@@ -290,7 +323,7 @@ const bool CommandLine::Split(
             }
         }
         // Escape character.
-        else if ((c == '\\') && (! b_EscapeMode) && (i < STR_Line.size() - 1))
+        else if ((c == '\\') && (! b_EscapeMode) && (i < STR_Line.GetLength() - 1))
         {
             GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Escape mode starting at " << i << endl;
             b_EscapeMode = true;
@@ -304,7 +337,11 @@ const bool CommandLine::Split(
         else
         {
             // Word expansion.
-            str_Word += c;
+            if (! str_Word.Append(c))
+            {
+                // Internal error.
+                return false;
+            }
             if (I_LastWordPosition < 0)
             {
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to " << i << " on non-blank character" << endl;
@@ -320,9 +357,9 @@ const bool CommandLine::Split(
         }
 
         // End of line management.
-        if (i >= STR_Line.size() - 1)
+        if (i >= STR_Line.GetLength() - 1)
         {
-            if (! str_Word.empty())
+            if (! str_Word.IsEmpty())
             {
                 Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
             }
@@ -330,24 +367,34 @@ const bool CommandLine::Split(
 
         if (c == '\n')
         {
-            GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "\\n pushed at " << i << endl;
-            VSTR_Words.push_back("\n");
-            GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to -1 on \\n" << endl;
-            I_LastWordPosition = -1;
-            return true;
+            if (VSTR_Words.AddTail(tk::String(MAX_WORD_LENGTH, "\n")))
+            {
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "\\n pushed at " << i << endl;
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to -1 on \\n" << endl;
+                I_LastWordPosition = -1;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
     if (b_EscapeMode)
     {
-        GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Unterminated escape sequence on end of line" << endl;
-        m_strError = "Unterminated escape sequence";
+        m_cliError
+            .SetString(ResourceString::LANG_EN, "Unterminated escape sequence")
+            .SetString(ResourceString::LANG_FR, "Séquence d'échappement incomplète");
+        GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on end of line" << endl;
         return false;
     }
     if (b_QuotedWord)
     {
+        m_cliError
+            .SetString(ResourceString::LANG_EN, "Unterminated quoted string")
+            .SetString(ResourceString::LANG_FR, "Guillemets non fermés");
         GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Unterminated quoted string on end of line" << endl;
-        m_strError = "Unterminated quoted string";
         return false;
     }
     return true;
@@ -358,13 +405,68 @@ CommandLine& CommandLine::AddElement(const Element* const PCLI_Element)
     if (const Param* pcli_Param = dynamic_cast<const Param*>(PCLI_Element))
     {
         const Param* pcli_Clone = pcli_Param->Clone();
-        m_cliElements.push_back(pcli_Clone);
-        m_cliAutoDelete.push_back(pcli_Clone);
+        if (! m_cliElements.AddTail(pcli_Clone))
+        {
+            CLI_ASSERT(false);
+        }
+        if (! m_cliAutoDelete.AddTail(pcli_Clone))
+        {
+            CLI_ASSERT(false);
+        }
     }
     else
     {
-        m_cliElements.push_back(PCLI_Element);
+        if (! m_cliElements.AddTail(PCLI_Element))
+        {
+            CLI_ASSERT(false);
+        }
     }
     return *this;
 }
 
+
+CommandLineIterator::CommandLineIterator(const CommandLine& CLI_CmdLine)
+  : m_cliCmdLine(CLI_CmdLine),
+    m_cliIterator(m_cliCmdLine.m_cliElements.GetIterator()), m_pcliCurrentElement(NULL)
+{
+}
+
+CommandLineIterator::~CommandLineIterator(void)
+{
+}
+
+const bool CommandLineIterator::StepIt(void)
+{
+    if (m_cliCmdLine.m_cliElements.IsValid(m_cliIterator))
+    {
+        m_pcliCurrentElement = m_cliCmdLine.m_cliElements.GetAt(m_cliIterator);
+        m_cliCmdLine.m_cliElements.MoveNext(m_cliIterator);
+        return (m_pcliCurrentElement != NULL);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+const bool CommandLineIterator::operator==(const Element& CLI_Element) const
+{
+    const cli::Param* const pcli_RefParam = dynamic_cast<const cli::Param*>(& CLI_Element);
+    const cli::Param* const pcli_CmdLineParam = dynamic_cast<const cli::Param*>(m_pcliCurrentElement);
+
+    if ((pcli_RefParam != NULL) && (pcli_CmdLineParam != NULL)
+        && (pcli_CmdLineParam->GetCloned() == pcli_RefParam))
+    {
+        pcli_RefParam->CopyValue(*pcli_CmdLineParam);
+        return true;
+    }
+    else
+    {
+        return (m_pcliCurrentElement == & CLI_Element);
+    }
+}
+
+const Element* const CommandLineIterator::operator*(void) const
+{
+    return m_pcliCurrentElement;
+}

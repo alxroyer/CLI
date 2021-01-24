@@ -23,24 +23,21 @@
 */
 
 
-#include "cli/param_host.h"
+#include "cli/pch.h"
 
-using namespace cli;
+#include "cli/param_host.h"
+#include "constraints.h"
+
+CLI_NS_USE(cli)
 
 
 ParamHost::ParamHost(const Help& CLI_Help)
-  : ParamT<std::string>("<host>", CLI_Help)
+  : ParamString("<host>", CLI_Help)
 {
 }
 
 ParamHost::~ParamHost(void)
 {
-}
-
-const bool ParamHost::SetstrValue(const std::string& STR_Value) const
-{
-    SetValue(STR_Value, STR_Value);
-    return true;
 }
 
 const Param* const ParamHost::Clone(void) const

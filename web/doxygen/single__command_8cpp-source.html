@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>single_command.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,88 +45,93 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="single__command_8h.html">cli/single_command.h</a>"</span>
-<a name="l00027"></a>00027 <span class="preprocessor">#include "<a class="code" href="consistency_8h.html">consistency.h</a>"</span>
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029 <span class="keyword">using namespace </span>cli;
-<a name="l00030"></a>00030 
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 <span class="preprocessor">#include "<a class="code" href="single__command_8h.html">cli/single_command.h</a>"</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include "<a class="code" href="consistency_8h.html">consistency.h</a>"</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#include "<a class="code" href="constraints_8h.html">constraints.h</a>"</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a><a class="code" href="classcli_1_1SingleCommand.html#e6128cb9a8db9b2bea7a837a3bfdad0c">00032</a> SingleCommand::SingleCommand(
-<a name="l00033"></a>00033         <span class="keyword">const</span> std::string&amp; STR_Command,
-<a name="l00034"></a>00034         <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; CLI_Output,
-<a name="l00035"></a>00035         <span class="keyword">const</span> <span class="keywordtype">bool</span> B_AutoDelete)
-<a name="l00036"></a>00036   : <a class="code" href="classcli_1_1IODevice.html">IODevice</a>(<span class="stringliteral">"cmd["</span> + STR_Command + <span class="stringliteral">"]"</span>, <span class="stringliteral">"\n"</span>, B_AutoDelete), m_cliOutput(CLI_Output),
-<a name="l00037"></a>00037     m_strCommand(STR_Command), m_iPosition(-1)
-<a name="l00038"></a>00038 {
-<a name="l00039"></a>00039     <a class="code" href="namespacecli.html#fbb2657ad8b08490e44f8f0d6591cf98">EnsureCommonDevices</a>();
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041     m_cliOutput.<a class="code" href="classcli_1_1OutputDevice.html#5cf7d389260e7c6a349efb9c2f5da262">UseInstance</a>(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>);
-<a name="l00042"></a>00042 }
+<a name="l00032"></a>00032 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 
+<a name="l00035"></a><a class="code" href="classSingleCommand.html#8d515761346cdeefad4d3799a454f977">00035</a> <a class="code" href="classSingleCommand.html">SingleCommand</a>::<a class="code" href="classSingleCommand.html">SingleCommand</a>(
+<a name="l00036"></a>00036         const <span class="keywordtype">char</span>* const STR_Command,
+<a name="l00037"></a>00037         <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; CLI_Output,
+<a name="l00038"></a>00038         const <span class="keywordtype">bool</span> B_AutoDelete)
+<a name="l00039"></a>00039   : <a class="code" href="classIODevice.html">IODevice</a>(tk::<a class="code" href="classString.html">String</a>::Concat(MAX_DEVICE_NAME_LENGTH, "cmd[", STR_Command, "]"), "\n", B_AutoDelete), m_cliOutput(CLI_Output),
+<a name="l00040"></a>00040     m_strCommand(MAX_CMD_LINE_LENGTH, STR_Command), m_iPosition(-1)
+<a name="l00041"></a>00041 {
+<a name="l00042"></a>00042     EnsureCommonDevices();
 <a name="l00043"></a>00043 
-<a name="l00044"></a><a class="code" href="classcli_1_1SingleCommand.html#6224ada688c5db4b9a3795a0a68a7cf0">00044</a> <a class="code" href="classcli_1_1SingleCommand.html#6224ada688c5db4b9a3795a0a68a7cf0">SingleCommand::~SingleCommand</a>(<span class="keywordtype">void</span>)
-<a name="l00045"></a>00045 {
-<a name="l00046"></a>00046     m_cliOutput.<a class="code" href="classcli_1_1OutputDevice.html#ecfe1a98108afdbf1262c6a05ee7d766">FreeInstance</a>(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>);
-<a name="l00047"></a>00047 }
-<a name="l00048"></a>00048 
-<a name="l00049"></a><a class="code" href="classcli_1_1SingleCommand.html#4259bf32850ec74f59fafdc59b2cb77a">00049</a> <span class="keyword">const</span> std::string&amp; <a class="code" href="classcli_1_1SingleCommand.html#4259bf32850ec74f59fafdc59b2cb77a">SingleCommand::GetCommand</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00050"></a>00050 <span class="keyword"></span>{
-<a name="l00051"></a>00051     <span class="keywordflow">return</span> m_strCommand;
-<a name="l00052"></a>00052 }
-<a name="l00053"></a>00053 
-<a name="l00054"></a><a class="code" href="classcli_1_1SingleCommand.html#f878ee9907f3c556eab7d6e77006a92c">00054</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1SingleCommand.html#f878ee9907f3c556eab7d6e77006a92c">SingleCommand::OpenDevice</a>(<span class="keywordtype">void</span>)
-<a name="l00055"></a>00055 {
-<a name="l00056"></a>00056     <span class="keywordflow">if</span> (! m_cliOutput.<a class="code" href="classcli_1_1OutputDevice.html#75099b653ab724583210d817dbf8b446">OpenUp</a>(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>))
-<a name="l00057"></a>00057     {
-<a name="l00058"></a>00058         <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00059"></a>00059     }
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061     m_iPosition = 0;
-<a name="l00062"></a>00062     <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00063"></a>00063 }
-<a name="l00064"></a>00064 
-<a name="l00065"></a><a class="code" href="classcli_1_1SingleCommand.html#203e54c30788e28722d3500bb53d05ef">00065</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1SingleCommand.html#203e54c30788e28722d3500bb53d05ef">SingleCommand::CloseDevice</a>(<span class="keywordtype">void</span>)
-<a name="l00066"></a>00066 {
-<a name="l00067"></a>00067     <span class="keywordtype">bool</span> b_Res = <span class="keyword">true</span>;
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069     m_iPosition = -1;
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071     <span class="keywordflow">if</span> (! m_cliOutput.<a class="code" href="classcli_1_1OutputDevice.html#810d944acedbf6fa139fb852ff547957">CloseDown</a>(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>))
-<a name="l00072"></a>00072     {
-<a name="l00073"></a>00073         b_Res = <span class="keyword">false</span>;
-<a name="l00074"></a>00074     }
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076     <span class="keywordflow">return</span> b_Res;
-<a name="l00077"></a>00077 }
+<a name="l00044"></a>00044     m_cliOutput.UseInstance(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>);
+<a name="l00045"></a>00045 }
+<a name="l00046"></a>00046 
+<a name="l00047"></a><a class="code" href="classSingleCommand.html#6224ada688c5db4b9a3795a0a68a7cf0">00047</a> <a class="code" href="classSingleCommand.html#6224ada688c5db4b9a3795a0a68a7cf0">SingleCommand::~SingleCommand</a>(<span class="keywordtype">void</span>)
+<a name="l00048"></a>00048 {
+<a name="l00049"></a>00049     m_cliOutput.<a class="code" href="classOutputDevice.html#ecfe1a98108afdbf1262c6a05ee7d766">FreeInstance</a>(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>);
+<a name="l00050"></a>00050 }
+<a name="l00051"></a>00051 
+<a name="l00052"></a><a class="code" href="classSingleCommand.html#25abcafadb71cb54dd4b4c584d383724">00052</a> <span class="keyword">const</span> tk::String <a class="code" href="classSingleCommand.html#25abcafadb71cb54dd4b4c584d383724">SingleCommand::GetCommand</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00053"></a>00053 <span class="keyword"></span>{
+<a name="l00054"></a>00054     <span class="keywordflow">return</span> m_strCommand;
+<a name="l00055"></a>00055 }
+<a name="l00056"></a>00056 
+<a name="l00057"></a><a class="code" href="classSingleCommand.html#f878ee9907f3c556eab7d6e77006a92c">00057</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classSingleCommand.html#f878ee9907f3c556eab7d6e77006a92c">SingleCommand::OpenDevice</a>(<span class="keywordtype">void</span>)
+<a name="l00058"></a>00058 {
+<a name="l00059"></a>00059     <span class="keywordflow">if</span> (! m_cliOutput.<a class="code" href="classOutputDevice.html#75099b653ab724583210d817dbf8b446">OpenUp</a>(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>))
+<a name="l00060"></a>00060     {
+<a name="l00061"></a>00061         <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00062"></a>00062     }
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064     m_iPosition = 0;
+<a name="l00065"></a>00065     <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00066"></a>00066 }
+<a name="l00067"></a>00067 
+<a name="l00068"></a><a class="code" href="classSingleCommand.html#203e54c30788e28722d3500bb53d05ef">00068</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classSingleCommand.html#203e54c30788e28722d3500bb53d05ef">SingleCommand::CloseDevice</a>(<span class="keywordtype">void</span>)
+<a name="l00069"></a>00069 {
+<a name="l00070"></a>00070     <span class="keywordtype">bool</span> b_Res = <span class="keyword">true</span>;
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072     m_iPosition = -1;
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074     <span class="keywordflow">if</span> (! m_cliOutput.<a class="code" href="classOutputDevice.html#810d944acedbf6fa139fb852ff547957">CloseDown</a>(<a class="code" href="debug_8h.html#12506d620d4ecd0161866c9b19d761ed">__CALL_INFO__</a>))
+<a name="l00075"></a>00075     {
+<a name="l00076"></a>00076         b_Res = <span class="keyword">false</span>;
+<a name="l00077"></a>00077     }
 <a name="l00078"></a>00078 
-<a name="l00079"></a><a class="code" href="classcli_1_1SingleCommand.html#582ab4f121cf08acdc3010955938c72a">00079</a> <span class="keyword">const</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff">KEY</a> <a class="code" href="classcli_1_1SingleCommand.html#582ab4f121cf08acdc3010955938c72a">SingleCommand::GetKey</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00080"></a>00080 <span class="keyword"></span>{
-<a name="l00081"></a>00081     <span class="keywordflow">if</span> ((m_iPosition &gt;= 0) &amp;&amp; (m_iPosition &lt; (<span class="keywordtype">signed</span>) m_strCommand.size()))
-<a name="l00082"></a>00082     {
-<a name="l00083"></a>00083         <span class="keyword">const</span> <span class="keywordtype">char</span> c_Char = m_strCommand[m_iPosition];
-<a name="l00084"></a>00084         m_iPosition ++;
-<a name="l00085"></a>00085         <span class="keywordflow">return</span> <a class="code" href="classcli_1_1IODevice.html#9a6f9df87b7109ba77b651fce0224311">IODevice::GetKey</a>(c_Char);
-<a name="l00086"></a>00086     }
-<a name="l00087"></a>00087     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_iPosition == (<span class="keywordtype">signed</span>) m_strCommand.size())
-<a name="l00088"></a>00088     {
-<a name="l00089"></a>00089         m_iPosition ++;
-<a name="l00090"></a>00090         <span class="keywordflow">return</span> <a class="code" href="classcli_1_1IODevice.html#9a6f9df87b7109ba77b651fce0224311">IODevice::GetKey</a>(<span class="charliteral">'\n'</span>);
-<a name="l00091"></a>00091     }
-<a name="l00092"></a>00092     <span class="keywordflow">else</span>
-<a name="l00093"></a>00093     {
-<a name="l00094"></a>00094         <span class="keywordflow">return</span> <a class="code" href="namespacecli.html#081d033ac0da811211bd0cadd8f83eff190ee79e864e3dca3f3d84b7bcf094db">NULL_KEY</a>;
-<a name="l00095"></a>00095     }
-<a name="l00096"></a>00096 }
-<a name="l00097"></a>00097 
-<a name="l00098"></a><a class="code" href="classcli_1_1SingleCommand.html#6cb5f91fbcb92915b07f5af8f3f3b2b0">00098</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1SingleCommand.html#6cb5f91fbcb92915b07f5af8f3f3b2b0">SingleCommand::PutString</a>(<span class="keyword">const</span> std::string&amp; STR_Out)<span class="keyword"> const</span>
-<a name="l00099"></a>00099 <span class="keyword"></span>{
-<a name="l00100"></a>00100     m_cliOutput.<a class="code" href="classcli_1_1OutputDevice.html#72542ec1418f9dfbd3310585d5f9645c">PutString</a>(STR_Out);
-<a name="l00101"></a>00101 }
-<a name="l00102"></a>00102 
-<a name="l00103"></a><a class="code" href="classcli_1_1SingleCommand.html#641d1677f4182180ed171dd1dd5beac4">00103</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1SingleCommand.html#641d1677f4182180ed171dd1dd5beac4">SingleCommand::Beep</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00104"></a>00104 <span class="keyword"></span>{
-<a name="l00105"></a>00105     m_cliOutput.<a class="code" href="classcli_1_1OutputDevice.html#2909d8101fa517e0a29ef2a34847d96b">Beep</a>();
-<a name="l00106"></a>00106 }
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:31 2007 for CLI by&nbsp;
+<a name="l00079"></a>00079     <span class="keywordflow">return</span> b_Res;
+<a name="l00080"></a>00080 }
+<a name="l00081"></a>00081 
+<a name="l00082"></a><a class="code" href="classSingleCommand.html#582ab4f121cf08acdc3010955938c72a">00082</a> <span class="keyword">const</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6">KEY</a> <a class="code" href="classSingleCommand.html#582ab4f121cf08acdc3010955938c72a">SingleCommand::GetKey</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00083"></a>00083 <span class="keyword"></span>{
+<a name="l00084"></a>00084     <span class="keywordflow">if</span> ((m_iPosition &gt;= 0) &amp;&amp; (m_iPosition &lt; (<span class="keywordtype">signed</span>) m_strCommand.GetLength()))
+<a name="l00085"></a>00085     {
+<a name="l00086"></a>00086         <span class="keyword">const</span> <span class="keywordtype">char</span> c_Char = m_strCommand[m_iPosition];
+<a name="l00087"></a>00087         m_iPosition ++;
+<a name="l00088"></a>00088         <span class="keywordflow">return</span> <a class="code" href="classIODevice.html#7bafac5c500746f742aa289f33e38feb">IODevice::GetKey</a>(c_Char);
+<a name="l00089"></a>00089     }
+<a name="l00090"></a>00090     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_iPosition == (<span class="keywordtype">signed</span>) m_strCommand.GetLength())
+<a name="l00091"></a>00091     {
+<a name="l00092"></a>00092         m_iPosition ++;
+<a name="l00093"></a>00093         <span class="keywordflow">return</span> <a class="code" href="classIODevice.html#7bafac5c500746f742aa289f33e38feb">IODevice::GetKey</a>(<span class="charliteral">'\n'</span>);
+<a name="l00094"></a>00094     }
+<a name="l00095"></a>00095     <span class="keywordflow">else</span>
+<a name="l00096"></a>00096     {
+<a name="l00097"></a>00097         <span class="keywordflow">return</span> <a class="code" href="io__device_8h.html#6ae70ce7b1b294c469f11cbabb8f30d6e42682039e1a584113718465a202d0c0">NULL_KEY</a>;
+<a name="l00098"></a>00098     }
+<a name="l00099"></a>00099 }
+<a name="l00100"></a>00100 
+<a name="l00101"></a><a class="code" href="classSingleCommand.html#728a83e767b2f43a66c289e9aa1db545">00101</a> <span class="keywordtype">void</span> <a class="code" href="classSingleCommand.html#728a83e767b2f43a66c289e9aa1db545">SingleCommand::PutString</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Out)<span class="keyword"> const</span>
+<a name="l00102"></a>00102 <span class="keyword"></span>{
+<a name="l00103"></a>00103     m_cliOutput.<a class="code" href="classOutputDevice.html#a4653710e8f6f3d9bd53cdfec4fe253d">PutString</a>(STR_Out);
+<a name="l00104"></a>00104 }
+<a name="l00105"></a>00105 
+<a name="l00106"></a><a class="code" href="classSingleCommand.html#641d1677f4182180ed171dd1dd5beac4">00106</a> <span class="keywordtype">void</span> <a class="code" href="classSingleCommand.html#641d1677f4182180ed171dd1dd5beac4">SingleCommand::Beep</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00107"></a>00107 <span class="keyword"></span>{
+<a name="l00108"></a>00108     m_cliOutput.<a class="code" href="classOutputDevice.html#5e5348afeca145a0ea70243f228fd564">Beep</a>();
+<a name="l00109"></a>00109 }
+<a name="l00110"></a>00110 
+<a name="l00111"></a>00111 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:32 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

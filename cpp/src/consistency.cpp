@@ -22,11 +22,14 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+#include "cli/pch.h"
+
 #include "cli/io_device.h"
 #include "cli/traces.h"
 #include "consistency.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
 void cli::EnsureCommonDevices(void)

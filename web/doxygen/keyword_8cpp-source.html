@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>keyword.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,20 +45,24 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="keyword_8h.html">cli/keyword.h</a>"</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="keyword">using namespace </span>cli;
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;stdlib.h&gt;</span>
 <a name="l00029"></a>00029 
-<a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="classcli_1_1Keyword.html#4172a56aeffe533126f52c3d73341282">00031</a> Keyword::Keyword(<span class="keyword">const</span> std::string&amp; STR_Keyword, <span class="keyword">const</span> <a class="code" href="classcli_1_1Help.html">Help</a>&amp; CLI_Help)
-<a name="l00032"></a>00032   : <a class="code" href="classcli_1_1SyntaxNode.html">SyntaxNode</a>(STR_Keyword, CLI_Help)
-<a name="l00033"></a>00033 {
-<a name="l00034"></a>00034 }
-<a name="l00035"></a>00035 
-<a name="l00036"></a><a class="code" href="classcli_1_1Keyword.html#7344279ddf79bd26186ccc0ed3f8d025">00036</a> <a class="code" href="classcli_1_1Keyword.html#7344279ddf79bd26186ccc0ed3f8d025">Keyword::~Keyword</a>(<span class="keywordtype">void</span>)
+<a name="l00030"></a>00030 <span class="preprocessor">#include "<a class="code" href="keyword_8h.html">cli/keyword.h</a>"</span>
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 
+<a name="l00035"></a><a class="code" href="classKeyword.html#814d02df1b30bbb634d292fc1806aec3">00035</a> <a class="code" href="classKeyword.html">Keyword</a>::<a class="code" href="classKeyword.html">Keyword</a>(const <span class="keywordtype">char</span>* const STR_Keyword, const <a class="code" href="classHelp.html">Help</a>&amp; CLI_Help)
+<a name="l00036"></a>00036   : <a class="code" href="classSyntaxNode.html">SyntaxNode</a>(STR_Keyword, CLI_Help)
 <a name="l00037"></a>00037 {
 <a name="l00038"></a>00038 }
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:30 2007 for CLI by&nbsp;
+<a name="l00039"></a>00039 
+<a name="l00040"></a><a class="code" href="classKeyword.html#7344279ddf79bd26186ccc0ed3f8d025">00040</a> <a class="code" href="classKeyword.html#7344279ddf79bd26186ccc0ed3f8d025">Keyword::~Keyword</a>(<span class="keywordtype">void</span>)
+<a name="l00041"></a>00041 {
+<a name="l00042"></a>00042 }
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:30 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

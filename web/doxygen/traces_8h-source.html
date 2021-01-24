@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_8f01d9b4589024334dc9ddb77b167b80.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_8a599c2cb6f1d7bd0e0805e56078a760.html">cli</a></div>
+<a class="el" href="dir_1478fa2896c71a852f24f40b9ae7a523.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ee510e0e819a9187a5b85fd01d9d2bcf.html">cli</a></div>
 <h1>traces.h</h1><a href="traces_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -49,134 +49,150 @@
 <a name="l00030"></a>00030 <span class="preprocessor">#ifndef _CLI_TRACES_H_</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#define _CLI_TRACES_H_</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;deque&gt;</span>
-<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;map&gt;</span>
-<a name="l00036"></a>00036 
+<a name="l00033"></a>00033 <span class="preprocessor">#include &lt;<a class="code" href="namespace_8h.html">cli/namespace.h</a>&gt;</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include &lt;<a class="code" href="object_8h.html">cli/object.h</a>&gt;</span>
+<a name="l00035"></a>00035 <span class="preprocessor">#include &lt;<a class="code" href="help_8h.html">cli/help.h</a>&gt;</span>
+<a name="l00036"></a>00036 <span class="preprocessor">#include &lt;<a class="code" href="tk_8h.html">cli/tk.h</a>&gt;</span>
 <a name="l00037"></a>00037 
-<a name="l00038"></a>00038 <span class="keyword">namespace </span>cli {
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040     <span class="comment">// Forward declarations.</span>
-<a name="l00041"></a>00041     <span class="keyword">class </span>Element;
-<a name="l00042"></a>00042     <span class="keyword">class </span>OutputDevice;
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 <a class="code" href="namespace_8h.html#43bf79d829bcd245270f7ed0ba16155a">CLI_NS_BEGIN</a>(cli)
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041     <span class="comment">// Forward declarations.</span>
+<a name="l00042"></a>00042     class <a class="code" href="classOutputDevice.html">OutputDevice</a>;
 <a name="l00043"></a>00043 
 <a name="l00044"></a>00044 
-<a name="l00046"></a><a class="code" href="classcli_1_1TraceClass.html">00046</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>
+<a name="l00046"></a><a class="code" href="classTraceClass.html">00046</a>     class <a class="code" href="classTraceClass.html">TraceClass</a> : public <a class="code" href="classObject.html">Object</a>
 <a name="l00047"></a>00047     {
 <a name="l00048"></a>00048     <span class="keyword">public</span>:
-<a name="l00050"></a><a class="code" href="classcli_1_1TraceClass.html#0e3c10e9247734e9aad4cb9129f01b95">00050</a>         <span class="keyword">typedef</span> std::deque&lt;TraceClass&gt; <a class="code" href="classcli_1_1TraceClass.html#0e3c10e9247734e9aad4cb9129f01b95">List</a>;
+<a name="l00050"></a><a class="code" href="classTraceClass.html#982f961164bcb5ff882892a4739964e3">00050</a>         <span class="keyword">typedef</span> tk::Queue&lt;TraceClass&gt; List;
 <a name="l00051"></a>00051 
 <a name="l00052"></a>00052     <span class="keyword">private</span>:
-<a name="l00054"></a>00054         <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>(<span class="keywordtype">void</span>);
+<a name="l00054"></a>00054         <a class="code" href="classTraceClass.html">TraceClass</a>(<span class="keywordtype">void</span>);
 <a name="l00055"></a>00055 
 <a name="l00056"></a>00056     <span class="keyword">public</span>:
-<a name="l00058"></a>00058         <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>(
-<a name="l00059"></a>00059             <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Class         
+<a name="l00058"></a>00058         <a class="code" href="classTraceClass.html">TraceClass</a>(
+<a name="l00059"></a>00059             <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class         
 <a name="l00060"></a>00060             );
 <a name="l00061"></a>00061 
-<a name="l00063"></a>00063         <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>(
-<a name="l00064"></a>00064             <span class="keyword">const</span> std::string&amp; STR_ClassName,   
-<a name="l00065"></a>00065             <span class="keyword">const</span> std::string&amp; STR_Description  
+<a name="l00063"></a>00063         <a class="code" href="classTraceClass.html">TraceClass</a>(
+<a name="l00064"></a>00064             <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_ClassName,    
+<a name="l00065"></a>00065             <span class="keyword">const</span> <a class="code" href="classHelp.html">Help</a>&amp; CLI_Help                
 <a name="l00066"></a>00066             );
 <a name="l00067"></a>00067 
-<a name="l00069"></a>00069         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1TraceClass.html#6e860c3f60fc07418f8ef11f2f874d7d">~TraceClass</a>(<span class="keywordtype">void</span>);
+<a name="l00069"></a>00069         <span class="keyword">virtual</span> ~<a class="code" href="classTraceClass.html">TraceClass</a>(<span class="keywordtype">void</span>);
 <a name="l00070"></a>00070 
 <a name="l00071"></a>00071     <span class="keyword">public</span>:
-<a name="l00073"></a>00073         <span class="keyword">const</span> std::string&amp; <a class="code" href="classcli_1_1TraceClass.html#9192cb8d59999952b04fdd77c0421d01">GetName</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00073"></a>00073         <span class="keyword">const</span> tk::String GetName(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00074"></a>00074 
-<a name="l00076"></a>00076         <span class="keyword">const</span> std::string&amp; <a class="code" href="classcli_1_1TraceClass.html#a3cd2d2946966cee0e119b16ae281356">GetDescription</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00076"></a>00076         <span class="keyword">const</span> <a class="code" href="classHelp.html">Help</a>&amp; GetHelp(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00077"></a>00077 
 <a name="l00078"></a>00078     <span class="keyword">protected</span>:
-<a name="l00081"></a>00081         <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; <a class="code" href="classcli_1_1TraceClass.html#e54ed75f6145451ce576c1be7c7f61bd">operator=</a>(<span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp;);
+<a name="l00081"></a>00081         <a class="code" href="classTraceClass.html">TraceClass</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp;);
 <a name="l00082"></a>00082 
 <a name="l00083"></a>00083     <span class="keyword">private</span>:
-<a name="l00085"></a>00085         std::string m_strName;
+<a name="l00085"></a>00085         tk::String m_strName;
 <a name="l00086"></a>00086 
-<a name="l00088"></a>00088         std::string m_strDescription;
+<a name="l00088"></a>00088         <a class="code" href="classHelp.html">Help</a> m_cliHelp;
 <a name="l00089"></a>00089     };
 <a name="l00090"></a>00090 
-<a name="l00092"></a>00092     <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="namespacecli.html#b6a291af6c3fae3fe038c59e46245a4e">operator==</a>(
-<a name="l00093"></a>00093         <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Class1,   
-<a name="l00094"></a>00094         <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Class2    
+<a name="l00092"></a>00092     <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="tk_8h.html#b93d976ecfcae27c28214ab48a9d90de">operator==</a>(
+<a name="l00093"></a>00093         <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class1,   
+<a name="l00094"></a>00094         <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class2    
 <a name="l00095"></a>00095         );
 <a name="l00096"></a>00096 
-<a name="l00097"></a>00097 
-<a name="l00099"></a><a class="code" href="classcli_1_1Traces.html">00099</a>     <span class="keyword">class </span><a class="code" href="classcli_1_1Traces.html">Traces</a>
-<a name="l00100"></a>00100     {
-<a name="l00101"></a>00101     <span class="keyword">public</span>:
-<a name="l00103"></a>00103         <span class="keyword">static</span> <a class="code" href="classcli_1_1Traces.html">Traces</a>&amp; <a class="code" href="classcli_1_1Traces.html#3ca326d5abd9ea4412d42e261705084e">GetInstance</a>(<span class="keywordtype">void</span>);
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105     <span class="keyword">protected</span>:
-<a name="l00107"></a>00107         <a class="code" href="classcli_1_1Traces.html#5a538bf1875180a595fb3b9d22cab52f">Traces</a>(<span class="keywordtype">void</span>);
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109     <span class="keyword">public</span>:
-<a name="l00111"></a>00111         <span class="keyword">virtual</span> <a class="code" href="classcli_1_1Traces.html#414864631e9dca7cd2e762d5d325b423">~Traces</a>(<span class="keywordtype">void</span>);
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113     <span class="keyword">public</span>:
-<a name="l00115"></a>00115         <span class="keyword">const</span> <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classcli_1_1Traces.html#32206e962cbb24ebe3154d65d494573a">GetStream</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00123"></a>00123         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1Traces.html#111bcade621537d1e5b960a4c1331223">SetStream</a>(
-<a name="l00124"></a>00124             <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; CLI_Stream                
-<a name="l00125"></a>00125             );
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127     <span class="keyword">public</span>:
-<a name="l00129"></a>00129         <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html#0e3c10e9247734e9aad4cb9129f01b95">TraceClass::List</a> <a class="code" href="classcli_1_1Traces.html#c97941ec08594ef68c31c50b6696d0b2">GetAllClasses</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00130"></a>00130 
-<a name="l00132"></a>00132         <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html#0e3c10e9247734e9aad4cb9129f01b95">TraceClass::List</a> <a class="code" href="classcli_1_1Traces.html#aedee397b4464dbab833150122c54584">GetCurrentFilter</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00133"></a>00133 
-<a name="l00137"></a>00137         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1Traces.html#2a4c99aeeb9d037eea36e4d4e526fd4d">SetFilter</a>(
-<a name="l00138"></a>00138             <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Class,    
-<a name="l00139"></a>00139             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_ShowTraces         
-<a name="l00140"></a>00140             );
-<a name="l00141"></a>00141 
-<a name="l00145"></a>00145         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1Traces.html#042751f198395cba4cd76a9144a36420">SetAllFilter</a>(
-<a name="l00146"></a>00146             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_ShowTraces         
+<a name="l00098"></a>00098     <span class="keyword">extern</span> <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a> <a class="code" href="traces_8h.html#af0ed6f77d76b7f107bd6668a41574fe">INTERNAL_ERROR</a>;
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 
+<a name="l00102"></a><a class="code" href="classTraces.html">00102</a>     <span class="keyword">class </span><a class="code" href="classTraces.html">Traces</a> : <span class="keyword">public</span> <a class="code" href="classObject.html">Object</a>
+<a name="l00103"></a>00103     {
+<a name="l00104"></a>00104     <span class="keyword">public</span>:
+<a name="l00106"></a>00106         <span class="keyword">static</span> <a class="code" href="classTraces.html">Traces</a>&amp; <a class="code" href="classTraces.html#3ca326d5abd9ea4412d42e261705084e">GetInstance</a>(<span class="keywordtype">void</span>);
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108     <span class="keyword">protected</span>:
+<a name="l00110"></a>00110         <a class="code" href="classTraces.html#5a538bf1875180a595fb3b9d22cab52f">Traces</a>(<span class="keywordtype">void</span>);
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112     <span class="keyword">private</span>:
+<a name="l00114"></a>00114         <a class="code" href="classTraces.html#5a538bf1875180a595fb3b9d22cab52f">Traces</a>(<span class="keyword">const</span> <a class="code" href="classTraces.html">Traces</a>&amp;);
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116     <span class="keyword">public</span>:
+<a name="l00118"></a>00118         <span class="keyword">virtual</span> <a class="code" href="classTraces.html#414864631e9dca7cd2e762d5d325b423">~Traces</a>(<span class="keywordtype">void</span>);
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120     <span class="keyword">private</span>:
+<a name="l00122"></a>00122         <a class="code" href="classTraces.html">Traces</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classTraces.html">Traces</a>&amp;);
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124     <span class="keyword">public</span>:
+<a name="l00126"></a>00126         <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classTraces.html#32206e962cbb24ebe3154d65d494573a">GetStream</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00127"></a>00127 
+<a name="l00131"></a>00131         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTraces.html#111bcade621537d1e5b960a4c1331223">SetStream</a>(
+<a name="l00132"></a>00132             <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; CLI_Stream                
+<a name="l00133"></a>00133             );
+<a name="l00134"></a>00134 
+<a name="l00139"></a>00139         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTraces.html#299fc648e2044704771e65bab14305e1">UnsetStream</a>(<span class="keywordtype">void</span>);
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141     <span class="keyword">public</span>:
+<a name="l00145"></a>00145         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTraces.html#6e460792b0696ff90a7d35f77a941c6d">Declare</a>(
+<a name="l00146"></a>00146             <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class     
 <a name="l00147"></a>00147             );
 <a name="l00148"></a>00148 
-<a name="l00149"></a>00149     <span class="keyword">public</span>:
-<a name="l00153"></a>00153         <span class="keyword">const</span> <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classcli_1_1Traces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(
-<a name="l00154"></a>00154             <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Class     
-<a name="l00155"></a>00155             );
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157     <span class="keyword">private</span>:
-<a name="l00162"></a>00162         <span class="keyword">const</span> <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; BeginTrace(
-<a name="l00163"></a>00163             <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Class     
-<a name="l00164"></a>00164             );
-<a name="l00165"></a>00165 
-<a name="l00167"></a>00167         <span class="keyword">const</span> <span class="keywordtype">bool</span> TraceFilterState(
-<a name="l00168"></a>00168             <span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Class,    
-<a name="l00169"></a>00169             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_ShowTraces         
-<a name="l00170"></a>00170             );
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172     <span class="keyword">private</span>:
-<a name="l00174"></a>00174         <span class="keyword">class </span>TraceClassFlag : <span class="keyword">public</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>
-<a name="l00175"></a>00175         {
-<a name="l00176"></a>00176         <span class="keyword">public</span>:
-<a name="l00177"></a>00177             TraceClassFlag(<span class="keywordtype">void</span>);
-<a name="l00178"></a>00178             TraceClassFlag(<span class="keyword">const</span> <a class="code" href="classcli_1_1TraceClass.html">TraceClass</a>&amp; CLI_Source, <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Show);
-<a name="l00179"></a>00179             TraceClassFlag(<span class="keyword">const</span> TraceClassFlag&amp; CLI_Source);
-<a name="l00180"></a>00180         <span class="keyword">public</span>:
-<a name="l00181"></a>00181             TraceClassFlag&amp; operator=(<span class="keyword">const</span> TraceClassFlag&amp; CLI_Class);
-<a name="l00182"></a>00182         <span class="keyword">public</span>:
-<a name="l00183"></a>00183             <span class="keyword">const</span> <span class="keywordtype">bool</span> IsVisible(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00184"></a>00184         <span class="keyword">private</span>:
-<a name="l00185"></a>00185             <span class="keywordtype">bool</span> m_bShow;
-<a name="l00186"></a>00186         };
-<a name="l00187"></a>00187 
-<a name="l00189"></a>00189         <span class="keyword">typedef</span> std::map&lt;std::string, TraceClassFlag&gt; ClassMap;
-<a name="l00190"></a>00190 
-<a name="l00192"></a>00192         ClassMap m_mapClasses;
-<a name="l00193"></a>00193 
-<a name="l00195"></a>00195         <span class="keywordtype">bool</span> m_bTraceAll;
-<a name="l00196"></a>00196 
-<a name="l00198"></a>00198         <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>* m_pcliStream;
-<a name="l00199"></a>00199     };
-<a name="l00200"></a>00200 
-<a name="l00202"></a>00202     <a class="code" href="classcli_1_1Traces.html">Traces</a>&amp; <a class="code" href="namespacecli.html#5d451db4b218a7b3bda1e1c863f93101">GetTraces</a>(<span class="keywordtype">void</span>);
-<a name="l00203"></a>00203 
-<a name="l00204"></a>00204 };
-<a name="l00205"></a>00205 
-<a name="l00206"></a>00206 <span class="preprocessor">#endif // _CLI_TRACES_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:32 2007 for CLI by&nbsp;
+<a name="l00150"></a>00150         <span class="keyword">const</span> <a class="code" href="classTraceClass.html#982f961164bcb5ff882892a4739964e3">TraceClass::List</a> <a class="code" href="classTraces.html#c97941ec08594ef68c31c50b6696d0b2">GetAllClasses</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00151"></a>00151 
+<a name="l00153"></a>00153         <span class="keyword">const</span> <a class="code" href="classTraceClass.html#982f961164bcb5ff882892a4739964e3">TraceClass::List</a> <a class="code" href="classTraces.html#aedee397b4464dbab833150122c54584">GetCurrentFilter</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00154"></a>00154 
+<a name="l00158"></a>00158         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTraces.html#2a4c99aeeb9d037eea36e4d4e526fd4d">SetFilter</a>(
+<a name="l00159"></a>00159             <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class,    
+<a name="l00160"></a>00160             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_ShowTraces         
+<a name="l00161"></a>00161             );
+<a name="l00162"></a>00162 
+<a name="l00166"></a>00166         <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classTraces.html#042751f198395cba4cd76a9144a36420">SetAllFilter</a>(
+<a name="l00167"></a>00167             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_ShowTraces         
+<a name="l00168"></a>00168             );
+<a name="l00169"></a>00169 
+<a name="l00170"></a>00170     <span class="keyword">public</span>:
+<a name="l00174"></a>00174         <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classTraces.html#d200c898b9ac4ae6245039c962c27749">Trace</a>(
+<a name="l00175"></a>00175             <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class     
+<a name="l00176"></a>00176             );
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178     <span class="keyword">private</span>:
+<a name="l00183"></a>00183         <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; BeginTrace(
+<a name="l00184"></a>00184             <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class     
+<a name="l00185"></a>00185             );
+<a name="l00186"></a>00186 
+<a name="l00188"></a>00188         <span class="keyword">const</span> <span class="keywordtype">bool</span> TraceFilterState(
+<a name="l00189"></a>00189             <span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Class,    
+<a name="l00190"></a>00190             <span class="keyword">const</span> <span class="keywordtype">bool</span> B_ShowTraces         
+<a name="l00191"></a>00191             );
+<a name="l00192"></a>00192 
+<a name="l00193"></a>00193     <span class="keyword">private</span>:
+<a name="l00195"></a>00195         <span class="keyword">class </span>TraceClassFlag : <span class="keyword">public</span> <a class="code" href="classTraceClass.html">TraceClass</a>
+<a name="l00196"></a>00196         {
+<a name="l00197"></a>00197         <span class="keyword">public</span>:
+<a name="l00198"></a>00198             TraceClassFlag(<span class="keywordtype">void</span>);
+<a name="l00199"></a>00199             TraceClassFlag(<span class="keyword">const</span> <a class="code" href="classTraceClass.html">TraceClass</a>&amp; CLI_Source, <span class="keyword">const</span> <span class="keywordtype">bool</span> B_Show);
+<a name="l00200"></a>00200             TraceClassFlag(<span class="keyword">const</span> TraceClassFlag&amp; CLI_Source);
+<a name="l00201"></a>00201             <span class="keyword">virtual</span> ~TraceClassFlag(<span class="keywordtype">void</span>);
+<a name="l00202"></a>00202         <span class="keyword">public</span>:
+<a name="l00203"></a>00203             TraceClassFlag&amp; operator=(<span class="keyword">const</span> TraceClassFlag&amp; CLI_Class);
+<a name="l00204"></a>00204         <span class="keyword">public</span>:
+<a name="l00205"></a>00205             <span class="keyword">const</span> <span class="keywordtype">bool</span> IsVisible(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00206"></a>00206         <span class="keyword">private</span>:
+<a name="l00207"></a>00207             <span class="keywordtype">bool</span> m_bShow;
+<a name="l00208"></a>00208         };
+<a name="l00209"></a>00209 
+<a name="l00211"></a>00211         <span class="keyword">typedef</span> tk::Map&lt;tk::String, TraceClassFlag&gt; ClassMap;
+<a name="l00212"></a>00212 
+<a name="l00214"></a>00214         ClassMap m_mapClasses;
+<a name="l00215"></a>00215 
+<a name="l00217"></a>00217         <span class="keywordtype">bool</span> m_bTraceAll;
+<a name="l00218"></a>00218 
+<a name="l00220"></a>00220         <a class="code" href="classOutputDevice.html">OutputDevice</a>* m_pcliStream;
+<a name="l00221"></a>00221     };
+<a name="l00222"></a>00222 
+<a name="l00224"></a>00224     <a class="code" href="classTraces.html">Traces</a>&amp; <a class="code" href="traces_8h.html#757ce8f9014dd17ed7349efcdd702af9">GetTraces</a>(<span class="keywordtype">void</span>);
+<a name="l00225"></a>00225 
+<a name="l00226"></a>00226 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00227"></a>00227 
+<a name="l00228"></a>00228 <span class="preprocessor">#endif // _CLI_TRACES_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:34 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

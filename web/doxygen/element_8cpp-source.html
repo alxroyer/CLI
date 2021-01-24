@@ -19,7 +19,7 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_6ea8a444d8a127bbb7e1b26df9b3f281.html">src</a></div>
+<a class="el" href="dir_8262b836d4d2442c58d8b677f971492c.html">src</a></div>
 <h1>element.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2007, Alexis Royer</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
@@ -45,80 +45,84 @@
 <a name="l00023"></a>00023 <span class="comment">*/</span>
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;assert.h&gt;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include "<a class="code" href="pch_8h.html">cli/pch.h</a>"</span>
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028 <span class="preprocessor">#include "<a class="code" href="cli_8h.html">cli/cli.h</a>"</span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include "<a class="code" href="shell_8h.html">cli/shell.h</a>"</span>
-<a name="l00030"></a>00030 <span class="preprocessor">#include "<a class="code" href="element_8h.html">cli/element.h</a>"</span>
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032 <span class="keyword">using namespace </span>cli;
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034 
-<a name="l00035"></a><a class="code" href="classcli_1_1Element.html#d92ffaec0dd7f176619b7e66f080cbce">00035</a> Element::Element(<span class="keyword">const</span> std::string&amp; STR_Keyword, <span class="keyword">const</span> <a class="code" href="classcli_1_1Help.html">Help</a>&amp; CLI_Help)
-<a name="l00036"></a>00036   : m_strKeyword(STR_Keyword),
-<a name="l00037"></a>00037     m_cliHelp(CLI_Help),
-<a name="l00038"></a>00038     m_pcliCli(NULL)
-<a name="l00039"></a>00039 {
-<a name="l00040"></a>00040 }
-<a name="l00041"></a>00041 
-<a name="l00042"></a><a class="code" href="classcli_1_1Element.html#946800e98d0a9e7a085987656b41c4db">00042</a> <a class="code" href="classcli_1_1Element.html#946800e98d0a9e7a085987656b41c4db">Element::~Element</a>(<span class="keywordtype">void</span>)
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;stdlib.h&gt;</span>
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 <span class="preprocessor">#include "<a class="code" href="cli_8h.html">cli/cli.h</a>"</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#include "<a class="code" href="shell_8h.html">cli/shell.h</a>"</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include "<a class="code" href="element_8h.html">cli/element.h</a>"</span>
+<a name="l00033"></a>00033 <span class="preprocessor">#include "<a class="code" href="assert_8h.html">cli/assert.h</a>"</span>
+<a name="l00034"></a>00034 <span class="preprocessor">#include "<a class="code" href="constraints_8h.html">constraints.h</a>"</span>
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <a class="code" href="namespace_8h.html#965caf70ca576c007bee150001248651">CLI_NS_USE</a>(cli)
+<a name="l00037"></a>00037 
+<a name="l00038"></a>00038 
+<a name="l00039"></a><a class="code" href="classElement.html#60d0a57c9a3ce2703c66fdbf2af610c7">00039</a> <a class="code" href="classElement.html">Element</a>::<a class="code" href="classElement.html">Element</a>(const <span class="keywordtype">char</span>* const STR_Keyword, const <a class="code" href="classHelp.html">Help</a>&amp; CLI_Help)
+<a name="l00040"></a>00040   : m_strKeyword(MAX_WORD_LENGTH, STR_Keyword),
+<a name="l00041"></a>00041     m_cliHelp(CLI_Help),
+<a name="l00042"></a>00042     m_pcliCli(NULL)
 <a name="l00043"></a>00043 {
 <a name="l00044"></a>00044 }
 <a name="l00045"></a>00045 
-<a name="l00046"></a><a class="code" href="classcli_1_1Element.html#b603ce5542679784d6c7791a9b00461f">00046</a> <span class="keyword">const</span> std::string <a class="code" href="classcli_1_1Element.html#b603ce5542679784d6c7791a9b00461f">Element::GetKeyword</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00047"></a>00047 <span class="keyword"></span>{
-<a name="l00048"></a>00048     <span class="keywordflow">return</span> m_strKeyword;
-<a name="l00049"></a>00049 }
-<a name="l00050"></a>00050 
-<a name="l00051"></a><a class="code" href="classcli_1_1Element.html#ecdac061bf30d63c2baf3f08bf0dfa49">00051</a> <span class="keyword">const</span> <a class="code" href="classcli_1_1Help.html">Help</a>&amp; <a class="code" href="classcli_1_1Element.html#ecdac061bf30d63c2baf3f08bf0dfa49">Element::GetHelp</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00052"></a>00052 <span class="keyword"></span>{
-<a name="l00053"></a>00053     <span class="keywordflow">return</span> m_cliHelp;
-<a name="l00054"></a>00054 }
-<a name="l00055"></a>00055 
-<a name="l00056"></a><a class="code" href="classcli_1_1Element.html#99c4ec1844be45c0502418f31d22f2d1">00056</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classcli_1_1Element.html#99c4ec1844be45c0502418f31d22f2d1">Element::FindElements</a>(
-<a name="l00057"></a>00057         <a class="code" href="namespacecli.html#d3d47996776b89b7005a8a3397f5b5fc">ElementList</a>&amp; CLI_ExactList,
-<a name="l00058"></a>00058         <a class="code" href="namespacecli.html#d3d47996776b89b7005a8a3397f5b5fc">ElementList</a>&amp; CLI_NearList,
-<a name="l00059"></a>00059         <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Keyword
-<a name="l00060"></a>00060         )<span class="keyword"> const</span>
-<a name="l00061"></a>00061 <span class="keyword"></span>{
-<a name="l00062"></a>00062     <span class="comment">// Should be overridden.</span>
-<a name="l00063"></a>00063     assert(<span class="keyword">false</span>);
-<a name="l00064"></a>00064     <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00065"></a>00065 }
-<a name="l00066"></a>00066 
-<a name="l00067"></a><a class="code" href="classcli_1_1Element.html#5506b12198f4a27f31c93233dd183f16">00067</a> <span class="keywordtype">void</span> <a class="code" href="classcli_1_1Element.html#5506b12198f4a27f31c93233dd183f16">Element::SetCli</a>(<a class="code" href="classcli_1_1Cli.html">Cli</a>&amp; CLI_Cli)
-<a name="l00068"></a>00068 {
-<a name="l00069"></a>00069     m_pcliCli = &amp; CLI_Cli;
-<a name="l00070"></a>00070 }
-<a name="l00071"></a>00071 
-<a name="l00072"></a><a class="code" href="classcli_1_1Element.html#a7b3f68d32cd7facba9548d495dbf466">00072</a> <a class="code" href="classcli_1_1Cli.html">Cli</a>&amp; <a class="code" href="classcli_1_1Element.html#a7b3f68d32cd7facba9548d495dbf466">Element::GetCli</a>(<span class="keywordtype">void</span>)
-<a name="l00073"></a>00073 {
-<a name="l00074"></a>00074     assert(m_pcliCli != NULL);
-<a name="l00075"></a>00075     <span class="keywordflow">return</span> *m_pcliCli;
-<a name="l00076"></a>00076 }
-<a name="l00077"></a>00077 
-<a name="l00078"></a><a class="code" href="classcli_1_1Element.html#32d70e09a8728885ab2e7abf81c0a3eb">00078</a> <span class="keyword">const</span> <a class="code" href="classcli_1_1Cli.html">Cli</a>&amp; <a class="code" href="classcli_1_1Element.html#a7b3f68d32cd7facba9548d495dbf466">Element::GetCli</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00079"></a>00079 <span class="keyword"></span>{
-<a name="l00080"></a>00080     assert(m_pcliCli != NULL);
-<a name="l00081"></a>00081     <span class="keywordflow">return</span> *m_pcliCli;
-<a name="l00082"></a>00082 }
-<a name="l00083"></a>00083 
-<a name="l00084"></a><a class="code" href="classcli_1_1Element.html#c451c95b406a4eaa13ae3056c92051b8">00084</a> <a class="code" href="classcli_1_1Shell.html">Shell</a>&amp; <a class="code" href="classcli_1_1Element.html#c451c95b406a4eaa13ae3056c92051b8">Element::GetShell</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00085"></a>00085 <span class="keyword"></span>{
-<a name="l00086"></a>00086     <span class="keywordflow">return</span> <a class="code" href="classcli_1_1Element.html#a7b3f68d32cd7facba9548d495dbf466">GetCli</a>().<a class="code" href="classcli_1_1Cli.html#dca36b8b9319356533b95620befaedc5">GetShell</a>();
-<a name="l00087"></a>00087 }
-<a name="l00088"></a>00088 
-<a name="l00089"></a><a class="code" href="classcli_1_1Element.html#1a22c542ea982c1eebee166c4a60c9f9">00089</a> <span class="keyword">const</span> <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classcli_1_1Element.html#1a22c542ea982c1eebee166c4a60c9f9">Element::GetOutputStream</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00090"></a>00090 <span class="keyword"></span>{
-<a name="l00091"></a>00091     <span class="keywordflow">return</span> <a class="code" href="classcli_1_1Element.html#c451c95b406a4eaa13ae3056c92051b8">GetShell</a>().<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb508763e9f9b065f3a1ad471b6fae2a8bd0af">OUTPUT_STREAM</a>);
-<a name="l00092"></a>00092 }
-<a name="l00093"></a>00093 
-<a name="l00094"></a><a class="code" href="classcli_1_1Element.html#9731163ddd50abc0954e299d91a19faf">00094</a> <span class="keyword">const</span> <a class="code" href="classcli_1_1OutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classcli_1_1Element.html#9731163ddd50abc0954e299d91a19faf">Element::GetErrorStream</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00095"></a>00095 <span class="keyword"></span>{
-<a name="l00096"></a>00096     <span class="keywordflow">return</span> <a class="code" href="classcli_1_1Element.html#c451c95b406a4eaa13ae3056c92051b8">GetShell</a>().<a class="code" href="classcli_1_1Shell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="namespacecli.html#65001714a679b48224858916d7cb5087f35d7d16ab47f9c2a4f1de0c19a5a1fc">ERROR_STREAM</a>);
-<a name="l00097"></a>00097 }
-<a name="l00098"></a>00098 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Sep 28 22:09:29 2007 for CLI by&nbsp;
+<a name="l00046"></a><a class="code" href="classElement.html#946800e98d0a9e7a085987656b41c4db">00046</a> <a class="code" href="classElement.html#946800e98d0a9e7a085987656b41c4db">Element::~Element</a>(<span class="keywordtype">void</span>)
+<a name="l00047"></a>00047 {
+<a name="l00048"></a>00048 }
+<a name="l00049"></a>00049 
+<a name="l00050"></a><a class="code" href="classElement.html#ea9add780fd41f9313c3be6ef84c3021">00050</a> <span class="keyword">const</span> tk::String <a class="code" href="classElement.html#ea9add780fd41f9313c3be6ef84c3021">Element::GetKeyword</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00051"></a>00051 <span class="keyword"></span>{
+<a name="l00052"></a>00052     <span class="keywordflow">return</span> m_strKeyword;
+<a name="l00053"></a>00053 }
+<a name="l00054"></a>00054 
+<a name="l00055"></a><a class="code" href="classElement.html#ecdac061bf30d63c2baf3f08bf0dfa49">00055</a> <span class="keyword">const</span> <a class="code" href="classHelp.html">Help</a>&amp; <a class="code" href="classElement.html#ecdac061bf30d63c2baf3f08bf0dfa49">Element::GetHelp</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00056"></a>00056 <span class="keyword"></span>{
+<a name="l00057"></a>00057     <span class="keywordflow">return</span> m_cliHelp;
+<a name="l00058"></a>00058 }
+<a name="l00059"></a>00059 
+<a name="l00060"></a><a class="code" href="classElement.html#937a0e0e350a8c9614accc7cb29170d6">00060</a> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="classElement.html#937a0e0e350a8c9614accc7cb29170d6">Element::FindElements</a>(
+<a name="l00061"></a>00061         <a class="code" href="classElement.html#ab78652ce32d1c7cbdd83980653322b0">Element::List</a>&amp; CLI_ExactList,
+<a name="l00062"></a>00062         <a class="code" href="classElement.html#ab78652ce32d1c7cbdd83980653322b0">Element::List</a>&amp; CLI_NearList,
+<a name="l00063"></a>00063         <span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keyword">const</span> STR_Keyword
+<a name="l00064"></a>00064         )<span class="keyword"> const</span>
+<a name="l00065"></a>00065 <span class="keyword"></span>{
+<a name="l00066"></a>00066     <span class="comment">// Should be overridden.</span>
+<a name="l00067"></a>00067     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(<span class="keyword">false</span>);
+<a name="l00068"></a>00068     <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00069"></a>00069 }
+<a name="l00070"></a>00070 
+<a name="l00071"></a><a class="code" href="classElement.html#5506b12198f4a27f31c93233dd183f16">00071</a> <span class="keywordtype">void</span> <a class="code" href="classElement.html#5506b12198f4a27f31c93233dd183f16">Element::SetCli</a>(<a class="code" href="classCli.html">Cli</a>&amp; CLI_Cli)
+<a name="l00072"></a>00072 {
+<a name="l00073"></a>00073     m_pcliCli = &amp; CLI_Cli;
+<a name="l00074"></a>00074 }
+<a name="l00075"></a>00075 
+<a name="l00076"></a><a class="code" href="classElement.html#a7b3f68d32cd7facba9548d495dbf466">00076</a> <a class="code" href="classCli.html">Cli</a>&amp; <a class="code" href="classElement.html#a7b3f68d32cd7facba9548d495dbf466">Element::GetCli</a>(<span class="keywordtype">void</span>)
+<a name="l00077"></a>00077 {
+<a name="l00078"></a>00078     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliCli != NULL);
+<a name="l00079"></a>00079     <span class="keywordflow">return</span> *m_pcliCli;
+<a name="l00080"></a>00080 }
+<a name="l00081"></a>00081 
+<a name="l00082"></a><a class="code" href="classElement.html#32d70e09a8728885ab2e7abf81c0a3eb">00082</a> <span class="keyword">const</span> <a class="code" href="classCli.html">Cli</a>&amp; <a class="code" href="classElement.html#a7b3f68d32cd7facba9548d495dbf466">Element::GetCli</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00083"></a>00083 <span class="keyword"></span>{
+<a name="l00084"></a>00084     <a class="code" href="assert_8h.html#1fe8f84b5d89ceccc07361b1d0da0144">CLI_ASSERT</a>(m_pcliCli != NULL);
+<a name="l00085"></a>00085     <span class="keywordflow">return</span> *m_pcliCli;
+<a name="l00086"></a>00086 }
+<a name="l00087"></a>00087 
+<a name="l00088"></a><a class="code" href="classElement.html#c451c95b406a4eaa13ae3056c92051b8">00088</a> <a class="code" href="classShell.html">Shell</a>&amp; <a class="code" href="classElement.html#c451c95b406a4eaa13ae3056c92051b8">Element::GetShell</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00089"></a>00089 <span class="keyword"></span>{
+<a name="l00090"></a>00090     <span class="keywordflow">return</span> <a class="code" href="classElement.html#a7b3f68d32cd7facba9548d495dbf466">GetCli</a>().<a class="code" href="classCli.html#dca36b8b9319356533b95620befaedc5">GetShell</a>();
+<a name="l00091"></a>00091 }
+<a name="l00092"></a>00092 
+<a name="l00093"></a><a class="code" href="classElement.html#1a22c542ea982c1eebee166c4a60c9f9">00093</a> <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classElement.html#1a22c542ea982c1eebee166c4a60c9f9">Element::GetOutputStream</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00094"></a>00094 <span class="keyword"></span>{
+<a name="l00095"></a>00095     <span class="keywordflow">return</span> <a class="code" href="classElement.html#c451c95b406a4eaa13ae3056c92051b8">GetShell</a>().<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c1492457a2dc04a7f380b028fc706855aefb9">OUTPUT_STREAM</a>);
+<a name="l00096"></a>00096 }
+<a name="l00097"></a>00097 
+<a name="l00098"></a><a class="code" href="classElement.html#9731163ddd50abc0954e299d91a19faf">00098</a> <span class="keyword">const</span> <a class="code" href="classOutputDevice.html">OutputDevice</a>&amp; <a class="code" href="classElement.html#9731163ddd50abc0954e299d91a19faf">Element::GetErrorStream</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00099"></a>00099 <span class="keyword"></span>{
+<a name="l00100"></a>00100     <span class="keywordflow">return</span> <a class="code" href="classElement.html#c451c95b406a4eaa13ae3056c92051b8">GetShell</a>().<a class="code" href="classShell.html#842377460a312d5bd992742609abf3e7">GetStream</a>(<a class="code" href="shell_8h.html#950d7a62f48d194fd7463162541c149253988cedf87c54e9e5dcc0e79f86db8e">ERROR_STREAM</a>);
+<a name="l00101"></a>00101 }
+<a name="l00102"></a>00102 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Nov 4 01:04:29 2007 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

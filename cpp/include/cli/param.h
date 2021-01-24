@@ -30,10 +30,12 @@
 #ifndef _CLI_PARAM_H_
 #define _CLI_PARAM_H_
 
+#include <cli/namespace.h>
 #include <cli/syntax_node.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Help;
@@ -45,29 +47,40 @@ namespace cli {
     //! Not final class.
     class Param : public SyntaxNode
     {
-    public:
+    private:
+        //! @brief No default constructor.
+        Param(void);
+        //! @brief No copy constructor.
+        Param(const Param&);
+
+    protected:
         //! @brief Constructor.
         Param(
-            const std::string& STR_Keyword, //!< Keyword.
+            const char* const STR_Keyword,  //!< Keyword.
                                             //!< Does not mean much for a parameter.
                                             //!< Something like a description of the type of parameter.
             const Help& CLI_Help            //!< Corresponding help.
             );
 
+    public:
         //! @brief Destructor.
         virtual ~Param(void);
+
+    private:
+        //! @brief No assignment operator.
+        Param& operator=(const Param&);
 
     public:
         //! @brief Keyword access.
         //!
         //! Correction of Element::GetKeyword().
         //! Does not return m_strKeyword, but m_strValue.
-        virtual const std::string GetKeyword(void) const;
+        virtual const tk::String GetKeyword(void) const;
 
         //! @brief Elements research.
         virtual const bool FindElements(
-            ElementList& CLI_ExactList,     //!< List of elements corresponding exactly.
-            ElementList& CLI_NearList,      //!< List of elements corresponding.
+            Element::List& CLI_ExactList,   //!< List of elements corresponding exactly.
+            Element::List& CLI_NearList,    //!< List of elements corresponding.
             const char* const STR_Keyword   //!< Beginning of a keyword.
             ) const;
 
@@ -77,11 +90,11 @@ namespace cli {
         //!
         //! To be overloaded by derived classes.
         virtual const bool SetstrValue(
-            const std::string& STR_Value    //!< New value.
+            const char* const STR_Value     //!< New value.
             ) const = 0;
 
         //! @brief Value access in its string form.
-        const std::string GetstrValue(void) const;
+        const tk::String GetstrValue(void) const;
 
         //! @brief Parameter cloning handler.
         //! @return A newly created parameter object of the correct type.
@@ -99,8 +112,8 @@ namespace cli {
 
     protected:
         //! @brief Value setting from derived class.
-        void SetValue(
-            const std::string& STR_Value    //!< New value.
+        const bool SetValue(
+            const char* const STR_Value     //!< New value.
             ) const;
 
         //! @brief Clone initialization.
@@ -109,13 +122,13 @@ namespace cli {
             ) const;
 
         //! @brief Cloned parameter reference setting.
-        void SetCloned(
+        const bool SetCloned(
             const Param& CLI_Cloned         //!< Clone parameter reference.
             );
 
     private:
         //! Value in its string form.
-        mutable std::string m_strValue;
+        mutable tk::String m_strValue;
 
         //! Cloned parameter reference.
         const Param* m_pcliCloned;
@@ -125,13 +138,21 @@ namespace cli {
     //! @brief Template parameter class.
     template <class T> class ParamT : public Param
     {
+    private:
+        //! @brief No default constructor.
+        ParamT<T>(void);
+        //! @brief No copy constructor.
+        ParamT<T>(const ParamT<T>&);
+
     public:
         //! @brief Constructor.
         ParamT<T>(
-            const std::string& STR_Keyword, //!< Keyword.
-            const Help& CLI_Help            //!< Corresponding help.
-            )
-          : Param(STR_Keyword, CLI_Help)
+                const char* const STR_Keyword,  //!< Keyword.
+                const T& T_Default,             //!< Default value.
+                const Help& CLI_Help            //!< Corresponding help.
+                )
+          : Param(STR_Keyword, CLI_Help),
+            m_tValue(T_Default)
         {
         }
 
@@ -139,6 +160,10 @@ namespace cli {
         virtual ~ParamT<T>(void)
         {
         }
+
+    private:
+        //! @brief No assignment operator.
+        ParamT<T>& operator=(const ParamT<T>&);
 
     public:
         //! @brief Implicit cast operator.
@@ -160,7 +185,7 @@ namespace cli {
     protected:
         //! @brief Value setting for derived class.
         void SetValue(
-            const std::string& STR_Value,   //!< New value in its string form.
+            const char* const STR_Value,    //!< New value in its string form.
             const T& T_Value                //!< New value in its typed form.
             ) const
         {
@@ -173,7 +198,7 @@ namespace cli {
         mutable T m_tValue;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_PARAM_H_
 

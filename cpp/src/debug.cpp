@@ -23,13 +23,21 @@
 */
 
 
+#include "cli/pch.h"
+
 #include "cli/debug.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-CallInfo::CallInfo(const std::string& STR_File, const unsigned int I_Line, const std::string& STR_Function)
-  : m_strFile(STR_File), m_iLine(I_Line), m_strFunction(STR_Function)
+CallInfo::CallInfo(
+        const char* const STR_File,
+        const unsigned int I_Line,
+        const char* const STR_Function)
+  : m_strFile(MAX_FILE_PATH_LENGTH, STR_File),
+    m_iLine(I_Line),
+    m_strFunction(MAX_WORD_LENGTH, STR_Function)
 {
 }
 
@@ -37,7 +45,7 @@ CallInfo::~CallInfo(void)
 {
 }
 
-const std::string& CallInfo::GetFile(void) const
+const char* const CallInfo::GetFile(void) const
 {
     return m_strFile;
 }
@@ -47,7 +55,7 @@ const unsigned int CallInfo::GetLine(void) const
     return m_iLine;
 }
 
-const std::string& CallInfo::GetFunction(void) const
+const char* const CallInfo::GetFunction(void) const
 {
     return m_strFunction;
 }

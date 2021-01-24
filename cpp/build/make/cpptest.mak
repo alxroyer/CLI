@@ -21,24 +21,24 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-# Variables
-include vars.mak
-
+# Includes
 PROJECT = cpptest
-CPP_DIR = ../..
+PROJECT_DEPS = libclicpp.mak
 SRC_DIR = $(CPP_DIR)/tests/cpp
 PROJ_INCLUDES = -I$(CPP_DIR)/include
-PROJ_LIBS = $(OUT_DIR)/libclicpp.a /usr/lib/libncurses.a
-PROJ_DEPS = $(OUT_DIR)/libclicpp.a
-PRODUCT_TYPE = BIN
-PRODUCT = $(OUT_DIR)/$(PROJECT)$(BIN_SUFFIX)
+PROJ_LIBS = -L$(OUT_DIR) -lclicpp -lncurses
+include build.mak
 
-# Rules
-include rules.mak
+# Debug and help
+include $(ROOT_DIR)/build/make/help.mak
 
-$(OUT_DIR)/libclicpp.a:
-	cd "$(CPP_DIR)/src" && make
+.PHONY: $(CPP_DIR)/build/make/cpptest.help
+$(CPP_DIR)/build/make/cpptest.help: ;
+
+.PHONY: $(CPP_DIR)/build/make/cpptest.vars
+$(CPP_DIR)/build/make/cpptest.vars:
+	$(call ShowVariables,)
 
 # Dependencies
-include $(DEPS)
-
+include $(AUTO_DEPS_FILE)
+$(PRODUCT): $(CPP_LIB)

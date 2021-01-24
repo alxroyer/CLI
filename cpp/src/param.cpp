@@ -22,13 +22,22 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+#include "cli/pch.h"
+
+#include <stdlib.h>
+
 #include "cli/param.h"
+#include "cli/traces.h"
+#include "cli/io_device.h"
+#include "constraints.h"
 
-using namespace cli;
+CLI_NS_USE(cli)
 
 
-Param::Param(const std::string& STR_Keyword, const Help& CLI_Help)
+Param::Param(const char* const STR_Keyword, const Help& CLI_Help)
   : SyntaxNode(STR_Keyword, CLI_Help),
+    m_strValue(MAX_WORD_LENGTH),
     m_pcliCloned(NULL)
 {
 }
@@ -37,9 +46,9 @@ Param::~Param(void)
 {
 }
 
-const std::string Param::GetKeyword(void) const
+const tk::String Param::GetKeyword(void) const
 {
-    if (! m_strValue.empty())
+    if (! m_strValue.IsEmpty())
     {
         return GetstrValue();
     }
@@ -50,8 +59,8 @@ const std::string Param::GetKeyword(void) const
 }
 
 const bool Param::FindElements(
-        ElementList& CLI_ExactList,
-        ElementList& CLI_NearList,
+        Element::List& CLI_ExactList,
+        Element::List& CLI_NearList,
         const char* const STR_Keyword
         ) const
 {
@@ -65,7 +74,7 @@ const bool Param::FindElements(
     }
 }
 
-const std::string Param::GetstrValue(void) const
+const tk::String Param::GetstrValue(void) const
 {
     return m_strValue;
 }
@@ -75,9 +84,17 @@ const Param* const Param::GetCloned(void) const
     return m_pcliCloned;
 }
 
-void Param::SetValue(const std::string& STR_Value) const
+const bool Param::SetValue(const char* const STR_Value) const
 {
-    m_strValue = STR_Value;
+    if (m_strValue.Set(STR_Value))
+    {
+        return true;
+}
+    else
+    {
+        GetTraces().Trace(INTERNAL_ERROR) << "Could not store original string parameter value." << endl;
+        return false;
+    }
 }
 
 const Param* const Param::InitClone(Param& CLI_Param) const
@@ -88,8 +105,9 @@ const Param* const Param::InitClone(Param& CLI_Param) const
     return & CLI_Param;
 }
 
-void Param::SetCloned(const Param& CLI_Cloned)
+const bool Param::SetCloned(const Param& CLI_Cloned)
 {
     m_pcliCloned = & CLI_Cloned;
+    return true;
 }
 

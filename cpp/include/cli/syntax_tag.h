@@ -30,18 +30,20 @@
 #ifndef _CLI_SYNTAX_TAG_H_
 #define _CLI_SYNTAX_TAG_H_
 
+#include <cli/namespace.h>
 #include <cli/syntax_node.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     //! @brief Syntax tag element class.
     class SyntaxTag : public SyntaxNode
     {
     private:
-        //! @brief Default constructor forbidden.
+        //! @brief No default constructor.
         SyntaxTag(void);
-        //! @brief Copy constructor forbidden.
+        //! @brief No copy constructor.
         SyntaxTag(const SyntaxTag&);
 
     public:
@@ -53,9 +55,13 @@ namespace cli {
         //! @brief Destructor.
         virtual ~SyntaxTag(void);
 
+    private:
+        //! @brief No assignment operator.
+        SyntaxTag& operator=(const SyntaxTag&);
+
     public:
         //! @brief Access to the string identifier.
-        virtual const std::string GetKeyword(void) const;
+        virtual const tk::String GetKeyword(void) const;
 
         //! @brief Retrieves the hollow attribute.
         const bool GetbHollow(void) const;
@@ -69,6 +75,12 @@ namespace cli {
     //! @brief Syntax tag reference element.
     class SyntaxRef : public Element
     {
+    private:
+        //! @brief No default constructor.
+        SyntaxRef(void);
+        //! @brief No copy constructor.
+        SyntaxRef(const SyntaxRef&);
+
     public:
         //! @brief Constructor.
         SyntaxRef(
@@ -78,9 +90,13 @@ namespace cli {
         //! @brief Destructor.
         virtual ~SyntaxRef(void);
 
+    private:
+        //! @brief No assignment operator.
+        SyntaxRef& operator=(const SyntaxRef&);
+
     public:
         //! @brief Access to the string identifier.
-        virtual const std::string GetKeyword(void) const;
+        virtual const tk::String GetKeyword(void) const;
 
         //! @brief Tag reference access.
         const SyntaxTag& GetTag(void) const;
@@ -90,6 +106,6 @@ namespace cli {
         const SyntaxTag* const m_pcliTag;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_SYNTAX_TAG_H_

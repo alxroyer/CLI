@@ -30,14 +30,13 @@
 #ifndef _CLI_ELEMENT_H_
 #define _CLI_ELEMENT_H_
 
-#include <string>
-#include <deque>
-#include <map>
-
+#include <cli/namespace.h>
+#include <cli/object.h>
 #include <cli/help.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Cli;
@@ -47,23 +46,23 @@ namespace cli {
     class Help;
 
 
-    // Typedefs.
-    //! @brief CLI element list type.
-    typedef std::deque<const Element*> ElementList;
-    //! @brief CLI element map type.
-    typedef std::map<const std::string, const Element*> ElementMap;
-
-
     //! @brief Generic CLI element.
     //!
     //! This class describes a generic CLI element (keywords, parameters, menus...).
     //! It basically contains a keyword i.e. an string identifier, and a help object.
-    class Element
+    class Element : public Object
     {
+    public:
+        // Typedefs.
+        //! @brief CLI element list type.
+        typedef tk::Queue<const Element*> List;
+        //! @brief CLI element map type.
+        typedef tk::Map<const tk::String, const Element*> Map;
+
     public:
         //! @brief Constructor.
         Element(
-            const std::string& STR_Keyword, //!< String identifier.
+            const char* const STR_Keyword,  //!< String identifier.
             const Help& STR_Help            //!< Help.
             );
 
@@ -72,17 +71,25 @@ namespace cli {
         //! Pure virtual. Element is not final.
         virtual ~Element(void) = 0;
 
+    private:
+        //! @brief No default constructor.
+        Element(void);
+        //! @brief No copy constructor.
+        Element(const Element&);
+        //! @brief No assignment operator.
+        Element& operator=(const Element&);
+
     public:
         //! @brief Access to the string identifier.
-        virtual const std::string GetKeyword(void) const;
+        virtual const tk::String GetKeyword(void) const;
 
         //! @brief Access to the help object.
         virtual const Help& GetHelp(void) const;
 
         //! @brief Sub-elements search.
         virtual const bool FindElements(
-            ElementList& CLI_ExactList,     //!< Output list of elements exactly matching STR_Keyword.
-            ElementList& CLI_NearList,      //!< Output list of elements matching STR_Keyword exactly or not.
+            Element::List& CLI_ExactList,   //!< Output list of elements exactly matching STR_Keyword.
+            Element::List& CLI_NearList,    //!< Output list of elements matching STR_Keyword exactly or not.
             const char* const STR_Keyword   //!< Keyword or beginning of a keyword.
                                             //!< Can be the whole word, or just the beginning, or something possibly matching (for parameters).
                                             //!< NULL means no keyword begun.
@@ -113,14 +120,14 @@ namespace cli {
 
     private:
         //! String identifier.
-        const std::string m_strKeyword;
+        const tk::String m_strKeyword;
         //! Help object.
         const Help m_cliHelp;
         //! CLI reference.
         Cli* m_pcliCli;
     };
 
-};
+CLI_NS_END(cli)
 
 #endif // _CLI_ELEMENT_H_
 

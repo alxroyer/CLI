@@ -30,13 +30,14 @@
 #ifndef _CLI_COMMAND_LINE_H_
 #define _CLI_COMMAND_LINE_H_
 
-#include <string>
-#include <vector>
-
+#include <cli/namespace.h>
+#include <cli/object.h>
 #include <cli/element.h>
+#include <cli/resource_string.h>
+#include <cli/tk.h>
 
 
-namespace cli {
+CLI_NS_BEGIN(cli)
 
     // Forward declarations.
     class Menu;
@@ -46,7 +47,7 @@ namespace cli {
     //!
     //! Parses a command line in its string form,
     //! and returns the command line in its Element collection form after analysis.
-    class CommandLine
+    class CommandLine : public Object
     {
     public:
         //! @brief Default constructor.
@@ -54,6 +55,12 @@ namespace cli {
 
         //! @brief Destructor.
         virtual ~CommandLine(void);
+
+    private:
+        //! @brief No copy constructor.
+        CommandLine(const CommandLine&);
+        //! @brief No assignment operator.
+        CommandLine& operator=(const CommandLine&);
 
     public:
         //! @brief Parse and analysis invocation.
@@ -65,21 +72,13 @@ namespace cli {
         //! and can be accessed through the following public methods.
         const bool Parse(
             const Menu& CLI_Menu,           //!< Current menu.
-            const std::string& STR_Line,    //!< Input command line in its string form.
+            const tk::String& STR_Line,    //!< Input command line in its string form.
             const bool B_Execution          //!< Flag set when parsing is done for execution.
                                             //!< Implicitely say completion otherwise.
             );
 
-        //! @brief Element access.
-        const Element& operator[](
-            const int I_Pos                 //!< Element position.
-            ) const;
-
         //! @brief Last element access.
         const Element& GetLastElement(void) const;
-
-        //! @brief Element count.
-        const int GetElementCount(void) const;
 
         //! @brief Last word (for completion).
         //! @return NULL when no last word.
@@ -98,14 +97,14 @@ namespace cli {
         //! @brief Last error.
         //!
         //! This resource is cleared on every parse.
-        const std::string GetLastError(void) const;
+        const ResourceString& GetLastError(void) const;
 
     private:
         //! @brief Splits a command line in words.
         //! @return A collection of words.
         const bool Split(
-            const std::string& STR_Line,            //!< Input command line in its string form.
-            std::vector<std::string>& VSTR_Words,   //!< Word list.
+            const tk::String& STR_Line,            //!< Input command line in its string form.
+            tk::Queue<tk::String>& Q_Words,         //!< Word list.
             int& I_LastWordPosition                 //!< Last word position in the list.
             );
 
@@ -119,22 +118,70 @@ namespace cli {
 
     private:
         //! Collection of corresponding element references for the command line.
-        ElementList m_cliElements;
+        Element::List m_cliElements;
         //! List of element references to destroy automatically in the CommandLine destructor.
-        ElementList m_cliAutoDelete;
+        Element::List m_cliAutoDelete;
         //! Current menu reference.
         const Element* m_pcliMenu;
         //! Last word used for completion.
-        std::string m_strLastWord;
+        tk::String m_strLastWord;
         //! Last word validity flag.
         bool m_bLastWordValid;
         //! Number of backspaces for completion.
         int m_iNumBackspacesForCompletion;
         //! Last error.
-        std::string m_strError;
+        ResourceString m_cliError;
+
+        friend class CommandLineIterator;
     };
 
-};
+    class CommandLineIterator : public Object
+    {
+    private:
+        //! @brief No default constructor.
+        CommandLineIterator(void);
+        //! @brief No copy constructor.
+        CommandLineIterator(const CommandLineIterator&);
+
+    public:
+        //! @brief Basic constructor.
+        CommandLineIterator(
+            const CommandLine& CLI_CmdLine  //!< Command line objet to iterate.
+            );
+
+        //! @brief Destructor.
+        virtual ~CommandLineIterator(void);
+
+    private:
+        //! @brief No assignment operator.
+        CommandLineIterator& operator=(const CommandLineIterator&);
+
+    public:
+        //! @brief Iteration.
+        //! @return true: Iteration succeeded.
+        //! @return false: Iteration failed.
+        const bool StepIt(void);
+
+        //! @brief Checks whether the element corresponds to the current element.
+        const bool operator==(
+            const Element& CLI_Element      //!< Element to check.
+            ) const;
+
+        //! @brief Current element accessor.
+        const Element* const operator*(void) const;
+
+    private:
+        //! Command line object to iterate.
+        const CommandLine& m_cliCmdLine;
+
+        //! Current position.
+        Element::List::Iterator m_cliIterator;
+
+        //! Current element.
+        const Element* m_pcliCurrentElement;
+    };
+
+CLI_NS_END(cli)
 
 #endif // _CLI_COMMAND_LINE_H_
 
