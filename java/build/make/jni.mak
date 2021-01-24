@@ -33,7 +33,7 @@ include _vars.mak
 JAVA_FILES = $(wildcard $(JAVA_SRC_DIR)/cli/*.java)
 JAVA_CLASSES = $(patsubst $(JAVA_SRC_DIR)/cli/%.java,$(OUT_DIR)/cli/%.class,$(JAVA_FILES))
 CPP_HEADERS = $(patsubst $(OUT_DIR)/cli/%.class,$(NATIVE_DIR)/cli_%.h,$(JAVA_CLASSES))
-CPP_HEADERS += $(JAVA_DIR)/native/cli_OutputDevice_OutputStream.h
+CPP_HEADERS += $(CLI_DIR)/java/native/cli_OutputDevice_OutputStream.h
 
 
 # Rules.
@@ -57,14 +57,14 @@ clean:
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(JAVA_DIR)/build/make/jni.help
-help: $(JAVA_DIR)/build/make/jni.help
-$(JAVA_DIR)/build/make/jni.help:
+.PHONY: $(CLI_DIR)/java/build/make/jni.help
+help: $(CLI_DIR)/java/build/make/jni.help
+$(CLI_DIR)/java/build/make/jni.help:
 	$(call PrintHelp, headers, Generate native header files)
 	$(call PrintHelp, clean, Clean output files)
 
-.PHONY: $(JAVA_DIR)/build/make/jni.vars
-vars: $(JAVA_DIR)/build/make/jni.vars
-$(JAVA_DIR)/build/make/jni.vars:
+.PHONY: $(CLI_DIR)/java/build/make/jni.vars
+vars: $(CLI_DIR)/java/build/make/jni.vars
+$(CLI_DIR)/java/build/make/jni.vars:
 	$(call ShowVariables,JAVA_FILES JAVA_CLASSES CPP_HEADERS)
 

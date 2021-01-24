@@ -37,7 +37,7 @@ cppbuild.default: $(.DEFAULT_GOAL) ;
 # Preliminary includes
 CLI_DIR ?= ../../..
 include $(CLI_DIR)/build/make/_vars.mak
-include $(CPP_DIR)/build/make/_vars.mak
+include $(CLI_DIR)/cpp/build/make/_vars.mak
 
 
 ##############
@@ -164,9 +164,9 @@ clean:
 	$(RM) $(CLEAN)
 
 # Debug and help
-.PHONY: $(CPP_DIR)/build/make/_build.help
-help: $(CPP_DIR)/build/make/_build.help
-$(CPP_DIR)/build/make/_build.help:
+.PHONY: $(CLI_DIR)/cpp/build/make/_build.help
+help: $(CLI_DIR)/cpp/build/make/_build.help
+$(CLI_DIR)/cpp/build/make/_build.help:
 	$(call PrintHelp,   build,  Build $(notdir $(PRODUCT)))
 	$(call PrintHelp,   dirs,   Check intermediate and output directories)
 ifeq ($(AUTO_DEPS),yes)
@@ -174,17 +174,17 @@ ifeq ($(AUTO_DEPS),yes)
 endif
 	$(call PrintHelp,   clean,  Clean intermediate and output files)
 
-.PHONY: $(CPP_DIR)/build/make/_build.vars
-vars: $(CPP_DIR)/build/make/_build.vars
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += MAKE CXX AR RANLIB
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += PROJECT PROJECT_DEPS PRODUCT_TYPE PRODUCT
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += SRC_DIR CPP_FILES OBJS
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += AUTO_DEPS AUTO_DEPS_FILE
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += PROJ_CPP_FLAGS CPP_OPT_FLAG CPP_DEBUG_FLAG CPP_OS_FLAGS CPP_FLAGS PROJ_INCLUDES INCLUDES
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += PROJ_LIBS LIBS
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += INT_DIR OUT_DIR
-$(CPP_DIR)/build/make/_build.vars: MY_VARS += PROJ_CLEAN CLEAN
-$(CPP_DIR)/build/make/_build.vars:
+.PHONY: $(CLI_DIR)/cpp/build/make/_build.vars
+vars: $(CLI_DIR)/cpp/build/make/_build.vars
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += MAKE CXX AR RANLIB
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJECT PROJECT_DEPS PRODUCT_TYPE PRODUCT
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += SRC_DIR CPP_FILES OBJS
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += AUTO_DEPS AUTO_DEPS_FILE
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJ_CPP_FLAGS CPP_OPT_FLAG CPP_DEBUG_FLAG CPP_OS_FLAGS CPP_FLAGS PROJ_INCLUDES INCLUDES
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJ_LIBS LIBS
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += INT_DIR OUT_DIR
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJ_CLEAN CLEAN
+$(CLI_DIR)/cpp/build/make/_build.vars:
 	$(call ShowVariables,$(MY_VARS))
 
 

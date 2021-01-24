@@ -134,27 +134,6 @@ public class Shell extends NativeObject {
     }
     private static final native void __setPrompt(int I_NativeShellRef, int I_NativePromptRef);
 
-    /** Error formatting.
-        @param CLI_LocationPrefix   Very first error prefix string, before the location. No error prefixing when the string given is empty.
-        @param CLI_LocationSuffix   Location suffix string. No location suffixing when the string given is empty.
-        @param CLI_ErrorPrefix      Error prefix string. No error prefixing when the string given is empty.
-        @param CLI_ErrorSuffix      Error suffix string. No error suffixing when the string given is empty. */
-    public final void setErrorFormatting(
-            ResourceString CLI_LocationPrefix, ResourceString CLI_LocationSuffix,
-            ResourceString CLI_ErrorPrefix, ResourceString CLI_ErrorSuffix
-    ) {
-        __setErrorFormatting(
-            this.getNativeRef(),
-            CLI_LocationPrefix.getNativeRef(), CLI_LocationSuffix.getNativeRef(),
-            CLI_ErrorPrefix.getNativeRef(), CLI_ErrorSuffix.getNativeRef()
-        );
-    }
-    private static final native void __setErrorFormatting(
-            int I_NativeShellRef,
-            int I_NativeLocationPrefixRef, int I_NativeLocationSuffixRef,
-            int I_NativeErrorPrefixRef, int I_NativeErrorSuffixRef
-    );
-
     /** Language setting.
         @param E_Lang New value. */
     public final void setLang(int E_Lang) {
@@ -218,6 +197,18 @@ public class Shell extends NativeObject {
         return __getHelpOffset(this.getNativeRef());
     }
     private static final native int __getHelpOffset(int I_NativeShellRef);
+
+    /** Current menu retrieval.
+        @param I_MenuIndex Index of the menu in the stack.
+                            0: root menu (bottom of the stack).
+                            1: menu stacked over the root menu.
+                            2: menu stacked over again...
+                            -1: current menu (top of the stack)
+        @return Reference of the current menu. null when I_MenuIndex is out of bounds. */
+    public Menu getCurrentMenu(int I_MenuIndex) {
+        return (Menu) NativeObject.getObject(__getCurrentMenu(this.getNativeRef(), I_MenuIndex));
+    }
+    private static final native int __getCurrentMenu(int I_NativeShellRef, int I_MenuIndex);
 
     /** Enter a menu.
         @param CLI_Menu Menu to enter. */

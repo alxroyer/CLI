@@ -43,7 +43,7 @@ cli-config>help
   quit            Quit
   show            Show CLI information
 cli-config>show version
-CLI version 2.5
+CLI version 2.6
 cli-config>show author
 Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 cli-config>show license

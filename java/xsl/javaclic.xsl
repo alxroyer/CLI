@@ -619,10 +619,6 @@
                         <xsl:text>.addHelp(cli.Help.LANG_FR, "Traces d'exécution du CLI")</xsl:text>
                 <xsl:text>);</xsl:text>
                 <xsl:value-of select="$STR_Endl"/>
-            <xsl:call-template name="T_Indent3"/>
-                <xsl:text>cli.Traces.trace(CLI_EXECUTION, "</xsl:text>
-                <xsl:call-template name="T_Node2Class"/>
-                <xsl:text>.execute()");</xsl:text><xsl:value-of select="$STR_Endl"/>
 
             <!-- Step variables -->
             <xsl:call-template name="T_Indent3"/>
@@ -746,14 +742,14 @@
         <!-- Trace current keyword -->
         <xsl:value-of select="$STR_Indent1"/>
             <xsl:text>cli.Traces.trace(CLI_EXECUTION, </xsl:text>
-            <xsl:text>"word = " + cli_Element.getKeyword());</xsl:text>
+            <xsl:text>"context = \"</xsl:text><xsl:call-template name="T_Node2Desc"/><xsl:text>\", "</xsl:text>
+            <xsl:text>+ "word = " + (cli_Element instanceof cli.Endl ? "&lt;CR&gt;" : cli_Element.getKeyword()));</xsl:text>
             <xsl:value-of select="$STR_Endl"/>
 
         <!-- Execution -->
         <xsl:if test="count(cli:java[not(@*)]) &gt; 0">
             <xsl:value-of select="$STR_UserIndent"/><xsl:value-of select="$STR_Endl"/>
             <xsl:for-each select="cli:java[not(@*)]">
-                <xsl:text>/* &gt; */ </xsl:text>
                 <xsl:call-template name="T_Indent">
                     <xsl:with-param name="STR_UserIndent" select="$STR_UserIndent"/>
                     <xsl:with-param name="I_IndentCount" select="$I_IndentCount + 1"/>
@@ -805,7 +801,7 @@
 
     <xsl:template name="T_SubElements">
         <xsl:param name="I_IndentCount" select="0"/>
-        <xsl:param name="B_Implement" select="1"/>
+        <xsl:param name="XML_JumpTag"/>
 
         <xsl:variable name="STR_Indent">
             <xsl:call-template name="T_Indent">
@@ -832,10 +828,20 @@
                 <!-- The referenced tag is an ancestor -->
                 <!-- Use a 'continue' statement to avoid inifinite loop generations -->
                 <xsl:for-each select="ancestor::cli:tag[@id=$STR_Tag]">
-                    <xsl:call-template name="T_SubElements">
-                        <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
-                        <xsl:with-param name="B_Implement" select="0"/>
-                    </xsl:call-template>
+                    <xsl:choose>
+                    <xsl:when test="$XML_JumpTag">
+                        <xsl:call-template name="T_SubElements">
+                            <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
+                            <xsl:with-param name="XML_JumpTag" select="$XML_JumpTag"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="T_SubElements">
+                            <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
+                            <xsl:with-param name="XML_JumpTag" select="."/>
+                        </xsl:call-template>
+                    </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
@@ -844,56 +850,49 @@
                 <xsl:for-each select="//cli:tag[@id=$STR_Tag]">
                     <xsl:call-template name="T_SubElements">
                         <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
-                        <xsl:with-param name="B_Implement" select="1"/>
+                        <xsl:with-param name="XML_JumpTag"/>
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:otherwise>
             </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:variable name="STR_ParentTopLabel">
-                <xsl:call-template name="T_Node2BlockLabel"/>
-            </xsl:variable>
             <xsl:for-each select="cli:keyword|cli:param|cli:tag[not(@hollow='yes')]|cli:endl">
                 <xsl:choose>
-                <xsl:when test="$B_Implement">
+                <xsl:when test="not($XML_JumpTag)">
                     <xsl:call-template name="T_ImplementMenuExecution">
                         <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
                     </xsl:call-template>
                 </xsl:when>
-                <xsl:otherwise>
-                    <!-- No implementation -->
+                <xsl:when test="$XML_JumpTag">
+                    <xsl:variable name="STR_JumpLabel"><xsl:for-each select="$XML_JumpTag"><xsl:call-template name="T_Node2BlockLabel"/></xsl:for-each></xsl:variable>
+
                     <xsl:choose>
                     <xsl:when test="self::cli:tag[@ref]">
                         <xsl:call-template name="T_SubElements">
                             <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
-                            <xsl:with-param name="B_Implement" select="$B_Implement"/>
+                            <xsl:with-param name="XML_JumpTag" select="$XML_JumpTag"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="self::cli:tag[@hollow='yes']"><!-- Do nothing --></xsl:when>
+                    <xsl:when test="self::cli:tag[@id]">
+                        <xsl:call-template name="T_SubElements">
+                            <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
+                            <xsl:with-param name="XML_JumpTag" select="$XML_JumpTag"/>
                         </xsl:call-template>
                     </xsl:when>
                     <xsl:when test="self::cli:param">
                         <xsl:value-of select="$STR_Indent"/>
-                            <xsl:text>if (</xsl:text>
-                                <xsl:call-template name="T_Node2Var"/>
-                                <xsl:text>.matches(cli_Element)</xsl:text>
-                            <xsl:text>) </xsl:text>
-                        <xsl:text>continue </xsl:text>
-                            <xsl:value-of select="$STR_ParentTopLabel"/>
-                            <xsl:text>;</xsl:text>
-                            <xsl:value-of select="$STR_Endl"/>
+                            <xsl:text>if (</xsl:text><xsl:call-template name="T_Node2Var"/><xsl:text>.matches(cli_Element)</xsl:text><xsl:text>) </xsl:text>
+                            <xsl:text>continue </xsl:text><xsl:value-of select="$STR_JumpLabel"/><xsl:text>;</xsl:text><xsl:value-of select="$STR_Endl"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of select="$STR_Indent"/>
-                            <xsl:text>if (</xsl:text>
-                                <xsl:text>cli_Element == </xsl:text>
-                                <xsl:call-template name="T_Node2Var"/>
-                            <xsl:text>) </xsl:text>
-                        <xsl:text>continue </xsl:text>
-                            <xsl:value-of select="$STR_ParentTopLabel"/>
-                            <xsl:text>;</xsl:text>
-                            <xsl:value-of select="$STR_Endl"/>
+                            <xsl:text>if (</xsl:text><xsl:text>cli_Element == </xsl:text><xsl:call-template name="T_Node2Var"/><xsl:text>) </xsl:text>
+                            <xsl:text>continue </xsl:text><xsl:value-of select="$STR_JumpLabel"/><xsl:text>;</xsl:text><xsl:value-of select="$STR_Endl"/>
                     </xsl:otherwise>
                     </xsl:choose>
-                </xsl:otherwise>
+                </xsl:when>
                 </xsl:choose>
             </xsl:for-each>
         </xsl:otherwise>
@@ -978,18 +977,19 @@
         <xsl:for-each select="parent::cli:*">
             <xsl:call-template name="T_Node2Desc"/>
         </xsl:for-each>
+        <xsl:text> </xsl:text>
     </xsl:if>
 
     <!-- Current item description -->
     <xsl:choose>
-    <xsl:when test="self::cli:cli"><xsl:value-of select="@name"/><xsl:text>&gt; </xsl:text></xsl:when>
-    <xsl:when test="self::cli:menu[@name]"><xsl:value-of select="@name"/><xsl:text>&gt; </xsl:text></xsl:when>
-    <xsl:when test="self::cli:keyword"><xsl:value-of select="@string"/><xsl:text> </xsl:text></xsl:when>
-    <xsl:when test="self::cli:param"><xsl:text>$</xsl:text><xsl:value-of select="@id"/><xsl:text> </xsl:text></xsl:when>
-    <xsl:when test="self::cli:tag[@id]"><xsl:text>[</xsl:text><xsl:value-of select="@id"/><xsl:text>:] </xsl:text></xsl:when>
-    <xsl:when test="self::cli:tag[@ref]"><xsl:text>[-&gt; </xsl:text><xsl:value-of select="@ref"/><xsl:text>] </xsl:text></xsl:when>
-    <xsl:when test="self::cli:endl"><xsl:text>&lt;CR&gt; </xsl:text></xsl:when>
-    <xsl:otherwise><xsl:text>??? </xsl:text></xsl:otherwise>
+    <xsl:when test="self::cli:cli"><xsl:value-of select="@name"/><xsl:text>&gt;</xsl:text></xsl:when>
+    <xsl:when test="self::cli:menu[@name]"><xsl:value-of select="@name"/><xsl:text>&gt;</xsl:text></xsl:when>
+    <xsl:when test="self::cli:keyword"><xsl:value-of select="@string"/></xsl:when>
+    <xsl:when test="self::cli:param"><xsl:text>$</xsl:text><xsl:value-of select="@id"/></xsl:when>
+    <xsl:when test="self::cli:tag[@id]"><xsl:text>[</xsl:text><xsl:value-of select="@id"/><xsl:text>:]</xsl:text></xsl:when>
+    <xsl:when test="self::cli:tag[@ref]"><xsl:text>[-&gt; </xsl:text><xsl:value-of select="@ref"/><xsl:text>]</xsl:text></xsl:when>
+    <xsl:when test="self::cli:endl"><xsl:text>&lt;CR&gt;</xsl:text></xsl:when>
+    <xsl:otherwise><xsl:text>???</xsl:text></xsl:otherwise>
     </xsl:choose>
 </xsl:template>
 

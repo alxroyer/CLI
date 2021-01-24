@@ -26,9 +26,9 @@ CLI_DIR := ../../..
 PROJECT = libclicpp
 STATIC_LIB_PREFIX =
 PRODUCT_TYPE = STATIC_LIB
-SRC_DIR = $(CPP_DIR)/src
+SRC_DIR = $(CLI_DIR)/cpp/src
 CPP_FILES = $(filter-out $(SRC_DIR)/win_console.cpp,$(wildcard $(SRC_DIR)/*.cpp))
-PROJ_INCLUDES = -I$(CPP_DIR)/include
+PROJ_INCLUDES = -I$(CLI_DIR)/cpp/include
 # Include win_console.cpp also for dependency computation
 deps: CPP_FILES += $(SRC_DIR)/win_console.cpp
 include _build.mak

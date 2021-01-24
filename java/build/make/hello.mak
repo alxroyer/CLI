@@ -30,7 +30,7 @@ hello.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 include _vars.mak
 PRODUCT = hello
-SRC_DIR = $(JAVA_DIR)/src/cli/test
+SRC_DIR = $(CLI_DIR)/java/src/cli/test
 JAVA_FILES = $(CLI_GO_JAVA) $(CLI_JAVA)
 PROJECT_DEPS = native.mak
 include _build.mak
@@ -38,10 +38,10 @@ PROJ_CLEAN += $(CLI_JAVA)
 
 # Variables
 CLI_XML_RES = $(CLI_DIR)/samples/user-guide/hello.xml
-CLI_XSL = $(JAVA_DIR)/xsl/javaclic.xsl
-CLI_JAVA = $(patsubst %.xml,$(JAVA_DIR)/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
+CLI_XSL = $(CLI_DIR)/java/xsl/javaclic.xsl
+CLI_JAVA = $(patsubst %.xml,$(CLI_DIR)/java/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
 CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
-CLI_GO_JAVA = $(JAVA_DIR)/src/cli/test/GoHello.java
+CLI_GO_JAVA = $(CLI_DIR)/java/src/cli/test/GoHello.java
 
 # Rules
 run:
@@ -58,14 +58,14 @@ deps: ;
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(JAVA_DIR)/build/make/hello.help
-help: $(JAVA_DIR)/build/make/hello.help
-$(JAVA_DIR)/build/make/hello.help:
+.PHONY: $(CLI_DIR)/java/build/make/hello.help
+help: $(CLI_DIR)/java/build/make/hello.help
+$(CLI_DIR)/java/build/make/hello.help:
 	$(call PrintHelp, run, 	 Run the Hello sample)
 
-.PHONY: $(JAVA_DIR)/build/make/hello.vars
-vars: $(JAVA_DIR)/build/make/hello.vars
-$(JAVA_DIR)/build/make/hello.vars:
+.PHONY: $(CLI_DIR)/java/build/make/hello.vars
+vars: $(CLI_DIR)/java/build/make/hello.vars
+$(CLI_DIR)/java/build/make/hello.vars:
 	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_GO_JAVA)
 
 # Dependencies

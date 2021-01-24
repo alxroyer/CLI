@@ -30,9 +30,10 @@ libclijava.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 include _vars.mak
 PRODUCT = libclijava
-SRC_DIR = $(JAVA_DIR)/src
+SRC_DIR = $(CLI_DIR)/java/src
 JAVA_FILES = $(wildcard $(SRC_DIR)/cli/*.java)
 JAR_OBJ = $(JAVA_ARCHIVE)
+PROJ_CLEAN = $(OUT_DIR)/cli/*.class $(OUT_DIR)/cli/test/*.class
 include _build.mak
 
 # Rules.
@@ -42,10 +43,10 @@ deps: ;
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(JAVA_DIR)/build/make/libclijava.help
-help: $(JAVA_DIR)/build/make/libclijava.help
-$(JAVA_DIR)/build/make/libclijava.help: ;
+.PHONY: $(CLI_DIR)/java/build/make/libclijava.help
+help: $(CLI_DIR)/java/build/make/libclijava.help
+$(CLI_DIR)/java/build/make/libclijava.help: ;
 
-.PHONY: $(JAVA_DIR)/build/make/libclijava.vars
-vars: $(JAVA_DIR)/build/make/libclijava.vars
-$(JAVA_DIR)/build/make/libclijava.vars: ;
+.PHONY: $(CLI_DIR)/java/build/make/libclijava.vars
+vars: $(CLI_DIR)/java/build/make/libclijava.vars
+$(CLI_DIR)/java/build/make/libclijava.vars: ;

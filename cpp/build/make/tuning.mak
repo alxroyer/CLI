@@ -25,7 +25,7 @@
 CLI_DIR := ../../..
 SRC_DIR = ../../tests/tuning
 CLI_XML_RES = $(SRC_DIR)/tuning.xml
-SRC_DIR = $(CPP_DIR)/tests/tuning
+SRC_DIR = $(CLI_DIR)/cpp/tests/tuning
 INT_DIR = $(OUT_DIR)/__tuning
 include _check.mak
 CPP_FILES += $(SRC_DIR)/gotuning.cpp
@@ -33,9 +33,9 @@ CPP_FILES += $(SRC_DIR)/gotuning.cpp
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(CPP_DIR)/build/make/tuning.help
-help: $(CPP_DIR)/build/make/tuning.help
-$(CPP_DIR)/build/make/tuning.help: ;
+.PHONY: $(CLI_DIR)/cpp/build/make/tuning.help
+help: $(CLI_DIR)/cpp/build/make/tuning.help
+$(CLI_DIR)/cpp/build/make/tuning.help: ;
 
 # Dependencies
 $(INT_DIR)/gotuning.o: $(SRC_DIR)/gotuning.cpp

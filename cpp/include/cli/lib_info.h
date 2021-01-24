@@ -27,15 +27,15 @@
 //! @author Alexis Royer
 //! @brief Library information.
 
-#ifndef _CLI_VERSION_H_
-#define _CLI_VERSION_H_
+#ifndef _CLI_LIB_INFO_H_
+#define _CLI_LIB_INFO_H_
 
 #include "cli/namespace.h"
 
 
 CLI_NS_BEGIN(cli)
 
-    static const char* const LIB_VERSION = "2.5";
+    static const char* const LIB_VERSION = "2.6";
     static const char* const LIB_COPYRIGHT = "Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI";
     static const char* const LIB_LICENSE =
 "Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI\n\
@@ -63,5 +63,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.";
 
 CLI_NS_END(cli)
 
-#endif // _CLI_VERSION_H_
+#endif // _CLI_LIB_INFO_H_
 

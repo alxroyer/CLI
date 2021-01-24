@@ -263,6 +263,7 @@
         <tgroup cols="3" colsep="1" rowsep="1" align="left">
         <colspec colname="description"/><colspec colname="cpp"/><colspec colname="java"/>
         <spanspec spanname="section" namest="description" nameend="java" align="left"/>
+        <spanspec spanname="deprecation" namest="cpp" nameend="java" align="left"/>
         <thead>
             <row>   <entry>Description</entry>
                     <entry>C++</entry>
@@ -271,76 +272,78 @@
         <tbody>
             <row>   <entry spanname="section">Input management</entry></row>
             <row>   <entry>Input stream access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#d2291c8673fec28e2f8151f09413b6a1"><function>Shell::GetInput</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ad2291c8673fec28e2f8151f09413b6a1"><function>Shell::GetInput</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getInput()"><function>Shell.getInput</function></ulink></entry></row>
             <row>   <entry>Output stream access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#70af9792100a23e8b5f509737269ffe1"><function>Shell::GetStream</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a65d8db1e2c912ce367a57e474498291d"><function>Shell::GetStream</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getStream(int)"><function>Shell.getStream</function></ulink></entry></row>
             <row>   <entry>Output stream positionning</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#b8ef37dc6a98ba279bf0901e2cd9155c"><function>Shell::SetStream</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ab8ef37dc6a98ba279bf0901e2cd9155c"><function>Shell::SetStream</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setStream(int,%20cli.OutputDevice)"><function>Shell.setStream</function></ulink></entry></row>
             <row>   <entry>Enabled/disabled stream accessor</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#de17c6ad4098d8ce4fe9bf5bcc96f172"><function>Shell::StreamEnabled</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a73a7304e40ed37149340f3b99b74f96b"><function>Shell::StreamEnabled</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#streamEnabled(int)"><function>Shell.streamEnabled</function></ulink></entry></row>
             <row>   <entry>Enable/disable stream</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#bf9b1288aa95e7a4668d43f6e4aa497d"><function>Shell::EnableStream</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#abf9b1288aa95e7a4668d43f6e4aa497d"><function>Shell::EnableStream</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#enableStream(int,%20boolean)"><function>Shell.enableStream</function></ulink></entry></row>
             <row>   <entry spanname="section">Presentation</entry></row>
             <row>   <entry>Welcome message setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#8778b8def7fbd6df15c9e615530097d4"><function>Shell::SetWelcomeMessage</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a8778b8def7fbd6df15c9e615530097d4"><function>Shell::SetWelcomeMessage</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setWelcomeMessage(cli.ResourceString)"><function>Shell.setWelcomeMessage</function></ulink></entry></row>
             <row>   <entry>Bye message setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#e80179cef20af1e277ccec1d78d6b775"><function>Shell::SetByeMessage</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ae80179cef20af1e277ccec1d78d6b775"><function>Shell::SetByeMessage</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setByeMessage(cli.ResourceString)"><function>Shell.setByeMessage</function></ulink></entry></row>
             <row>   <entry>Prompt message positionning</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#f4e5a2eaa80d146926bcde65351a3e4d"><function>Shell::SetPrompt</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#af4e5a2eaa80d146926bcde65351a3e4d"><function>Shell::SetPrompt</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setPrompt(cli.ResourceString)"><function>Shell.setPrompt</function></ulink></entry></row>
             <row>   <entry>Error formatting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#ab4770bb61ea7038152429ec06c21940"><function>Shell::SetErrorFormatting</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#setErrorFormatting(cli.ResourceString,%20cli.ResourceString,%20cli.ResourceString,%20cli.ResourceString)"><function>Shell.setErrorFormatting</function></ulink></entry></row>
+                    <entry spanname="deprecation">Deprecated since version 2.6, use <link linkend="adv.menus.handlers">error handlers</link> instead.</entry></row>
             <row>   <entry>Help margin accessor</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#88ecb7b84507a6a0a328bbad2f7dc546"><function>Shell::GetHelpMargin</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a88ecb7b84507a6a0a328bbad2f7dc546"><function>Shell::GetHelpMargin</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getHelpMargin()"><function>Shell.getHelpMargin</function></ulink></entry></row>
             <row>   <entry>Help offset accessor</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#b634fad29d7130768a0d035b4b84fa5c"><function>Shell::GetHelpOffset</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ab634fad29d7130768a0d035b4b84fa5c"><function>Shell::GetHelpOffset</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getHelpOffset()"><function>Shell.getHelpOffset</function></ulink></entry></row>
             <row>   <entry spanname="section">Language settings</entry></row>
             <row>   <entry>Language setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#4da46821d20e0c7519dec0ad3e381c3a"><function>Shell::SetLang</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a4da46821d20e0c7519dec0ad3e381c3a"><function>Shell::SetLang</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setLang(int)"><function>Shell.setLang</function></ulink></entry></row>
             <row>   <entry>Language access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#fae8f69c25a41e89d184e3c49b1b3918"><function>Shell::GetLang</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#afae8f69c25a41e89d184e3c49b1b3918"><function>Shell::GetLang</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getLang()"><function>Shell.getLang</function></ulink></entry></row>
             <row>   <entry spanname="section">Beep settings</entry></row>
             <row>   <entry>Beep configuration setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#d14c863b1b25d88be7575e0ed6ee36ae"><function>Shell::SetBeep</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ad14c863b1b25d88be7575e0ed6ee36ae"><function>Shell::SetBeep</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setBeep(boolean)"><function>Shell.setBeep</function></ulink></entry></row>
             <row>   <entry>Beep configuration access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#0ac2a73a2b92fcdc38f682a6c2267590"><function>Shell::GetBeep</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a0ac2a73a2b92fcdc38f682a6c2267590"><function>Shell::GetBeep</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getBeep()"><function>Shell.getBeep</function></ulink></entry></row>
             <row>   <entry spanname="section">Execution</entry></row>
+            <row>   <entry>Retrives the current menu (or one of those in the current menu stack)</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#acd89663e4920f82781e067924ebb0d0c"><function>Shell::GetCurrentMenu</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#getCurrentMenu(int)"><function>Shell.getCurrentMenu</function></ulink></entry></row>
             <row>   <entry>Enters a menu</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#4cb1766fc8b8c632d168ca1e0ef74b54"><function>Shell::EnterMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a4cb1766fc8b8c632d168ca1e0ef74b54"><function>Shell::EnterMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#enterMenu(cli.Menu)"><function>Shell.enterMenu</function></ulink></entry></row>
             <row>   <entry>Exits the current menu</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#b244951b902a334a0b042d48af9989fd"><function>Shell::ExitMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ab244951b902a334a0b042d48af9989fd"><function>Shell::ExitMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#exitMenu()"><function>Shell.exitMenu</function></ulink></entry></row>
             <row>   <entry>Terminates the shell</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#3d082082d4a4ee56c6d4e82564ae868b"><function>Shell::Quit</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a3d082082d4a4ee56c6d4e82564ae868b"><function>Shell::Quit</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#quit()"><function>Shell.quit</function></ulink></entry></row>
             <row>   <entry>Terminates the shell</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#14b1f93386a3f66d65beec6fbbd80a20"><function>Shell::QuitThreadSafe</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a14b1f93386a3f66d65beec6fbbd80a20"><function>Shell::QuitThreadSafe</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#quitThreadSafe()"><function>Shell.quitThreadSafe</function></ulink></entry></row>
             <row>   <entry spanname="section">Basic command access</entry></row>
             <row>   <entry>Displays help depending on the context of the current line</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#10d22c619c06ef903ffde6153cf7ec1e"><function>Shell::DisplayHelp</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a10d22c619c06ef903ffde6153cf7ec1e"><function>Shell::DisplayHelp</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#displayHelp()"><function>Shell.displayHelp</function></ulink></entry></row>
             <row>   <entry>Prints the working menu</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#9e18d5399d3855c50f1d54015e09bc86"><function>Shell::PrintWorkingMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a9e18d5399d3855c50f1d54015e09bc86"><function>Shell::PrintWorkingMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#printWorkingMenu()"><function>Shell.printWorkingMenu</function></ulink></entry></row>
             <row>   <entry spanname="section">Debug</entry></row>
             <row>   <entry>Configuration menu enabling</entry>
-                    <entry><ulink url="../doxygen/html/classCli.html#fcef4a4232b6a21d8a6262adb51b8b49"><function>Cli::EnableConfigMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classCli.html#afcef4a4232b6a21d8a6262adb51b8b49"><function>Cli::EnableConfigMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Cli.html#enableConfigMenu(boolean)"><function>Cli.enableConfigMenu</function></ulink></entry></row>
         </tbody>
         </tgroup>

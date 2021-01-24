@@ -27,10 +27,10 @@ __CPP_MKRES__ = 1
 CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 CLI_XML_CPP ?= $(patsubst %.xml,$(INT_DIR)/%.cpp,$(notdir $(CLI_XML_RES)))
 CLI_XML_OBJ = $(patsubst %.cpp,%.o,$(CLI_XML_CPP))
-CLI_MAIN_CPP ?= $(CPP_DIR)/tests/testsample.cpp
+CLI_MAIN_CPP ?= $(CLI_DIR)/cpp/tests/testsample.cpp
 CLI_MAIN_OBJ ?= $(patsubst %.cpp,$(INT_DIR)/%.o,$(notdir $(CLI_MAIN_CPP)))
-CLI_BINARY ?= $(OUT_DIR)/$(PROJECT)$(BIN_SUFFIX)
-CLI_XSL ?= $(CPP_DIR)/xsl/cppclic.xsl
+CLI_BINARY ?= $(OUT_DIR)/$(BIN_PREFIX)$(PROJECT)$(BIN_SUFFIX)
+CLI_XSL ?= $(CLI_DIR)/cpp/xsl/cppclic.xsl
 CLI_XSLT_OPTS ?=
 
 # Includes
@@ -39,7 +39,7 @@ PROJECT_DEPS ?= $(CLI_DIR)/cpp/build/make/libclicpp.mak
 PRODUCT ?= $(CLI_BINARY)
 CPP_FILES ?= $(CLI_XML_CPP) $(CLI_MAIN_CPP)
 AUTO_DEPS ?= no
-PROJ_INCLUDES ?= -I$(CPP_DIR)/include -I$(dir $(CLI_XML_RES))
+PROJ_INCLUDES ?= -I$(CLI_DIR)/cpp/include -I$(dir $(CLI_XML_RES))
 PROJ_LIBS ?= -L$(dir $(CPP_LIB)) -lclicpp -lncurses
 PROJ_CLEAN += $(CLI_XML_CPP)
 include $(CLI_DIR)/cpp/build/make/_build.mak
@@ -49,19 +49,22 @@ $(CLI_XML_CPP): $(CLI_XML_RES) $(CLI_XSL)
 	@mkdir -p $(dir $(CLI_XML_CPP))
 	xsltproc $(CLI_XSLT_OPTS) $(CLI_XSL) $(CLI_XML_RES) > $(CLI_XML_CPP)
 
+$(CPP_LIB):
+	$(call MkDispatch, $(CLI_DIR)/cpp/build/make/libclicpp.mak)
+
 $(CLI_XML_OBJ): CPP_FLAGS += -Wno-unused-label
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(CPP_DIR)/build/make/_mkres.vars
-vars: $(CPP_DIR)/build/make/_mkres.vars
-$(CPP_DIR)/build/make/_mkres.vars:
+.PHONY: $(CLI_DIR)/cpp/build/make/_mkres.vars
+vars: $(CLI_DIR)/cpp/build/make/_mkres.vars
+$(CLI_DIR)/cpp/build/make/_mkres.vars:
 	$(call ShowVariables,CLI_XML_RES CLI_XML_CPP CLI_XML_OBJ CLI_MAIN_CPP CLI_MAIN_OBJ CLI_BINARY CLI_XSL CLI_XSLT_OPTS)
 
 # Dependencies
-$(CLI_XML_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
+$(CLI_XML_OBJ): $(CLI_XML_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
+$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
 $(PRODUCT): $(CPP_LIB)
 
 

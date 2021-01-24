@@ -32,8 +32,6 @@ void TuneByeMessage(const cli::ResourceString& CLI_ByeMessage);
 
 void TunePrompt(const cli::ResourceString& CLI_Prompt);
 
-void TuneErrorFormatting(const cli::ResourceString& CLI_LocationPrefix, const cli::ResourceString& CLI_LocationSuffix, const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix);
-
 void TuneLang(const cli::ResourceString::LANG E_Lang);
 
 void TuneBeep(const bool B_Enable);

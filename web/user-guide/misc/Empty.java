@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
     // ----- Owner CLI -----
     private Empty m_cliOwnerCli;
     // ----- Menus -----
-    private Empty m_clicli_id4487178;
+    private Empty m_clicli_id4485656;
     // ----- Node members -----
     // ----- Extra java (option='members') -----
 
@@ -38,7 +38,7 @@ import java.util.NoSuchElementException;
         // CLI reference
         m_cliOwnerCli = (Empty) getCli();
         // Create menus and populate
-        m_cliOwnerCli.m_clicli_id4487178 = this;
+        m_cliOwnerCli.m_clicli_id4485656 = this;
         // Local nodes
     }
 
@@ -46,15 +46,14 @@ import java.util.NoSuchElementException;
     public boolean execute(cli.CommandLine CLI_CmdLine) {
         try {
             cli.TraceClass CLI_EXECUTION = new cli.TraceClass("CLI_EXECUTION", new cli.Help().addHelp(cli.Help.LANG_EN, "CLI Execution traces").addHelp(cli.Help.LANG_FR, "Traces d'exécution du CLI"));
-            cli.Traces.trace(CLI_EXECUTION, "Empty.execute()");
             Iterator<cli.Element> cli_Elements = CLI_CmdLine.iterator();
             cli.Element cli_Element = null;
-            // myCLI> 
-            m_clicli_id4487178_lbl:
+            // myCLI>
+            m_clicli_id4485656_lbl:
             {
                 cli_Element = cli_Elements.next();
                 if (cli_Element == null) return false;
-                cli.Traces.trace(CLI_EXECUTION, "word = " + cli_Element.getKeyword());
+                cli.Traces.trace(CLI_EXECUTION, "context = \"myCLI>\", "+ "word = " + (cli_Element instanceof cli.Endl ? "<CR>" : cli_Element.getKeyword()));
                 return false;
             }
         } catch (NoSuchElementException e1) {

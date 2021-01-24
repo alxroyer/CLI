@@ -28,7 +28,7 @@ __JAVA_VARS__ = 1
 CLI_DIR ?= ../../..
 
 include $(CLI_DIR)/build/make/_vars.mak
-include $(CPP_DIR)/build/make/_vars.mak
+include $(CLI_DIR)/cpp/build/make/_vars.mak
 
 
 # Directories
@@ -36,8 +36,8 @@ ifeq ($(JAVA_HOME),)
 $(error Please set JAVA_HOME to your SDK installation directory)
 endif
 JDK_DIR ?= $(JAVA_HOME)
-JAVA_SRC_DIR = $(JAVA_DIR)/src
-NATIVE_DIR = $(JAVA_DIR)/native
+JAVA_SRC_DIR = $(CLI_DIR)/java/src
+NATIVE_DIR = $(CLI_DIR)/java/native
 OUT_DIR = $(RDX)
 
 # Java flags
@@ -56,9 +56,9 @@ JAVA_DYN_LIB = $(OUT_DIR)/$(DYN_LIB_PREFIX)cli$(DYN_LIB_SUFFIX)
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(JAVA_DIR)/build/make/_vars.vars
-vars: $(JAVA_DIR)/build/make/_vars.vars
-$(JAVA_DIR)/build/make/_vars.vars:
+.PHONY: $(CLI_DIR)/java/build/make/_vars.vars
+vars: $(CLI_DIR)/java/build/make/_vars.vars
+$(CLI_DIR)/java/build/make/_vars.vars:
 	$(call ShowVariables,JDK_DIR JAVA_SRC_DIR NATIVE_DIR OUT_DIR JAVA_PATH JAVAC_FLAGS JAVA_ARCHIVE JAVA_DYN_LIB)
 
 endif

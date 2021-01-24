@@ -26,7 +26,7 @@
 #ifndef _CLI_GO_HELLO_H_
 #define _CLI_GO_HELLO_H_
 
-void sayHello(void) {}
-void sayBye(void) {}
+static void sayHello(void) {}
+static void sayBye(void) {}
 
 #endif // _CLI_GO_HELLO_H_

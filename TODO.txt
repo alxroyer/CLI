@@ -22,9 +22,22 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 
+
+General: Enable shell timeout management (induces timeout management with input devices).
+General: Text edition facilities (passwords, text fields, int fields, yes/no questions, choice questions...).
+General: Implement a MiniShell class (short screen management, 0-9, A-F, arrows, enter, escape).
+General: Analyze & integrate contributions.
+General: Other target languages.
+
 Schema: Describe the schema with a DTD schema.
-XSL/User guide: Deprecate the static CLI creation.
+
 XSL: Indicate date and time of generation
+XSL: Systematic XSL generation (have constant identifiers for constant inputs)
 XSL: Add a tag/copy mechanism in order to reuse command patterns between menus.
+
+C++: Improve telnet implementation: make TelnetConnection inherit from MonoThreadDevice, use select() in TelnetServer, get rid of CLI_TELNET_MULTI_CLIENT, extend unit test
 C++: Manage the tag[@ref]/@max attribute with the CLI library.
 C++: Create a pool of memory, in order to better control memory purpose with embedded integrations.
+C++: Improve doxygen documentation: force every method to have its own section, even if it is only briefly documented (and check user-guide references)
+
+Doc: Deprecate the XSL static CLI creation.

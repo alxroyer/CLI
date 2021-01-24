@@ -49,15 +49,15 @@ ifneq ($(CYGWIN),)
 	STATIC_LIB_SUFFIX ?= .a
 endif
 OUT_DIR ?= $(TARGET)$(CXX)/$(RDX)
-CPP_LIB = $(CPP_DIR)/build/make/$(TARGET)$(CXX)/$(RDX)/$(STATIC_LIB_PREFIX)clicpp$(STATIC_LIB_SUFFIX)
+CPP_LIB = $(CLI_DIR)/cpp/build/make/$(TARGET)$(CXX)/$(RDX)/$(STATIC_LIB_PREFIX)clicpp$(STATIC_LIB_SUFFIX)
 
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(CPP_DIR)/build/make/_vars.vars
-vars: $(CPP_DIR)/build/make/_vars.vars
-$(CPP_DIR)/build/make/_vars.vars:
+.PHONY: $(CLI_DIR)/cpp/build/make/_vars.vars
+vars: $(CLI_DIR)/cpp/build/make/_vars.vars
+$(CLI_DIR)/cpp/build/make/_vars.vars:
 	$(call ShowVariables,TARGET BIN_PREFIX BIN_SUFFIX DYN_LIB_PREFIX DYN_LIB_SUFFIX STATIC_LIB_PREFIX STATIC_LIB_SUFFIX OUT_DIR CPP_LIB)
 
 endif

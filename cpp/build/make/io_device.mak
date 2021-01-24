@@ -23,7 +23,7 @@
 
 # Includes
 CLI_DIR := ../../..
-SRC_DIR = $(CPP_DIR)/tests/io_device
+SRC_DIR = $(CLI_DIR)/cpp/tests/io_device
 CLI_XML_RES = $(SRC_DIR)/io_device.xml
 CLI_MAIN_CPP = $(SRC_DIR)/io_device_impl.cpp
 include _check.mak

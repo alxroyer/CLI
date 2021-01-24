@@ -30,8 +30,8 @@ cpptest.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 PROJECT = cpptest
 PROJECT_DEPS = libclicpp.mak
-SRC_DIR = $(CPP_DIR)/tests/cpp
-PROJ_INCLUDES = -I$(CPP_DIR)/include
+SRC_DIR = $(CLI_DIR)/cpp/tests/cpp
+PROJ_INCLUDES = -I$(CLI_DIR)/cpp/include
 PROJ_LIBS = -L$(OUT_DIR) -lclicpp -lncurses
 include _build.mak
 

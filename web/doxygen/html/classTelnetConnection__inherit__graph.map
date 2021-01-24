@@ -1,4 +1,5 @@
-base referer
-rect $classIODevice.html 33,157 110,184
-rect $classOutputDevice.html 20,82 124,109
-rect $classObject.html 41,8 102,34
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classIODevice.html" title="Generic input/output device." alt="" coords="31,160,103,189"/>
+<area shape="rect" id="node4" href="$classOutputDevice.html" title="Generic output device." alt="" coords="17,83,116,112"/>
+<area shape="rect" id="node6" href="$classObject.html" title="Generic object." alt="" coords="37,5,96,35"/>
+</map>

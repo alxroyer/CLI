@@ -26,13 +26,22 @@
 #include "cli/pch.h"
 
 #ifndef CLI_WIN_NETWORK
+    #include <errno.h> // errno
+    #define socket_errno errno
     #include <sys/types.h> // socket, bind, listen
     #include <sys/socket.h> // socket, bind, listen
     #include <netinet/in.h> // sockaddr_in
     #include <unistd.h> // getpid
 #else
     #include <winsock2.h> // Windows sockets
+    #define socket_errno WSAGetLastError()
+    #define socklen_t int
+    #define EADDRINUSE WSAEADDRINUSE
+    #define SHUT_RD SD_RECEIVE
+    #define SHUT_WR SD_SEND
+    #define SHUT_RDWR SD_BOTH
     #define close closesocket
+    #define sleep(seconds) Sleep((seconds)*1000)
     // Disable disturbing macros.
     #undef DELETE
 #endif
@@ -51,6 +60,15 @@ CLI_NS_USE(cli)
     #define CLI_TELNET_INPUT_BUFFER_SIZE 1024
 #endif
 
+//! @brief Telnet server trace class singleton redirection.
+#define CLI_TELNET_SERVER GetTelnetServerTraceClass()
+static const TraceClass& GetTelnetServerTraceClass(void)
+{
+    static const TraceClass cli_TelnetServerTraceClass("CLI_TELNET_SERVER", Help()
+        .AddHelp(Help::LANG_EN, "CLI telnet server traces")
+        .AddHelp(Help::LANG_FR, "Traces de serveur telnet CLI"));
+    return cli_TelnetServerTraceClass;
+}
 //! @brief Telnet connection trace class singleton redirection.
 #define CLI_TELNET_IN GetTelnetInTraceClass()
 //! @brief Telnet connection trace class singleton.
@@ -73,14 +91,13 @@ static const TraceClass& GetTelnetOutTraceClass(void)
 }
 
 
-
 TelnetServer::TelnetServer(Shell& CLI_Shell, const unsigned long UL_TcpPort)
   : m_cliShell(CLI_Shell),
     m_ulTcpPort(UL_TcpPort)
 {
-    // Does nothing but registers the appropriate trace classes.
-    GetTraces().Trace(CLI_TELNET_IN);
-    GetTraces().Trace(CLI_TELNET_OUT);
+    GetTraces().Declare(CLI_TELNET_SERVER);
+    GetTraces().Declare(CLI_TELNET_IN);
+    GetTraces().Declare(CLI_TELNET_OUT);
 }
 
 TelnetServer::~TelnetServer(void)
@@ -89,8 +106,10 @@ TelnetServer::~TelnetServer(void)
 
 void TelnetServer::StartServer(void)
 {
+    GetTraces().Trace(CLI_TELNET_SERVER) << "Starting server on port " << m_ulTcpPort << endl;
+
     const int i_ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
-    #ifdef CLI_WIN_NETWORK
+#ifdef CLI_WIN_NETWORK
     // Winsock needs to be initialized.
     if (i_ServerSocket < 0)
     {
@@ -102,68 +121,113 @@ void TelnetServer::StartServer(void)
             ((int&) i_ServerSocket) = socket(AF_INET, SOCK_STREAM, 0);
         }
     }
-    #endif
+#endif
     if (i_ServerSocket < 0)
     {
         const ResourceString cli_Error = ResourceString()
             .SetString(ResourceString::LANG_EN, "socket() failed")
             .SetString(ResourceString::LANG_FR, "Echec de la fonction socket()");
-        m_cliShell.GetStream(ERROR_STREAM) << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+        OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+        GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
+        return;
+    }
+    GetTraces().Trace(CLI_TELNET_SERVER) << "socket() successful (i_ServerSocket = " << i_ServerSocket << ")" << endl;
+
+    // So that we can re-bind to it without TIME_WAIT problems
+    int i_ReuseAddr = 1;
+    if (setsockopt(i_ServerSocket, SOL_SOCKET, SO_REUSEADDR, (const char*) & i_ReuseAddr, sizeof(i_ReuseAddr)) != 0)
+    {
+        close(i_ServerSocket);
+        const ResourceString cli_Error = ResourceString()
+            .SetString(ResourceString::LANG_EN, "setsockopt() failed")
+            .SetString(ResourceString::LANG_FR, "Echec de la fonction setsockopt()");
+        OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+        GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
         return;
     }
 
+    // Bind the socket
     struct sockaddr_in s_SockAddr;
     s_SockAddr.sin_family = AF_INET;
     s_SockAddr.sin_port = htons((unsigned short) m_ulTcpPort);
     s_SockAddr.sin_addr.s_addr = INADDR_ANY;
 
-    if (bind(i_ServerSocket, (struct sockaddr*) & s_SockAddr, sizeof(s_SockAddr)) < 0)
+    int i_BindTries = 0;
+    while (bind(i_ServerSocket, (struct sockaddr*) & s_SockAddr, sizeof(s_SockAddr)) < 0)
     {
-        close(i_ServerSocket);
-        const ResourceString cli_Error = ResourceString()
-            .SetString(ResourceString::LANG_EN, "bind() failed")
-            .SetString(ResourceString::LANG_FR, "Echec de la fonction bind()");
-        m_cliShell.GetStream(ERROR_STREAM) << cli_Error.GetString(m_cliShell.GetLang()) << endl;
-        return;
+        i_BindTries ++;
+        if ((socket_errno == EADDRINUSE) && (i_BindTries < 2))
+        {
+            sleep(500);
+        }
+        else
+        {
+            close(i_ServerSocket);
+            const ResourceString cli_Error = ResourceString()
+                .SetString(ResourceString::LANG_EN, "bind() failed")
+                .SetString(ResourceString::LANG_FR, "Echec de la fonction bind()");
+            OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
+            return;
+        }
     }
+    GetTraces().Trace(CLI_TELNET_SERVER) << "bind() successful" << endl;
 
+    // Make the server listen up to 5 clients
     if (listen(i_ServerSocket, 5) < 0)
     {
         close(i_ServerSocket);
         const ResourceString cli_Error = ResourceString()
             .SetString(ResourceString::LANG_EN, "listen() failed")
             .SetString(ResourceString::LANG_FR, "Echec de la fonction listen()");
-        m_cliShell.GetStream(ERROR_STREAM) << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+        OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+        GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
         return;
     }
+    GetTraces().Trace(CLI_TELNET_SERVER) << "listen() successful" << endl;
 
     while (1)
     {
-        const ResourceString cli_InfoWaiting = ResourceString()
-            .SetString(ResourceString::LANG_EN, "Waiting for clients...")
-            .SetString(ResourceString::LANG_FR, "En attente de clients...");
-        m_cliShell.GetStream(OUTPUT_STREAM) << cli_InfoWaiting.GetString(m_cliShell.GetLang()) << endl;
+        // Wait for a client
+        GetTraces().Trace(CLI_TELNET_SERVER) << "Waiting for clients..." << endl;
         const int i_ConnectionSocket = accept(i_ServerSocket, NULL, NULL);
-
         if (i_ConnectionSocket < 0)
         {
             close(i_ServerSocket);
             const ResourceString cli_Error = ResourceString()
                 .SetString(ResourceString::LANG_EN, "accept() failed")
                 .SetString(ResourceString::LANG_FR, "Echec de la fonction accept()");
-            m_cliShell.GetStream(ERROR_STREAM) << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
             return;
         }
+        GetTraces().Trace(CLI_TELNET_SERVER) << "accept() successful (i_ConnectionSocket = " << i_ConnectionSocket << ")" << endl;
 
+        // Accept the client
         const ResourceString cli_InfoClient = ResourceString()
             .SetString(ResourceString::LANG_EN, "Accepting telnet connection")
             .SetString(ResourceString::LANG_FR, "Connexion telnet acceptée");
-        m_cliShell.GetStream(OUTPUT_STREAM) << cli_InfoClient.GetString(m_cliShell.GetLang()) << endl;
+        GetTraces().Trace(CLI_TELNET_SERVER) << cli_InfoClient.GetString(m_cliShell.GetLang()) << endl;
         if (! AcceptConnection(i_ConnectionSocket))
         {
             return;
         }
     }
+
+    // Release server resources
+    if (close(i_ServerSocket) != 0)
+    {
+        close(i_ServerSocket);
+        const ResourceString cli_Error = ResourceString()
+            .SetString(ResourceString::LANG_EN, "close() failed")
+            .SetString(ResourceString::LANG_FR, "Echec de la fonction close()");
+        OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+        GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
+        return;
+    }
+    GetTraces().Trace(CLI_TELNET_SERVER) << "close(" << i_ServerSocket << ") successful" << endl;
+
+    GetTraces().Trace(CLI_TELNET_SERVER) << "Server is done." << endl;
 }
 
 const bool TelnetServer::AcceptConnection(const int I_ConnectionSocket)
@@ -189,27 +253,84 @@ const bool TelnetServer::AcceptConnection(const int I_ConnectionSocket)
 #else
         i_Pid = GetCurrentThreadId();
 #endif
-        const ResourceString cli_InfoStart = ResourceString()
-            .SetString(ResourceString::LANG_EN, "Connection started")
-            .SetString(ResourceString::LANG_FR, "Début de connexion");
-        m_cliShell.GetStream(OUTPUT_STREAM)
-            << cli_InfoStart.GetString(m_cliShell.GetLang())
-            << " " << i_Pid << cli::endl;
+        GetTraces().Trace(CLI_TELNET_SERVER) << "Execution started (pid = " << i_Pid << ")" << endl;
+
+        // Configure LINGER option
+        linger t_Linger;
+        t_Linger.l_onoff = 1; // enable LINGER
+        t_Linger.l_linger = 1; // seconds
+        if (setsockopt(I_ConnectionSocket, SOL_SOCKET, SO_LINGER, (const char*) & t_Linger, sizeof(t_Linger)) != 0)
+        {
+            close(I_ConnectionSocket);
+            const ResourceString cli_Error = ResourceString()
+                .SetString(ResourceString::LANG_EN, "setsockopt(SO_LINGER) failed")
+                .SetString(ResourceString::LANG_FR, "Echec de la fonction setsockopt(SO_LINGER)");
+            OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
+            return false;
+        }
+        GetTraces().Trace(CLI_TELNET_SERVER) << "setsockopt(" << I_ConnectionSocket << ", SO_LINGER) successful" << endl;
+
         if (TelnetConnection* const pcli_Connection = new TelnetConnection(m_cliShell, I_ConnectionSocket, true))
         {
             pcli_Connection->UseInstance(__CALL_INFO__);
             m_cliShell.Run(*pcli_Connection);
             pcli_Connection->FreeInstance(__CALL_INFO__);
         }
-        const ResourceString cli_InfoEnd = ResourceString()
-            .SetString(ResourceString::LANG_EN, "Connection done")
-            .SetString(ResourceString::LANG_FR, "Début de connexion");
-        m_cliShell.GetStream(OUTPUT_STREAM)
-            << cli_InfoEnd.GetString(m_cliShell.GetLang())
-            << " " << i_Pid << cli::endl;
+        GetTraces().Trace(CLI_TELNET_SERVER) << "Execution done (pid = " << i_Pid << ")" << endl;
+
 #ifdef CLI_TELNET_MULTI_CLIENT
         exit(0);
+#else
+        // Did not manage to correctly end up the connection on the server side,
+        // neither on Windows nor Linux systems.
+        // This a hack until I provide another implementation.
+        {
+            linger t_Linger; socklen_t i_Len = sizeof(t_Linger);
+            if (getsockopt(I_ConnectionSocket, SOL_SOCKET, SO_LINGER, (char*) & t_Linger, & i_Len) != 0)
+            {
+                close(I_ConnectionSocket);
+                const ResourceString cli_Error = ResourceString()
+                    .SetString(ResourceString::LANG_EN, "getsockopt(SO_LINGER) failed")
+                    .SetString(ResourceString::LANG_FR, "Echec de la fonction getsockopt(SO_LINGER)");
+                OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+                GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
+                return false;
+            }
+
+            if (t_Linger.l_onoff)
+            {
+                sleep(t_Linger.l_linger);
+            }
+        }
+
+        // Stop sending characters
+        if (shutdown(I_ConnectionSocket, SHUT_WR) != 0)
+        {
+            close(I_ConnectionSocket);
+            const ResourceString cli_Error = ResourceString()
+                .SetString(ResourceString::LANG_EN, "shutdown() failed")
+                .SetString(ResourceString::LANG_FR, "Echec de la fonction shutdown()");
+            OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
+            return false;
+        }
+        GetTraces().Trace(CLI_TELNET_SERVER) << "shutdown(" << I_ConnectionSocket << ") successful" << endl;
+
+        // Release resources
+        if (close(I_ConnectionSocket) != 0)
+        {
+            close(I_ConnectionSocket);
+            const ResourceString cli_Error = ResourceString()
+                .SetString(ResourceString::LANG_EN, "close() failed")
+                .SetString(ResourceString::LANG_FR, "Echec de la fonction close()");
+            OutputDevice::GetStdErr() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            GetTraces().Trace(CLI_TELNET_SERVER) << "errno = " << socket_errno << endl;
+            return false;
+        }
+        GetTraces().Trace(CLI_TELNET_SERVER) << "close(" << I_ConnectionSocket << ") successful" << endl;
 #endif
+
         return true;
     }
 }
@@ -244,11 +365,75 @@ const bool TelnetConnection::CloseDevice(void)
 
 const KEY TelnetConnection::GetKey(void) const
 {
+    // Wait for characters if needed
+    bool b_ReceiveCharacters = false;
+    if (m_qChars.IsEmpty())
+    {
+        GetTraces().Trace(CLI_TELNET_IN) << "m_qChars.GetCount() = " << m_qChars.GetCount() << endl;
+
+        b_ReceiveCharacters = true;
+    }
+    else if (m_qChars.GetCount() < 10)
+    {
+        GetTraces().Trace(CLI_TELNET_IN) << "m_qChars.GetCount() = " << m_qChars.GetCount() << endl;
+
+        // Just peek the socket to read if there are characters remaining
+        fd_set fd_read; FD_ZERO(& fd_read); FD_SET(m_iSocket, & fd_read);
+        timeval t_Timeout; t_Timeout.tv_sec = 0; t_Timeout.tv_usec = 10000;
+        const int i_Select = select(FD_SETSIZE, & fd_read, NULL, NULL, & t_Timeout);
+        GetTraces().Trace(CLI_TELNET_IN) << "select() returned " << i_Select << endl;
+        GetTraces().Trace(CLI_TELNET_IN) << "FD_ISSET(m_iSocket, & fd_read) = " << FD_ISSET(m_iSocket, & fd_read) << endl;
+        if ((i_Select > 0) && FD_ISSET(m_iSocket, & fd_read))
+        {
+            b_ReceiveCharacters = true;
+        }
+        if (i_Select < 0)
+        {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "Telnet reception error")
+                .SetString(ResourceString::LANG_FR, "Echec de réception en telnet");
+            GetTraces().Trace(CLI_TELNET_SERVER) << "select() failed, errno = " << socket_errno << endl;
+            return NULL_KEY;
+        }
+    }
+    if (b_ReceiveCharacters)
+    {
+        // Dequeue characters from the socket
+        GetTraces().Trace(CLI_TELNET_IN) << "calling recv()..." << endl;
+        char str_Buffer[256];
+        const int i_Len = recv(m_iSocket, str_Buffer, sizeof(str_Buffer), 0);
+        GetTraces().Trace(CLI_TELNET_IN) << "recv() returned " << i_Len << endl;
+        if (i_Len <= 0)
+        {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "Telnet reception error")
+                .SetString(ResourceString::LANG_FR, "Echec de réception en telnet");
+            GetTraces().Trace(CLI_TELNET_SERVER) << "recv() failed, errno = " << socket_errno << endl;
+            return NULL_KEY;
+        }
+
+        // Queue them in the internal fifo
+        for (int i=0; i<i_Len; i++)
+        {
+            if (str_Buffer[i] != '\0')
+            {
+                if (! m_qChars.AddTail(str_Buffer[i]))
+                {
+                    GetTraces().Trace(INTERNAL_ERROR)
+                        << "TelnetConnection::GetKey(): "
+                        << "Could not append character '" << str_Buffer[i] << "' "
+                        << "to m_qChars" << endl;
+                }
+            }
+        }
+    }
+
+    // Process characters
     if (! m_qChars.IsEmpty())
     {
         // Dequeue the received characters
         const int i_Front = m_qChars.RemoveHead();
-        GetTraces().Trace(CLI_TELNET_IN) << "i_Char = " << i_Front << endl;
+        GetTraces().Trace(CLI_TELNET_IN) << "i_Char = " << (char) i_Front << " (" << i_Front << ")" << endl;
 
         // Special character management.
         switch (i_Front)
@@ -261,7 +446,7 @@ const KEY TelnetConnection::GetKey(void) const
         case 13:
             if (! m_qChars.IsEmpty())
             {
-                GetTraces().Trace(CLI_TELNET_IN) << "i_Char2 = " << m_qChars.GetHead() << endl;
+                GetTraces().Trace(CLI_TELNET_IN) << "i_Char2 = " << (char) m_qChars.GetHead() << " (" << m_qChars.GetHead() << ")" << endl;
                 if (m_qChars.GetHead() == 10)
                 {
                     // Process only the character 13 when the sequence is 13-10.
@@ -278,7 +463,7 @@ const KEY TelnetConnection::GetKey(void) const
         case 27:
             if (! m_qChars.IsEmpty())
             {
-                GetTraces().Trace(CLI_TELNET_IN) << "i_Char2 = " << m_qChars.GetHead() << endl;
+                GetTraces().Trace(CLI_TELNET_IN) << "i_Char2 = " << (char) m_qChars.GetHead() << " (" << m_qChars.GetHead() << ")" << endl;
                 if (m_qChars.GetHead() == 91)
                 {
                     m_qChars.RemoveHead();
@@ -286,7 +471,7 @@ const KEY TelnetConnection::GetKey(void) const
                     if (! m_qChars.IsEmpty())
                     {
                         const int i_Special = m_qChars.RemoveHead();
-                        GetTraces().Trace(CLI_TELNET_IN) << "i_Char3 = " << i_Special << endl;
+                        GetTraces().Trace(CLI_TELNET_IN) << "i_Char3 = " << (char) i_Special << " (" << i_Special << ")" << endl;
 
                         switch (i_Special)
                         {
@@ -300,7 +485,7 @@ const KEY TelnetConnection::GetKey(void) const
                             if (! m_qChars.IsEmpty())
                             {
                                 const int i_Finish = m_qChars.RemoveHead();
-                                GetTraces().Trace(CLI_TELNET_IN) << "i_Char4 = " << i_Finish << endl;
+                                GetTraces().Trace(CLI_TELNET_IN) << "i_Char4 = " << (char) i_Finish << " (" << i_Finish << ")" << endl;
 
                                 if (i_Finish == 126)
                                 {
@@ -319,7 +504,7 @@ const KEY TelnetConnection::GetKey(void) const
                                     // Function keys.
                                     const int i_Function = i_Finish;
                                     const int i_FunctionFinish = m_qChars.RemoveHead();
-                                    GetTraces().Trace(CLI_TELNET_IN) << "i_Char5 = " << i_FunctionFinish << endl;
+                                    GetTraces().Trace(CLI_TELNET_IN) << "i_Char5 = " << (char) i_FunctionFinish << " (" << i_FunctionFinish << ")" << endl;
 
                                     if (i_FunctionFinish == 126)
                                     {
@@ -350,7 +535,7 @@ const KEY TelnetConnection::GetKey(void) const
                                     // Function keys.
                                     const int i_Function = i_Finish;
                                     const int i_FunctionFinish = m_qChars.RemoveHead();
-                                    GetTraces().Trace(CLI_TELNET_IN) << "i_Char5 = " << i_FunctionFinish << endl;
+                                    GetTraces().Trace(CLI_TELNET_IN) << "i_Char5 = " << (char) i_FunctionFinish << " (" << i_FunctionFinish << ")" << endl;
 
                                     if (i_FunctionFinish == 126)
                                     {
@@ -492,36 +677,8 @@ const KEY TelnetConnection::GetKey(void) const
             return GetKey();
         }
     }
-    else
-    {
-        // Wait for characters
-        char str_Buffer[256];
-        const int i_Len = recv(m_iSocket, str_Buffer, 256, 0);
-        if (i_Len <= 0)
-        {
-            m_cliLastError
-                .SetString(ResourceString::LANG_EN, "Telnet reception error")
-                .SetString(ResourceString::LANG_FR, "Echec de réception en telnet");
-            return NULL_KEY;
-        }
-        else
-        {
-            for (int i=0; i<i_Len; i++)
-            {
-                if (str_Buffer[i] != '\0')
-                {
-                    if (! m_qChars.AddTail(str_Buffer[i]))
-                    {
-                        GetTraces().Trace(INTERNAL_ERROR)
-                            << "TelnetConnection::GetKey(): "
-                            << "Could not append character '" << str_Buffer[i] << "' "
-                            << "to m_qChars" << endl;
-                    }
-                }
-            }
-            return GetKey();
-        }
-    }
+
+    return NULL_KEY;
 }
 
 void TelnetConnection::PutString(const char* const STR_Out) const
@@ -545,39 +702,48 @@ void TelnetConnection::PutString(const char* const STR_Out) const
             {
                 switch (STR_Out[i])
                 {
-                case KEY_aacute:    str_Out[o++] = (char) -96;    break;
-                case KEY_agrave:    str_Out[o++] = (char) -123;   break;
-                case KEY_auml:      str_Out[o++] = (char) -124;   break;
-                case KEY_acirc:     str_Out[o++] = (char) -125;   break;
-                case KEY_ccedil:    str_Out[o++] = (char) -121;   break;
-                case KEY_eacute:    str_Out[o++] = (char) -126;   break;
-                case KEY_egrave:    str_Out[o++] = (char) -118;   break;
-                case KEY_euml:      str_Out[o++] = (char) -119;   break;
-                case KEY_ecirc:     str_Out[o++] = (char) -120;   break;
-                case KEY_iacute:    str_Out[o++] = (char) -95;    break;
-                case KEY_igrave:    str_Out[o++] = (char) -115;   break;
-                case KEY_iuml:      str_Out[o++] = (char) -117;   break;
-                case KEY_icirc:     str_Out[o++] = (char) -116;   break;
-                case KEY_oacute:    str_Out[o++] = (char) -94;    break;
-                case KEY_ograve:    str_Out[o++] = (char) -107;   break;
-                case KEY_ouml:      str_Out[o++] = (char) -108;   break;
-                case KEY_ocirc:     str_Out[o++] = (char) -109;   break;
-                case KEY_uacute:    str_Out[o++] = (char) -93;    break;
-                case KEY_ugrave:    str_Out[o++] = (char) -105;   break;
-                case KEY_uuml:      str_Out[o++] = (char) -127;   break;
-                case KEY_ucirc:     str_Out[o++] = (char) -106;   break;
-                case SQUARE:        str_Out[o++] = (char) -3;     break;
-                case EURO:          str_Out[o++] = (char) -79;    break;
-                case POUND:         str_Out[o++] = (char) -100;   break;
-                case MICRO:         str_Out[o++] = (char) -26;    break;
-                case PARAGRAPH:     str_Out[o++] = (char) -11;    break;
-                case DEGREE:        str_Out[o++] = (char) -8;     break;
-                case COPYRIGHT:     str_Out[o++] = (char) -72;    break;
+                case KEY_aacute:    str_Out[o++] = (char) -96;  break;
+                case KEY_agrave:    str_Out[o++] = (char) -123; break;
+                case KEY_auml:      str_Out[o++] = (char) -124; break;
+                case KEY_acirc:     str_Out[o++] = (char) -125; break;
+                case KEY_ccedil:    str_Out[o++] = (char) -121; break;
+                case KEY_eacute:    str_Out[o++] = (char) -126; break;
+                case KEY_egrave:    str_Out[o++] = (char) -118; break;
+                case KEY_euml:      str_Out[o++] = (char) -119; break;
+                case KEY_ecirc:     str_Out[o++] = (char) -120; break;
+                case KEY_iacute:    str_Out[o++] = (char) -95;  break;
+                case KEY_igrave:    str_Out[o++] = (char) -115; break;
+                case KEY_iuml:      str_Out[o++] = (char) -117; break;
+                case KEY_icirc:     str_Out[o++] = (char) -116; break;
+                case KEY_oacute:    str_Out[o++] = (char) -94;  break;
+                case KEY_ograve:    str_Out[o++] = (char) -107; break;
+                case KEY_ouml:      str_Out[o++] = (char) -108; break;
+                case KEY_ocirc:     str_Out[o++] = (char) -109; break;
+                case KEY_uacute:    str_Out[o++] = (char) -93;  break;
+                case KEY_ugrave:    str_Out[o++] = (char) -105; break;
+                case KEY_uuml:      str_Out[o++] = (char) -127; break;
+                case KEY_ucirc:     str_Out[o++] = (char) -106; break;
+                case SQUARE:        str_Out[o++] = (char) -3;   break;
+                case EURO:          str_Out[o++] = (char) -79;  break;
+                case POUND:         str_Out[o++] = (char) -100; break;
+                case MICRO:         str_Out[o++] = (char) -26;  break;
+                case PARAGRAPH:     str_Out[o++] = (char) -11;  break;
+                case DEGREE:        str_Out[o++] = (char) -8;   break;
+                case COPYRIGHT:     str_Out[o++] = (char) -72;  break;
                 case '\n':          str_Out[o++] = '\r'; str_Out[o++] = '\n'; break;
+                default:            str_Out[o++] = STR_Out[i];  break;
                 }
             }
 
             // Send the buffer.
+            if (OutputDevice* const pcli_TraceStream = & const_cast<OutputDevice&>(GetTraces().GetStream()))
+            {
+                for (int r=0; r<i_OutLen; r++)
+                {
+                    GetTraces().Trace(CLI_TELNET_OUT) << "sending " << (char) str_Out[r] << endl;
+                }
+                GetTraces().SetStream(*pcli_TraceStream);
+            }
             const int i_Len = send(m_iSocket, str_Out, i_OutLen, 0);
             if (i_Len != i_OutLen)
             {

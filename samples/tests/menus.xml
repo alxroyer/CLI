@@ -68,6 +68,28 @@
                             <keyword string="menu1"><endl><menu ref="menu1"/></endl></keyword>
                             <!-- Self referencing -->
                             <keyword string="menu1.1"><endl><menu ref="menu1.1"/></endl></keyword>
+
+                            <keyword string="pwm-ext">
+                                <endl>
+                                    <cpp>for (int i_MenuIndex = 0; true; i_MenuIndex ++) {</cpp>
+                                    <cpp>    const cli::Menu* const pcli_CurrentMenu = GetShell().GetCurrentMenu(i_MenuIndex);</cpp>
+                                    <cpp>    if (pcli_CurrentMenu == NULL) {</cpp>
+                                    <cpp>        break;</cpp>
+                                    <cpp>    } else {</cpp>
+                                    <cpp>        <out/> &lt;&lt; i_MenuIndex &lt;&lt; ": " &lt;&lt; pcli_CurrentMenu->GetName() &lt;&lt; cli::endl;</cpp>
+                                    <cpp>    }</cpp>
+                                    <cpp>}</cpp>
+
+                                    <java>for (int i_MenuIndex = 0; true; i_MenuIndex ++) {</java>
+                                    <java>    cli.Menu cli_CurrentMenu = getShell().getCurrentMenu(i_MenuIndex);</java>
+                                    <java>    if (cli_CurrentMenu == null) {</java>
+                                    <java>        break;</java>
+                                    <java>    } else {</java>
+                                    <java>        <out/>.put(i_MenuIndex + ": " + cli_CurrentMenu.getName()).endl();</java>
+                                    <java>    }</java>
+                                    <java>}</java>
+                                </endl>
+                            </keyword>
                         </menu>
                     </endl>
                 </keyword>

@@ -55,6 +55,12 @@ public abstract class Menu extends SyntaxNode {
     }
     private static final native void __finalize(int I_NativeMenuRef);
 
+    /** Menu name access.
+        @return Name of the menu. */
+    public String getName() {
+        return getKeyword();
+    }
+
     /** Populate abstract method.
         This method should be overridden by final menu classes
         to describe the elements defining the command lines attached to the menu. */

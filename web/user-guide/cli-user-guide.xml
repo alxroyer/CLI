@@ -66,10 +66,15 @@
 <artheader>
     <author><firstname>Royer</firstname><surname>Alexis</surname></author>
     <issuenum>2.5</issuenum>
-    <pubdate>Sep, 30th 2010</pubdate>
+    <pubdate>Dec, 15th 2010</pubdate>
     <title>CLI library user guide</title>
     <!--<titleabbrev></titleabbrev>-->
     <revhistory>
+        <revision>  <revnumber>2.6</revnumber><date>Dec, 15th 2010</date>
+                    <revremark> Deprecations:
+                                    <function>Shell::SetErrorFormatting</function> / <function>Shell.setErrorFormatting</function>.<sbr/>
+                                Additions:
+                                    <function>Sehll::GetCurrentMenu</function> / <function>Shell.getCurrentMenu</function>.</revremark></revision>
         <revision>  <revnumber>2.5</revnumber><date>Sep, 8th 2010</date>
                     <revremark> New features:
                                     schemas,

@@ -31,12 +31,12 @@ javatests.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 include _vars.mak
 
-JAVA_SAMPLE_FILES = $(shell find $(SAMPLES_DIR) -name "*.java")
+JAVA_SAMPLE_FILES = $(shell find $(CLI_DIR)/samples -name "*.java")
 JAVA_SAMPLE_CLASSES = $(patsubst %.java,$(OUT_DIR)/cli/test/%.class,$(notdir $(JAVA_SAMPLE_FILES)))
 
 XML_FILES = $(patsubst %.check,%.xml,$(CHECK_FILES))
 TEST_FILES = $(patsubst %.xml,%.test,$(XML_FILES))
-CHECK_FILES = $(shell find $(SAMPLES_DIR) -name "*.check")
+CHECK_FILES = $(shell find $(CLI_DIR)/samples -name "*.check")
 
 
 # Rules
@@ -53,8 +53,8 @@ $(OUT_DIR)/cli/test/%.class: $(JAVA_SRC_DIR)/cli/test/%.java
 	javac $(JAVAC_FLAGS) $<
 
 $(JAVA_SRC_DIR)/cli/test/%.java: JAVA_SRC_FILE = $@
-$(JAVA_SRC_DIR)/cli/test/%.java: JAVA_SAMPLE_FILE = $(SAMPLES_DIR)/user-guide/$(notdir $@)
-$(JAVA_SRC_DIR)/cli/test/%.java: $(SAMPLES_DIR)/user-guide/%.java
+$(JAVA_SRC_DIR)/cli/test/%.java: JAVA_SAMPLE_FILE = $(CLI_DIR)/samples/user-guide/$(notdir $@)
+$(JAVA_SRC_DIR)/cli/test/%.java: $(CLI_DIR)/samples/user-guide/%.java
 	echo "package cli.test;" > $(JAVA_SRC_FILE)
 	cat $(JAVA_SAMPLE_FILE) >> $(JAVA_SRC_FILE)
 
@@ -73,13 +73,13 @@ deps: ;
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(JAVA_DIR)/build/make/tests.help
-help: $(JAVA_DIR)/build/make/tests.help
-$(JAVA_DIR)/build/make/tests.help:
+.PHONY: $(CLI_DIR)/java/build/make/tests.help
+help: $(CLI_DIR)/java/build/make/tests.help
+$(CLI_DIR)/java/build/make/tests.help:
 	$(call PrintHelp, tests, Launch tests on each sample file)
 	$(call PrintHelp, clean, Clean intermediate files)
 
-.PHONY: $(JAVA_DIR)/build/make/tests.vars
-vars: $(JAVA_DIR)/build/make/tests.vars
-$(JAVA_DIR)/build/make/tests.vars:
+.PHONY: $(CLI_DIR)/java/build/make/tests.vars
+vars: $(CLI_DIR)/java/build/make/tests.vars
+$(CLI_DIR)/java/build/make/tests.vars:
 	$(call ShowVariables, JAVA_SAMPLE_FILES JAVA_SAMPLE_CLASSES XML_FILES TEST_FILES CHECK_FILES)

@@ -70,15 +70,22 @@ CLI_NS_BEGIN(cli)
 
     public:
         //! @brief Menu name access.
+        //! @return Name of the menu.
         const tk::String GetName(void) const;
 
     public:
         //! @brief CLI reference setting.
         virtual void SetCli(Cli& CLI_Cli);
         //! @brief Reserved commands execution.
-        virtual const bool ExecuteReserved(const CommandLine& CLI_CommandLine) const;
+        //! @return true if the command has found an execution code, false otherwise.
+        virtual const bool ExecuteReserved(
+            const CommandLine& CLI_CommandLine  //!< Command line to execute.
+            ) const;
         //! @brief User-defined commands execution.
-        virtual const bool Execute(const CommandLine& CLI_CommandLine) const;
+        //! @return true if the command has found an execution code, false otherwise.
+        virtual const bool Execute(
+            const CommandLine& CLI_CommandLine  //!< Command line to execute.
+            ) const;
         //! @brief Handler on menu exit.
         virtual void OnExit(void) const;
         //! @brief Handler on prompt display.

@@ -21,15 +21,118 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+# Default goal
+TELNET_GOAL = check
+ifeq ($(TELNET_GOAL),check)
+.DEFAULT_GOAL = check
+endif
+ifeq ($(TELNET_GOAL),server)
+.DEFAULT_GOAL = server
+endif
+ifeq ($(TELNET_GOAL),client)
+.DEFAULT_GOAL = client
+endif
+.PHONY: telnet.default
+telnet.default: $(.DEFAULT_GOAL) ;
+
 # Variables
 CLI_DIR := ../../..
-PROJECT = telnet
-CLI_XML_RES = $(CPP_DIR)/tests/hello/hello.xml
-SRC_DIR = $(CPP_DIR)/tests/telnet
-CLI_MAIN_CPP = $(SRC_DIR)/gotelnet.cpp
+SRC_DIR = $(CLI_DIR)/cpp/tests/telnet
+ifeq ($(TELNET_GOAL),check)
+include _vars.mak
+INT_DIR = $(OUT_DIR)/__telnet
+SERVER_BINARY = $(OUT_DIR)/$(BIN_PREFIX)telnet-server$(BIN_SUFFIX)
+CLIENT_BINARY = $(OUT_DIR)/$(BIN_PREFIX)telnet-client$(BIN_SUFFIX)
+TELNET_PORT = 9012
+TELNET_TEST = $(CLI_DIR)/samples/user-guide/empty.test
+TELNET_LOG = $(INT_DIR)/empty.log
+TELNET_CHECK = $(INT_DIR)/empty.check
+endif
+ifeq ($(TELNET_GOAL),server)
+PROJECT = telnet-server
+CLI_XML_RES = $(CLI_DIR)/samples/user-guide/empty.xml
+CLI_MAIN_CPP = $(SRC_DIR)/goserver.cpp
 include _mkres.mak
+endif
+ifeq ($(TELNET_GOAL),client)
+PROJECT = telnet-client
+PROJECT_DEPS = libclicpp.mak
+CPP_FILES = $(SRC_DIR)/goclient.cpp
+AUTO_DEPS = no
+PROJ_INCLUDES = -I$(CLI_DIR)/cpp/include
+PROJ_LIBS = -L$(dir $(CPP_LIB)) -lclicpp -lncurses
+include _build.mak
+endif
+
+# Rules
+ifeq ($(TELNET_GOAL),check)
+.PHONY: check
+check: $(TELNET_LOG) $(TELNET_CHECK)
+	dos2unix $(TELNET_LOG) 2> /dev/null
+	dos2unix $(TELNET_CHECK) 2> /dev/null
+	diff $(TELNET_LOG) $(TELNET_CHECK)
+
+$(INT_DIR)/empty.check: $(CLI_DIR)/samples/user-guide/empty.check
+	cat $< | sed -e "s/[^>]*: Syntax error next to /Syntax error next to /" > $@
+
+$(TELNET_LOG): $(SERVER_BINARY) $(CLIENT_BINARY) $(CLI_DIR)/samples/cleanlog.sh
+	dos2unix $(TELNET_TEST) 2> /dev/null
+	$(SERVER_BINARY) $(TELNET_PORT) &
+	@mkdir -p $(dir $(TELNET_LOG))
+	$(CLIENT_BINARY) $(TELNET_PORT) $(TELNET_TEST) > $(TELNET_LOG)
+	@dos2unix $(CLI_DIR)/samples/cleanlog.sh 2> /dev/null
+	$(CLI_DIR)/samples/cleanlog.sh $(TELNET_LOG)
+	killall telnet-server
+
+.PHONY: server $(SERVER_BINARY)
+server: $(SERVER_BINARY)
+$(SERVER_BINARY):
+	$(MAKE) -f telnet.mak TELNET_GOAL=server
+
+.PHONY: client $(CLIENT_BINARY)
+client: $(CLIENT_BINARY)
+$(CLIENT_BINARY):
+	$(MAKE) -f telnet.mak TELNET_GOAL=client
+
+.PHONY: deps
+deps:
+	$(MAKE) -f telnet.mak TELNET_GOAL=server deps
+	$(MAKE) -f telnet.mak TELNET_GOAL=client deps
+
+.PHONY: clean
+clean:
+	$(MAKE) -C $(CLI_DIR)/cpp/build/make -f telnet.mak TELNET_GOAL=server clean
+	$(MAKE) -C $(CLI_DIR)/cpp/build/make -f telnet.mak TELNET_GOAL=client clean
+endif
+ifeq ($(TELNET_GOAL),server)
+.PHONY: server
+server: build ;
+endif
+ifeq ($(TELNET_GOAL),client)
+.PHONY: client
+client: build ;
+endif
+
+# Debug and help
+include $(CLI_DIR)/build/make/_help.mak
+
+ifeq ($(TELNET_GOAL),check)
+.PHONY: $(CLI_DIR)/cpp/build/make/telnet.help
+help: $(CLI_DIR)/cpp/build/make/telnet.help
+$(CLI_DIR)/cpp/build/make/telnet.help:
+	$(call PrintHelp, check,  Check test output)
+	$(call PrintHelp, server, Generate the server program)
+	$(call PrintHelp, client, Generate the client program)
+	$(call PrintHelp, clean,  Clean outputs)
+
+.PHONY: $(CLI_DIR)/cpp/build/make/telnet.vars
+vars: $(CLI_DIR)/cpp/build/make/telnet.vars
+$(CLI_DIR)/cpp/build/make/telnet.vars:
+	$(call ShowVariables,TELNET_GOAL SRC_DIR INT_DIR SERVER_BINARY CLIENT_BINARY TELNET_PORT TELNET_TEST TELNET_LOG TELNET_CHECK)
+endif
 
 # Dependencies
-$(CLI_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
+ifeq ($(TELNET_GOAL),client)
+$(INT_DIR)/goclient.o: $(SRC_DIR)/goclient.cpp $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
 $(PRODUCT): $(CPP_LIB)
+endif

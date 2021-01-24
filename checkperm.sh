@@ -57,10 +57,12 @@ checkperm "*.mak"           $rw
 checkperm "*.map"           $rw
 checkperm "*.md5"           $rw
 checkperm "*.png"           $rw
+checkperm "*.rng"           $rw
 checkperm "*.sh"            $rwx
 checkperm "*.test"          $rw
 checkperm "*.txt"           $rw
 checkperm "*.xml"           $rw
+checkperm "*.xsd"           $rw
 checkperm "*.xsl"           $rw
 checkperm "Makefile"        $rw
 checkperm "package-list"    $rw
@@ -83,10 +85,12 @@ unknown_exts=$(find . -type f -print | sed -e "s/^.*\././" | sed -e "s/^.*\///" 
     | grep -v "\.map" \
     | grep -v "\.md5" \
     | grep -v "\.png" \
+    | grep -v "\.rng" \
     | grep -v "\.sh" \
     | grep -v "\.test" \
     | grep -v "\.txt" \
     | grep -v "\.xml" \
+    | grep -v "\.xsd" \
     | grep -v "\.xsl" \
     | grep -v "Makefile" \
     | grep -v "package-list")

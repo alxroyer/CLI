@@ -220,30 +220,6 @@ extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setPrompt(
     NativeTraces::TraceReturn("Shell.__setPrompt()");
 }
 
-extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setErrorFormatting(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jint I_NativeLocationPrefixRef, jint I_NativeLocationSuffixRef, jint I_NativeErrorPrefixRef, jint I_NativeErrorSuffixRef)
-{
-    NativeTraces::TraceMethod("Shell.__setErrorFormatting(I_NativeShellRef, I_NativeLocationPrefixRef, I_NativeLocationSuffixRef, I_NativeErrorPrefixRef, I_NativeErrorSuffixRef)");
-    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
-    NativeTraces::TraceParam("I_NativeLocationPrefixRef", "%d", I_NativeLocationPrefixRef);
-    NativeTraces::TraceParam("I_NativeLocationSuffixRef", "%d", I_NativeLocationSuffixRef);
-    NativeTraces::TraceParam("I_NativeErrorPrefixRef", "%d", I_NativeErrorPrefixRef);
-    NativeTraces::TraceParam("I_NativeErrorSuffixRef", "%d", I_NativeErrorSuffixRef);
-    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
-    {
-        const cli::ResourceString* const pcli_LocationPrefix = (const cli::ResourceString*) I_NativeLocationPrefixRef;
-        const cli::ResourceString* const pcli_LocationSuffix = (const cli::ResourceString*) I_NativeLocationSuffixRef;
-        const cli::ResourceString* const pcli_ErrorPrefix = (const cli::ResourceString*) I_NativeErrorPrefixRef;
-        const cli::ResourceString* const pcli_ErrorSuffix = (const cli::ResourceString*) I_NativeErrorSuffixRef;
-        if ((pcli_LocationPrefix != NULL) && (pcli_LocationSuffix != NULL) && (pcli_ErrorPrefix != NULL) && (pcli_ErrorSuffix != NULL))
-        {
-            pcli_Shell->SetErrorFormatting(*pcli_LocationPrefix, *pcli_LocationSuffix, *pcli_ErrorPrefix, *pcli_ErrorSuffix);
-        }
-    }
-    NativeTraces::TraceReturn("Shell.__setErrorFormatting()");
-}
-
 extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setLang(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeShellRef, jint E_Lang)
@@ -370,6 +346,22 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getHelpOffset(
     }
     NativeTraces::TraceReturn("Shell.__getHelpOffset()", "%d", i_HelpOffset);
     return i_HelpOffset;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getCurrentMenu(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef, jint I_MenuIndex)
+{
+    NativeTraces::TraceMethod("Shell.__getCurrentMenu(I_NativeShellRef, I_MenuIndex)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    NativeTraces::TraceParam("I_MenuIndex", "%d", I_MenuIndex);
+    const cli::Menu* pcli_CurrentMenu = NULL;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        pcli_CurrentMenu = pcli_Shell->GetCurrentMenu(I_MenuIndex);
+    }
+    NativeTraces::TraceReturn("Shell.__getCurrentMenu()", "%d", (int) pcli_CurrentMenu);
+    return (jint) pcli_CurrentMenu;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1enterMenu(

@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-<p align="right"><font size="-2">Last updated on Sep, 30th 2010</font></p>
+<p align="right"><font size="-2">Last updated on Dec, 29th 2010</font></p>
     <center><font size="+3"><b>CLI</b></font></center>
 
 <table>
@@ -67,12 +67,15 @@
 <a name="news"/>
     <h1>Latest news</h1>
     <table>
-    <tr><td width="10%"/><td valign="top" align="right"><i>Sep, 30th 2010</i></td><td width="5%"/>
-                         <td valign="top">New version 2.5 release<br/>
+    <tr><td width="10%"/><td valign="top" align="right"><i>Dec, 15th 2010</i></td><td width="5%"/>
+                         <td valign="top">Version 2.6 release (patch for version 2.5).<br/>
                                 &gt;&gt;&gt;
                                 <span align="right"><a href="#history">[changes]</a></span>
                                 <span align="right"><a href="#download">[download]</a></span>
                                 &lt;&lt;&lt;</td>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
+    <tr><td width="10%"/><td valign="top" align="right"><i>Sep, 30th 2010</i></td><td width="5%"/>
+                         <td valign="top">New version 2.5 release.</td>
         <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
     <!--<tr><td width="10%"/><td valign="top" align="right"><i>Oct, 1st 2009</i></td><td width="5%"/>
                          <td valign="top">New version 2.4 release<br/>
@@ -310,9 +313,34 @@
     <table border="1">
 
     <tr>
-    <th bgcolor="#eeeeee">date</th>
-    <th bgcolor="#eeeeee">version</th>
+    <th bgcolor="#eeeeee">Date</th>
+    <th bgcolor="#eeeeee">Version</th>
     <th bgcolor="#eeeeee">Description</th>
+    </tr>
+
+    <tr>
+    <td valign="top" bgcolor="#ffffcc">Dec, 15th 2010</td>
+    <td valign="top" align="center" bgcolor="#ffffcc">2.6</td>
+    <td>
+        Bug corrections:
+        <ul>
+        <li>Bug(major)! Do not print intermediate character for errors with no location</li>
+        <li>Bug(major)! Bad XSL generation (C++ and Java) with nested tags (dummy tags among others)</li>
+        <li>Bug(major)! No character output with telnet connections</li>
+        <li>Bug(minor)! Extra /* > */ comments for user code lines</li>
+        </ul>
+        Major modifications:
+        <ul>
+        <li>Deprecation of SetErrorFormatting(). Use of error handlers instead</li>
+        <li>C++/Java: Shell::GetCurrentMenu(index) method addition</li>
+        </ul>
+        Miscellaneous:
+        <ul>
+        <li>CPP_DIR, JAVA_DIR, SAMPLES_DIR and WEB_DIR makefile variables removal</li>
+        <li>Documentation makefiles moved in web/build/make</li>
+        <li>Full telnet test implementation</li>
+        </ul>
+    </td>
     </tr>
 
     <tr>
@@ -616,10 +644,12 @@
     <li><b>Other target languages:</b>
         Supported languages are C++ and Java at present.
         Next ones could be Perl or python...</li>
-    <li><b>Full tag[@ref]/@max management:</b>
-        Introduced with automatic documentation generation, this attribute could be fully managed in order to better control command line options.</li>
+    <li><b>Shell timeout management:</b>
+        Add inner support for timeout management within a shell.</li>
+    <li><b>Text edition facilities:</b>
+        passwords, text fields, int fields, yes/no questions, choice questions...</li>
     <li><b>Memory pools:</b>
-        Implement memory pools in order to provide memory management with embedded integration contexts.</li>
+        Implement memory pools in order to provide better memory management with embedded integration contexts.</li>
     <li>...</li>
     </ul>
     </p>
@@ -630,6 +660,17 @@
     <p>The latest version of the toolkit is also available on <a href="https://sourceforge.net/projects/aroyer-cli/">Sourceforge</a>.</p>
 
     <table>
+    <tr>
+    <th align="left" width="120">Date</th>
+    <th align="left">Archive</th>
+    <th align="left">Description</th>
+    </tr>
+
+    <tr>
+    <td>Dec, 15th 2010</td>
+    <td><a href="cli-2.6.tgz">cli-2.6.tgz</a></td>
+    <td>Patch for CLI 2.5 bugs (see <a href="#history">history</a>).</td>
+    </tr>
 
     <tr>
     <td>Sep, 30th 2010</td>

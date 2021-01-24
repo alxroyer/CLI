@@ -61,15 +61,15 @@ check: build_depends $(CLI_LOG) $(CLI_CHECK)
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(CPP_DIR)/build/make/_check.help
-help: $(CPP_DIR)/build/make/_check.help
-$(CPP_DIR)/build/make/_check.help:
+.PHONY: $(CLI_DIR)/cpp/build/make/_check.help
+help: $(CLI_DIR)/cpp/build/make/_check.help
+$(CLI_DIR)/cpp/build/make/_check.help:
 	$(call PrintHelp, check, Check test output)
 	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
 
-.PHONY: $(CPP_DIR)/build/make/_check.vars
-vars: $(CPP_DIR)/build/make/_check.vars
-$(CPP_DIR)/build/make/_check.vars:
+.PHONY: $(CLI_DIR)/cpp/build/make/_check.vars
+vars: $(CLI_DIR)/cpp/build/make/_check.vars
+$(CLI_DIR)/cpp/build/make/_check.vars:
 	$(call ShowVariables,CLI_TEST CLI_LOG CLI_CHECK)
 
 endif

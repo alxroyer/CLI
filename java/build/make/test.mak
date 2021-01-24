@@ -33,7 +33,7 @@ CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 CLI_DIR := ../../..
 include _vars.mak
 PRODUCT = TestSample
-SRC_DIR = $(JAVA_DIR)/src/cli/test
+SRC_DIR = $(CLI_DIR)/java/src/cli/test
 JAVA_FILES = $(CLI_TEST_SAMPLE_JAVA) $(CLI_JAVA)
 PROJECT_DEPS += libclijava.mak
 PROJECT_DEPS += jni.mak
@@ -42,10 +42,10 @@ include _build.mak
 PROJ_CLEAN += $(CLI_JAVA) $(CLI_LOG)
 
 # Variables
-CLI_XSL = $(JAVA_DIR)/xsl/javaclic.xsl
-CLI_JAVA = $(patsubst %.xml,$(JAVA_DIR)/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
+CLI_XSL = $(CLI_DIR)/java/xsl/javaclic.xsl
+CLI_JAVA = $(patsubst %.xml,$(CLI_DIR)/java/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
 CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
-CLI_TEST_SAMPLE_JAVA = $(JAVA_DIR)/src/cli/test/TestSample.java
+CLI_TEST_SAMPLE_JAVA = $(CLI_DIR)/java/src/cli/test/TestSample.java
 CLI_TEST = $(patsubst %.xml,%.test,$(CLI_XML_RES))
 CLI_LOG = $(OUT_DIR)/cli/test/$(CLI_JAVA_CLASS_NAME).log
 CLI_CHECK = $(patsubst %.xml,%.check,$(CLI_XML_RES))
@@ -77,15 +77,15 @@ deps: ;
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(JAVA_DIR)/build/make/test.help
-help: $(JAVA_DIR)/build/make/test.help
-$(JAVA_DIR)/build/make/test.help:
+.PHONY: $(CLI_DIR)/java/build/make/test.help
+help: $(CLI_DIR)/java/build/make/test.help
+$(CLI_DIR)/java/build/make/test.help:
 	$(call PrintHelp, check, Check test output)
 	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
 
-.PHONY: $(JAVA_DIR)/build/make/test.vars
-vars: $(JAVA_DIR)/build/make/test.vars
-$(JAVA_DIR)/build/make/test.vars:
+.PHONY: $(CLI_DIR)/java/build/make/test.vars
+vars: $(CLI_DIR)/java/build/make/test.vars
+$(CLI_DIR)/java/build/make/test.vars:
 	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_TEST_SAMPLE_JAVA CLI_TEST CLI_LOG CLI_CHECK)
 
 # Dependencies

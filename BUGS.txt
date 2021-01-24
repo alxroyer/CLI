@@ -41,8 +41,8 @@ KNOWN ISSUES
             CTRL+INS, SHIFT+INS, SHIFT+SUPPR
             bad output for '€'
             input -93 conflicts between '£' and 'ú' (when 'ú' is copied from the output itself)
-    * Bug(minor)! C++: Improve windows clean screen behavior.
-    * Bug(minor)! C++: Window telnet multi-client not implemented.
+    * Bug(minor)! C++: Improve Windows clean screen behavior.
+    * Bug(minor)! C++: Windows telnet multi-client not implemented.
             Note: fork() for Windows incompatibility
     * Bug(minor)! Java(Linux): warning: unmappable character for encoding UTF8 ... "Traces d'ex?cution du CLI"
     * Bug(minor)! XSL: xsltproc infinite loop with interleaved tags.
@@ -50,6 +50,13 @@ KNOWN ISSUES
             <tag id="tag2">...<tag ref="tag1"/>...</tag>
             Seems non-sens however.
 
+
+FIXED in 2.6
+(Dec, 15th 2010)
+    * bug(major)! Do not print intermediate character for errors with no location.
+    * bug(major)! Bad XSL generation (C++ and Java) with nested tags (dummy tags among others).
+    * bug(major)! No character output with telnet connections.
+    * bug(minor)! Extra /* > */ comments for user code lines.
 
 FIXED in 2.5
 (Sep, 30th 2010)

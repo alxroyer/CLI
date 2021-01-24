@@ -24,11 +24,6 @@
 # Variables
 CLI_DIR := ../../..
 CLI_XML_RES = $(SRC_DIR)/hello.xml
-SRC_DIR = $(CPP_DIR)/tests/hello
+SRC_DIR = $(CLI_DIR)/cpp/tests/hello
 CLI_MAIN_CPP = $(SRC_DIR)/gohello.cpp
 include _mkres.mak
-
-# Dependencies
-$(CLI_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(PRODUCT): $(CPP_LIB)

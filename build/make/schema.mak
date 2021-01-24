@@ -31,7 +31,7 @@ include _vars.mak
 
 # Variables
 SCHEMA_DIR = $(CLI_DIR)/schema
-XML_FILES = $(shell find $(SAMPLES_DIR) -name "*.xml" -print)
+XML_FILES = $(shell find $(CLI_DIR)/samples -name "*.xml" -print)
 
 # Rules
 .PHONY: check

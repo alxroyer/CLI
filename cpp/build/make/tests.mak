@@ -32,7 +32,7 @@ CLI_DIR := ../../..
 include _vars.mak
 XML_FILES = $(patsubst %.check,%.xml,$(CHECK_FILES))
 TEST_FILES = $(patsubst %.xml,%.test,$(XML_FILES))
-CHECK_FILES = $(shell find $(SAMPLES_DIR) -name "*.check")
+CHECK_FILES = $(shell find $(CLI_DIR)/samples -name "*.check")
 
 
 # Rules
@@ -55,15 +55,15 @@ deps: ;
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(CPP_DIR)/build/make/tests.help
-help: $(CPP_DIR)/build/make/tests.help
-$(CPP_DIR)/build/make/tests.help:
+.PHONY: $(CLI_DIR)/cpp/build/make/tests.help
+help: $(CLI_DIR)/cpp/build/make/tests.help
+$(CLI_DIR)/cpp/build/make/tests.help:
 	$(call PrintHelp, tests, Launch tests on each sample file)
 	$(call PrintHelp, dirs, Create intermediate directories)
 	$(call PrintHelp, clean, Clean intermediate files)
 
-.PHONY: $(CPP_DIR)/build/make/tests.vars
-vars: $(CPP_DIR)/build/make/tests.vars
-$(CPP_DIR)/build/make/tests.vars:
+.PHONY: $(CLI_DIR)/cpp/build/make/tests.vars
+vars: $(CLI_DIR)/cpp/build/make/tests.vars
+$(CLI_DIR)/cpp/build/make/tests.vars:
 	$(call ShowVariables,XML_FILES TEST_FILES CHECK_FILES)
 

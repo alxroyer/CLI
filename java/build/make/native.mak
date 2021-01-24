@@ -30,7 +30,7 @@ native.default: $(.DEFAULT_GOAL) ;
 # Includes
 CLI_DIR := ../../..
 include _vars.mak
-include $(CPP_DIR)/build/make/_vars.mak
+include $(CLI_DIR)/cpp/build/make/_vars.mak
 
 PROJECT = native
 PRODUCT_TYPE = DYN_LIB
@@ -38,12 +38,12 @@ PRODUCT = $(JAVA_DYN_LIB)
 PROJ_DEPS = jni.mak
 SRC_DIR = $(NATIVE_DIR)
 ifeq ($(TARGET),Cygwin)
-CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CPP_DIR)/src/ncurses_console.cpp,$(wildcard $(CPP_DIR)/src/*.cpp))
-deps: CPP_FILES += $(CPP_DIR)/src/ncurses_console.cpp
+CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CLI_DIR)/cpp/src/ncurses_console.cpp,$(wildcard $(CLI_DIR)/cpp/src/*.cpp))
+deps: CPP_FILES += $(CLI_DIR)/cpp/src/ncurses_console.cpp
 endif
 ifeq ($(TARGET),Linux)
-CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CPP_DIR)/src/win_console.cpp,$(wildcard $(CPP_DIR)/src/*.cpp))
-deps: CPP_FILES += $(CPP_DIR)/src/win_console.cpp
+CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CLI_DIR)/cpp/src/win_console.cpp,$(wildcard $(CLI_DIR)/cpp/src/*.cpp))
+deps: CPP_FILES += $(CLI_DIR)/cpp/src/win_console.cpp
 endif
 AUTO_DEPS = yes
 INT_DIR = $(OUT_DIR)/$(TARGET)$(CXX)/__$(PROJECT)
@@ -63,9 +63,9 @@ endif
 ifeq ($(TARGET),Linux)
 PROJ_INCLUDES += -isystem "$(JDK_DIR)/include/linux"
 endif
-PROJ_INCLUDES += -I$(CPP_DIR)/include
+PROJ_INCLUDES += -I$(CLI_DIR)/cpp/include
 INCLUDES = $(PROJ_INCLUDES)
-include $(CPP_DIR)/build/make/_build.mak
+include $(CLI_DIR)/cpp/build/make/_build.mak
 
 .PHONY: deps.pre
 deps.pre:

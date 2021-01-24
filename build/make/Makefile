@@ -30,30 +30,26 @@ CLI_DIR := ../..
 include _vars.mak
 PROJECTS += schema.mak
 PROJECTS += cli2help.mak
-PROJECTS += $(CPP_DIR)/build/make/Makefile
-PROJECTS += $(JAVA_DIR)/build/make/Makefile
+PROJECTS += $(CLI_DIR)/cpp/build/make/Makefile
+PROJECTS += $(CLI_DIR)/java/build/make/Makefile
 DEFAULT_HELP = Generate libraries and tests
 include _all.mak
 
 # C++ only
 .PHONY: cpp
-cpp: PROJECTS = $(CPP_DIR)/build/make/Makefile
+cpp: PROJECTS = $(CLI_DIR)/cpp/build/make/Makefile
 cpp: default ;
 
 # Java only
 .PHONY: java
-java: PROJECTS = $(JAVA_DIR)/build/make/Makefile
+java: PROJECTS = $(CLI_DIR)/java/build/make/Makefile
 java: default ;
 
 # Documentation
 .PHONY: doc
-doc: PROJECTS = $(WEB_DIR)/user-guide/user-guide.mak
-doc: PROJECTS += $(WEB_DIR)/doxygen/doxygen.mak
-doc: PROJECTS += $(WEB_DIR)/javadoc/javadoc.mak
+doc: PROJECTS = $(CLI_DIR)/web/build/make/Makefile
 doc: default ;
-clean: PROJECTS += $(WEB_DIR)/user-guide/user-guide.mak
-clean: PROJECTS += $(WEB_DIR)/doxygen/doxygen.mak
-clean: PROJECTS += $(WEB_DIR)/javadoc/javadoc.mak
+clean: PROJECTS += $(CLI_DIR)/web/build/make/Makefile
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak

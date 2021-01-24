@@ -30,11 +30,6 @@ CLI_DIR ?= ../..
 include $(CLI_DIR)/build/make/_utils.mak
 
 # Variables
-CPP_DIR = $(CLI_DIR)/cpp
-JAVA_DIR = $(CLI_DIR)/java
-SAMPLES_DIR = $(CLI_DIR)/samples
-WEB_DIR = $(CLI_DIR)/web
-
 ifndef _DEBUG
 	RDX = Release
 else
@@ -47,7 +42,7 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(CLI_DIR)/build/make/_vars.vars
 vars: $(CLI_DIR)/build/make/_vars.vars
 $(CLI_DIR)/build/make/_vars.vars:
-	$(call ShowVariables,CLI_DIR CPP_DIR JAVA_DIR SAMPLES_DIR WEB_DIR)
+	$(call ShowVariables,CLI_DIR RDX)
 
 
 endif

@@ -29,38 +29,38 @@ cmdlinetest.default: $(.DEFAULT_GOAL) ;
 # Includes
 CLI_DIR := ../../..
 PROJECT = cmdlinetest
-SRC_DIR = $(CPP_DIR)/tests/cmd_line
-PROJ_INCLUDES += -I$(CPP_DIR)/include
-PROJ_INCLUDES += -I$(CPP_DIR)/src
+SRC_DIR = $(CLI_DIR)/cpp/tests/cmd_line
+PROJ_INCLUDES += -I$(CLI_DIR)/cpp/include
+PROJ_INCLUDES += -I$(CLI_DIR)/cpp/src
 CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-CPP_FILES += $(CPP_DIR)/src/consistency.cpp
-CPP_FILES += $(CPP_DIR)/src/command_line.cpp
-CPP_FILES += $(CPP_DIR)/src/command_line_edition.cpp
-CPP_FILES += $(CPP_DIR)/src/command_line_history.cpp
-CPP_FILES += $(CPP_DIR)/src/debug.cpp
-CPP_FILES += $(CPP_DIR)/src/help.cpp
-CPP_FILES += $(CPP_DIR)/src/io_device.cpp
-CPP_FILES += $(CPP_DIR)/src/object.cpp
-CPP_FILES += $(CPP_DIR)/src/resource_string.cpp
-CPP_FILES += $(CPP_DIR)/src/string_device.cpp
-CPP_FILES += $(CPP_DIR)/src/tk.cpp
-CPP_FILES += $(CPP_DIR)/src/traces.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/consistency.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/command_line.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/command_line_edition.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/command_line_history.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/debug.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/help.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/io_device.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/object.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/resource_string.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/string_device.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/tk.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/traces.cpp
 
 # Addition for cli::CommandLine
-CPP_FILES += $(CPP_DIR)/src/param.cpp
-CPP_FILES += $(CPP_DIR)/src/param_string.cpp
-CPP_FILES += $(CPP_DIR)/src/syntax_node.cpp
-CPP_FILES += $(CPP_DIR)/src/syntax_tag.cpp
-CPP_FILES += $(CPP_DIR)/src/element.cpp
-CPP_FILES += $(CPP_DIR)/src/shell.cpp
-CPP_FILES += $(CPP_DIR)/src/cli.cpp
-CPP_FILES += $(CPP_DIR)/src/menu.cpp
-CPP_FILES += $(CPP_DIR)/src/config_menu.cpp
-CPP_FILES += $(CPP_DIR)/src/traces_menu.cpp
-CPP_FILES += $(CPP_DIR)/src/keyword.cpp
-CPP_FILES += $(CPP_DIR)/src/endl.cpp
-CPP_FILES += $(CPP_DIR)/src/io_mux.cpp
-CPP_FILES += $(CPP_DIR)/src/mt_device.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/param.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/param_string.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/syntax_node.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/syntax_tag.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/element.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/shell.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/cli.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/menu.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/config_menu.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/traces_menu.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/keyword.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/endl.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/io_mux.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/mt_device.cpp
 
 PROJ_CPP_FLAGS += -DCLI_NO_STL
 PROJ_CPP_FLAGS += -DCLI_MAX_CMD_LINE_LENGTH=256

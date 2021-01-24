@@ -23,7 +23,7 @@
 
 # Includes
 CLI_DIR := ../../..
-CLI_XML_RES = $(SAMPLES_DIR)/user-guide/empty.xml
-SRC_DIR = $(CPP_DIR)/tests/empty
+CLI_XML_RES = $(CLI_DIR)/samples/user-guide/empty.xml
+SRC_DIR = $(CLI_DIR)/cpp/tests/empty
 CLI_MAIN_CPP = $(SRC_DIR)/goempty.cpp
 include _mkres.mak

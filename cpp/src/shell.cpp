@@ -78,8 +78,6 @@ Shell::Shell(const Cli& CLI_Cli)
     EnsureTraces();
 
     // Members initialization.
-    m_cliErrorFormatting[1] = ResourceString().SetString(ResourceString::LANG_EN, ": ");
-
     for (int i=0; i<STREAM_TYPES_COUNT; i++)
     {
         m_artStream[i].pcliStream = NULL;
@@ -282,14 +280,6 @@ void Shell::SetByeMessage(const ResourceString& CLI_ByeMessage)
 void Shell::SetPrompt(const ResourceString& CLI_Prompt)
 {
     m_cliNoDefaultPrompt = CLI_Prompt;
-}
-
-void Shell::SetErrorFormatting(const ResourceString& CLI_LocationPrefix, const ResourceString& CLI_LocationSuffix, const ResourceString& CLI_ErrorPrefix, const ResourceString& CLI_ErrorSuffix)
-{
-    m_cliErrorFormatting[0] = CLI_LocationPrefix;
-    m_cliErrorFormatting[1] = CLI_LocationSuffix;
-    m_cliErrorFormatting[2] = CLI_ErrorPrefix;
-    m_cliErrorFormatting[3] = CLI_ErrorSuffix;
 }
 
 void Shell::SetLang(const ResourceString::LANG E_Lang)
@@ -675,17 +665,34 @@ void Shell::PrintError(const ResourceString& CLI_Location, const ResourceString&
     // First of all, call the CLI handler.
     if (GetCli().OnError(CLI_Location, CLI_ErrorMessage))
     {
-        // Retrieve error formatting prefix and suffix.
-        const tk::String str_LocationPrefix = m_cliErrorFormatting[0].GetString(GetLang());
-        const tk::String str_LocationSuffix = m_cliErrorFormatting[1].GetString(GetLang());
-        const tk::String str_ErrorPrefix = m_cliErrorFormatting[2].GetString(GetLang());
-        const tk::String str_ErrorSuffix = m_cliErrorFormatting[3].GetString(GetLang());
-
         // Print out the error.
-        GetStream(ERROR_STREAM)
-            << str_LocationPrefix << CLI_Location.GetString(GetLang()) << str_LocationSuffix
-            << str_ErrorPrefix << CLI_ErrorMessage.GetString(GetLang()) << str_ErrorSuffix
-            << endl;
+        const tk::String str_Location = CLI_Location.GetString(GetLang());
+        const tk::String str_ErrorMessage = CLI_ErrorMessage.GetString(GetLang());
+        GetStream(ERROR_STREAM) << str_Location << (str_Location.IsEmpty() ? "" : ": ") << str_ErrorMessage << endl;
+    }
+}
+
+const Menu* const Shell::GetCurrentMenu(const int I_MenuIndex) const
+{
+    if (I_MenuIndex < 0)
+    {
+        return m_qMenus.GetTail();
+    }
+    else
+    {
+        int i_MenuIndex = 0;
+        for (   tk::Queue<const Menu*>::Iterator it = m_qMenus.GetIterator();
+                m_qMenus.IsValid(it);
+                m_qMenus.MoveNext(it))
+        {
+            if (i_MenuIndex == I_MenuIndex)
+            {
+                return m_qMenus.GetAt(it);
+            }
+            i_MenuIndex ++;
+        }
+
+        return NULL;
     }
 }
 

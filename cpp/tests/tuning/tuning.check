@@ -39,15 +39,6 @@ Veuillez saisir une ligne de commande : bye
 Bye!
 Veuillez saisir une ligne de commande : 
 Veuillez saisir une ligne de commande : lang en
-Please enter a command line: error location-prefix en "   Beginning of error [ " fr "   Début d'erreur [ " location-suffix en " ] " fr " ] " prefix en ">>> " fr ">>> " suffix en " <<< End of error" fr " <<< Fin d'erreur"
-Please enter a command line: lang en
-Please enter a command line: invalid command
-   Beginning of error [ ../../../cpp/tests/tuning/tuning.test:20 ] >>> Syntax error next to 'invalid' <<< End of error
-Please enter a command line: lang fr
-Veuillez saisir une ligne de commande : invalid command
-   Début d'erreur [ ../../../cpp/tests/tuning/tuning.test:22 ] >>> Erreur de syntaxe près de 'invalid' <<< Fin d'erreur
-Veuillez saisir une ligne de commande : 
-Veuillez saisir une ligne de commande : lang en
 Please enter a command line: beep on
 Echo is on
 Please enter a command line: beep off
@@ -58,7 +49,6 @@ Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
   cli-config      CLI configuration menu
-  error           Error format modification
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language
@@ -83,7 +73,6 @@ Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
   cli-config      CLI configuration menu
-  error           Error format modification
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language
@@ -107,7 +96,6 @@ Please enter a command line: cli-config off
 Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
-  error           Error format modification
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language
@@ -117,15 +105,14 @@ Please enter a command line: help
   restore-cli-config Configuration menu restoration
   welcome         Welcome message modification
 Please enter a command line: cli-config
-   Beginning of error [ ../../../cpp/tests/tuning/tuning.test:40 ] >>> Syntax error next to 'cli-config' <<< End of error
+../../../cpp/tests/tuning/tuning.test:33: Syntax error next to 'cli-config'
 Please enter a command line: cli-config on
-   Beginning of error [ ../../../cpp/tests/tuning/tuning.test:41 ] >>> Syntax error next to 'cli-config' <<< End of error
+../../../cpp/tests/tuning/tuning.test:34: Syntax error next to 'cli-config'
 Please enter a command line: restore-cli-config
 Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
   cli-config      CLI configuration menu
-  error           Error format modification
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language

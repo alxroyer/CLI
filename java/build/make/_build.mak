@@ -54,9 +54,9 @@ JAR_SRC_DIR ?= $(sort $(dir $(patsubst $(SRC_DIR)/%.java,$(OUT_DIR)/%.java,$(fil
 JAR_SRC_FILES ?= $(patsubst %,%/*.class,$(JAR_SRC_DIR))
 PROJECT_DEPS ?=
 ifeq ($(JAR_OBJ),build.java)
-PROJ_CLEAN ?= $(JAVA_OBJS)
+PROJ_CLEAN ?= 
 else
-PROJ_CLEAN ?= $(JAVA_OBJS) $(JAR_OBJ)
+PROJ_CLEAN ?= $(JAR_OBJ)
 endif
 
 
@@ -88,23 +88,22 @@ endif
 .PHONY: clean
 clean:
 	$(call MkDispatch, $(PROJECT_DEPS), clean)
-	rm -rf $(JAVA_OBJS)
-	rm -rf $(PROJ_CLEAN)
+	rm -rf $(JAVA_OBJS) $(PROJ_CLEAN)
 
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(JAVA_DIR)/build/make/_build.help
-help: $(JAVA_DIR)/build/make/_build.help
-$(JAVA_DIR)/build/make/_build.help: ;
+.PHONY: $(CLI_DIR)/java/build/make/_build.help
+help: $(CLI_DIR)/java/build/make/_build.help
+$(CLI_DIR)/java/build/make/_build.help: ;
 	$(call PrintHelp,   dirs,   Check intermediate directories)
 	$(call PrintHelp,   build,  Build $(notdir $(PRODUCT)))
 	$(call PrintHelp,   clean,  Clean $(notdir $(PRODUCT)) outputs)
 
-.PHONY: $(JAVA_DIR)/build/make/_build.vars
-vars: $(JAVA_DIR)/build/make/_build.vars
-$(JAVA_DIR)/build/make/_build.vars:
+.PHONY: $(CLI_DIR)/java/build/make/_build.vars
+vars: $(CLI_DIR)/java/build/make/_build.vars
+$(CLI_DIR)/java/build/make/_build.vars:
 	$(call ShowVariables,PRODUCT SRC_DIR JAVA_FILES JAVA_OBJS JAVAC_OPTS JAR_OBJ JAR_OPTS JAR_SRC_DIR JAR_SRC_FILES PROJECT_DEPS PROJ_CLEAN)
 
 

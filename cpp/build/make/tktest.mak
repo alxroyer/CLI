@@ -29,17 +29,17 @@ tktest.default: $(.DEFAULT_GOAL) ;
 # Includes
 CLI_DIR := ../../..
 PROJECT = tktest
-SRC_DIR = $(CPP_DIR)/tests/tk
-PROJ_INCLUDES = -I$(CPP_DIR)/include
+SRC_DIR = $(CLI_DIR)/cpp/tests/tk
+PROJ_INCLUDES = -I$(CLI_DIR)/cpp/include
 CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-CPP_FILES += $(CPP_DIR)/src/object.cpp
-CPP_FILES += $(CPP_DIR)/src/tk.cpp
-CPP_FILES += $(CPP_DIR)/src/traces.cpp
-CPP_FILES += $(CPP_DIR)/src/io_device.cpp
-CPP_FILES += $(CPP_DIR)/src/help.cpp
-CPP_FILES += $(CPP_DIR)/src/resource_string.cpp
-CPP_FILES += $(CPP_DIR)/src/debug.cpp
-CPP_FILES += $(CPP_DIR)/src/consistency.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/object.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/tk.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/traces.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/io_device.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/help.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/resource_string.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/debug.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/consistency.cpp
 PROJ_CPP_FLAGS += -DCLI_NO_STL
 include _build.mak
 

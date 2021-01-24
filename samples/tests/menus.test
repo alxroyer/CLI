@@ -11,8 +11,10 @@ menu1
 pwm
 menu1.1
 pwm
+pwm-ext
 menu1.1
 pwm
+pwm-ext
 menu1
 pwm
 exit
@@ -27,6 +29,7 @@ exit
 pwm
 menu1.1
 pwm
+pwm-ext
 menu1
 pwm
 quit

@@ -23,7 +23,7 @@ class myCLI : public cli::Cli {
     // ----- Owner CLI -----
     private: myCLI* m_pcliOwnerCli;
     // ----- Menus -----
-    private: myCLI* m_pcli_cli_id4485840;
+    private: myCLI* m_pcli_cli_id4487378;
     // ----- Node members -----
     // ----- Extra cpp (option='members') -----
 
@@ -44,7 +44,7 @@ class myCLI : public cli::Cli {
         // CLI reference
         m_pcliOwnerCli = dynamic_cast<myCLI*>(const_cast<cli::Cli*>(& GetCli()));
         // Create menus and populate
-        m_pcliOwnerCli->m_pcli_cli_id4485840 = this;
+        m_pcliOwnerCli->m_pcli_cli_id4487378 = this;
         // Local nodes
     }
 
@@ -52,16 +52,15 @@ class myCLI : public cli::Cli {
     public: virtual const bool Execute(const cli::CommandLine& CLI_CmdLine) const {
         {
             static const cli::TraceClass CLI_EXECUTION("CLI_EXECUTION", cli::Help().AddHelp(cli::Help::LANG_EN, "CLI Execution traces").AddHelp(cli::Help::LANG_FR, "Traces d'exécution du CLI"));
-            cli::GetTraces().Trace(CLI_EXECUTION) << "myCLI.Execute()";
             cli::CommandLineIterator cli_Elements(CLI_CmdLine);
-            // myCLI> 
-            m_pcli_cli_id4485840_top_lbl: ;
+            // myCLI>
+            m_pcli_cli_id4487378_top_lbl: ;
             {
                 if (! cli_Elements.StepIt()) return false;
-                cli::GetTraces().Trace(CLI_EXECUTION) << "word = " << (*cli_Elements)->GetKeyword();
+                cli::GetTraces().Trace(CLI_EXECUTION) << "context = \"myCLI>\", "<< "word = " << (dynamic_cast<const cli::Endl*>(*cli_Elements) ? "<CR>" : (const char*) (*cli_Elements)->GetKeyword()) << cli::endl;
                 return false;
             }
-            m_pcli_cli_id4485840_end_lbl: ;
+            m_pcli_cli_id4487378_end_lbl: ;
         }
         return false;
     }
@@ -80,7 +79,7 @@ class myCLI : public cli::Cli {
 };
 
 // ----- Node creation -----
-myCLI m_pcli_cli_id4485840;
+myCLI m_pcli_cli_id4487378;
 
 // ----- Extra cpp (option='body') -----
 

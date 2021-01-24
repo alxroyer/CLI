@@ -19,9 +19,20 @@ menu1>pwm
 menu1>menu1.1
 menu1.1>pwm
   /menus/menu1/menu1/menu1.1
+menu1.1>pwm-ext
+0: menus
+1: menu1
+2: menu1
+3: menu1.1
 menu1.1>menu1.1
 menu1.1>pwm
   /menus/menu1/menu1/menu1.1/menu1.1
+menu1.1>pwm-ext
+0: menus
+1: menu1
+2: menu1
+3: menu1.1
+4: menu1.1
 menu1.1>menu1
 menu1>pwm
   /menus/menu1/menu1/menu1.1/menu1.1/menu1
@@ -43,6 +54,9 @@ menus>pwm
 menus>menu1.1
 menu1.1>pwm
   /menus/menu1.1
+menu1.1>pwm-ext
+0: menus
+1: menu1.1
 menu1.1>menu1
 menu1>pwm
   /menus/menu1.1/menu1

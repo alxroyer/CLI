@@ -32,19 +32,19 @@ include _vars.mak
 # Variables
 XSL_DIR = $(CLI_DIR)/xsl
 OUT_DIR = cli2help
-XML_FILES = $(shell find $(SAMPLES_DIR) -name "*.xml" -print)
-HTML_FILES += $(patsubst $(SAMPLES_DIR)/%.xml,$(OUT_DIR)/%.en.html,$(XML_FILES))
-HTML_FILES += $(patsubst $(SAMPLES_DIR)/%.xml,$(OUT_DIR)/%.fr.html,$(XML_FILES))
+XML_FILES = $(shell find $(CLI_DIR)/samples -name "*.xml" -print)
+HTML_FILES += $(patsubst $(CLI_DIR)/samples/%.xml,$(OUT_DIR)/%.en.html,$(XML_FILES))
+HTML_FILES += $(patsubst $(CLI_DIR)/samples/%.xml,$(OUT_DIR)/%.fr.html,$(XML_FILES))
 
 # Rules
 .PHONY: default
 default: $(HTML_FILES) ;
 
-$(OUT_DIR)/%.en.html: $(SAMPLES_DIR)/%.xml $(XSL_DIR)/cli2help.xsl
+$(OUT_DIR)/%.en.html: $(CLI_DIR)/samples/%.xml $(XSL_DIR)/cli2help.xsl
 	@mkdir -p $(dir $@)
 	xsltproc --stringparam STR_Lang 'en' $(XSL_DIR)/cli2help.xsl $< > $@
 
-$(OUT_DIR)/%.fr.html: $(SAMPLES_DIR)/%.xml $(XSL_DIR)/cli2help.xsl
+$(OUT_DIR)/%.fr.html: $(CLI_DIR)/samples/%.xml $(XSL_DIR)/cli2help.xsl
 	@mkdir -p $(dir $@)
 	xsltproc --stringparam STR_Lang 'fr' $(XSL_DIR)/cli2help.xsl $< > $@
 

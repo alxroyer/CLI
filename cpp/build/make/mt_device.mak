@@ -29,8 +29,8 @@ mt_device.default: $(.DEFAULT_GOAL) ;
 # Includes
 CLI_DIR := ../../..
 PROJECT = mt_device
-CLI_XML_RES = $(SAMPLES_DIR)/user-guide/empty.xml
-SRC_DIR = $(CPP_DIR)/tests/mt_device
+CLI_XML_RES = $(CLI_DIR)/samples/user-guide/empty.xml
+SRC_DIR = $(CLI_DIR)/cpp/tests/mt_device
 CLI_MAIN_CPP = $(SRC_DIR)/mt_test.cpp
 include _mkres.mak
 
@@ -38,8 +38,3 @@ include _mkres.mak
 .PHONY: run
 run: build
 	$(PRODUCT)
-
-# Dependencies
-$(CLI_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(PRODUCT): $(CPP_LIB)

@@ -123,14 +123,6 @@ void TunePrompt(const cli::ResourceString& CLI_Prompt)
     }
 }
 
-void TuneErrorFormatting(const cli::ResourceString& CLI_LocationPrefix, const cli::ResourceString& CLI_LocationSuffix, const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix)
-{
-    if (cli::Shell* const pcli_Shell = GetShell())
-    {
-        pcli_Shell->SetErrorFormatting(CLI_LocationPrefix, CLI_LocationSuffix, CLI_ErrorPrefix, CLI_ErrorSuffix);
-    }
-}
-
 void TuneLang(const cli::ResourceString::LANG E_Lang)
 {
     if (cli::Shell* const pcli_Shell = GetShell())

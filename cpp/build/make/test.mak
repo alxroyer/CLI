@@ -26,7 +26,7 @@ CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 
 # Includes
 CLI_DIR := ../../..
-CLI_MAIN_CPP = $(CPP_DIR)/tests/testsample.cpp
+CLI_MAIN_CPP = $(CLI_DIR)/cpp/tests/testsample.cpp
 CLI_XSLT_OPTS = --param STR_ClassPrefix "'Ccli'"
 INT_DIR = $(TARGET)$(CXX)/$(RDX)/__test
 OUT_DIR = $(TARGET)$(CXX)/$(RDX)/__test
@@ -35,13 +35,13 @@ include _check.mak
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
-.PHONY: $(CPP_DIR)/build/make/test.help
-help: $(CPP_DIR)/build/make/test.help
-$(CPP_DIR)/build/make/test.help:
+.PHONY: $(CLI_DIR)/cpp/build/make/test.help
+help: $(CLI_DIR)/cpp/build/make/test.help
+$(CLI_DIR)/cpp/build/make/test.help:
 	$(call PrintHelp, check, Check test output)
 	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
 
-.PHONY: $(CPP_DIR)/build/make/test.vars
-vars: $(CPP_DIR)/build/make/test.vars
-$(CPP_DIR)/build/make/test.vars:
+.PHONY: $(CLI_DIR)/cpp/build/make/test.vars
+vars: $(CLI_DIR)/cpp/build/make/test.vars
+$(CLI_DIR)/cpp/build/make/test.vars:
 	$(call ShowVariables,CLI_XML_RES)
