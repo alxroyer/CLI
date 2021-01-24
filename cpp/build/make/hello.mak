@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,13 +22,14 @@
 
 
 # Variables
+CLI_DIR := ../../..
 CLI_XML_RES = $(SRC_DIR)/hello.xml
 SRC_DIR = $(CPP_DIR)/tests/hello
 CLI_MAIN_CPP = $(SRC_DIR)/gohello.cpp
 include mkres.mak
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/hello.help
 $(CPP_DIR)/build/make/hello.help: ;

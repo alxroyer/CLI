@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,30 +25,50 @@
 package cli;
 
 
-public abstract class Menu extends SyntaxNode
-{
+/** Menu class.
+    A menu owns Element instances, which owns next Element instances... terminated by an Endl instance.
+    Command lines are defined this way.
+    When the shell analyzes a command line, it asks the corresponding menu to execute it through the abstract execute() method.
+    The menu class also offers a handler to execute special operations when the menu exits. */
+public abstract class Menu extends SyntaxNode {
+
+    /** Constructor from native instance.
+        @param I_NativeRef Native instance reference. */
     protected Menu(int I_NativeRef) {
         super(I_NativeRef);
     }
-    public Menu(String J_Help, Help CLI_Help) {
-        super(__Menu(J_Help, CLI_Help.getNativeRef()));
+    /** Constructor from Java.
+        @param J_Name Name of the menu.
+        @param CLI_Help Help attached to the menu. */
+    public Menu(String J_Name, Help CLI_Help) {
+        super(__Menu(J_Name, CLI_Help.getNativeRef()));
     }
     private static final native int __Menu(String J_Help, int I_NativeHelpRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
         // Caution!
         // When the native C++ inherited cli::Menu object has already been destroyed in Cli.__finalize(),
         // Do not call Menu.__finalize() here.
         if (! (this instanceof Cli)) {
-            __finalize(this.getNativeRef());
+            if (getbDoFinalize()) {
+                __finalize(this.getNativeRef());
+            }
         }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeMenuRef);
 
+    /** Populate abstract method.
+        This method should be overridden by final menu classes
+        to describe the elements defining the command lines attached to the menu. */
     public abstract void populate();
 
-    /** Command line execution. */
+    /** Command line execution.
+        This method should be overriden by final menu classes.
+        @param CLI_CmdLine Command line to execute.
+        @return true if the command line has been executed successfully (syntactically speaking),
+                false otherwise. */
     public abstract boolean execute(CommandLine CLI_CmdLine);
     private final boolean __execute(int I_NativeCmdLineRef) {
         Traces.traceMethod("Menu.__execute(I_NativeCmdLineRef)");
@@ -57,9 +77,13 @@ public abstract class Menu extends SyntaxNode
         boolean b_Res = false;
         try {
             NativeObject cli_CommandLine = NativeObject.getObject(I_NativeCmdLineRef);
-            Traces.traceValue("cli_CommandLine", cli_CommandLine.toString());
-            if (cli_CommandLine instanceof CommandLine) {
-                b_Res = execute((CommandLine) cli_CommandLine);
+            if (cli_CommandLine != null) {
+                Traces.traceValue("cli_CommandLine", cli_CommandLine.toString());
+                if (cli_CommandLine instanceof CommandLine) {
+                    b_Res = execute((CommandLine) cli_CommandLine);
+                }
+            } else {
+                System.err.println("Could not find CommandLine reference " + new Integer(I_NativeCmdLineRef));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,6 +93,8 @@ public abstract class Menu extends SyntaxNode
         return b_Res;
     }
 
+    /** Handler called when the menu exits.
+        This method may be overriden by final menu classes. */
     public void onExit() {
     }
     private final void __onExit() {
@@ -76,4 +102,5 @@ public abstract class Menu extends SyntaxNode
         onExit();
         Traces.traceReturn("Menu.__onExit()");
     }
+
 }

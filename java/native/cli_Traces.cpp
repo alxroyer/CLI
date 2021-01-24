@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -22,13 +22,33 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <cli/traces.h>
-#include <cli/io_device.h>
+#include "cli/traces.h"
+#include "cli/io_device.h"
 
 #include "cli_CommandLine.h"
 
 #include "NativeTraces.h"
 
+
+extern "C" JNIEXPORT jboolean JNICALL Java_cli_Traces__1_1setStream(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeOutputDeviceRef)
+{
+    jboolean b_Res = false;
+    if (cli::OutputDevice* const pcli_Stream = (cli::OutputDevice*) I_NativeOutputDeviceRef)
+    {
+        b_Res = cli::GetTraces().SetStream(*pcli_Stream);
+    }
+    return b_Res;
+}
+
+extern "C" JNIEXPORT jboolean JNICALL Java_cli_Traces__1_1unsetStream(
+        JNIEnv* PJ_Env, jclass PJ_Class)
+{
+    jboolean b_Res = false;
+    b_Res = cli::GetTraces().UnsetStream();
+    return b_Res;
+}
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Traces__1_1setFilter(
         JNIEnv* PJ_Env, jclass PJ_Class,
@@ -36,6 +56,7 @@ extern "C" JNIEXPORT void JNICALL Java_cli_Traces__1_1setFilter(
 {
     if (const cli::TraceClass* const pcli_TraceClass = (const cli::TraceClass*) I_NativeTraceClassRef)
     {
+        cli::GetTraces().Declare(*pcli_TraceClass);
         cli::GetTraces().SetFilter(*pcli_TraceClass, B_ShowTraces);
     }
 }

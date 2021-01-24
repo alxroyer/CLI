@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -26,7 +26,7 @@ __CPP_CHECK__ = 1
 
 
 # Default goal
-.DEFAULT_GOAL ?= check
+DEFAULT_GOAL ?= check
 .PHONY: cppcheck.default
 cppcheck.default: check ;
 
@@ -53,7 +53,7 @@ check: build_depends $(CLI_LOG) $(CLI_CHECK)
 	diff $(CLI_LOG) $(CLI_CHECK)
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/check.help
 $(CPP_DIR)/build/make/check.help:

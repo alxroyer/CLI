@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -24,7 +24,7 @@ ifndef __CPP_MKRES__
 __CPP_MKRES__ = 1
 
 # Parameters
-CLI_XML_RES ?= $(ROOT_DIR)/samples/clisample/clisample.xml
+CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 CLI_XML_CPP ?= $(patsubst %.xml,$(INT_DIR)/%.cpp,$(notdir $(CLI_XML_RES)))
 CLI_XML_OBJ = $(patsubst %.cpp,%.o,$(CLI_XML_CPP))
 CLI_MAIN_CPP ?= $(CPP_DIR)/tests/testsample.cpp
@@ -52,7 +52,7 @@ $(CLI_XML_CPP): $(CLI_XML_RES) $(CLI_XSL)
 $(CLI_XML_OBJ): CPP_FLAGS += -Wno-unused-label
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/mkres.help
 $(CPP_DIR)/build/make/mkres.help: ;

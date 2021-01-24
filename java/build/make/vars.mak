@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -25,19 +25,17 @@ ifndef __JAVA_VARS__
 __JAVA_VARS__ = 1
 
 
-ROOT_DIR ?= ../../..
+CLI_DIR ?= ../../..
 
-include $(ROOT_DIR)/build/make/vars.mak
+include $(CLI_DIR)/build/make/vars.mak
 include $(CPP_DIR)/build/make/vars.mak
 
 
 # Directories
-ifeq ($(TARGET),Cygwin)
-JDK_DIR ?= "/cygdrive/c/Program Files/java/jdk1.5.0_03"
+ifeq ($(JAVA_HOME),)
+$(error Please set JAVA_HOME to your SDK installation directory)
 endif
-ifeq ($(TARGET),Linux)
-JDK_DIR ?= "/usr/local/share/jdk1.6.0_03"
-endif
+JDK_DIR ?= $(JAVA_HOME)
 JAVA_SRC_DIR = $(JAVA_DIR)/src
 NATIVE_DIR = $(JAVA_DIR)/native
 OUT_DIR = $(RDX)

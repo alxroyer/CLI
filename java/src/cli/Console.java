@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -24,19 +24,21 @@
 
 package cli;
 
-import java.util.*;
-import java.awt.*;
 
-
+/** Console input/output device. */
 public class Console extends IODevice
 {
+    /** Constructor. */
     public Console() {
         super(__Console());
     }
     private static final native int __Console();
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeConsoleRef);

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -26,8 +26,8 @@
 #ifndef _CLI_GO_IO_DEVICE_H_
 #define _CLI_GO_IO_DEVICE_H_
 
-#include <cli/shell.h>
-#include <cli/io_mux.h>
+#include "cli/shell.h"
+#include "cli/io_mux.h"
 
 
 //! @brief The CLI of this program.

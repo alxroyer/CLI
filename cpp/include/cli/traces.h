@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,10 +30,10 @@
 #ifndef _CLI_TRACES_H_
 #define _CLI_TRACES_H_
 
-#include <cli/namespace.h>
-#include <cli/object.h>
-#include <cli/help.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/object.h"
+#include "cli/help.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -75,9 +75,8 @@ CLI_NS_BEGIN(cli)
         //! @brief Description accessor.
         const Help& GetHelp(void) const;
 
-    protected:
+    public:
         //! @brief Assignment operator.
-        //! @note Not available from outside.
         TraceClass& operator=(const TraceClass&);
 
     private:
@@ -94,8 +93,10 @@ CLI_NS_BEGIN(cli)
         const TraceClass& CLI_Class2    //!< Second member.
         );
 
-    //! @brief Internal error common trace class.
-    extern const TraceClass INTERNAL_ERROR;
+    //! @brief Internal error common trace class singleton redirection.
+    #define INTERNAL_ERROR GetInternalErrorTraceClass()
+    //! @brief Internal error common trace class singleton.
+    const TraceClass& GetInternalErrorTraceClass();
 
 
     //! @brief Traces service.

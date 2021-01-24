@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -31,10 +31,10 @@
 #ifndef _CLI_IO_MUX_H_
 #define _CLI_IO_MUX_H_
 
-#include <cli/namespace.h>
-#include <cli/io_device.h>
-#include <cli/shell.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/io_device.h"
+#include "cli/shell.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -92,6 +92,8 @@ CLI_NS_BEGIN(cli)
         const IODevice* const GetInput(void) const;
 
         //! @brief Input device addition in the list.
+        //! @return true: The device has been added.
+        //! @return false: The device has not been added.
         const bool AddInput(
             IODevice* const PCLI_Input          //!< Input device.
             );
@@ -133,7 +135,12 @@ CLI_NS_BEGIN(cli)
 
     private:
         //! Output streams.
-        OutputDevice* m_arpcliOutputs[STREAM_TYPES_COUNT];
+        struct Output_t
+        {
+            OutputDevice* pcliOutput;
+            bool bDoOpenClose;
+        };
+        struct Output_t m_arsOutputs[STREAM_TYPES_COUNT];
 
         //! Input device list.
         tk::Queue<IODevice*> m_qInputs;

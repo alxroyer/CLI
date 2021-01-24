@@ -4,6 +4,12 @@ myCLI>
   help            Get help
   pwm             Print Working Menu
   quit            Quit
+myCLI>
+  cli-config      CLI configuration menu
+  exit            Exit menu 'myCLI'
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
 myCLI>help
   cli-config      CLI configuration menu
   exit            Exit menu 'myCLI'

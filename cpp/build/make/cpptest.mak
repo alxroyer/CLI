@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,6 +22,7 @@
 
 
 # Includes
+CLI_DIR := ../../..
 PROJECT = cpptest
 PROJECT_DEPS = libclicpp.mak
 SRC_DIR = $(CPP_DIR)/tests/cpp
@@ -30,7 +31,7 @@ PROJ_LIBS = -L$(OUT_DIR) -lclicpp -lncurses
 include build.mak
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/cpptest.help
 $(CPP_DIR)/build/make/cpptest.help: ;

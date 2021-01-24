@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -26,8 +26,8 @@
 #include "cli/pch.h"
 
 #ifndef CLI_NO_REGEX
-#include <regex.h>
-#include <string.h>
+    #include <regex.h>
+    #include <string.h>
 #endif
 
 #include "cli/cli.h"
@@ -46,11 +46,25 @@
 CLI_NS_USE(cli)
 
 
-static const TraceClass TRACE_CLI("CLI", Help()
-    .AddHelp(Help::LANG_EN, "CLI traces")
-    .AddHelp(Help::LANG_FR, "Traces de CLI"));
+//! @brief Cli trace class singleton redirection.
+#define TRACE_CLI GetCliTraceClass()
+//! @brief Cli trace class singleton.
+static const TraceClass& GetCliTraceClass(void)
+{
+    static const TraceClass cli_CliTraceClass("CLI", Help()
+        .AddHelp(Help::LANG_EN, "CLI traces")
+        .AddHelp(Help::LANG_FR, "Traces de CLI"));
+    return cli_CliTraceClass;
+}
 
-static Cli::List M_CliRegistry(MAX_CLI_REGISTRY_COUNT);
+
+//! @brief Cli registry singleton.
+static Cli::List& GetCliRegistry(void)
+{
+    static Cli::List cli_CliRegistry(MAX_CLI_REGISTRY_COUNT);
+    return cli_CliRegistry;
+}
+
 
 Cli::Cli(const char* const STR_Name, const Help& CLI_Help)
   : Menu(STR_Name, CLI_Help),
@@ -65,7 +79,7 @@ Cli::Cli(const char* const STR_Name, const Help& CLI_Help)
     SetCli(*this);
 
     // Register this new CLI in the global CLI list.
-    if (M_CliRegistry.AddTail(this))
+    if (GetCliRegistry().AddTail(this))
     {
         GetTraces().Trace(TRACE_CLI) << "New CLI '" << GetName() << "'." << cli::endl;
     }
@@ -80,13 +94,13 @@ Cli::~Cli(void)
     GetTraces().Trace(TRACE_CLI) << "Deletion of CLI '" << GetName() << "'." << cli::endl;
 
     // Remove this CLI from the global CLI list.
-    for (   Cli::List::Iterator it = M_CliRegistry.GetIterator();
-            M_CliRegistry.IsValid(it);
-            M_CliRegistry.MoveNext(it))
+    for (   Cli::List::Iterator it = GetCliRegistry().GetIterator();
+            GetCliRegistry().IsValid(it);
+            GetCliRegistry().MoveNext(it))
     {
-        if (M_CliRegistry.GetAt(it) == this)
+        if (GetCliRegistry().GetAt(it) == this)
         {
-            M_CliRegistry.Remove(it);
+            GetCliRegistry().Remove(it);
             break;
         }
     }
@@ -115,11 +129,11 @@ const int Cli::FindFromName(Cli::List& CLI_CliList, const char* const STR_RegExp
 
     // Check the name for each CLI instance.
     const int i_InitialCount = CLI_CliList.GetCount();
-    for (   Cli::List::Iterator it = M_CliRegistry.GetIterator();
-            M_CliRegistry.IsValid(it);
-            M_CliRegistry.MoveNext(it))
+    for (   Cli::List::Iterator it = GetCliRegistry().GetIterator();
+            GetCliRegistry().IsValid(it);
+            GetCliRegistry().MoveNext(it))
     {
-        if (const Cli* const pcli_Cli = M_CliRegistry.GetAt(it))
+        if (const Cli* const pcli_Cli = GetCliRegistry().GetAt(it))
         {
 #ifndef CLI_NO_REGEX
             if (regexec(& s_RegExp, pcli_Cli->GetName(), 0, NULL, 0) == 0)
@@ -191,6 +205,22 @@ const Keyword& Cli::GetConfigMenuNode(void) const
 {
     CLI_ASSERT(m_pcliConfigMenuNode != NULL);
     return *m_pcliConfigMenuNode;
+}
+
+const bool Cli::EnableConfigMenu(const bool B_Enable)
+{
+    bool b_Res;
+    CLI_ASSERT(m_pcliConfigMenuNode != NULL);
+    if (B_Enable)
+    {
+        AddElement(m_pcliConfigMenuNode);
+        b_Res = true;
+    }
+    else
+    {
+        b_Res = RemoveElement(m_pcliConfigMenuNode, false);
+    }
+    return b_Res;
 }
 
 #ifdef _DEBUG

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -22,7 +22,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <cli/cli.h>
+#include "cli/cli.h"
 
 #include "cli_Cli.h"
 
@@ -132,7 +132,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Cli__1_1addMenu(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeCliRef, jint I_NativeMenuRef)
 {
-    NativeTraces::TraceMethod("Menu.addMenu(I_NativeCliRef, I_NativeMenuRef)");
+    NativeTraces::TraceMethod("Cli.addMenu(I_NativeCliRef, I_NativeMenuRef)");
     NativeTraces::TraceParam("I_NativeCliRef", "%d", I_NativeCliRef);
     NativeTraces::TraceParam("I_NativeMenuRef", "%d", I_NativeMenuRef);
     jboolean b_Res = false;
@@ -145,6 +145,27 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Cli__1_1addMenu(
             b_Res = true;
         }
     }
-    NativeTraces::TraceReturn("Menu.addMenu()", "%d", (int) b_Res);
+    NativeTraces::TraceReturn("Cli.addMenu()", "%d", (int) b_Res);
     return b_Res;
 }
+
+extern "C" JNIEXPORT jboolean JNICALL Java_cli_Cli__1_1enableConfigMenu(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeCliRef, jboolean B_Enable)
+{
+    NativeTraces::TraceMethod("Cli.enableConfigMenu(I_NativeCliRef, B_Enable)");
+    NativeTraces::TraceParam("I_NativeCliRef", "%d", I_NativeCliRef);
+    NativeTraces::TraceParam("B_Enable", "%d", B_Enable);
+    jboolean b_Res = false;
+    if (cli::Cli* const pcli_Cli = (cli::Cli*) I_NativeCliRef)
+    {
+        if (cli::Menu* const pcli_Menu = (cli::Menu*) I_NativeCliRef)
+        {
+            pcli_Cli->EnableConfigMenu(B_Enable);
+            b_Res = true;
+        }
+    }
+    NativeTraces::TraceReturn("Cli.enableConfigMenu()", "%d", b_Res);
+    return b_Res;
+}
+

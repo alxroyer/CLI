@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,8 +25,9 @@
 
 #include "cli/pch.h"
 
-#include <cli/io_mux.h>
-#include <cli/shell.h>
+#include "cli/io_mux.h"
+#include "cli/shell.h"
+#include "cli/assert.h"
 #include "consistency.h"
 #include "constraints.h"
 
@@ -41,7 +42,7 @@ IOMux::IOMux(const bool B_AutoDelete)
     EnsureCommonDevices();
     EnsureTraces();
 
-    memset(m_arpcliOutputs, '\0', sizeof(m_arpcliOutputs));
+    memset(m_arsOutputs, '\0', sizeof(m_arsOutputs));
 }
 
 IOMux::~IOMux(void)
@@ -61,6 +62,7 @@ const bool IOMux::OpenDevice(void)
     // Input.
     if ((! CheckInput()) || (m_qInputs.IsEmpty()))
     {
+        // Note: m_cliLastError has been set within CheckInput()
         b_Res = false;
     }
     else
@@ -69,11 +71,15 @@ const bool IOMux::OpenDevice(void)
         {
             if (! pcli_Input->OpenUp(__CALL_INFO__))
             {
+                m_cliLastError = pcli_Input->GetLastError();
                 b_Res = false;
             }
         }
         else
         {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "IOMux: Input list error")
+                .SetString(ResourceString::LANG_FR, "IOMux: Erreur sur la liste d'entrées");
             b_Res = false;
         }
     }
@@ -82,27 +88,30 @@ const bool IOMux::OpenDevice(void)
     for (int i = 0; i < STREAM_TYPES_COUNT; i++)
     {
         // Select default output if none is set.
-        if (m_arpcliOutputs[i] == NULL)
+        if (m_arsOutputs[i].pcliOutput == NULL)
         {
             if (pcli_Input != NULL)
             {
-                m_arpcliOutputs[i] = pcli_Input;
+                m_arsOutputs[i].pcliOutput = pcli_Input;
             }
             else
             {
-                m_arpcliOutputs[i] = & OutputDevice::GetNullDevice();
+                m_arsOutputs[i].pcliOutput = & OutputDevice::GetNullDevice();
             }
-            m_arpcliOutputs[i]->UseInstance(__CALL_INFO__);
+            m_arsOutputs[i].pcliOutput->UseInstance(__CALL_INFO__);
         }
 
         // Open up the output device.
-        if (m_arpcliOutputs[i] != NULL)
+        CLI_ASSERT(! m_arsOutputs[i].bDoOpenClose);
+        if (m_arsOutputs[i].pcliOutput != NULL)
         {
-            if (! m_arpcliOutputs[i]->OpenUp(__CALL_INFO__))
+            if (! m_arsOutputs[i].pcliOutput->OpenUp(__CALL_INFO__))
             {
+                m_cliLastError = m_arsOutputs[i].pcliOutput->GetLastError();
                 b_Res = false;
             }
         }
+        m_arsOutputs[i].bDoOpenClose = true;
     }
 
     if (! b_Res)
@@ -119,12 +128,17 @@ const bool IOMux::CloseDevice(void)
     // Outputs.
     for (int i = 0; i < STREAM_TYPES_COUNT; i++)
     {
-        if (m_arpcliOutputs[i] != NULL)
+        if (m_arsOutputs[i].pcliOutput != NULL)
         {
-            if (! m_arpcliOutputs[i]->CloseDown(__CALL_INFO__))
+            if (m_arsOutputs[i].bDoOpenClose)
             {
-                b_Res = false;
+                if (! m_arsOutputs[i].pcliOutput->CloseDown(__CALL_INFO__))
+                {
+                    m_cliLastError = m_arsOutputs[i].pcliOutput->GetLastError();
+                    b_Res = false;
+                }
             }
+            m_arsOutputs[i].bDoOpenClose = false;
         }
     }
 
@@ -133,6 +147,7 @@ const bool IOMux::CloseDevice(void)
     {
         if (! ReleaseFirstInputDevice())
         {
+            // Note: m_cliLastError has been set within ReleaseFirstInputDevice()
             b_Res = false;
         }
     }
@@ -143,12 +158,12 @@ const bool IOMux::CloseDevice(void)
 void IOMux::PutString(const char* const STR_Out) const
 {
     //! @warning This method should not be called. However, we redirect the call to output stream.
-    if ((m_arpcliOutputs[OUTPUT_STREAM] != NULL)
+    if ((m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
         // Protection against infinite loop.
         && (! m_bIOLocked))
     {
         m_bIOLocked = true;
-        m_arpcliOutputs[OUTPUT_STREAM]->PutString(STR_Out);
+        m_arsOutputs[OUTPUT_STREAM].pcliOutput->PutString(STR_Out);
         m_bIOLocked = false;
     }
 }
@@ -156,12 +171,12 @@ void IOMux::PutString(const char* const STR_Out) const
 void IOMux::Beep(void) const
 {
     //! @warning This method should not be called. However, we redirect the call to m_tOutput.
-    if ((m_arpcliOutputs[OUTPUT_STREAM] != NULL)
+    if ((m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
         // Protection against infinite loop.
         && (! m_bIOLocked))
     {
         m_bIOLocked = true;
-        m_arpcliOutputs[OUTPUT_STREAM]->Beep();
+        m_arsOutputs[OUTPUT_STREAM].pcliOutput->Beep();
         m_bIOLocked = false;
     }
 }
@@ -190,6 +205,16 @@ const KEY IOMux::GetKey(void) const
             }
         }
     }
+    else
+    {
+        // Note: m_cliLastError has been set within CheckInput()
+        if (m_cliLastError.IsEmpty())
+        {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "IOMux: No input device")
+                .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique d'entrée");
+        }
+    }
 
     return cli::NULL_KEY;
 }
@@ -197,12 +222,15 @@ const KEY IOMux::GetKey(void) const
 const OutputDevice& IOMux::GetOutput(const STREAM_TYPE E_StreamType) const
 {
     if ((E_StreamType >= 0) && (E_StreamType < STREAM_TYPES_COUNT)
-        && (m_arpcliOutputs[E_StreamType] != NULL))
+        && (m_arsOutputs[E_StreamType].pcliOutput != NULL))
     {
-        return *m_arpcliOutputs[E_StreamType];
+        return *m_arsOutputs[E_StreamType].pcliOutput;
     }
     else
     {
+        m_cliLastError
+            .SetString(ResourceString::LANG_EN, "IOMux: No output device")
+            .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique de sortie");
         return OutputDevice::GetNullDevice();
     }
 }
@@ -212,11 +240,12 @@ const bool IOMux::SetOutput(const STREAM_TYPE E_StreamType, OutputDevice* const 
     // Free previous device.
     if (! ReleaseOutputDevice(E_StreamType, true))
     {
+        // Note: m_cliLastError has been set within ReleaseOutputDevice()
         return false;
     }
 
     // Store next device reference.
-    m_arpcliOutputs[E_StreamType] = PCLI_Stream;
+    m_arsOutputs[E_StreamType].pcliOutput = PCLI_Stream;
     // Lock the device instance.
     if (PCLI_Stream != NULL)
     {
@@ -225,12 +254,14 @@ const bool IOMux::SetOutput(const STREAM_TYPE E_StreamType, OutputDevice* const 
 
     // Possibly open the device.
     if ((GetOpenUsers() > 0)
-        && (m_arpcliOutputs[E_StreamType] != NULL)
-        // Protection against misfunctionning.
-        && (m_arpcliOutputs[E_StreamType] != this))
+        && (m_arsOutputs[E_StreamType].pcliOutput != NULL)
+        && (m_arsOutputs[E_StreamType].bDoOpenClose))
+        //  // Protection against misfunctionning.
+        //  && (m_arpcliOutputs[E_StreamType] != this))
     {
-        if (! m_arpcliOutputs[E_StreamType]->OpenUp(__CALL_INFO__))
+        if (! m_arsOutputs[E_StreamType].pcliOutput->OpenUp(__CALL_INFO__))
         {
+            m_cliLastError = m_arsOutputs[E_StreamType].pcliOutput->GetLastError();
             return false;
         }
     }
@@ -255,11 +286,23 @@ const bool IOMux::AddInput(IODevice* const PCLI_Input)
         if (m_qInputs.AddTail(PCLI_Input))
         {
             PCLI_Input->UseInstance(__CALL_INFO__);
-            return false;
+            return true;
+        }
+        else
+        {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "IOMux: Cannot add the input device to the input list")
+                .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée à la liste");
         }
     }
+    else
+    {
+        m_cliLastError
+            .SetString(ResourceString::LANG_EN, "IOMux: Cannot add a NULL input device")
+            .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée invalide");
+    }
 
-    return true;
+    return false;
 }
 
 const bool IOMux::NextInput(void)
@@ -269,6 +312,7 @@ const bool IOMux::NextInput(void)
     {
         if (! ReleaseFirstInputDevice())
         {
+            // Note: m_cliLastError has been set within ReleaseFirstInputDevice()
             return false;
         }
     }
@@ -283,12 +327,23 @@ const bool IOMux::NextInput(void)
                 if (! pcli_Input->OpenUp(__CALL_INFO__))
                 {
                     // Open failure.
+                    m_cliLastError = pcli_Input->GetLastError();
                     return false;
                 }
             }
 
             // Successful return.
             return true;
+        }
+    }
+    else
+    {
+        // Note: m_cliLastError has been set within CheckInput()
+        if (m_cliLastError.IsEmpty())
+        {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "IOMux: No input device")
+                .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique d'entrée");
         }
     }
 
@@ -304,6 +359,7 @@ const bool IOMux::ResetInputList(void)
     {
         if (! ReleaseFirstInputDevice())
         {
+            // Note: m_cliLastError has been set within ReleaseFirstInputDevice()
             b_Res = false;
         }
     }
@@ -323,13 +379,18 @@ const bool IOMux::CheckInput(void) const
         // Input needed.
         if (IODevice* const pcli_Input = const_cast<IOMux*>(this)->CreateInputDevice())
         {
-            const_cast<IOMux*>(this)->AddInput(pcli_Input);
+            if (! const_cast<IOMux*>(this)->AddInput(pcli_Input))
+            {
+                // Note: m_cliLastError has been set within AddInput().
+                return false;
+            }
             if (GetOpenUsers() > 0)
             {
                 // Input should be opened.
                 if (! pcli_Input->OpenUp(__CALL_INFO__))
                 {
                     // Open failure.
+                    m_cliLastError = pcli_Input->GetLastError();
                     return false;
                 }
             }
@@ -337,6 +398,9 @@ const bool IOMux::CheckInput(void) const
         else if (m_qInputs.IsEmpty())
         {
             // No more input.
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "IOMux: No more input")
+                .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée");
             return false;
         }
     }
@@ -358,6 +422,7 @@ const bool IOMux::ReleaseFirstInputDevice(void)
                 // Close the device if needed.
                 if (! pcli_Input->CloseDown(__CALL_INFO__))
                 {
+                    m_cliLastError = pcli_Input->GetLastError();
                     b_Res = false;
                 }
             }
@@ -369,6 +434,9 @@ const bool IOMux::ReleaseFirstInputDevice(void)
     }
     else
     {
+        m_cliLastError
+            .SetString(ResourceString::LANG_EN, "IOMux: No more input")
+            .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée");
         return false;
     }
 }
@@ -377,21 +445,22 @@ const bool IOMux::ReleaseOutputDevice(const STREAM_TYPE E_StreamType, const bool
 {
     bool b_Res = true;
 
-    if (m_arpcliOutputs[E_StreamType] != NULL)
+    if (m_arsOutputs[E_StreamType].pcliOutput != NULL)
     {
-        if (GetOpenUsers() > 0)
+        if ((GetOpenUsers() > 0) && (m_arsOutputs[E_StreamType].bDoOpenClose))
         {
             // Close the device if needed.
-            if (! m_arpcliOutputs[E_StreamType]->CloseDown(__CALL_INFO__))
+            if (! m_arsOutputs[E_StreamType].pcliOutput->CloseDown(__CALL_INFO__))
             {
+                m_cliLastError = m_arsOutputs[E_StreamType].pcliOutput->GetLastError();
                 b_Res = false;
             }
         }
         // Release the device instance.
-        m_arpcliOutputs[E_StreamType]->FreeInstance(__CALL_INFO__);
+        m_arsOutputs[E_StreamType].pcliOutput->FreeInstance(__CALL_INFO__);
 
         // Remove reference.
-        m_arpcliOutputs[E_StreamType] = NULL;
+        m_arsOutputs[E_StreamType].pcliOutput = NULL;
     }
 
     return b_Res;

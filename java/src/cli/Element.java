@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,17 +25,24 @@
 package cli;
 
 
+/** CLI element class. */
 public abstract class Element extends NativeObject
 {
+    /** Constructor.
+        @param I_NativeRef  Native object reference. */
     protected Element(int I_NativeRef) {
         super(I_NativeRef);
     }
 
+    /** Element name accessor.
+        @return Element name. */
     public final String getKeyword() {
         return __getKeyword(this.getNativeRef());
     }
     private static final native String __getKeyword(int I_NativeElementRef);
 
+    /** Element help accessor.
+        @return Element help. */
     public final Help getHelp() {
         Help cli_Help = new Help();
         if (cli_Help != null) {
@@ -47,11 +54,29 @@ public abstract class Element extends NativeObject
     }
     private static final native String __getHelp(int I_NativeElementRef, int E_LangId);
 
+    /** Owner CLI accessor.
+        @return Owner CLI. */
+    public final Cli getCli() {
+        return (Cli) NativeObject.getObject(__getCli(this.getNativeRef()));
+    }
+    private static final native int __getCli(int I_NativeElementRef);
+
+    /** Running shell accessor.
+        @return Running shell. */
+    public final Shell getShell() {
+        return (Shell) NativeObject.getObject(__getShell(this.getNativeRef()));
+    }
+    private static final native int __getShell(int I_NativeElementRef);
+
+    /** Current output stream accessor.
+        @return Current output stream. */
     public final OutputDevice getOutputStream() {
         return (OutputDevice) NativeObject.getObject(__getOutputStream(this.getNativeRef()));
     }
     private static final native int __getOutputStream(int I_NativeElementRef);
 
+    /** Current error stream accessor.
+        @return Current error stream. */
     public final OutputDevice getErrorStream() {
         return (OutputDevice) NativeObject.getObject(__getErrorStream(this.getNativeRef()));
     }

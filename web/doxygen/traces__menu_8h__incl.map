@@ -1,9 +1,0 @@
-base referer
-rect $namespace_8h.html 862,217 979,243
-rect $menu_8h.html 167,413 250,439
-rect $traces_8h.html 478,185 563,211
-rect $syntax__node_8h.html 298,362 423,389
-rect $tk_8h.html 753,362 811,389
-rect $element_8h.html 473,311 569,338
-rect $object_8h.html 618,159 703,186
-rect $help_8h.html 623,261 698,287

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,27 +25,41 @@
 package cli;
 
 
+/** Trace class description. */
 public class TraceClass extends NativeObject
 {
+    /** Constructor with a single trace class name given.
+        @param STR_ClassName Trace class name. */
     public TraceClass(String STR_ClassName) {
         super(__TraceClass(STR_ClassName, 0));
     }
+    /** Constructor with a trace class name and a corresponding help given.
+        @param STR_ClassName Trace class name.
+        @param CLI_Help Corresponding help objet. */
     public TraceClass(String STR_ClassName, Help CLI_Help) {
         super(__TraceClass(STR_ClassName, CLI_Help.getNativeRef()));
     }
     private static final native int __TraceClass(String STR_ClassName, int I_NativeHelpRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(this.getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(this.getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeTraceClassRef);
 
+    /** Class name accessor.
+        @return Class name. null if an error occured. */
     public String getClassName() {
         return __getClassName(getNativeRef());
     }
     private static final native String __getClassName(int I_NativeTraceClassRef);
 
+    /** Help string accessor.
+        @param E_Language Identifier of the requested help string.
+        @return Help string. null if an error occured. */
     public String getHelp(int E_Language) {
         return __getHelp(getNativeRef(), E_Language);
     }

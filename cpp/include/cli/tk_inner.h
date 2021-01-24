@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -33,7 +33,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <cli/object.h>
+#include "cli/object.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -156,7 +156,7 @@ CLI_NS_BEGIN(cli)
             {
                 if (m_strString != NULL)
                 {
-                    return strlen(m_strString);
+                    return (unsigned int) strlen(m_strString);
                 }
                 else
                 {
@@ -251,7 +251,7 @@ CLI_NS_BEGIN(cli)
                 if (STR_String != NULL)
                 {
                     // Determine copy length.
-                    unsigned int ui_CopyLen = strlen(STR_String);
+                    unsigned int ui_CopyLen = (unsigned int) strlen(STR_String);
                     if (ui_CopyLen + GetLength() > m_uiMaxLen)
                     {
                         ui_CopyLen = m_uiMaxLen - GetLength();
@@ -350,6 +350,11 @@ CLI_NS_BEGIN(cli)
                 while (! IsEmpty())
                 {
                     RemoveTail();
+                }
+                if (m_arptQueue != NULL)
+                {
+                    delete [] m_arptQueue;
+                    m_arptQueue = NULL;
                 }
             }
 

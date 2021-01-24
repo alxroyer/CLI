@@ -1,15 +1,15 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>CLI library user guide</title><link rel="stylesheet" href="stylesheet.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id4700156"></a>CLI library user guide</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Royer</span> <span class="surname">Alexis</span></h3></div></div><div><p class="pubdate">Oct, 31st 2007</p></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id5307687">1. Introduction</a></span></dt><dt><span class="section"><a href="#install">2. Installation</a></span></dt><dd><dl><dt><span class="section"><a href="#download">2.1. Download</a></span></dt><dt><span class="section"><a href="#prerequisit">2.2. Prerequisit</a></span></dt><dt><span class="section"><a href="#build">2.3. Build</a></span></dt></dl></dd><dt><span class="section"><a href="#howto">3. How to use it</a></span></dt><dd><dl><dt><span class="section"><a href="#xslt">3.1. Transformation</a></span></dt><dt><span class="section"><a href="#integ">3.2. Integration</a></span></dt></dl></dd><dt><span class="section"><a href="#xmlres">4. The XML resource file</a></span></dt><dd><dl><dt><span class="section"><a href="#xmlres.cli">4.1. 
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>CLI library user guide</title><link rel="stylesheet" href="stylesheet.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id4709850"></a>CLI library user guide</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Royer</span> <span class="surname">Alexis</span></h3></div></div><div><p class="pubdate">Jul, 25th 2008</p></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 1.0</td><td align="left">June, 1st 2006</td></tr><tr><td align="left" colspan="2">First release.</td></tr><tr><td align="left">Revision 2.0</td><td align="left">Sept, 27th 2007</td></tr><tr><td align="left" colspan="2">Java addition.</td></tr><tr><td align="left">Revision 2.1</td><td align="left">Oct, 31st 2007</td></tr><tr><td align="left" colspan="2">Corrections.</td></tr><tr><td align="left">Revision 2.2</td><td align="left">Sep, 21st 2008</td></tr><tr><td align="left" colspan="2">Few corrections.</td></tr></table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id5307708">1. Introduction</a></span></dt><dt><span class="section"><a href="#install">2. Installation</a></span></dt><dd><dl><dt><span class="section"><a href="#download">2.1. Download</a></span></dt><dt><span class="section"><a href="#prerequisit">2.2. Prerequisit</a></span></dt><dt><span class="section"><a href="#build">2.3. Build</a></span></dt></dl></dd><dt><span class="section"><a href="#howto">3. How to use it</a></span></dt><dd><dl><dt><span class="section"><a href="#xslt">3.1. Transformation</a></span></dt><dt><span class="section"><a href="#integ">3.2. Integration</a></span></dt></dl></dd><dt><span class="section"><a href="#xmlres">4. The XML resource file</a></span></dt><dd><dl><dt><span class="section"><a href="#xmlres.cli">4.1. 
         <code class="sgmltag-element">cli</code>
         - The root element</a></span></dt><dt><span class="section"><a href="#xmlres.keyword.endl">4.2. 
         <code class="sgmltag-element">keyword</code>
         &amp; <code class="sgmltag-element">endl</code>
         - Define a syntax tree</a></span></dt><dt><span class="section"><a href="#xmlres.help">4.3. 
         <code class="sgmltag-element">help</code>
-        - Put help everywhere</a></span></dt><dt><span class="section"><a href="#id5308856">4.4. <code class="sgmltag-element">cpp</code>, <code class="sgmltag-element">java</code>
-                - Insert target language directly in the resource file</a></span></dt><dt><span class="section"><a href="#id5308857">4.5. <code class="sgmltag-element">param</code>
-                - Let the user enter data</a></span></dt><dt><span class="section"><a href="#id5309208">4.6. <code class="sgmltag-element">tag</code>
-                - How to make jumps in the syntax tree</a></span></dt><dt><span class="section"><a href="#id5309209">4.7. <code class="sgmltag-element">menu</code>
-                - Classify user-defined command lines in menus</a></span></dt></dl></dd><dt><span class="section"><a href="#more">5. Advanced</a></span></dt><dd><dl><dt><span class="section"><a href="#adv.iodevices">5.1. Define your own input/output device</a></span></dt><dt><span class="section"><a href="#adv.IOMux">5.2. Input / output multiplexer device</a></span></dt><dt><span class="section"><a href="#adv.traces">5.3. Traces</a></span></dt><dt><span class="section"><a href="#adv.noxmlres">5.4. Without the XML resource file</a></span></dt></dl></dd><dt><span class="section"><a href="#id5310460">6. Conclusion</a></span></dt></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id5307687"></a>1. Introduction</h2></div></div></div><p>
+        - Put help everywhere</a></span></dt><dt><span class="section"><a href="#id5308845">4.4. <code class="sgmltag-element">cpp</code>, <code class="sgmltag-element">java</code>
+                - Insert target language directly in the resource file</a></span></dt><dt><span class="section"><a href="#id5308846">4.5. <code class="sgmltag-element">param</code>
+                - Let the user enter data</a></span></dt><dt><span class="section"><a href="#id5309198">4.6. <code class="sgmltag-element">tag</code>
+                - How to make jumps in the syntax tree</a></span></dt><dt><span class="section"><a href="#id5309199">4.7. <code class="sgmltag-element">menu</code>
+                - Classify user-defined command lines in menus</a></span></dt></dl></dd><dt><span class="section"><a href="#more">5. Advanced</a></span></dt><dd><dl><dt><span class="section"><a href="#adv.iodevices">5.1. Define your own input/output device</a></span></dt><dt><span class="section"><a href="#adv.IOMux">5.2. Input / output multiplexer device</a></span></dt><dt><span class="section"><a href="#adv.traces">5.3. Traces</a></span></dt><dt><span class="section"><a href="#adv.noxmlres">5.4. Without the XML resource file</a></span></dt></dl></dd><dt><span class="section"><a href="#id5310450">6. Conclusion</a></span></dt></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id5307708"></a>1. Introduction</h2></div></div></div><p>
     CLI is a library and a set of tools
     that allow you to easily develop text-based user interfaces.
     So far, what you have to do is
@@ -56,7 +56,7 @@
     </p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="xslt"></a>3.1. Transformation</h3></div></div></div><p>
         The transformation of the XML resource file into target language code is very easy.
         It is nothing but a simple XSL transformation.
-        </p><div class="example"><a name="id5308043"></a><p class="title"><b>Example 1. Transformation of an XML resource file</b></p><p>
+        </p><div class="example"><a name="id5308070"></a><p class="title"><b>Example 1. Transformation of an XML resource file</b></p><p>
         Try it out!
         Here is a sample CLI resource file:
             
@@ -120,7 +120,7 @@
                       of the <code class="sgmltag-element">cli</code> element
                       in the XML resource file;</li><li>CLI retrieval through <code class="function">cli::Cli::FindFromName</code>
                       and a regular expression.</li><li>Non-static but explicite creation of the object in user code.</li></ul></div><p>
-            </p><div class="example"><a name="id5308370"></a><p class="title"><b>Example 2. Empty example with C++ integration
+            </p><div class="example"><a name="id5308362"></a><p class="title"><b>Example 2. Empty example with C++ integration
                             using the <code class="sgmltag-attribute">cpp</code> attribute</b></p><p>
             Here is now the <code class="filename">empty.xml</code> file with C++ integration:
                 
@@ -138,8 +138,8 @@
             </p><p>
             Here is a <code class="filename">goempty.cpp</code> file doing so:
 </p><pre class="programlisting">
-#include &lt;cli/common.h&gt;
-#include &lt;cli/console.h&gt;
+#include "cli/common.h"
+#include "cli/console.h"
 extern cli::Cli* PCLI_MyCli;
 int main(void) {
     cli::Shell cli_Shell(*PCLI_MyCli);
@@ -157,11 +157,11 @@ g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a
             And run:
                 </p><pre class="programlisting">./empty</pre><p>
             Great for an empty stuff, ain't it?
-            </p></div><div class="example"><a name="id5308441"></a><p class="title"><b>Example 3. Empty example with C++ integration
+            </p></div><div class="example"><a name="id5308433"></a><p class="title"><b>Example 3. Empty example with C++ integration
                             using <code class="function">cli::Cli::FindFromName</code></b></p><p>
             This version of the <code class="filename">goempty.cpp</code> file works too:
 </p><pre class="programlisting">
-#include &lt;cli/common.h&gt;
+#include "cli/common.h"
 int main(void) {
     cli::CliList cli_List;
     const int i_Clis = cli::Cli::FindFromName(cli_List, ".*");
@@ -178,13 +178,13 @@ int main(void) {
     cli_MyShell.Run(cli::Console());
 }
 </pre><p>
-            </p></div><div class="example"><a name="id5308465"></a><p class="title"><b>Example 4. Empty example with C++ integration
+            </p></div><div class="example"><a name="id5308456"></a><p class="title"><b>Example 4. Empty example with C++ integration
                             using an explicite creation</b></p><p>
             Let's use <code class="filename">cppclic.xsl</code> parameters:
                 </p><pre class="programlisting">xsltproc --param B_CliStaticCreation 0 --param STR_CliClassName "'EmptyCli'" cppclic.xsl empty.xml &gt; empty_cli.h</pre><p>
             The source <code class="filename">goempty.cpp</code> then simply includes <code class="filename">empty_cli.h</code>:
 </p><pre class="programlisting">
-#include &lt;cli/common.h&gt;
+#include "cli/common.h"
 #include "empty_cli.h"
 
 int main(void) {
@@ -198,7 +198,7 @@ int main(void) {
             The best way to instantiate the CLI object is to retrieve the class from its name,
             then to call <code class="function">newInstance</code> on it.
             That's what is presented in the exemple below.
-            </p><div class="example"><a name="id5308515"></a><p class="title"><b>Example 5. Empty example with Java integration</b></p><p>
+            </p><div class="example"><a name="id5308504"></a><p class="title"><b>Example 5. Empty example with Java integration</b></p><p>
             Considering you have generated a <code class="filename">Empty.java</code> file
             as described in <a href="#xslt" title="3.1. Transformation">XSLT transformation section</a>,
             you may just compile this file with <span><strong class="command">javac</strong></span>,
@@ -244,7 +244,7 @@ class GoEmpty {
         &amp; <code class="sgmltag-element">endl</code>
         - Define a syntax tree</h3></div></div></div><p>
         Keywords and carriage returns are the basics of a CLI.
-        </p><div class="example"><a name="id5308675"></a><p class="title"><b>Example 6. Hello world!</b></p>
+        </p><div class="example"><a name="id5308664"></a><p class="title"><b>Example 6. Hello world!</b></p>
         Consider the following command <span><strong class="command">say hello</strong></span>.
         It is actually a sequence of two keywords
         <span><strong class="command">say</strong></span> and <span><strong class="command">hello</strong></span>,
@@ -333,8 +333,8 @@ class GoEmpty {
         <code class="sgmltag-element">help</code> elements can be added to CLI elements
         to document them.
         The <code class="sgmltag-attribute">lang</code> attribute identifies
-        the corresponding language<sup>[<a name="id5308820" href="#ftn.id5308820">1</a>]</sup>.
-        </p><div class="example"><a name="id5308831"></a><p class="title"><b>Example 7. Put help everywhere.</b></p>
+        the corresponding language<sup>[<a name="id5308809" href="#ftn.id5308809">1</a>]</sup>.
+        </p><div class="example"><a name="id5308820"></a><p class="title"><b>Example 7. Put help everywhere.</b></p>
         Here is how you could document a <code class="filename">hello.xml</code> file:
             
 <pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
@@ -352,17 +352,17 @@ class GoEmpty {
         Good.
         That's what I needed.
         Now, how do I execute stuff from the command lines.
-        </blockquote></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5308856"></a>4.4. <code class="sgmltag-element">cpp</code>, <code class="sgmltag-element">java</code>
+        </blockquote></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5308845"></a>4.4. <code class="sgmltag-element">cpp</code>, <code class="sgmltag-element">java</code>
                 - Insert target language directly in the resource file</h3></div></div></div><p>
         Target language instructions are inserted straight forward
         in the XML resource file
         through target language tags:
-            </p><div class="itemizedlist"><ul type="disc"><li><code class="sgmltag-element">cpp</code> for C++</li><li><code class="sgmltag-element">java</code> for C++</li><li>...</li></ul></div><p>
+            </p><div class="itemizedlist"><ul type="disc"><li><code class="sgmltag-element">cpp</code> for C++</li><li><code class="sgmltag-element">java</code> for Java</li><li>...</li></ul></div><p>
         </p><p>
         Basically, these tags are located in <code class="sgmltag-element">endl</code> elements.
         It allows you to define what is executed
         when a command line has been successfully parsed.
-        </p><div class="example"><a name="id5308906"></a><p class="title"><b>Example 8. Insert target language instructions.</b></p>
+        </p><div class="example"><a name="id5308895"></a><p class="title"><b>Example 8. Insert target language instructions.</b></p>
         Let's say you have a C++ function <code class="function">sayHello</code>,
         or a Java class <code class="classname">HelloApi</code>,
         and you would like those to be called when the user types <span><strong class="command">say hello</strong></span>.
@@ -430,7 +430,7 @@ class GoEmpty {
         Use them like <code class="varname">std::cout</code> and <code class="varname">std::cerr</code> in C++,
         and use the <code class="varname">cli::endl</code> constant for carriage returns.
         Use <code class="function">put</code> and <code class="function">endl</code> methods in Java.
-        </p><div class="example"><a name="id5309019"></a><p class="title"><b>Example 9. Output</b></p>
+        </p><div class="example"><a name="id5309008"></a><p class="title"><b>Example 9. Output</b></p>
         Here is an example of output for C++:
             
 <pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
@@ -457,14 +457,14 @@ class GoEmpty {
         </div><div class="blockquote"><blockquote class="blockquote">
         I got it.
         Now, tell me, how do I have users entering values?
-        </blockquote></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5308857"></a>4.5. <code class="sgmltag-element">param</code>
+        </blockquote></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5308846"></a>4.5. <code class="sgmltag-element">param</code>
                 - Let the user enter data</h3></div></div></div><p>
         <code class="sgmltag-element">param</code> elements can be used
         instead of <code class="sgmltag-element">keyword</code> elements.
         Obviously, this kind of element controls parameters elements.
         The CLI library manages different types of parameters:
-            </p><div class="itemizedlist"><ul type="disc"><li>strings</li><li>integers</li><li>floats</li><li>host names<sup>[<a name="id5309135" href="#ftn.id5309135">2</a>]</sup></li></ul></div><p>
-        </p><div class="example"><a name="id5309138"></a><p class="title"><b>Example 10. Parameters</b></p>
+            </p><div class="itemizedlist"><ul type="disc"><li>strings</li><li>integers</li><li>floats</li><li>host names<sup>[<a name="id5309124" href="#ftn.id5309124">2</a>]</sup></li></ul></div><p>
+        </p><div class="example"><a name="id5309127"></a><p class="title"><b>Example 10. Parameters</b></p>
         The following example illustrates how to use
         <code class="sgmltag-element">param</code> elements:
             
@@ -516,7 +516,7 @@ class GoEmpty {
         </blockquote></div><p>
         I know, that's the reason why I've created
         <code class="sgmltag-element">tag</code> elements.
-        </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5309208"></a>4.6. <code class="sgmltag-element">tag</code>
+        </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5309198"></a>4.6. <code class="sgmltag-element">tag</code>
                 - How to make jumps in the syntax tree</h3></div></div></div><p>
         Tags act like labels and gotos do in C/C++.
         The equivalent of the label definition
@@ -529,7 +529,7 @@ class GoEmpty {
         Thanks to tags, you can define such kind of patterns:
             </p><div class="itemizedlist"><ul type="disc"><li>a*</li><li>a+</li><li>(ab)*</li><li>(ab)+</li><li>(a|b)*</li><li>(a|b)+</li><li>a(b1|b2)c</li><li>a(b1|b2|)c</li></ul></div><p>
         The following examples show you how to do such syntax patterns.
-        </p><div class="example"><a name="id5309284"></a><p class="title"><b>Example 11. How to make
+        </p><div class="example"><a name="id5309274"></a><p class="title"><b>Example 11. How to make
                         a a* syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -556,7 +556,7 @@ class GoEmpty {
 &lt;/cli&gt;
 </pre>
 
-            </td></tr></tbody></table></div></div><div class="example"><a name="id5309310"></a><p class="title"><b>Example 12. How to make
+            </td></tr></tbody></table></div></div><div class="example"><a name="id5309300"></a><p class="title"><b>Example 12. How to make
                         a a+ syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -583,7 +583,7 @@ class GoEmpty {
 &lt;/cli&gt;
 </pre>
 
-            </td></tr></tbody></table></div></div><div class="example"><a name="id5309356"></a><p class="title"><b>Example 13. How to make
+            </td></tr></tbody></table></div></div><div class="example"><a name="id5309345"></a><p class="title"><b>Example 13. How to make
                         a (ab)* syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -614,7 +614,7 @@ class GoEmpty {
 &lt;/cli&gt;
 </pre>
 
-            </td></tr></tbody></table></div></div><div class="example"><a name="id5309430"></a><p class="title"><b>Example 14. How to make
+            </td></tr></tbody></table></div></div><div class="example"><a name="id5309419"></a><p class="title"><b>Example 14. How to make
                         a (ab)+ syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -645,7 +645,7 @@ class GoEmpty {
 &lt;/cli&gt;
 </pre>
 
-            </td></tr></tbody></table></div></div><div class="example"><a name="id5309476"></a><p class="title"><b>Example 15. How to make
+            </td></tr></tbody></table></div></div><div class="example"><a name="id5309465"></a><p class="title"><b>Example 15. How to make
                         a (a|b)* syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -678,7 +678,7 @@ class GoEmpty {
 &lt;/cli&gt;
 </pre>
 
-            </td></tr></tbody></table></div></div><div class="example"><a name="id5309516"></a><p class="title"><b>Example 16. How to make
+            </td></tr></tbody></table></div></div><div class="example"><a name="id5309505"></a><p class="title"><b>Example 16. How to make
                         a (a|b)+ syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -717,7 +717,7 @@ class GoEmpty {
         Let me show you how to make a
         a(b1|b2|)c syntax pattern
         before a(b1|b2)c.
-        </p><div class="example"><a name="id5309581"></a><p class="title"><b>Example 17. How to make
+        </p><div class="example"><a name="id5309570"></a><p class="title"><b>Example 17. How to make
                         a a(b1|b2|)c syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -763,7 +763,7 @@ class GoEmpty {
         to tag <code class="sgmltag-value">my-tag</code>,
         just add a <code class="sgmltag-attribute">hollow</code> attribute
         with a <code class="sgmltag-value">yes</code> value.
-        </p><div class="example"><a name="id5309654"></a><p class="title"><b>Example 18. How to make
+        </p><div class="example"><a name="id5309643"></a><p class="title"><b>Example 18. How to make
                         a a(b1|b2)c syntax pattern
                         with a <code class="sgmltag-element">tag</code> element</b></p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -810,7 +810,7 @@ class GoEmpty {
         and command lines with options.
         I don't really know if recursive command lines are really useful in user interfaces.
         On the other hand, optional parameters are usually used in text based user interfaces.
-        </p><div class="example"><a name="id5309669"></a><p class="title"><b>Example 19. An optional command line</b></p><p>
+        </p><div class="example"><a name="id5309658"></a><p class="title"><b>Example 19. An optional command line</b></p><p>
         Consider the following object class:
             </p><pre class="programlisting">class Circle {
 public:
@@ -989,7 +989,7 @@ add circle radius 2
 add circle x_position -1 y_position -1 radius 3
 ...
 </pre><p>
-        </p></div><div class="example"><a name="id5309857"></a><p class="title"><b>Example 20. Another optional command line</b></p><p>
+        </p></div><div class="example"><a name="id5309846"></a><p class="title"><b>Example 20. Another optional command line</b></p><p>
         If you want parameters to be ordered, you could use the following pattern.
             </p><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 <pre class="programlisting">
@@ -1142,7 +1142,7 @@ add circle green
         That's a possibility.
         But hold on!
         What you are looking for is probably menus.
-        </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5309209"></a>4.7. <code class="sgmltag-element">menu</code>
+        </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id5309199"></a>4.7. <code class="sgmltag-element">menu</code>
                 - Classify user-defined command lines in menus</h3></div></div></div><p>
         Menus allow you to gather sets of commands under a common topic.
         Menus are accessed through command lines.
@@ -1156,7 +1156,7 @@ add circle green
         it references a defined menu.
         </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
         Basically, the CLI defines the main menu itself.
-        </div><div class="example"><a name="id5310031"></a><p class="title"><b>Example 21. Classify user-defined command lines in menus</b></p>
+        </div><div class="example"><a name="id5310020"></a><p class="title"><b>Example 21. Classify user-defined command lines in menus</b></p>
         Consider a CLI controlling a configuration.
         A common organization is to offer consultation commands in the main menu,
         and to reserve modification commands in an edition mode.
@@ -1239,7 +1239,7 @@ add circle green
    &lt;/keyword&gt;
   &lt;/keyword&gt;
   &lt;handler name="exit"&gt;
-   &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Leaving edit config menu" &lt;&lt; cli:endl;&lt;/cpp&gt;
+   &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Leaving edit config menu" &lt;&lt; cli::endl;&lt;/cpp&gt;
    &lt;java&gt;&lt;out/&gt;.put("Leaving edit config menu").endl();&lt;/java&gt;
   &lt;/handler&gt;
  &lt;/menu&gt;
@@ -1281,7 +1281,7 @@ add circle green
         The CLI library has generic C++ classes defining input/output devices:
         <code class="classname">cli::OutputDevice</code> and <code class="classname">cli::IODevice</code>.
         The CLI library gives several implementations of this generic class:
-        </p><div class="variablelist"><dl><dt><span class="term"><code class="classname">cli::Console</code></span></dt><dd>Console input/output device</dd><dt><span class="term"><code class="classname">cli::TelnetConnection</code></span></dt><dd>Telnet connection input/output device<sup>[<a name="id5310236" href="#ftn.id5310236">3</a>]</sup>.</dd><dt><span class="term"><code class="classname">cli::InputFileDevice</code></span></dt><dd>Reading from a file can be useful for replaying scripts for instance.</dd><dt><span class="term"><code class="classname">cli::OutputFileDevice</code></span></dt><dd>Redirect output to a file thanks to this device.</dd><dt><span class="term"><code class="classname">cli::SingleCommand</code></span></dt><dd>Single command device object.
+        </p><div class="variablelist"><dl><dt><span class="term"><code class="classname">cli::Console</code></span></dt><dd>Console input/output device</dd><dt><span class="term"><code class="classname">cli::TelnetConnection</code></span></dt><dd>Telnet connection input/output device<sup>[<a name="id5310226" href="#ftn.id5310226">3</a>]</sup>.</dd><dt><span class="term"><code class="classname">cli::InputFileDevice</code></span></dt><dd>Reading from a file can be useful for replaying scripts for instance.</dd><dt><span class="term"><code class="classname">cli::OutputFileDevice</code></span></dt><dd>Redirect output to a file thanks to this device.</dd><dt><span class="term"><code class="classname">cli::SingleCommand</code></span></dt><dd>Single command device object.
                 This device allows you define a single command line
                 and have it executed.</dd><dt><span class="term"><code class="classname">cli::IOMux</code></span></dt><dd>Input and output can be multiplexed thanks to this class.
                 More information is available in the <a href="#adv.IOMux" title="5.2. Input / output multiplexer device">next section</a>.</dd></dl></div><p>
@@ -1334,7 +1334,7 @@ add circle green
         <code class="classname">cli::Traces</code> uses an output device that defaults to stderr.
         You may change this device through the <code class="function">cli::Traces::SetStream</code> method,
         and redirect traces to a file for instances
-        <sup>[<a name="id5310405" href="#ftn.id5310405">4</a>]</sup>.
+        <sup>[<a name="id5310394" href="#ftn.id5310394">4</a>]</sup>.
         Changing this device for the null device is way to disable traces.
         </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="adv.noxmlres"></a>5.4. Without the XML resource file</h3></div></div></div><p>
         Some of you could find the library interesting for what it already implements,
@@ -1344,15 +1344,15 @@ add circle green
         But you could plan using library objects directly,
         and maybe inherit from them in order to improve the stuff.
         Well... Up to you!
-        </p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id5310460"></a>6. Conclusion</h2></div></div></div><p>
+        </p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id5310450"></a>6. Conclusion</h2></div></div></div><p>
     Well, that's it for that user guide.
     I hope you enjoyed it.
     Don't hesitate contacting me for any remark or so.
-    </p></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id5308820" href="#id5308820">1</a>] </sup>
+    </p></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id5308809" href="#id5308809">1</a>] </sup>
             Only the <code class="sgmltag-attvalue">en</code> language identifier
             is available for the moment.
-            </p></div><div class="footnote"><p><sup>[<a name="ftn.id5309135" href="#id5309135">2</a>] </sup>
+            </p></div><div class="footnote"><p><sup>[<a name="ftn.id5309124" href="#id5309124">2</a>] </sup>
                 A full support of host names is not provided yet.
-                </p></div><div class="footnote"><p><sup>[<a name="ftn.id5310236" href="#id5310236">3</a>] </sup>The telnet protocole is not fully managed for the moment.
+                </p></div><div class="footnote"><p><sup>[<a name="ftn.id5310226" href="#id5310226">3</a>] </sup>The telnet protocole is not fully managed for the moment.
                 Use simple TCP client connections for now
-                with <span class="application">teraterm</span> for instance.</p></div><div class="footnote"><p><sup>[<a name="ftn.id5310405" href="#id5310405">4</a>] </sup>The io_device unit test shows how to redirect traces to a file.</p></div></div></div></body></html>
+                with <span class="application">teraterm</span> for instance.</p></div><div class="footnote"><p><sup>[<a name="ftn.id5310394" href="#id5310394">4</a>] </sup>The io_device unit test shows how to redirect traces to a file.</p></div></div></div></body></html>

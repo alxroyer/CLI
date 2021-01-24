@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,15 +25,23 @@
 package cli;
 
 
+/** Keyword element class.
+    i.e. single constant keyword within a command line. */
 public class Keyword extends SyntaxNode
 {
+    /** Constructor.
+        @param J_Keyword Keyword string.
+        @param CLI_Help Help attached to the keyword element. */
     public Keyword(String J_Keyword, Help CLI_Help) {
         super(__Keyword(J_Keyword, CLI_Help.getNativeRef()));
     }
     private static final native int __Keyword(String J_Keyword, int I_NativeHelpRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeKeywordRef);

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,41 +25,82 @@
 package cli;
 
 
+/** Traces management class. */
 public final class Traces
 {
+    /** Static class. No constructor. */
+    private Traces() {
+    }
+
+    /** Modifies the traces output stream.
+        @param CLI_Stream   Output device to be used.
+        @return true: success, false: failure. */
+    public static final boolean setStream(OutputDevice CLI_Stream) {
+        return __setStream(CLI_Stream.getNativeRef());
+    }
+    private static final native boolean __setStream(int I_NativeOutputDeviceRef);
+
+    /** Restores the initial traces output stream.
+        @return true: success, false: failure. */
+    public static final boolean unsetStream() {
+        return __unsetStream();
+    }
+    private static final native boolean __unsetStream();
+
+    /** Modifies the traces filter.
+        @param CLI_Class    Trace class object of the filter modification.
+        @param B_ShowTraces true if the traces should be displayed, false otherwise. */
     public static final void setFilter(TraceClass CLI_Class, boolean B_ShowTraces) {
         __setFilter(CLI_Class.getNativeRef(), B_ShowTraces);
     }
     private static final native void __setFilter(int I_NativeTraceClassRef, boolean B_ShowTraces);
 
+    /** Modifies the traces filter for all trace classes.
+        @param B_ShowTraces true if the traces should be displayed, false otherwise. */
     public static final void setAllFilter(boolean B_ShowTraces) {
         __setAllFilter(B_ShowTraces);
     }
-    public static final native void __setAllFilter(boolean B_ShowTraces);
+    private static final native void __setAllFilter(boolean B_ShowTraces);
 
+    /** Sends a trace to the trace system.
+        @param CLI_TraceClass   Corresponding trace class.
+        @param STR_Text         Text of the trace. */
     public static final void trace(TraceClass CLI_TraceClass, String STR_Text) {
         __trace(CLI_TraceClass.getNativeRef(), STR_Text);
     }
     private static final native void __trace(int I_TraceClassNativeRef, String STR_Text);
 
+    /** Traces the entrance within a method.
+        @param STR_Method   Method name. */
     public static final void traceMethod(String STR_Method) {
         __traceMethod(STR_Method);
     }
     private static final native void __traceMethod(String STR_Method);
 
+    /** Traces a parameter value, when entering a method basically.
+        @param STR_ParamName    Name of the parameter.
+        @param STR_ParamValue   Value of the parameter. */
     public static final void traceParam(String STR_ParamName, String STR_ParamValue) {
         __traceParam(STR_ParamName, STR_ParamValue);
     }
     private static final native void __traceParam(String STR_ParamName, String STR_ParamValue);
 
+    /** Traces a variable value, within the body of a method basically.
+        @param STR_VarName      Name of the variable.
+        @param STR_VarValue     Value of the variable. */
     public static final void traceValue(String STR_VarName, String STR_VarValue) {
         __traceValue(STR_VarName, STR_VarValue);
     }
     private static final native void __traceValue(String STR_VarName, String STR_VarValue);
 
+    /** Traces the output of a void method.
+        @param STR_Method   Method name. */
     public static final void traceReturn(String STR_Method) {
         __traceReturn(STR_Method);
     }
+    /** Traces the output of a method returning a value.
+        @param STR_Method   Method name.
+        @param STR_Result   Value returned by the method. */
     public static final void traceReturn(String STR_Method, String STR_Result) {
         if (STR_Result != null) {
             __traceReturn(STR_Method, STR_Result);

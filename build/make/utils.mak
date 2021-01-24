@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -24,7 +24,7 @@ ifndef __ROOT_UTILS__
 __ROOT_UTILS__ = 1
 
 
-ROOT_DIR ?= ../..
+CLI_DIR ?= ../..
 
 # Functions
 IsSilent = $(if $(filter s,$(MAKEFLAGS))$(filter -s,$(MAKEFLAGS)),yes,)
@@ -46,11 +46,11 @@ MkCallRule = $(MkCallDefault) $(2)
 MkDispatch = $(if $(2),$(call Map2,MkCallRule,$(1),$(2)),$(call Map,MkCallDefault,$(1)))
 
 # Debug and help
-.PHONY: $(ROOT_DIR)/build/make/utils.help
-$(ROOT_DIR)/build/make/utils.help: ;
+.PHONY: $(CLI_DIR)/build/make/utils.help
+$(CLI_DIR)/build/make/utils.help: ;
 
-.PHONY: $(ROOT_DIR)/build/make/utils.vars
-$(ROOT_DIR)/build/make/utils.vars:
+.PHONY: $(CLI_DIR)/build/make/utils.vars
+$(CLI_DIR)/build/make/utils.vars:
 	$(call ShowVariables,)
 
 

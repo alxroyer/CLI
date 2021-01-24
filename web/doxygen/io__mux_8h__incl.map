@@ -1,9 +1,0 @@
-base referer
-rect $namespace_8h.html 737,236 854,262
-rect $io__device_8h.html 260,160 364,186
-rect $tk_8h.html 616,312 674,338
-rect $shell_8h.html 133,306 210,333
-rect $object_8h.html 602,210 688,237
-rect $debug_8h.html 441,160 526,186
-rect $help_8h.html 274,325 349,352
-rect $resource__string_8h.html 413,261 554,288

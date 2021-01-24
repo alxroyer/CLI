@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,23 +25,23 @@
 package cli;
 
 
-public class OutputFileDevice extends OutputDevice
-{
-    /**
-     * @brief Constructor.
-     * @param STR_OutputFileName Output file name.
-     */
+/** Output file device. */
+public class OutputFileDevice extends OutputDevice {
+
+    /** Constructor.
+        @param STR_OutputFileName Output file name. */
     public OutputFileDevice(String STR_OutputFileName) {
         super(__OutputFileDevice(STR_OutputFileName));
     }
     private static final native int __OutputFileDevice(String STR_OutputFileName);
 
-    /**
-     * @brief Destructor.
-     */
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeFileDeviceRef);
+
 }

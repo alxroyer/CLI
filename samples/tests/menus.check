@@ -1,0 +1,39 @@
+menus>pwm
+  /menus
+menus>menu1
+menu1>pwm
+  /menus/menu1
+menu1>menu1
+menu1>pwm
+  /menus/menu1/menu1
+menu1>menu1.1
+menu1.1>pwm
+  /menus/menu1/menu1/menu1.1
+menu1.1>menu1.1
+menu1.1>pwm
+  /menus/menu1/menu1/menu1.1/menu1.1
+menu1.1>menu1
+menu1>pwm
+  /menus/menu1/menu1/menu1.1/menu1.1/menu1
+menu1>exit
+menu1.1>pwm
+  /menus/menu1/menu1/menu1.1/menu1.1
+menu1.1>exit
+menu1.1>pwm
+  /menus/menu1/menu1/menu1.1
+menu1.1>exit
+menu1>pwm
+  /menus/menu1/menu1
+menu1>exit
+menu1>pwm
+  /menus/menu1
+menu1>exit
+menus>pwm
+  /menus
+menus>menu1.1
+menu1.1>pwm
+  /menus/menu1.1
+menu1.1>menu1
+menu1>pwm
+  /menus/menu1.1/menu1
+menu1>quit

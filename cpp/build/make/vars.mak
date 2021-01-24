@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -24,8 +24,8 @@ ifndef __CPP_VARS__
 __CPP_VARS__ = 1
 
 
-ROOT_DIR ?= ../../..
-include $(ROOT_DIR)/build/make/vars.mak
+CLI_DIR ?= ../../..
+include $(CLI_DIR)/build/make/vars.mak
 
 
 LINUX ?= $(findstring linux,$(shell $(MAKE) --help))

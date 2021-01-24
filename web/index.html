@@ -1,7 +1,7 @@
 <html>
 
 <!--
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -29,7 +29,7 @@
     <title>CLI library - How to quickly develop a command line interface</title>
 </head>
 <body>
-<p align="right"><font size="-2">Last updated on Oct, 31st 2007</font></p>
+<p align="right"><font size="-2">Last updated on Sep, 21st 2008</font></p>
     <center><font size="+3"><b>CLI</b></font></center>
 
 <table>
@@ -53,8 +53,11 @@
 <a name="news"/>
     <h1>News</h1>
     <table>
+    <tr><td width="10%"/><td valign="top"><i>Sep, 21st 2008</i></td><td width="5%"/>
+                         <td valign="top">New version 2.2 release</td>
+        <td width="10%"/></tr>
     <tr><td width="10%"/><td valign="top"><i>Oct, 31st 2007</i></td><td width="5%"/>
-                         <td valign="top">The CLI library is now available for C++ and Java !</td>
+                         <td valign="top">The CLI library is now available for C++ and Java</td>
         <td width="10%"/></tr>
     <tr><td width="10%"/><td valign="top"><i>Sept, 27th 2007</i></td><td width="5%"/>
                          <td valign="top">License modification</td>
@@ -223,7 +226,8 @@
             but you are interested in what the library does on the other hand,
             you could directly use the C++ objects of the library.
             You shall therefore have a look at
-            the <a href="doxygen">doxygen</a> documentation of the library.</li>
+            the <a href="doxygen/html/index.html">doxygen</a>
+            or <a href="javadoc/html/index.html">javadoc</a> documentation of the library.</li>
     </ul>
     </p>
 
@@ -270,6 +274,12 @@
     <table>
 
     <tr>
+    <td>Sep, 21st 2008</td>
+    <td><a href="cli-2.2.tgz">cli-2.2.tgz</a></td>
+    <td>Bug fixes  &amp; Various improvements.</td>
+    </tr>
+
+    <tr>
     <td>Oct, 31st 2007</td>
     <td><a href="cli-2.1.tgz">cli-2.1.tgz</a></td>
     <td>Java support and various improvements.</td>
@@ -314,6 +324,44 @@
     <h1>History</h1>
 
     <table border="1">
+
+    <tr>
+    <td valign="top" bgcolor="#ffffcc">2.2</td>
+    <td>
+        Bug corrections:
+        <ul>
+        <li>major! IOMux device closure error.</li>
+        <li>major! cli::tk::Queue::Iterator [tk_stl.h] definition revision. Incompatible with some compilers.</li>
+        <li>major! Java object consistency problems.</li>
+        <li>major! XSL generation errors for menus directly generated for an endl node.</li>
+        <li>major! Bad cppclic.xsl generation for 2 level menu structures.</li>
+        <li>major! Memory leak in Queue::~Queue() [tk_inner.h] -> m_arptQueue was not destroyed.</li>
+        <li>major! Consistency errors because of static constant objects in C++ files when compiled with Visual .NET. Singleton used instead.</li>
+        <li>major! Bad javaclic.xsl generation for 2 level menu structures. Test addition.</li>
+        <li>major! History cannot store more than 100 command lines</li>
+        <li>minor! InputFileDevice::GetKey(): unknown characters do not end the file anymore.</li>
+        <li>minor! Spelling error: "Uncomplete" changed to "Incomplete" in CommandLine::Parse().</li>
+        <li>minor! System includes (#include <>) changed into project includes (#include "").</li>
+        <li>minor! When an input file does not exist (cli::InputFileDevice), no error message is printed out.
+                     => Addition of a m_cliLastError member in cli::OutputDevice, that can be set by all subclasses.</li>
+        <li>minor! TAB when the line is empty does nothing.</li>
+        </ul>
+
+        Misceallanous:
+        <ul>
+        <li>Makefile improvements.</li>
+        <li>Special character addition.</li>
+        <li>Addition of error prefixing.</li>
+        <li>Cli configuration menu disabling</li>
+        <li>Java implementation evolutions:
+            cli.Element.getCli/getShell(), cli.Traces.set/unsetStream(), cli.IOMux, cli.SingleCommand</li>
+        <li>Java documentation.</li>
+        <li>Doxygen documentation generated in web directory.</li>
+        <li>XSL stylesheet revision:
+            special sections, CLI_EXECUTION, cpp corrections, coherence between cpp and java...</li>
+        </ul>
+    </td>
+    </tr>
 
     <tr>
     <td valign="top" bgcolor="#ffffcc">2.1</td>

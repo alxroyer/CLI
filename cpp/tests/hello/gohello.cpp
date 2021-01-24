@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -23,8 +23,8 @@
 */
 
 
-#include <cli/common.h>
-#include <cli/console.h>
+#include "cli/common.h"
+#include "cli/console.h"
 
 
 int main(void)

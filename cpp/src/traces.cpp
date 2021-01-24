@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -39,16 +39,27 @@ CLI_NS_USE(cli)
 
 
 #ifndef CLI_NO_NAMESPACE
-const TraceClass cli::INTERNAL_ERROR("CLI_INTERNAL_ERROR", Help()
+const TraceClass& cli::GetInternalErrorTraceClass(void)
 #else
-const TraceClass INTERNAL_ERROR("CLI_INTERNAL_ERROR", Help()
+const TraceClass& GetInternalErrorTraceClass(void)
 #endif
-    .AddHelp(Help::LANG_EN, "Internal error traces")
-    .AddHelp(Help::LANG_FR, "Traces d'erreurs internes"));
+{
+    static const TraceClass cli_InternalErrorTraceClass("CLI_INTERNAL_ERROR", Help()
+        .AddHelp(Help::LANG_EN, "Internal error traces")
+        .AddHelp(Help::LANG_FR, "Traces d'erreurs internes"));
+    return cli_InternalErrorTraceClass;
+}
 
-static const TraceClass TRACE_TRACES("CLI_TRACES", Help()
-    .AddHelp(Help::LANG_EN, "Traces about traces")
-    .AddHelp(Help::LANG_FR, "Traces du système de traces"));
+//! @brief TRACE_TRACES singleton redirection.
+#define TRACE_TRACES GetTracesTraceClass()
+//! @brief TRACE_TRACES singleton.
+static const TraceClass& GetTracesTraceClass(void)
+{
+    static const TraceClass cli_TracesTraceClass("CLI_TRACES", Help()
+        .AddHelp(Help::LANG_EN, "Traces about traces")
+        .AddHelp(Help::LANG_FR, "Traces du système de traces"));
+    return cli_TracesTraceClass;
+}
 
 
 TraceClass::TraceClass(const TraceClass& CLI_Class)
@@ -144,6 +155,7 @@ const bool Traces::UnsetStream(void)
         m_pcliStream = NULL;
         if (! pcli_Stream->CloseDown(__CALL_INFO__))
         {
+            OutputDevice::GetStdErr() << pcli_Stream->GetLastError().GetString(ResourceString::LANG_DEFAULT) << endl;
             b_Res = false;
         }
         pcli_Stream->FreeInstance(__CALL_INFO__);
@@ -171,6 +183,8 @@ const bool Traces::SetStream(OutputDevice& CLI_Stream)
         CLI_Stream.UseInstance(__CALL_INFO__);
         if (! CLI_Stream.OpenUp(__CALL_INFO__))
         {
+            OutputDevice::GetStdErr() << CLI_Stream.GetLastError().GetString(ResourceString::LANG_DEFAULT) << endl;
+
             // Store nothing on error.
             CLI_Stream.FreeInstance(__CALL_INFO__);
             return false;

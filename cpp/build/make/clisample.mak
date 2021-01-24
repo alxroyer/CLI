@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,13 +22,14 @@
 
 
 # Includes
-SRC_DIR = $(ROOT_DIR)/samples/clisample
+CLI_DIR := ../../..
+SRC_DIR = $(CLI_DIR)/samples/clisample
 CLI_XML_RES = $(SRC_DIR)/clisample.xml
 CLI_MAIN_CPP = $(SRC_DIR)/clisample_main.cpp
 include mkres.mak
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/clisample.help
 $(CPP_DIR)/build/make/clisample.help: ;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,19 +25,16 @@
 
 #include "cli/pch.h"
 
-//! @def CLI_WIN_NETWORK
-//! @brief Define this constant if you wish to use Windows Socket API.
-//!        BSD socket API otherwise.
-
 #ifndef CLI_WIN_NETWORK
-#include <sys/types.h> // socket, bind, listen
-#include <sys/socket.h> // socket, bind, listen
-#include <netinet/in.h> // sockaddr_in
+    #include <sys/types.h> // socket, bind, listen
+    #include <sys/socket.h> // socket, bind, listen
+    #include <netinet/in.h> // sockaddr_in
+    #include <unistd.h> // getpid
 #else
-#include <winsock2.h> // Windows sockets
+    #include <winsock2.h> // Windows sockets
+    #define close closesocket
 #endif
 #include <stdio.h> // close
-#include <unistd.h> // getpid
 #include <string.h>
 
 #include "cli/telnet.h"
@@ -47,13 +44,6 @@
 CLI_NS_USE(cli)
 
 
-//! @brief Define this constant if you wish to activate Telnet multiple client management.
-//!        Single client management otherwise.
-#ifndef CLI_TELNET_MULTI_CLIENT
-    #define CLI_TELNET_MULTI_CLIENT 0
-#endif
-//! @brief Size of telnet input buffer.
-//! @note Useless when STL toolkit implementation is used.
 #ifndef CLI_TELNET_INPUT_BUFFER_SIZE
     #define CLI_TELNET_INPUT_BUFFER_SIZE 1024
 #endif
@@ -140,7 +130,7 @@ const bool TelnetServer::AcceptConnection(const int I_ConnectionSocket)
 {
     int i_Pid = 0;
 
-#if CLI_TELNET_MULTI_CLIENT
+#ifdef CLI_TELNET_MULTI_CLIENT
     if (i_Pid = fork())
     {
         // Server side.
@@ -169,7 +159,7 @@ const bool TelnetServer::AcceptConnection(const int I_ConnectionSocket)
         m_cliShell.GetStream(OUTPUT_STREAM)
             << cli_InfoEnd.GetString(m_cliShell.GetLang())
             << " " << i_Pid << cli::endl;
-#if CLI_TELNET_MULTI_CLIENT
+#ifdef CLI_TELNET_MULTI_CLIENT
         exit(0);
 #endif
         return true;
@@ -182,7 +172,6 @@ TelnetConnection::TelnetConnection(
         const int I_ConnectionSocket,
         const bool B_AutoDelete)
   : IODevice("telnet", "\r\n", B_AutoDelete),
-    m_cliShell(CLI_Shell),
     m_iSocket(I_ConnectionSocket),
     m_qChars(CLI_TELNET_INPUT_BUFFER_SIZE)
 {
@@ -199,7 +188,7 @@ const bool TelnetConnection::OpenDevice(void)
 
 const bool TelnetConnection::CloseDevice(void)
 {
-#if CLI_TELNET_MULTI_CLIENT
+#ifdef CLI_TELNET_MULTI_CLIENT
     close(m_iSocket);
 #endif
     delete this;
@@ -239,9 +228,9 @@ const KEY TelnetConnection::GetKey(void) const
                                 << "TelnetConnection::GetKey(): "
                                 << "Unable to restore previously removed character from m_qChars"
                                 << endl;
+                        }
                     }
                 }
-            }
             }
             break;
 
@@ -266,10 +255,9 @@ const KEY TelnetConnection::GetKey(void) const
         const int i_Len = recv(m_iSocket, str_Buffer, 256, 0);
         if (i_Len <= 0)
         {
-            const ResourceString cli_Error = ResourceString()
-                .SetString(ResourceString::LANG_EN, "recv() failed")
-                .SetString(ResourceString::LANG_FR, "Echec de la fonction recv()");
-            GetErrorStream() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "Telnet reception error")
+                .SetString(ResourceString::LANG_FR, "Echec de réception en telnet");
             return NULL_KEY;
         }
         else
@@ -284,8 +272,8 @@ const KEY TelnetConnection::GetKey(void) const
                             << "TelnetConnection::GetKey(): "
                             << "Could not append character '" << str_Buffer[i] << "' "
                             << "to m_qChars" << endl;
+                    }
                 }
-            }
             }
             return GetKey();
         }
@@ -296,13 +284,12 @@ void TelnetConnection::PutString(const char* const STR_Out) const
 {
     if (STR_Out != NULL)
     {
-        const int i_Len = send(m_iSocket, STR_Out, strlen(STR_Out), 0);
+        const int i_Len = send(m_iSocket, STR_Out, (int) strlen(STR_Out), 0);
         if (i_Len != (signed) strlen(STR_Out))
         {
-            const ResourceString cli_Error = ResourceString()
-                .SetString(ResourceString::LANG_EN, "send() failed")
-                .SetString(ResourceString::LANG_FR, "Echec de la fonction send()");
-            GetErrorStream() << cli_Error.GetString(m_cliShell.GetLang()) << endl;
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, "Telnet emission error")
+                .SetString(ResourceString::LANG_FR, "Echec d'émission en telnet");
 
             if (i_Len < 0)
             {
@@ -311,15 +298,15 @@ void TelnetConnection::PutString(const char* const STR_Out) const
             else if ((unsigned) i_Len < strlen(STR_Out))
             {
                 GetTraces().Trace(INTERNAL_ERROR)
-                    << "send uncomplete"
+                    << "send incomplete"
                     << " (only " << i_Len << " characters sent"
-                    << " over " << strlen(STR_Out) << ")" << endl;
+                    << " over " << (unsigned int) strlen(STR_Out) << ")" << endl;
             }
             else if ((unsigned) i_Len > strlen(STR_Out))
             {
                 GetTraces().Trace(INTERNAL_ERROR)
                     << "strange send return value"
-                    << " (" << i_Len << " for " << strlen(STR_Out) << " characters sent)" << endl;
+                    << " (" << i_Len << " for " << (unsigned int) strlen(STR_Out) << " characters sent)" << endl;
             }
         }
     }
@@ -329,7 +316,7 @@ void TelnetConnection::Beep(void) const
 {
 }
 
-const OutputDevice& TelnetConnection::GetErrorStream(void) const
+/*const OutputDevice& TelnetConnection::GetErrorStream(void) const
 {
     // First try to send error to the device set in the shell.
     if (const OutputDevice* const pcli_ErrorDevice = & m_cliShell.GetStream(ERROR_STREAM))
@@ -343,4 +330,4 @@ const OutputDevice& TelnetConnection::GetErrorStream(void) const
 
     // Default to standard error.
     return OutputDevice::GetStdErr();
-}
+}*/

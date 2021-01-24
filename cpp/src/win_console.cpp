@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -33,9 +33,16 @@
 CLI_NS_USE(cli)
 
 
-static const TraceClass CLI_WIN_CONSOLE("CLI_WIN_CONSOLE", Help()
-    .AddHelp(Help::LANG_EN, "CLI Windows console traces")
-    .AddHelp(Help::LANG_FR, "Traces de la console Windows du CLI"));
+//! @brief Windows console trace class singleton redirection.
+#define CLI_WIN_CONSOLE GetWinConsoleTraceClass()
+//! @brief Windows console trace class singleton.
+static const TraceClass& GetWinConsoleTraceClass(void)
+{
+    static const TraceClass cli_WinConsoleTraceClass("CLI_WIN_CONSOLE", Help()
+        .AddHelp(Help::LANG_EN, "CLI Windows console traces")
+        .AddHelp(Help::LANG_FR, "Traces de la console Windows du CLI"));
+    return cli_WinConsoleTraceClass;
+}
 
 
 Console::Console(const bool B_AutoDelete)
@@ -68,8 +75,11 @@ const KEY Console::GetKey(void) const
         switch (i_Char)
         {
             case 8:
+            {
                 return BACKSPACE;
+            }
             case 224: // Escaped characters.
+            {
                 const int i_Char2 = getch();
                 GetTraces().Trace(CLI_WIN_CONSOLE) << "i_Char2 = " << i_Char2 << endl;
                 switch (i_Char2)
@@ -85,19 +95,22 @@ const KEY Console::GetKey(void) const
                     //case 83:    return DELETE;
                 }
                 break;
+            }
             default:
+            {
                 const KEY e_Char = IODevice::GetKey(i_Char);
                 if (e_Char != NULL_KEY)
                 {
                     return e_Char;
                 }
+            }
         }
     }
 }
 
 void Console::PutString(const char* const STR_Out) const
 {
-    printf("%s", STR_Out);
+    _cputs(STR_Out);
 }
 
 void Console::Beep(void) const

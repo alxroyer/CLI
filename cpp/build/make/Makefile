@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -21,14 +21,13 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-ROOT_DIR ?= ../../..
-
 # Includes
-PROJECTS = libclicpp.mak tktest.mak cpptest.mak empty.mak hello.mak clisample.mak tests.mak io_device.mak
-include $(ROOT_DIR)/build/make/all.mak
+CLI_DIR := ../../..
+PROJECTS = libclicpp.mak tktest.mak cpptest.mak empty.mak tuning.mak hello.mak clisample.mak tests.mak io_device.mak
+include $(CLI_DIR)/build/make/all.mak
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/Makefile.help
 $(CPP_DIR)/build/make/Makefile.help: ;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,12 +25,18 @@
 package cli;
 
 
-public class SyntaxNode extends Element
-{
+/** A syntax node is an element which may be considered as a node in the decision tree defining the command lines. */
+public class SyntaxNode extends Element {
+
+    /** Constructor.
+        @param I_NativeRef Native instance reference. */
     protected SyntaxNode(int I_NativeRef) {
         super(I_NativeRef);
     }
 
+    /** Adds a next element in the command lines decision tree after this node.
+        @param CLI_Element Next element after this node.
+        @return The element added. null if an error occured. */
     public final Element addElement(Element CLI_Element) {
         if (__addElement(this.getNativeRef(), CLI_Element.getNativeRef())) {
             return CLI_Element;
@@ -38,4 +44,5 @@ public class SyntaxNode extends Element
         return null;
     }
     private static final native boolean __addElement(int I_NativeSyntaxNodeRef, int I_NativeElementRef);
+
 }

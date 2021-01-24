@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -34,7 +34,7 @@
 #include <deque>
 #include <map>
 
-#include <cli/object.h>
+#include "cli/object.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -141,7 +141,7 @@ CLI_NS_BEGIN(cli)
             //! @brief String length accessor.
             const unsigned int GetLength(void) const
             {
-                return m_stlString.size();
+                return (unsigned int) m_stlString.size();
             }
 
             //! @brief Checks whether the string is empty or not.
@@ -275,12 +275,24 @@ CLI_NS_BEGIN(cli)
             //! @brief Item count.
             const unsigned int GetCount(void) const
             {
-                return m_stlQueue.size();
+                return (unsigned int) m_stlQueue.size();
             }
 
         public:
             //! @brief Iterator object.
-            typedef class std::deque<T>::iterator Iterator;
+            class Iterator : public std::deque<T>::iterator
+            {
+            private:
+                //! @brief Default constructor.
+                Iterator(void) : std::deque<T>::iterator() {}
+
+            public:
+                //! @brief Copy constructor from an STL iterator.
+                //! @note This is convenient for implicitely converting STL objects to CLI objects.
+                template <class U>
+                Iterator(const U& it)
+                  : std::deque<T>::iterator(it) {}
+            };
 
             //! @brief Iterator retrieval.
             Iterator GetIterator(void) const
@@ -535,12 +547,37 @@ CLI_NS_BEGIN(cli)
 
         public:
             //! @brief Iterator object.
-            typedef class std::map<K,T>::iterator Iterator;
+            class Iterator : public std::map<K,T>::iterator
+            {
+            private:
+            friend class Map;
+                //! @brief Default constructor.
+                Iterator(void) : std::map<K,T>::iterator() {}
+
+            public:
+                //! @brief Copy constructor.
+                //! @note   We cannot use implicit conversions from STL objects to CLI objects here
+                //!         because conflicting calls to Map::GetAt().
+                Iterator(const Iterator& it)
+                  : std::map<K,T>::iterator(it) {}
+
+            private:
+                //! @brief Assignment operator.
+                //! @note This operator ensures conversions from STL objects to CLI objects.
+                template <class U>
+                Iterator& operator=(const U& any) {
+                    std::map<K,T>::iterator::operator=(any);
+                    return *this;
+                }
+            };
+
 
             //! @brief Iterator retrieval.
             Iterator GetIterator(void) const
             {
-                return const_cast<std::map<K,T>&>(m_stlMap).begin();
+                Iterator it;
+                it = const_cast<std::map<K,T>&>(m_stlMap).begin();
+                return it;
             }
 
             //! @brief Checks the element at the given position is valid.

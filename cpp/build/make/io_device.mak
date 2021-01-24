@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,6 +22,7 @@
 
 
 # Includes
+CLI_DIR := ../../..
 SRC_DIR = $(CPP_DIR)/tests/io_device
 CLI_XML_RES = $(SRC_DIR)/io_device.xml
 CLI_MAIN_CPP = $(SRC_DIR)/io_device_impl.cpp
@@ -39,7 +40,7 @@ more-clean-up:
 	mv $(CLI_LOG).tmp $(CLI_LOG)
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/io_device.help
 $(CPP_DIR)/build/make/io_device.help: ;

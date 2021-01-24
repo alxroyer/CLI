@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -27,8 +27,9 @@
 
 #include <string>
 #include <map>
-#include <cli/object.h>
-#include <cli/io_device.h>
+
+#include "cli/object.h"
+#include "cli/io_device.h"
 
 class NativeObject
 {

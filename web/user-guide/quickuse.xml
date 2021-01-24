@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -179,8 +179,8 @@
             <para>
             Here is a <filename>goempty.cpp</filename> file doing so:
 <programlisting>
-#include &lt;cli/common.h&gt;
-#include &lt;cli/console.h&gt;
+#include "cli/common.h"
+#include "cli/console.h"
 extern cli::Cli* PCLI_MyCli;
 int main(void) {
     cli::Shell cli_Shell(*PCLI_MyCli);
@@ -208,7 +208,7 @@ g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a
             <para>
             This version of the <filename>goempty.cpp</filename> file works too:
 <programlisting>
-#include &lt;cli/common.h&gt;
+#include "cli/common.h"
 int main(void) {
     cli::CliList cli_List;
     const int i_Clis = cli::Cli::FindFromName(cli_List, ".*");
@@ -235,7 +235,7 @@ int main(void) {
                 <programlisting>xsltproc --param B_CliStaticCreation 0 --param STR_CliClassName "'EmptyCli'" cppclic.xsl empty.xml &gt; empty_cli.h</programlisting>
             The source <filename>goempty.cpp</filename> then simply includes <filename>empty_cli.h</filename>:
 <programlisting>
-#include &lt;cli/common.h&gt;
+#include "cli/common.h"
 #include "empty_cli.h"
 
 int main(void) {

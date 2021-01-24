@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -23,8 +23,10 @@
 */
 
 #include <deque>
+#include <iostream>
 
-#include <cli/param.h>
+#include "cli/param.h"
+#include "cli/endl.h"
 
 #include "NativeMenu.h"
 #include "NativeObject.h"
@@ -77,6 +79,38 @@ const bool __NativeMenu__Execute(
                     {
                         NativeTraces::TraceValue("pj_Object", "0x%08x", pj_Object);
                         b_Res = PJ_Env->CallBooleanMethod(pj_Object, pj_ExecuteMethodID, (int) & CLI_CmdLine);
+                        // Display error when Java code did not execute the command.
+                        if (! b_Res)
+                        {
+                            std::string str_CommandLine;
+                            const cli::Element* pcli_Element = NULL;
+                            for (   cli::CommandLineIterator it(CLI_CmdLine);
+                                    it.StepIt() && (pcli_Element = *it); )
+                            {
+                                if (! dynamic_cast<const cli::Endl*>(pcli_Element))
+                                {
+                                    if (! str_CommandLine.empty())
+                                    {
+                                        str_CommandLine += " ";
+                                    }
+                                    str_CommandLine += pcli_Element->GetKeyword();
+                                }
+                            }
+                            // Display unless the command is a well known command.
+                            if (true
+                                && (str_CommandLine != "cli-config")
+                                && (str_CommandLine != "exit")
+                                && (str_CommandLine != "help")
+                                && (str_CommandLine != "pwm")
+                                && (str_CommandLine != "quit")
+                                && (str_CommandLine != "traces"))
+                            {
+                                std::cerr
+                                    << "Java failed while executing command: "
+                                    << "'" << str_CommandLine << "'"
+                                    << std::endl;
+                            }
+                        }
                     }
                 }
             }
@@ -94,6 +128,7 @@ const bool __NativeMenu__Execute(
             q_Params.pop_back();
         }
     }
+
     NativeTraces::TraceReturn("__NativeMenu__Execute()", "%d", (int) b_Res);
     return b_Res;
 }

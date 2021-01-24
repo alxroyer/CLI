@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -28,28 +28,35 @@ import java.util.Iterator;
 import java.util.Vector;
 
 
+/** Command line class.
+    Describes a list of elements after analysis from a text command line. */
 public final class CommandLine extends NativeObject
 {
-    /*
-    Do not Create command lines from scratch.
-    The native library cares for that.
-
+    /** Constructor. */
     public CommandLine() {
         super(__CommandLine());
     }
-    */
     private static final native int __CommandLine();
 
-    // Create a new command line from native instance.
+    /** Create a new command line from native instance.
+        @param I_NativeCmdLineRef   Native object reference. */
     private static final void createFromNative(int I_NativeCmdLineRef) {
         Traces.traceMethod("CommandLine.createFromNative(I_NativeCmdLineRef)");
         Traces.traceParam("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString());
 
         // Just create a new object.
-        new CommandLine(I_NativeCmdLineRef);
+        CommandLine cli_CmdLine = new CommandLine(I_NativeCmdLineRef);
+        if (cli_CmdLine != null) {
+            // Do not finalize native-created objects.
+            cli_CmdLine.dontFinalize();
+            // Object already remembered from the NativeObject constructor...
+            //  NativeObject.remember(cli_CmdLine);
+        }
 
         Traces.traceReturn("CommandLine.createFromNative()");
     }
+    /** Create a command line from its native reference.
+        @param I_NativeCmdLineRef   Native object reference. */
     private CommandLine(int I_NativeCmdLineRef) {
         // Register the native reference.
         super(I_NativeCmdLineRef);
@@ -67,32 +74,35 @@ public final class CommandLine extends NativeObject
         }
     }
 
-    /*
-    Do not delete command line objects.
-    The native library cares for that.
-
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
-    */
     private static final native void __finalize(int I_NativeCmdLineRef);
 
-    // Let the native library notify java when command lines are not used anymore.
+    /** Let the native library notify java when command lines are not used anymore.
+        @param I_NativeCmdLineRef   Native object reference. */
     private static final void deleteFromNative(int I_NativeCmdLineRef) {
         Traces.traceMethod("CommandLine.deleteFromNative(I_NativeCmdLineRef)");
         Traces.traceParam("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString());
 
         // Forget the command line references.
         NativeObject cli_CmdLine = NativeObject.getObject(I_NativeCmdLineRef);
-        Traces.traceValue("cli_CmdLine", cli_CmdLine.toString());
-        if (cli_CmdLine instanceof CommandLine) {
-            NativeObject.forget(cli_CmdLine);
+        if (cli_CmdLine != null) {
+            Traces.traceValue("cli_CmdLine", cli_CmdLine.toString());
+            if (cli_CmdLine instanceof CommandLine) {
+                NativeObject.forget(cli_CmdLine);
+            }
         }
 
         Traces.traceReturn("CommandLine.deleteFromNative()");
     }
 
+    /** Retrieves an iterator over the elements of the command line.
+        @return Iterator over the elements of the command line. */
     public Iterator<Element> iterator() {
         return m_jElements.iterator();
     }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -33,26 +33,28 @@
 //! Within a single XML file, you define the tree of menus, keywords and parameters, and match them directly to some target language code.
 //!
 //! Different input/output devices are available:
-//!     - console:                      cli::Console
-//!     - TCP:                          cli::TelnetServer and cli::TelnetConnection
-//!     - files:                        cli::InputFileDevice and cli::OutputFileDevice
-//!     - single command:               cli::SingleCommand
-//!     - RS232 (todo)
-//!     - user defined input/output:    cli::IODevice
+//!     - console:                      Console
+//!     - TCP:                          TelnetServer and TelnetConnection
+//!     - files:                        InputFileDevice and OutputFileDevice
+//!     - single command:               SingleCommand
+//!     - input/output multiplexer:     IOMux
+//!     - user defined input/output:    IODevice
 //!
 //! This documentation gives information about the implementation of this library for C++. Here are pieces of advice to quickly get the essential of it:
-//!     - First of all, you might be interested in the cli::Cli class, which defines a CLI structure.
-//!     - Then have a look at the cli::Shell and cli::CommandLine classes. These classes implement CLI executions.
-//!     - Get back to the cli::Menu class and find out how user code is executed through the handlers. It is also interesting at this point to have a look at the XSL transformation.
-//!     - Eventually go to the cli::IODevice class and its child classes.
+//!     - First of all, you might be interested in the Cli class, which defines a CLI structure.
+//!     - Then have a look at the Shell and CommandLine classes. These classes implement CLI executions.
+//!     - Get back to the Menu class and find out how user code is executed through the handlers.
+//!       It is also interesting at this point to have a look at the XSL transformation.
+//!     - Eventually go to the IODevice class and its child classes.
 //!       You may also implement this generic input/output interface for special needs.
+//!     - You may need to have a look at the various preprocessing constants described in preprocessing.h.
 
 #ifndef _CLI_CLI_H_
 #define _CLI_CLI_H_
 
-#include <cli/namespace.h>
-#include <cli/menu.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/menu.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -139,7 +141,12 @@ CLI_NS_BEGIN(cli)
         const ConfigMenu& GetConfigMenu(void) const;
         //! @brief Configuration menu node access (read-only).
         const Keyword& GetConfigMenuNode(void) const;
+    public:
+        //! @brief Configuration menu enabling.
+        //! @return false is the operation failed.
+        const bool EnableConfigMenu(const bool B_Enable);
 
+    private:
         #ifdef _DEBUG
         //! @brief Traces menu access.
         TracesMenu& GetTracesMenu(void);

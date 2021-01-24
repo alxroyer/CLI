@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,38 +25,59 @@
 package cli;
 
 
+/** Help class.
+    Useful for all CLI element objects. */
 public final class Help extends NativeObject
 {
+    /** Default constructor. */
     public Help() {
         super(__Help());
     }
+    /** Copy constructor.
+        @param CLI_Help Source object. */
     public Help(Help CLI_Help) {
         super(__Help(CLI_Help.getNativeRef()));
     }
     private static final native int __Help();
     private static final native int __Help(int I_NativeHelpRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeHelpRef);
 
+    /** English language constant. */
     public static final int LANG_EN = 0;
+    /** French language constant. */
     public static final int LANG_FR = 1;
+    /** Number of languages managed by the library. */
     public static final int LANG_COUNT = 2;
 
+    /** Help addition for a given language.
+        @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
+        @param J_Help   Help string.
+        @return The help instance itself. */
     public final Help addHelp(int E_Lang, String J_Help) {
         __addHelp(this.getNativeRef(), E_Lang, J_Help);
         return this;
     }
     private static final native boolean __addHelp(int I_NativeHelpRef, int E_Lang, String J_Help);
 
+    /** States whether the help object has a help resource for the given language.
+        @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
+        @return true if the help object contains resource for the given language, false otherwise. */
     public final boolean hasHelp(int E_Lang) {
         return __hasHelp(this.getNativeRef(), E_Lang);
     }
     private static final native boolean __hasHelp(int I_NativeHelpRef, int E_Lang);
 
+    /** Retrieves help resource for the given language.
+        @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
+        @return Help resource. */
     public final String getHelp(int E_Lang) {
         return __getHelp(this.getNativeRef(), E_Lang);
     }

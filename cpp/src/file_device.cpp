@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -60,15 +60,23 @@ const bool InputFileDevice::OpenDevice(void)
     CLI_ASSERT(& m_cliOutput != this);
     if (! m_cliOutput.OpenUp(__CALL_INFO__))
     {
+        m_cliLastError = m_cliOutput.GetLastError();
         return false;
     }
 
     if (m_pfFile == NULL)
     {
         m_pfFile = fopen(m_strFileName, "r");
+        if (m_pfFile == NULL)
+        {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, ResourceString::Concat("Cannot open input file '", m_strFileName, "'"))
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible d'ouvrir le fichier d'entrée '", m_strFileName, "'"));
+            return false;
+        }
     }
 
-    return (m_pfFile != NULL);
+    return true;
 }
 
 const bool InputFileDevice::CloseDevice(void)
@@ -79,6 +87,9 @@ const bool InputFileDevice::CloseDevice(void)
     {
         if (fclose(m_pfFile) != 0)
         {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, ResourceString::Concat("Cannot close input file '", m_strFileName, "'"))
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible de fermer le fichier d'entrée '", m_strFileName, "'"));
             b_Res = false;
         }
         m_pfFile = NULL;
@@ -86,6 +97,7 @@ const bool InputFileDevice::CloseDevice(void)
 
     if (! m_cliOutput.CloseDown(__CALL_INFO__))
     {
+        m_cliLastError = m_cliOutput.GetLastError();
         b_Res = false;
     }
 
@@ -99,7 +111,8 @@ const KEY InputFileDevice::GetKey(void) const
         m_iCurrentLine = m_iNextLine;
         m_iCurrentColumn = m_iNextColumn;
         char c_Char = NULL_KEY;
-        if (fread(& c_Char, sizeof(char), 1, m_pfFile) == 1)
+        while ( (! feof(m_pfFile))
+                && (fread(& c_Char, sizeof(char), 1, m_pfFile) == 1))
         {
             if (c_Char == '\n')
             {
@@ -110,7 +123,14 @@ const KEY InputFileDevice::GetKey(void) const
             {
                 m_iNextColumn ++;
             }
-            return IODevice::GetKey(c_Char);
+            KEY e_Key = IODevice::GetKey(c_Char);
+            if (e_Key != NULL_KEY)
+            {
+                m_cliLastError
+                    .SetString(ResourceString::LANG_EN, ResourceString::Concat("Error while reading input file '", m_strFileName, "'"))
+                    .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrée '", m_strFileName, "'"));
+                return e_Key;
+            }
         }
     }
 
@@ -158,9 +178,16 @@ const bool OutputFileDevice::OpenDevice(void)
     if (m_pfFile == NULL)
     {
         m_pfFile = fopen(m_strFileName, "w");
+        if (m_pfFile == NULL)
+        {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, ResourceString::Concat("Cannot open output file '", m_strFileName, "'"))
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible d'ouvrir le fichier de sortie '", m_strFileName, "'"));
+            return false;
+        }
     }
 
-    return (m_pfFile != NULL);
+    return true;
 }
 
 const bool OutputFileDevice::CloseDevice(void)
@@ -171,6 +198,9 @@ const bool OutputFileDevice::CloseDevice(void)
     {
         if (fclose(m_pfFile) != 0)
         {
+            m_cliLastError
+                .SetString(ResourceString::LANG_EN, ResourceString::Concat("Cannot close output file '", m_strFileName, "'"))
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible de fermer le fichier de sortie '", m_strFileName, "'"));
             b_Res = false;
         }
         m_pfFile = NULL;

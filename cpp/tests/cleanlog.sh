@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #

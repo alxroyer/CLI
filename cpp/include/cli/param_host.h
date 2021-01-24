@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,8 +30,8 @@
 #ifndef _CLI_PARAM_HOST_H_
 #define _CLI_PARAM_HOST_H_
 
-#include <cli/namespace.h>
-#include <cli/param_string.h>
+#include "cli/namespace.h"
+#include "cli/param_string.h"
 
 
 CLI_NS_BEGIN(cli)

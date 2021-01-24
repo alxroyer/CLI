@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -144,7 +144,7 @@
         through target language tags:
             <itemizedlist>
             <listitem><sgmltag class="element">cpp</sgmltag> for C++</listitem>
-            <listitem><sgmltag class="element">java</sgmltag> for C++</listitem>
+            <listitem><sgmltag class="element">java</sgmltag> for Java</listitem>
             <listitem>...</listitem>
             </itemizedlist>
         </para>

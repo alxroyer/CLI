@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,17 +25,22 @@
 package cli;
 
 
+/** Input file device. */
 public class InputFileDevice extends IODevice
 {
-    //! @param STR_FileName Input file name.
-    //! @param CLI_Out Output device.
+    /** Constructor.
+        @param STR_FileName Input file name.
+        @param CLI_Out Output device. */
     public InputFileDevice(String STR_FileName, OutputDevice CLI_Out) {
         super(__InputFileDevice(STR_FileName, CLI_Out.getNativeRef()));
     }
     private static final native int __InputFileDevice(String STR_FileName, int I_NativeOutputDeviceRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeFileDeviceRef);

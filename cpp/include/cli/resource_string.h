@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,9 +30,9 @@
 #ifndef _CLI_STRING_H_
 #define _CLI_STRING_H_
 
-#include <cli/namespace.h>
-#include <cli/object.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/object.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -56,6 +56,7 @@ CLI_NS_BEGIN(cli)
 
     public:
         //! @brief Assignment operator.
+        //! @return The object itself.
         ResourceString& operator=(
             const ResourceString& STR_String    //!< Source string object.
             );
@@ -66,11 +67,13 @@ CLI_NS_BEGIN(cli)
         {
             LANG_EN,        //!< English.
             LANG_FR,        //!< French.
-            LANG_COUNT      //!< Languages count.
+            LANG_COUNT,     //!< Languages count.
+            LANG_DEFAULT = LANG_EN
         } LANG;
 
     public:
         //! @brief Adds resource for a given language.
+        //! @return The object itself.
         //!
         //! If a string already exists for the given language,
         //! then it is overwritten.
@@ -80,25 +83,35 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Determines whether a string exists for a given language.
+        //! @return true: The resource string has a string set for the given language.
+        //! @return false: The resource string has no string set for the given language.
         const bool HasString(
             const LANG E_Lang               //!< Language identifier.
             ) const;
 
         //! @brief Access to the string of a given language.
+        //! @return The string defined for the given language.
         //!
         //! If the string does not exist for the given language, the defaultt language is used.
         const tk::String GetString(
             const LANG E_Lang               //!< Language identifier.
             ) const;
 
+        //! @brief Determines whether the resource string is empty (ie no string has been set for any language).
+        //! @return true: The resource string is empty.
+        //! @return false: The resource string is not empty.
+        const bool IsEmpty(void) const;
+
     public:
         //! @brief String concatenation in the aim of a resource definition.
+        //! @return The concatenation of the string arguments.
         static const tk::String Concat(
             const char* const STR_1,        //!< First string.
             const char* const STR_2         //!< Second string.
             );
 
         //! @brief String concatenation in the aim of a resource definition.
+        //! @return The concatenation of the string arguments.
         static const tk::String Concat(
             const char* const STR_1,        //!< First string.
             const char* const STR_2,        //!< Second string.
@@ -106,6 +119,7 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief String concatenation in the aim of a resource definition.
+        //! @return The concatenation of the string arguments.
         static const tk::String Concat(
             const char* const STR_1,        //!< First string.
             const char* const STR_2,        //!< Second string.
@@ -114,6 +128,7 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief String concatenation in the aim of a resource definition.
+        //! @return The concatenation of the string arguments.
         static const tk::String Concat(
             const char* const STR_1,        //!< First string.
             const char* const STR_2,        //!< Second string.
@@ -128,6 +143,15 @@ CLI_NS_BEGIN(cli)
         //! Help map.
         LangStringMap m_mapStrings;
     };
+
+    //! @brief Addition operator.
+    //! @return The concatenation of the resource string arguments.
+    //!
+    //! Concats the strings of the input resource string objects for each language.
+    ResourceString operator+(
+        const ResourceString& CLI_Str1,     //!< First member.
+        const ResourceString& CLI_Str2      //!< Second member.
+        );
 
 CLI_NS_END(cli)
 

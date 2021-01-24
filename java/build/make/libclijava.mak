@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,11 +22,12 @@
 
 
 # Default goal
-.DEFAULT_GOAL ?= build
+DEFAULT_GOAL ?= build
 .PHONY: libclijava.default
 libclijava.default: build ;
 
 # Variables.
+CLI_DIR := ../../..
 include vars.mak
 
 JAVA_FILES = $(wildcard $(JAVA_DIR)/src/cli/*.java)
@@ -43,7 +44,7 @@ dirs:
 
 $(JAVA_ARCHIVE): $(JAVA_FILES)
 	javac $(JAVAC_FLAGS) $(JAVA_FILES)
-	jar $(JAR_FLAGS) -cf $(JAVA_ARCHIVE) $(JAVA_CLASSES)
+	cd $(RDX) && jar $(JAR_FLAGS) -cf $(notdir $(JAVA_ARCHIVE)) cli
 
 %.class: %.java
 	javac $<
@@ -56,7 +57,7 @@ clean:
 	$(RM) $(JAVA_ARCHIVE) $(JAVA_CLASSES)
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/libclijava.help
 $(JAVA_DIR)/build/make/libclijava.help:

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -32,9 +32,9 @@
 
 #include <stdio.h>
 
-#include <cli/namespace.h>
-#include <cli/io_device.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/io_device.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)

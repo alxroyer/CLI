@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,15 +25,23 @@
 package cli;
 
 
+/** A syntax tag does nothing from the execution point of view, and represents no keyword or parameter.
+    It may be referenced by SyntaxRef elements to make jumps in the command lines decision tree. */
 public class SyntaxTag extends SyntaxNode {
 
+    /** Regular constructor.
+        @param B_HollowTag  true when the tag is a hollow tag.
+                            See the CLI user-guide for more information on hollow tags. */
     public SyntaxTag(boolean B_HollowTag) {
         super(__SyntaxTag(B_HollowTag));
     }
     private static final native int __SyntaxTag(boolean B_HollowTag);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeTagRef);

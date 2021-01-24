@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,12 +22,12 @@
 
 
 # Default goal
-.DEFAULT_GOAL ?= check
+DEFAULT_GOAL ?= check
 .PHONY: javatest.default
 javatest.default: check ;
 
 # Parameters
-CLI_XML_RES ?= $(ROOT_DIR)/samples/clisample/clisample.xml
+CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 
 # Includes
 include vars.mak
@@ -76,7 +76,7 @@ clean:
 	$(RM) $(CLI_JAVA) $(CLI_CLASS) $(CLI_TEST_SAMPLE_CLASS) $(CLI_LOG)
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/test.help
 $(JAVA_DIR)/build/make/test.help:

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -22,10 +22,10 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <cli/cli.h>
-#include <cli/file_device.h>
-#include <cli/traces.h>
-#include <cli/assert.h>
+#include "cli/cli.h"
+#include "cli/file_device.h"
+#include "cli/traces.h"
+#include "cli/assert.h"
 
 #include "io_device_impl.h"
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,8 +25,8 @@
 #ifndef _CLI_NATIVE_TRACES_H_
 #define _CLI_NATIVE_TRACES_H_
 
-#include <cli/traces.h>
-#include <cli/io_device.h>
+#include "cli/traces.h"
+#include "cli/io_device.h"
 
 #include "jni.h"
 

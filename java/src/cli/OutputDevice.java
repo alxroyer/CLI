@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,54 +25,86 @@
 package cli;
 
 
+/** Generic output device. */
 public class OutputDevice extends NativeObject
 {
+    /** Constructor.
+        @param I_NativeRef Native instance reference. */
     protected OutputDevice(int I_NativeRef) {
         super(I_NativeRef);
     }
 
+    /** Pushes characters to the output device.
+        @param J_Text String to be displayed by the device.
+        @return The output device itself. */
     public final OutputDevice put(String J_Text) {
         __print(getNativeRef(), J_Text);
         return this;
     }
     private static final native void __print(int I_NativeOutputDeviceRef, String J_Text);
+    /** Pushes an integer value to be displayed by the output device.
+        @param J_Integer Integer value to be displayed by the device.
+        @return The output device itself. */
     public final OutputDevice put(Integer J_Integer) {
         __print(getNativeRef(), J_Integer.intValue());
         return this;
     }
     private static final native void __print(int I_NativeOutputDeviceRef, int I_Integer);
+    /** Pushes a float value to be displayed by the output device.
+        @param J_Float Float value to be displayed by the device.
+        @return The output device itself. */
     public final OutputDevice put(Float J_Float) {
         __print(getNativeRef(), J_Float.floatValue());
         return this;
     }
     private static final native void __print(int I_NativeOutputDeviceRef, float F_Float);
+    /** Pushes a double value to be displayed by the output device.
+        @param J_Double Double value to be displayed by the device.
+        @return The output device itself. */
     public final OutputDevice put(Double J_Double) {
         __print(getNativeRef(), J_Double.doubleValue());
         return this;
     }
     private static final native void __print(int I_NativeOutputDeviceRef, double D_Double);
+    /** Pushes an end of line to be displayed by the output device.
+        @return The output device itself. */
     public final OutputDevice endl() {
         __endl(getNativeRef());
         return this;
     }
     private static final native void __endl(int I_NativeOutputDeviceRef);
 
-    //! @brief Null device.
+    /** Null device singleton.
+        @return The null output device. */
     public static final OutputDevice getNullDevice() {
-        return new OutputDevice(__getNullDevice());
+        if (m_cliNullDevice == null) {
+            m_cliNullDevice = new OutputDevice(__getNullDevice());
+        }
+        return m_cliNullDevice;
     }
     private static final native int __getNullDevice();
+    private static OutputDevice m_cliNullDevice = null;
 
-    //! @brief Standard output device.
+    /** Standard output device singleton.
+        @return The standard output device. */
     public static final OutputDevice getStdOut() {
-        return new OutputDevice(__getStdOut());
+        if (m_cliStdOut == null) {
+            m_cliStdOut = new OutputDevice(__getStdOut());
+        }
+        return m_cliStdOut;
     }
     private static final native int __getStdOut();
+    private static OutputDevice m_cliStdOut = null;
 
-    //! @brief Standard error device.
+    /** Standard error device singleton.
+        @return The standard error device. */
     public static final OutputDevice getStdErr() {
-        return new OutputDevice(__getStdErr());
+        if (m_cliStdErr == null) {
+            m_cliStdErr = new OutputDevice(__getStdErr());
+        }
+        return m_cliStdErr;
     }
     private static final native int __getStdErr();
+    private static OutputDevice m_cliStdErr = null;
 
 }

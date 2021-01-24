@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,8 +30,8 @@
 #ifndef _CLI_ENDL_H_
 #define _CLI_ENDL_H_
 
-#include <cli/namespace.h>
-#include <cli/element.h>
+#include "cli/namespace.h"
+#include "cli/element.h"
 
 
 CLI_NS_BEGIN(cli)

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -25,7 +25,7 @@ __ROOT_ALL = 1
 
 
 # Default goal
-.DEFAULT_GOAL ?= default
+DEFAULT_GOAL ?= default
 .PHONY: all.default
 all.default: default ;
 
@@ -33,8 +33,8 @@ all.default: default ;
 PROJECTS ?=
 
 # Includes
-ROOT_DIR ?= ../..
-include $(ROOT_DIR)/build/make/vars.mak
+CLI_DIR ?= ../..
+include $(CLI_DIR)/build/make/vars.mak
 
 # Rules
 .PHONY: default
@@ -50,14 +50,14 @@ clean:
 	$(call MkDispatch,$(PROJECTS),clean)
 
 # Debug and help
-.PHONY: $(ROOT_DIR)/build/make/all.help
-$(ROOT_DIR)/build/make/all.help:
+.PHONY: $(CLI_DIR)/build/make/all.help
+$(CLI_DIR)/build/make/all.help:
 	$(call PrintHelp, default,   Dispatch default rule on sub-projects)
 	$(call PrintHelp, deps,      Dispatch deps rule on sub-projects)
 	$(call PrintHelp, clean,     Dispatch clean rule on sub-projects)
 
-.PHONY: $(ROOT_DIR)/build/make/all.vars
-$(ROOT_DIR)/build/make/all.vars:
+.PHONY: $(CLI_DIR)/build/make/all.vars
+$(CLI_DIR)/build/make/all.vars:
 	$(call ShowVariables,PROJECTS)
 
 endif

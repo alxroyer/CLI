@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -31,10 +31,12 @@ VERSION
 
 INSTALL
   This library needs the 'ncurses' library for the console mode.
+  It also needs a JDK 1.5 at least, with a regular JAVA_HOME environment variable being set.
   Assuming this, you should compile the library from the sources using the following commands:
+    $ cd build/make
     $ make
   or (debug version):
-    $ make _DEBUG=
+    $ make _DEBUG=1
  Eventually copy 'cli.dll/so' and extract 'cli.jar' in the correct paths
  or modify your paths to have java work with this library
 

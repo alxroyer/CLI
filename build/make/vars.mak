@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -24,16 +24,16 @@ ifndef __ROOT_VARS__
 __ROOT_VARS__ = 1
 
 # Parameters
-ROOT_DIR ?= ../..
+CLI_DIR ?= ../..
 
 #Includes
-include $(ROOT_DIR)/build/make/utils.mak
+include $(CLI_DIR)/build/make/utils.mak
 
 # Variables
-CPP_DIR = $(ROOT_DIR)/cpp
-JAVA_DIR = $(ROOT_DIR)/java
-SAMPLES_DIR = $(ROOT_DIR)/samples
-WEB_DIR = $(ROOT_DIR)/web
+CPP_DIR = $(CLI_DIR)/cpp
+JAVA_DIR = $(CLI_DIR)/java
+SAMPLES_DIR = $(CLI_DIR)/samples
+WEB_DIR = $(CLI_DIR)/web
 
 ifndef _DEBUG
 	RDX = Release
@@ -42,12 +42,12 @@ else
 endif
 
 # Debug and help
-.PHONY: $(ROOT_DIR)/build/make/vars.help
-$(ROOT_DIR)/build/make/vars.help: ;
+.PHONY: $(CLI_DIR)/build/make/vars.help
+$(CLI_DIR)/build/make/vars.help: ;
 
-.PHONY: $(ROOT_DIR)/build/make/vars.vars
-$(ROOT_DIR)/build/make/vars.vars:
-	$(call ShowVariables,ROOT_DIR CPP_DIR JAVA_DIR SAMPLES_DIR WEB_DIR)
+.PHONY: $(CLI_DIR)/build/make/vars.vars
+$(CLI_DIR)/build/make/vars.vars:
+	$(call ShowVariables,CLI_DIR CPP_DIR JAVA_DIR SAMPLES_DIR WEB_DIR)
 
 
 endif

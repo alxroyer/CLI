@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,11 +22,12 @@
 
 
 # Default goal
-.DEFAULT_GOAL ?= headers
+DEFAULT_GOAL ?= headers
 .PHONY: jni.default
 jni.default: headers ;
 
 # Variables.
+CLI_DIR := ../../..
 include vars.mak
 
 JAVA_FILES = $(wildcard $(JAVA_SRC_DIR)/cli/*.java)
@@ -53,7 +54,7 @@ clean:
 	$(RM) $(CPP_HEADERS)
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/jni.help
 $(JAVA_DIR)/build/make/jni.help:

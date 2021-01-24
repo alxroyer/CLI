@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -165,7 +165,10 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
 
 const bool Menu::Execute(const CommandLine& CLI_CommandLine) const
 {
-    GetErrorStream() << "(no execution defined)" << endl;
+    const ResourceString cli_Error = ResourceString()
+        .SetString(ResourceString::LANG_EN, "No execution defined for the current command line")
+        .SetString(ResourceString::LANG_FR, "Pas d'exécution définie pour la ligne de commande");
+    GetErrorStream() << cli_Error.GetString(GetShell().GetLang()) << endl;
     return true;
 }
 

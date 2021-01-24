@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -24,7 +24,12 @@ ifndef __ROOT_HELP__
 __ROOT_HELP__ = 1
 
 
-ROOT_DIR ?= ../..
+CLI_DIR ?= ../..
+
+# Default goal
+#ifneq ($(DEFAULT_GOAL),)
+#.DEFAULT_GOAL = $(DEFAULT_GOAL)
+#endif
 
 # Functions
 	# Print help.
@@ -32,7 +37,7 @@ ROOT_DIR ?= ../..
 	# $(2): Rule Description.
 	PrintHelp =     @echo -n "$(MAKE)" \
 	                && echo -n "$(if $(strip $(1)), $(strip $(1)))" \
-	                && echo -n "$(if $(filter $(.DEFAULT_GOAL),$(1)), [default])" \
+	                && echo -n "$(if $(filter $(DEFAULT_GOAL),$(1)), [default])" \
 	                && echo -n ": $(strip $(2))" \
 	                && echo ""
 	# Show variables for the current makefile.
@@ -45,28 +50,26 @@ HELP_RULES = $(patsubst Makefile,Makefile.help,$(patsubst %.mak,%.help,$(MAKEFIL
 .PHONY: help %.help
 help: $(HELP_RULES) ;
 # This rule should simply redirect to the correct file when no path is given
-#%.help: $(patsubst $(realpath $(ROOT_DIR))/%,$(ROOT_DIR)/%,$(realpath .))/%.help ;
-%.help: $(ROOT_DIR)/build/make/%.help ;
-%.help: $(CPP_DIR)/build/make/%.help ;
-%.help: $(JAVA_DIR)/build/make/%.help ;
+#%.help: $(patsubst $(realpath $(CLI_DIR))/%,$(CLI_DIR)/%,$(realpath .))/%.help ;
+%.help: $(CLI_DIR)/$(notdir $(patsubst %/build/make,%,$(shell pwd)))/build/make/%.help ;
+%.help: $(CLI_DIR)/build/make/%.help ;
 
-VAR_RULES = $(filter-out $(ROOT_DIR)/build/make/utils.vars $(ROOT_DIR)/build/make/help.vars,$(patsubst Makefile,Makefile.vars,$(patsubst %.mak,%.vars,$(MAKEFILE_LIST))))
+VAR_RULES = $(filter-out $(CLI_DIR)/build/make/utils.vars $(CLI_DIR)/build/make/help.vars,$(patsubst Makefile,Makefile.vars,$(patsubst %.mak,%.vars,$(MAKEFILE_LIST))))
 .PHONY: vars
 vars: $(VAR_RULES) ;
 # This rule should simply redirect to the correct file when no path is given
-#%.vars: $(patsubst $(realpath $(ROOT_DIR))/%,$(ROOT_DIR)/%,$(realpath .))/%.vars ;
-%.vars: $(ROOT_DIR)/build/make/%.vars ;
-%.vars: $(CPP_DIR)/build/make/%.vars ;
-%.vars: $(JAVA_DIR)/build/make/%.vars ;
+#%.vars: $(patsubst $(realpath $(CLI_DIR))/%,$(CLI_DIR)/%,$(realpath .))/%.vars ;
+%.vars: $(CLI_DIR)/$(notdir $(patsubst %/build/make,%,$(shell pwd)))/build/make/%.vars ;
+%.vars: $(CLI_DIR)/build/make/%.vars ;
 
 # Debug and help
-.PHONY: $(ROOT_DIR)/build/make/help.help
-$(ROOT_DIR)/build/make/help.help:
+.PHONY: $(CLI_DIR)/build/make/help.help
+$(CLI_DIR)/build/make/help.help:
 	$(call PrintHelp, help, Print help)
 	$(call PrintHelp, vars, Show variables)
 
-.PHONY: $(ROOT_DIR)/build/make/help.vars
-$(ROOT_DIR)/build/make/help.vars:
+.PHONY: $(CLI_DIR)/build/make/help.vars
+$(CLI_DIR)/build/make/help.vars:
 	$(call ShowVariables,MAKEFILE_LIST VAR_RULES HELP_RULES)
 
 

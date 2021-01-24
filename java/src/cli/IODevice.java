@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,8 +25,11 @@
 package cli;
 
 
+/** Generic input/output device. */
 public class IODevice extends OutputDevice
 {
+    /** Constructor.
+        @param I_NativeRef Native instance reference. */
     protected IODevice(int I_NativeRef) {
         super(I_NativeRef);
     }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,11 +30,11 @@
 #ifndef _CLI_SHELL_H_
 #define _CLI_SHELL_H_
 
-#include <cli/namespace.h>
-#include <cli/object.h>
-#include <cli/help.h>
-#include <cli/io_device.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/object.h"
+#include "cli/help.h"
+#include "cli/io_device.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -48,7 +48,7 @@ CLI_NS_BEGIN(cli)
 
 
     //! @brief Output stream enumeration.
-    typedef enum
+    typedef enum _STREAM_TYPE
     {
         ALL_STREAMS = -1,   //!< All streams.
 
@@ -113,11 +113,31 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Welcome message setting.
-        void SetWelcomeMessage(const ResourceString& CLI_WelcomeMessage);
+        void SetWelcomeMessage(
+            const ResourceString& CLI_WelcomeMessage    //!< Welcome message.
+                                                        //!< When an empty string is given, the default
+                                                        //!< welcome message is restored.
+            );
         //! @brief Bye message setting.
-        void SetByeMessage(const ResourceString& CLI_ByeMessage);
+        void SetByeMessage(
+            const ResourceString& CLI_ByeMessage        //!< Bye message.
+                                                        //!< When an empty string is given, the default
+                                                        //!< bye message is restored.
+            );
         //! @brief Prompt message positionning.
-        void SetPrompt(const ResourceString& CLI_Prompt);
+        void SetPrompt(
+            const ResourceString& CLI_Prompt            //!< Prompt string.
+                                                        //!< When an empty string is given, the default
+                                                        //!< prompt (depending on the current menu)
+                                                        //!< is restored.
+            );
+        //! @brief Error formatting.
+        void SetErrorFormatting(
+            const ResourceString& CLI_ErrorPrefix,      //!< Error prefix string.
+                                                        //!< No error prefixing when the string given is empty.
+            const ResourceString& CLI_ErrorSuffix       //!< Error suffix string.
+                                                        //!< No error suffixing when the string given is empty.
+            );
 
         //! @brief Language setting.
         void SetLang(const ResourceString::LANG E_Lang);
@@ -161,6 +181,8 @@ CLI_NS_BEGIN(cli)
         void PromptByeMessage(void) const;
         //! @brief Prints the prompt message, indicating the current menu.
         void PromptMenu(void) const;
+        //! @brief Error printing.
+        void PrintError(const ResourceString& CLI_ErrorMessage) const;
 
     private:
         friend class Menu;
@@ -248,6 +270,8 @@ CLI_NS_BEGIN(cli)
         ResourceString m_cliByeMessage;
         //! Non-default Prompt.
         ResourceString m_cliNoDefaultPrompt;
+        //! Error formatting: prefix and suffix.
+        ResourceString m_cliErrorFormatting[2];
         //! Current language.
         ResourceString::LANG m_eLang;
         //! Beep enabled.

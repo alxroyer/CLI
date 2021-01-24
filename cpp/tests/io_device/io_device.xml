@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -26,8 +26,8 @@
 
 <cli name="io-device" xmlns="http://alexis.royer.free.fr/CLI">
 
-    <cpp option="include">#include &lt;cli/single_command.h&gt;</cpp>
-    <cpp option="include">#include &lt;cli/file_device.h&gt;</cpp>
+    <cpp option="include">#include "cli/single_command.h"</cpp>
+    <cpp option="include">#include "cli/file_device.h"</cpp>
     <cpp option="include">#include "io_device_impl.h"</cpp>
 
     <cpp>CLI_NS_USE(cli)</cpp>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,10 +30,10 @@
 #ifndef _CLI_TELNET_H_
 #define _CLI_TELNET_H_
 
-#include <cli/namespace.h>
-#include <cli/object.h>
-#include <cli/io_device.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/object.h"
+#include "cli/io_device.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -120,14 +120,7 @@ CLI_NS_BEGIN(cli)
         //! @brief Beep handler.
         virtual void Beep(void) const;
 
-    protected:
-        //! @brief Error device selection.
-        //! @note It is better not to report error to the device which has caused the error.
-        const OutputDevice& GetErrorStream(void) const;
-
     private:
-        //! Shell reference.
-        Shell& m_cliShell;
         //! Connection socket handler.
         const int m_iSocket;
         //! Character input buffer.

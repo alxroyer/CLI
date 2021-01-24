@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -49,9 +49,16 @@ static const unsigned int HELP_OFFSET = 15;
 static const unsigned int HISTORY_PAGE = 5;
 static const unsigned int HISTORY_STACK_SIZE = 100;
 
-static const TraceClass TRACE_SHELL("CLI_SHELL", Help()
-    .AddHelp(Help::LANG_EN, "Shell traces")
-    .AddHelp(Help::LANG_FR, "Traces du shell"));
+//! @brief Shell trace class singleton redirection.
+#define TRACE_SHELL GetShellTraceClass()
+//! @brief Shell trace class singleton.
+static const TraceClass& GetShellTraceClass(void)
+{
+    static const TraceClass cli_ShellTraceClass("CLI_SHELL", Help()
+        .AddHelp(Help::LANG_EN, "Shell traces")
+        .AddHelp(Help::LANG_FR, "Traces du shell"));
+    return cli_ShellTraceClass;
+}
 
 
 Shell::Shell(const Cli& CLI_Cli)
@@ -59,7 +66,8 @@ Shell::Shell(const Cli& CLI_Cli)
     m_eLang(Help::LANG_EN), m_bBeep(true),
     m_qMenus(MAX_MENU_PER_CLI),
     m_strLine(MAX_CMD_LINE_LENGTH),
-    m_qHistory(HISTORY_STACK_SIZE),
+    // History stack owns HISTORY_STACK_SIZE + 1 elements for HISTORY_STACK_SIZE previous and another next one.
+    m_qHistory(HISTORY_STACK_SIZE + 1),
     m_iHistoryIndex(0)
 {
     EnsureCommonDevices();
@@ -124,6 +132,10 @@ const OutputDevice& Shell::GetStream(const STREAM_TYPE E_StreamType) const
             }
         }
     }
+    else
+    {
+        CLI_ASSERT(false);
+    }
 
     // Default to null device.
     return OutputDevice::GetNullDevice();
@@ -133,6 +145,7 @@ const bool Shell::SetStream(const STREAM_TYPE E_StreamType, OutputDevice& CLI_St
 {
     if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
     {
+        CLI_ASSERT(false);
         return false;
     }
     else
@@ -148,6 +161,7 @@ const bool Shell::SetStream(const STREAM_TYPE E_StreamType, OutputDevice& CLI_St
             {
                 if (! pcli_Stream->CloseDown(__CALL_INFO__))
                 {
+                    PrintError(pcli_Stream->GetLastError());
                     b_Res = false;
                 }
             }
@@ -168,6 +182,7 @@ const bool Shell::SetStream(const STREAM_TYPE E_StreamType, OutputDevice& CLI_St
                 if (! CLI_Stream.OpenUp(__CALL_INFO__))
                 {
                     // Store nothing on error.
+                    PrintError(CLI_Stream.GetLastError());
                     CLI_Stream.FreeInstance(__CALL_INFO__);
                     return false;
                 }
@@ -184,6 +199,7 @@ const bool Shell::StreamEnabled(const STREAM_TYPE E_StreamType) const
 {
     if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
     {
+        CLI_ASSERT(false);
         return false;
     }
     else
@@ -196,6 +212,7 @@ const bool Shell::EnableStream(const STREAM_TYPE E_StreamType, const bool B_Enab
 {
     if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
     {
+        CLI_ASSERT(false);
         return false;
     }
     else
@@ -218,6 +235,12 @@ void Shell::SetByeMessage(const ResourceString& CLI_ByeMessage)
 void Shell::SetPrompt(const ResourceString& CLI_Prompt)
 {
     m_cliNoDefaultPrompt = CLI_Prompt;
+}
+
+void Shell::SetErrorFormatting(const ResourceString& CLI_ErrorPrefix, const ResourceString& CLI_ErrorSuffix)
+{
+    m_cliErrorFormatting[0] = CLI_ErrorPrefix;
+    m_cliErrorFormatting[1] = CLI_ErrorSuffix;
 }
 
 void Shell::SetLang(const ResourceString::LANG E_Lang)
@@ -326,18 +349,28 @@ const bool Shell::OpenDevices(IODevice& CLI_IODevice)
     // Then open up devices.
     {
         // Input.
-        if ((m_pcliInput == NULL)
-            || (! m_pcliInput->OpenUp(__CALL_INFO__)))
+        if (m_pcliInput == NULL)
         {
+            CLI_ASSERT(false);
+            b_Res = false;
+        }
+        else if (! m_pcliInput->OpenUp(__CALL_INFO__))
+        {
+            PrintError(m_pcliInput->GetLastError());
             b_Res = false;
         }
 
         // Output.
         for (int i=0; i<STREAM_TYPES_COUNT; i++)
         {
-            if ((m_artStream[i].pcliStream == NULL)
-                || (! m_artStream[i].pcliStream->OpenUp(__CALL_INFO__)))
+            if (m_artStream[i].pcliStream == NULL)
             {
+                CLI_ASSERT(false);
+                b_Res = false;
+            }
+            else if (! m_artStream[i].pcliStream->OpenUp(__CALL_INFO__))
+            {
+                PrintError(m_artStream[i].pcliStream->GetLastError());
                 b_Res = false;
             }
         }
@@ -357,17 +390,27 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
         // Output.
         for (int i=0; i<STREAM_TYPES_COUNT; i++)
         {
-            if ((m_artStream[i].pcliStream != NULL)
-                && (! m_artStream[i].pcliStream->CloseDown(__CALL_INFO__)))
+            if (m_artStream[i].pcliStream == NULL)
             {
+                CLI_ASSERT(false);
+                b_Res = false;
+            }
+            else if (! m_artStream[i].pcliStream->CloseDown(__CALL_INFO__))
+            {
+                PrintError(m_artStream[i].pcliStream->GetLastError());
                 b_Res = false;
             }
         }
 
         // Input device.
-        if ((m_pcliInput != NULL)
-            && (! m_pcliInput->CloseDown(__CALL_INFO__)))
+        if (m_pcliInput == NULL)
         {
+            CLI_ASSERT(false);
+            b_Res = false;
+        }
+        else if (! m_pcliInput->CloseDown(__CALL_INFO__))
+        {
+            PrintError(m_pcliInput->GetLastError());
             b_Res = false;
         }
     }
@@ -379,7 +422,10 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
         {
             if (m_artStream[i].pcliStream == & CLI_IODevice)
             {
-                m_artStream[i].pcliStream->FreeInstance(__CALL_INFO__);
+                if (! m_artStream[i].pcliStream->FreeInstance(__CALL_INFO__))
+                {
+                    PrintError(m_artStream[i].pcliStream->GetLastError());
+                }
                 m_artStream[i].pcliStream = NULL;
             }
         }
@@ -387,7 +433,10 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
         // Input.
         if (m_pcliInput != NULL)
         {
-            m_pcliInput->FreeInstance(__CALL_INFO__);
+            if (! m_pcliInput->FreeInstance(__CALL_INFO__))
+            {
+                PrintError(m_pcliInput->GetLastError());
+            }
             m_pcliInput = NULL;
         }
     }
@@ -433,24 +482,38 @@ void Shell::PromptByeMessage(void) const
 void Shell::PromptMenu(void) const
 {
     // Show the prompt.
-    const tk::String str_NoDefaultPrompt = m_cliNoDefaultPrompt.GetString(GetLang());
-    if (! str_NoDefaultPrompt.IsEmpty())
+    if (! m_qMenus.IsEmpty())
     {
-        GetStream(PROMPT_STREAM) << str_NoDefaultPrompt;
-    }
-    else
-    {
-        if (! m_qMenus.IsEmpty())
+        const tk::String str_NoDefaultPrompt = m_cliNoDefaultPrompt.GetString(GetLang());
+        if (! str_NoDefaultPrompt.IsEmpty())
+        {
+            GetStream(PROMPT_STREAM) << str_NoDefaultPrompt;
+        }
+        else
         {
             if (const Menu* const pcli_Menu = m_qMenus.GetTail())
             {
                 GetStream(PROMPT_STREAM) << pcli_Menu->GetKeyword() << ">";
             }
         }
-    }
 
-    // Eventually echo the current 
-    GetStream(ECHO_STREAM) << m_strLine;
+        // Eventually echo the current 
+        GetStream(ECHO_STREAM) << m_strLine;
+    }
+}
+
+void Shell::PrintError(const ResourceString& CLI_ErrorMessage) const
+{
+    // Retrieve error formatting prefix and suffix.
+    const tk::String str_ErrorPrefix = m_cliErrorFormatting[0].GetString(GetLang());
+    const tk::String str_ErrorSuffix = m_cliErrorFormatting[1].GetString(GetLang());
+
+    // Print out the error.
+    GetStream(ERROR_STREAM)
+        << str_ErrorPrefix
+        << CLI_ErrorMessage.GetString(GetLang())
+        << str_ErrorSuffix
+        << endl;
 }
 
 void Shell::ExitMenu(void)
@@ -507,10 +570,10 @@ void Shell::EnterMenu(const Menu& CLI_Menu)
 {
     if (! m_qMenus.AddTail(& CLI_Menu))
     {
-        GetStream(ERROR_STREAM)
-            << "Too many menus. "
-            << "Cannot enter '" << CLI_Menu.GetName() << "'."
-            << endl;
+        ResourceString cli_Error = ResourceString()
+            .SetString(ResourceString::LANG_EN, tk::String::Concat(MAX_RESOURCE_LENGTH, "Too many menus. Cannot enter '", CLI_Menu.GetName(), "'."))
+            .SetString(ResourceString::LANG_FR, tk::String::Concat(MAX_RESOURCE_LENGTH, "Trop de menus. Impossible d'entrer dans le menu '", CLI_Menu.GetName(), "'."));
+        PrintError(cli_Error);
     }
     //  PromptMenu();
 }
@@ -524,19 +587,19 @@ void Shell::OnKey(const KEY E_KeyCode)
     switch (E_KeyCode)
     {
     case KEY_UP:    m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(1);                   break;
+                    OnHistory(1);                           break;
     case KEY_DOWN:  m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(-1);                  break;
+                    OnHistory(-1);                          break;
     case PAGE_UP:   m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(HISTORY_PAGE);        break;
+                    OnHistory(HISTORY_PAGE);                break;
     case PAGE_DOWN: m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(-HISTORY_PAGE);       break;
-    case BACKSPACE: OnBackspace();                  break;
-    case ENTER:     OnExecute();                    break;
+                    OnHistory(- (signed int) HISTORY_PAGE); break;
+    case BACKSPACE: OnBackspace();                          break;
+    case ENTER:     OnExecute();                            break;
     case BREAK:
-    case ESCAPE:    OnEscape();                     break;
-    case LOGOUT:    OnExit(true);                   break;
-    case TAB:       OnHelp(true, false);            break;
+    case ESCAPE:    OnEscape();                             break;
+    case LOGOUT:    OnExit(true);                           break;
+    case TAB:       OnHelp(true, false);                    break;
     case QUESTION:
         if (m_strLine.GetChar(m_strLine.GetLength() - 1) == '\\')
             OnPrintableChar(E_KeyCode);
@@ -544,11 +607,16 @@ void Shell::OnKey(const KEY E_KeyCode)
             OnHelp(true, true);
         break;
 
-    case KEY_a: case KEY_b: case KEY_c: case KEY_d: case KEY_e: case KEY_f:
-    case KEY_g: case KEY_h: case KEY_i: case KEY_j: case KEY_k: case KEY_l:
-    case KEY_m: case KEY_n: case KEY_o: case KEY_p: case KEY_q: case KEY_r:
-    case KEY_s: case KEY_t: case KEY_u: case KEY_v: case KEY_w: case KEY_x:
-    case KEY_y: case KEY_z:
+    case KEY_a: case KEY_aacute: case KEY_agrave: case KEY_auml: case KEY_acirc:
+    case KEY_b: case KEY_c: case KEY_ccedil: case KEY_d:
+    case KEY_e: case KEY_eacute: case KEY_egrave: case KEY_euml: case KEY_ecirc:
+    case KEY_f: case KEY_g: case KEY_h:
+    case KEY_i: case KEY_iacute: case KEY_igrave: case KEY_iuml: case KEY_icirc:
+    case KEY_j: case KEY_k: case KEY_l: case KEY_m: case KEY_n:
+    case KEY_o: case KEY_oacute: case KEY_ograve: case KEY_ouml: case KEY_ocirc:
+    case KEY_p: case KEY_q: case KEY_r: case KEY_s: case KEY_t:
+    case KEY_u: case KEY_uacute: case KEY_ugrave: case KEY_uuml: case KEY_ucirc:
+    case KEY_v: case KEY_w: case KEY_x: case KEY_y: case KEY_z:
 
     case KEY_A: case KEY_B: case KEY_C: case KEY_D: case KEY_E: case KEY_F:
     case KEY_G: case KEY_H: case KEY_I: case KEY_J: case KEY_K: case KEY_L:
@@ -723,8 +791,8 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
                     }
 
                     // When no more completion so far available, print help.
-                    if ((cli_CommandLine.GetLastWord() != NULL)
-                        && (str_CompletionSoFar == cli_CommandLine.GetLastWord()))
+                    if ((cli_CommandLine.GetLastWord() == NULL)
+                        || (str_CompletionSoFar == cli_CommandLine.GetLastWord()))
                     {
                         b_PrintHelpList = true;
                     }
@@ -779,7 +847,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
             {
                 GetStream(ECHO_STREAM) << endl;
             }
-            GetStream(ERROR_STREAM) << cli_CommandLine.GetLastError().GetString(GetLang()) << endl;
+            PrintError(cli_CommandLine.GetLastError());
             if (B_Edition)
             {
                 PromptMenu();
@@ -834,13 +902,13 @@ void Shell::OnExecute(void)
                     const ResourceString cli_ExecutionError = ResourceString()
                         .SetString(ResourceString::LANG_EN, "Execution error")
                         .SetString(ResourceString::LANG_FR, "Erreur d'exécution");
-                    GetStream(ERROR_STREAM) << cli_ExecutionError.GetString(GetLang()) << endl;
+                    PrintError(cli_ExecutionError);
                 }
             }
         }
         else
         {
-            GetStream(ERROR_STREAM) << cli_CommandLine.GetLastError().GetString(GetLang()) << endl;
+            PrintError(cli_CommandLine.GetLastError());
         }
         m_strLine.Set("");
         PromptMenu();
@@ -883,7 +951,8 @@ void Shell::PrintLine(const char* const STR_Append)
         const ResourceString cli_LineError = ResourceString()
             .SetString(ResourceString::LANG_EN, "Line too long")
             .SetString(ResourceString::LANG_FR, "Ligne trop longue");
-        GetStream(ERROR_STREAM) << endl << cli_LineError.GetString(GetLang()) << endl;
+        GetStream(ERROR_STREAM) << endl;
+        PrintError(cli_LineError);
         PromptMenu();
     }
 }
@@ -980,9 +1049,17 @@ void Shell::PushHistory(const char* const STR_Line)
         // Ensure there is at least one element.
         if (m_qHistory.IsEmpty())
         {
-            m_qHistory.AddTail(tk::String(MAX_CMD_LINE_LENGTH));
+            if (! m_qHistory.AddTail(tk::String(MAX_CMD_LINE_LENGTH)))
+            {
+                ResourceString cli_Error = ResourceString()
+                    .SetString(ResourceString::LANG_EN, "History stack error")
+                    .SetString(ResourceString::LANG_FR, "Erreur de la file d'historique");
+                PrintError(cli_Error);
+            }
         }
+        // Backup the current line.
         m_qHistory.GetHead().Set(STR_Line);
+        // Add a new empty element.
         m_qHistory.AddHead(tk::String(MAX_CMD_LINE_LENGTH, ""));
     }
     m_iHistoryIndex = 0;

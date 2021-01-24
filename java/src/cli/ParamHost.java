@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,18 +25,31 @@
 package cli;
 
 
-public class ParamHost extends Param
-{
+/** Host parameter element.
+    Host parameter are basically IP addresses, URLs... */
+public class ParamHost extends Param {
+
+    /** Constructor.
+        @param CLI_Help Help to be attached to the parameter. */
     public ParamHost(Help CLI_Help) {
         super(__ParamHost(CLI_Help.getNativeRef()));
     }
     private static final native int __ParamHost(int I_NativeHelpRef);
 
+    /** Creation from native code.
+        Useful for cloned parameters created for a specific host value given in a command line.
+        @param I_NativeParamRef Native instance reference. */
     protected static void createFromNative(int I_NativeParamRef) {
         Traces.traceMethod("ParamHost.createFromNative(I_NativeParamRef)");
         Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
 
-        new ParamHost(I_NativeParamRef);
+        Param cli_Param = new ParamHost(I_NativeParamRef);
+        if (cli_Param != null) {
+            // Do not finalize native-created objects.
+            cli_Param.dontFinalize();
+            // Object already remembered from the NativeObject constructor...
+            //  NativeObject.remember(cli_Param);
+        }
 
         Traces.traceReturn("ParamHost.createFromNative()");
     }
@@ -44,26 +57,37 @@ public class ParamHost extends Param
         super(I_NativeParamRef);
     }
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeParamRef);
 
+    /** Destruction from native code.
+        See createFromNative(). */
     protected static void deleteFromNative(int I_NativeParamRef) {
         Traces.traceMethod("ParamHost.deleteFromNative(I_NativeParamRef)");
         Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
 
         NativeObject cli_Param = NativeObject.getObject(I_NativeParamRef);
-        if (cli_Param instanceof ParamHost) {
-            NativeObject.forget(cli_Param);
+        if (cli_Param != null) {
+            Traces.traceValue("cli_Param", cli_Param.toString());
+            if (cli_Param instanceof ParamHost) {
+                NativeObject.forget(cli_Param);
+            }
         }
 
         Traces.traceReturn("ParamHost.deleteFromNative()");
     }
 
+    /** Host value accessor.
+        @return The host value controlled by the parameter. */
     public final String getValue() {
         return new String(__getValue(this.getNativeRef()));
     }
     private static final native String __getValue(int I_NativeParamRef);
+
 }

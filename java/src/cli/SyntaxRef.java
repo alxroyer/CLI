@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,15 +25,23 @@
 package cli;
 
 
+/** A syntax reference is an element which references a syntax tag.
+    It allows jumps in the command lines decision tree, to make repetitive patterns, optional part of commands...
+    See the XML resource syntax section in the CLI user guide for more detailed explanations. */
 public class SyntaxRef extends Element {
 
+    /** Constructor.
+        @param CLI_SyntaxTag Target syntax tag referenced by this object. */
     public SyntaxRef(SyntaxTag CLI_SyntaxTag) {
         super(__SyntaxRef(CLI_SyntaxTag.getNativeRef()));
     }
     private static final native int __SyntaxRef(int I_NativeTagRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeTagRefRef);

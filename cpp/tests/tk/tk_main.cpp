@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,14 +30,6 @@
 #include "cli/io_device.h"
 
 CLI_NS_USE(cli)
-
-
-static const TraceClass CLI_TK(
-    "CLI_TK",
-    Help()
-        .AddHelp(Help::LANG_EN, "tk test")
-        .AddHelp(Help::LANG_FR, "test de cli:tk")
-);
 
 
 const bool CheckString(void)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 #include "cli/syntax_tag.h"
 #include "cli/param.h"
 #include "cli/traces.h"
+#include "cli/assert.h"
 #include "cli/io_device.h"
 #include "constraints.h"
 
@@ -50,12 +51,14 @@ SyntaxNode::~SyntaxNode(void)
         if (const Element* const pcli_Element = m_cliElements.RemoveHead())
         {
             delete pcli_Element;
+        }
     }
-}
 }
 
 Element& SyntaxNode::AddElement(Element* const PCLI_Element)
 {
+    CLI_ASSERT(PCLI_Element != NULL);
+
     for (   Element::List::Iterator it = m_cliElements.GetIterator();
             m_cliElements.IsValid(it);
             m_cliElements.MoveNext(it))
@@ -64,23 +67,58 @@ Element& SyntaxNode::AddElement(Element* const PCLI_Element)
         {
             if (pcli_Element->GetKeyword() == PCLI_Element->GetKeyword())
             {
-        // Conflicting names.
-        // Caution!
-        // The behaviour is the following: deletion of the new element,
-        // and retrieval of the element with the same name.
-        // This could be convenient if both elements are keywords for instance,
-        // but there is absolutely no guarantee for any other conditions.
-        delete PCLI_Element;
-                return const_cast<Element&>(*pcli_Element);
-    }
+                if (PCLI_Element != pcli_Element)
+                {
+                    //! @warning Conflicting names:
+                    //!         The behaviour is the following: deletion of the new element,
+                    //!         and retrieval of the element with the same name.
+                    //!         This could be convenient if both elements are keywords for instance,
+                    //!         but there is absolutely no guarantee for any other conditions.
+                    delete PCLI_Element;
+                    return const_cast<Element&>(*pcli_Element);
+                }
+                else
+                {
+                    // Element already available from this syntaxe node.
+                    // Do not add it again.
+                    // Just return the reference.
+                    return *PCLI_Element;
+                }
+            }
         }
     }
 
     // Regular behaviour.
-        PCLI_Element->SetCli(GetCli());
+    PCLI_Element->SetCli(GetCli());
     m_cliElements.AddTail(PCLI_Element);
-        return *PCLI_Element;
+    return *PCLI_Element;
+}
+
+const bool SyntaxNode::RemoveElement(const Element* const PCLI_Element, const bool B_AutoDelete)
+{
+    bool b_Res = false;
+
+    for (   Element::List::Iterator it = m_cliElements.GetIterator();
+            m_cliElements.IsValid(it);
+            m_cliElements.MoveNext(it))
+    {
+        if (const Element* const pcli_Element = m_cliElements.GetAt(it))
+        {
+            if (pcli_Element == PCLI_Element)
+            {
+                // Element to remove found
+                m_cliElements.Remove(it);
+                if (B_AutoDelete)
+                {
+                    delete pcli_Element;
+                }
+                b_Res = true;
+            }
+        }
     }
+
+    return b_Res;
+}
 
 const bool SyntaxNode::FindElements(
         Element::List& CLI_ExactList,
@@ -94,71 +132,71 @@ const bool SyntaxNode::FindElements(
     {
         if (const Element* const pcli_Element = m_cliElements.GetAt(it))
         {
-        if (0) {}
-        else if (const SyntaxTag* const pcli_Tag = dynamic_cast<const SyntaxTag*>(pcli_Element))
-        {
-            if (! pcli_Tag->GetbHollow())
+            if (0) {}
+            else if (const SyntaxTag* const pcli_Tag = dynamic_cast<const SyntaxTag*>(pcli_Element))
             {
-                if (! pcli_Tag->FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
+                if (! pcli_Tag->GetbHollow())
+                {
+                    if (! pcli_Tag->FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (const SyntaxRef* const pcli_Ref = dynamic_cast<const SyntaxRef*>(pcli_Element))
+            {
+                if (! pcli_Ref->GetTag().FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
                 {
                     return false;
                 }
             }
-        }
-        else if (const SyntaxRef* const pcli_Ref = dynamic_cast<const SyntaxRef*>(pcli_Element))
-        {
-            if (! pcli_Ref->GetTag().FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
+            else if (STR_Keyword == NULL)
             {
-                return false;
-            }
-        }
-        else if (STR_Keyword == NULL)
-        {
-            // No keyword begun.
-            // Retrieve all sub-elements.
+                // No keyword begun.
+                // Retrieve all sub-elements.
                 if (! CLI_NearList.AddTail(pcli_Element))
                 {
                     GetTraces().Trace(INTERNAL_ERROR) << "SyntaxNode::FindElements(): Not enough space in CLI_ExactList." << endl;
-        }
+                }
             }
-        else
-        {
-            // A beginning of word has been given.
+            else
+            {
+                // A beginning of word has been given.
                 const tk::String str_Keyword(MAX_WORD_LENGTH, STR_Keyword);
 
-            if (const Param* const pcli_Param = dynamic_cast<const Param*>(pcli_Element))
-            {
-                // Just check SetstrValue() works for parameters.
-                if (str_Keyword != "\n")
+                if (const Param* const pcli_Param = dynamic_cast<const Param*>(pcli_Element))
                 {
-                    if (pcli_Param->SetstrValue(str_Keyword))
+                    // Just check SetstrValue() works for parameters.
+                    if (str_Keyword != "\n")
                     {
+                        if (pcli_Param->SetstrValue(str_Keyword))
+                        {
                             if (! CLI_NearList.AddTail(pcli_Param))
                             {
                                 GetTraces().Trace(INTERNAL_ERROR) << "SyntaxNode::FindElements(): Not enough space in CLI_ExactList." << endl;
-                    }
+                            }
                             if (! CLI_ExactList.AddTail(pcli_Param))
                             {
                                 GetTraces().Trace(INTERNAL_ERROR) << "SyntaxNode::FindElements(): Not enough space in CLI_ExactList." << endl;
-                }
-            }
+                            }
+                        }
                     }
                 }
                 else if (pcli_Element->GetKeyword().SubString(0, str_Keyword.GetLength()) == str_Keyword)
-            {
-                // Check the beginning of the word for other elements.
-                    if (! CLI_NearList.AddTail(pcli_Element))
                 {
+                    // Check the beginning of the word for other elements.
+                    if (! CLI_NearList.AddTail(pcli_Element))
+                    {
                         GetTraces().Trace(INTERNAL_ERROR) << "SyntaxNode::FindElements(): Not enough space in CLI_ExactList." << endl;
-                }
+                    }
                     if (str_Keyword.GetLength() == pcli_Element->GetKeyword().GetLength())
                     {
                         if (! CLI_ExactList.AddTail(pcli_Element))
                         {
                             GetTraces().Trace(INTERNAL_ERROR) << "SyntaxNode::FindElements(): Not enough space in CLI_ExactList." << endl;
-            }
-        }
-    }
+                        }
+                    }
+                }
             }
         }
     }

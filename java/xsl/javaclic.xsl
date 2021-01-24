@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -162,16 +162,26 @@
 </xsl:template>
 
 <xsl:template name="T_MenuSubMenus">
+    <!-- Sub menus, only for CLI object -->
     <xsl:if test="self::cli:cli">
         <xsl:call-template name="T_Indent1"/>
             <xsl:text>// ----- Sub-menus -----</xsl:text>
             <xsl:value-of select="$STR_Endl"/>
         <xsl:for-each select=".//cli:menu[not(@ref)]">
-            <xsl:call-template name="T_Menu" select="."/>
+            <xsl:call-template name="T_Menu"/>
             <xsl:value-of select="$STR_Endl"/>
         </xsl:for-each>
         <xsl:value-of select="$STR_Endl"/>
     </xsl:if>
+    <!-- Any menu, reference to the owner CLI object -->
+    <xsl:call-template name="T_Indent1"/>
+        <xsl:text>// ----- Owner CLI -----</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
+    <xsl:call-template name="T_Indent1"/>
+        <xsl:text>private </xsl:text>
+        <xsl:for-each select="/cli:cli"><xsl:call-template name="T_Node2Class"/></xsl:for-each>
+        <xsl:text> m_cliOwnerCli;</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
 </xsl:template>
 
 <xsl:template name="T_MenuMembers">
@@ -179,29 +189,27 @@
     <xsl:variable name="STR_Var"><xsl:call-template name="T_Node2Var"/></xsl:variable>
     <xsl:variable name="I_IndentOffset"><xsl:call-template name="T_IndentOffset"/></xsl:variable>
 
-    <xsl:call-template name="T_Indent1"/>
-        <xsl:text>// ----- Node members -----</xsl:text>
-        <xsl:value-of select="$STR_Endl"/>
-
-    <!-- Self -->
-    <xsl:call-template name="T_Indent1"/>
-        <xsl:choose>
-        <xsl:when test="self::cli:cli"><xsl:text>cli.Cli</xsl:text></xsl:when>
-        <xsl:when test="self::cli:menu"><xsl:text>cli.Menu</xsl:text></xsl:when>
-        </xsl:choose>
-        <xsl:text> </xsl:text>
-        <xsl:call-template name="T_Node2Var"/>
-        <xsl:text>;</xsl:text>
-        <xsl:value-of select="$STR_Endl"/>
-
     <!-- Menus -->
-    <xsl:for-each select=".//cli:menu[@name]">
+    <xsl:if test="self::cli:cli">
+        <xsl:call-template name="T_Indent1"/>
+            <xsl:text>// ----- Menus -----</xsl:text>
+            <xsl:value-of select="$STR_Endl"/>
+        <!-- Self -->
         <xsl:call-template name="T_DeclareNode">
             <xsl:with-param name="I_IndentCount" select="$I_IndentOffset + 1"/>
         </xsl:call-template>
-    </xsl:for-each>
+        <!-- Effective menus -->
+        <xsl:for-each select=".//cli:menu[@name]">
+            <xsl:call-template name="T_DeclareNode">
+                <xsl:with-param name="I_IndentCount" select="$I_IndentOffset + 1"/>
+            </xsl:call-template>
+        </xsl:for-each>
+    </xsl:if>
 
     <!-- Sub-nodes -->
+    <xsl:call-template name="T_Indent1"/>
+        <xsl:text>// ----- Node members -----</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
     <xsl:call-template name="T_DeclareSubNodes">
         <xsl:with-param name="I_IndentCount" select="$I_IndentOffset + 1"/>
     </xsl:call-template>
@@ -240,7 +248,9 @@
             <xsl:call-template name="T_Node2Class"/>
         </xsl:variable>
         <xsl:variable name="STR_Var">
-            <xsl:call-template name="T_Node2Var"/>
+            <xsl:call-template name="T_Node2Var">
+                <xsl:with-param name="B_UseOwnerCli" select="0"/>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="STR_ParentVar">
             <xsl:for-each select="parent::cli:*">
@@ -249,6 +259,7 @@
         </xsl:variable>
 
         <xsl:value-of select="$STR_Indent"/>
+            <xsl:text>private </xsl:text>
             <xsl:value-of select="$STR_Class"/>
             <xsl:text> </xsl:text>
             <xsl:value-of select="$STR_Var"/>
@@ -272,10 +283,6 @@
             <xsl:text>super(</xsl:text>
                 <xsl:call-template name="T_CreateNodeParams"/>
             <xsl:text>);</xsl:text>
-            <xsl:value-of select="$STR_Endl"/>
-        <xsl:call-template name="T_Indent2"/>
-            <xsl:call-template name="T_Node2Var"/>
-            <xsl:text> = this;</xsl:text>
             <xsl:value-of select="$STR_Endl"/>
         <!-- Create sub-menus -->
         <xsl:if test="self::cli:cli">
@@ -308,16 +315,43 @@
         <xsl:value-of select="$STR_Endl"/>
     <xsl:call-template name="T_Indent1"/><xsl:text>public void populate() {</xsl:text><xsl:value-of select="$STR_Endl"/>
 
-    <!-- Menus -->
+    <!-- CLI reference -->
+    <xsl:call-template name="T_Indent2"/>
+        <xsl:text>// CLI reference</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
+    <xsl:call-template name="T_Indent2"/>
+        <xsl:text>m_cliOwnerCli = (</xsl:text>
+        <xsl:for-each select="/cli:cli"><xsl:call-template name="T_Node2Class"/></xsl:for-each>
+        <xsl:text>) getCli();</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
+
+    <!-- Populate menus -->
     <xsl:if test="self::cli:cli">
+        <xsl:variable name="STR_Indent"><xsl:call-template name="T_Indent2"/></xsl:variable>
+
+        <xsl:value-of select="$STR_Indent"/>
+            <xsl:text>// Create menus and populate</xsl:text>
+            <xsl:value-of select="$STR_Endl"/>
+        <!-- Self CLI reference setting -->
+        <xsl:value-of select="$STR_Indent"/>
+            <xsl:call-template name="T_Node2Var"/>
+            <xsl:text> = this;</xsl:text>
+            <xsl:value-of select="$STR_Endl"/>
+        <!-- Create the menus -->
         <xsl:for-each select=".//cli:menu[@name]">
-            <!-- Create the menu -->
-            <xsl:call-template name="T_CreateNode">
-                <xsl:with-param name="I_IndentCount" select="$I_IndentOffset + 2"/>
-                <xsl:with-param name="B_WithCreateParams" select="0"/>
-            </xsl:call-template>
-            <!-- Populate it -->
-            <xsl:call-template name="T_Indent2"/>
+            <xsl:value-of select="$STR_Indent"/>
+                <xsl:call-template name="T_Node2Var"/>
+                <xsl:text> = (</xsl:text>
+                    <xsl:call-template name="T_Node2Class"/>
+                <xsl:text>) </xsl:text>
+                    <xsl:text>addMenu(</xsl:text>
+                        <xsl:text>new </xsl:text><xsl:call-template name="T_Node2Class"/><xsl:text>()</xsl:text>
+                    <xsl:text>);</xsl:text>
+                <xsl:value-of select="$STR_Endl"/>
+        </xsl:for-each>
+        <!-- Populate them -->
+        <xsl:for-each select=".//cli:menu[@name]">
+            <xsl:value-of select="$STR_Indent"/>
                 <xsl:call-template name="T_Node2Var"/>
                 <xsl:text>.populate();</xsl:text>
                 <xsl:value-of select="$STR_Endl"/>
@@ -325,6 +359,9 @@
     </xsl:if>
 
     <!-- Sub-nodes -->
+    <xsl:call-template name="T_Indent2"/>
+        <xsl:text>// Local nodes</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
     <xsl:call-template name="T_CreateSubNodes">
         <xsl:with-param name="I_IndentCount" select="$I_IndentOffset + 2"/>
     </xsl:call-template>
@@ -348,14 +385,17 @@
                         and not(self::cli:cpp)
                         and not(self::cli:java)
                         and not(self::cli:handler)
-                        and not(self::cli:menu[@name])
+                        and not(self::cli:menu[@name] and parent::cli:cli)
                         and not(self::cli:tag[@id])">
             <xsl:call-template name="T_CreateNode">
                 <xsl:with-param name="I_IndentCount" select="$I_IndentCount"/>
             </xsl:call-template>
-            <xsl:call-template name="T_CreateSubNodes">
-                <xsl:with-param name="I_IndentCount" select="$I_IndentCount + 1"/>
-            </xsl:call-template>
+            <xsl:if test="  not(self::cli:cli[@name])
+                            and not(self::cli:menu[@name])">
+                <xsl:call-template name="T_CreateSubNodes">
+                    <xsl:with-param name="I_IndentCount" select="$I_IndentCount + 1"/>
+                </xsl:call-template>
+            </xsl:if>
         </xsl:if>
         </xsl:for-each>
         <!-- Then tag contents -->
@@ -387,7 +427,7 @@
         </xsl:variable>
 
         <xsl:value-of select="$STR_Indent"/>
-            <xsl:if test="not(self::cli:tag[@ref]) and not(self::cli:menu[@ref])">
+            <xsl:if test="not(self::cli:tag[@ref]) and not(self::cli:menu)">
                 <xsl:value-of select="$STR_Var"/>
                 <xsl:text> = (</xsl:text>
                 <xsl:value-of select="$STR_Class"/>
@@ -395,27 +435,38 @@
             </xsl:if>
                 <xsl:value-of select="$STR_ParentVar"/>
                 <xsl:choose>
-                <xsl:when test="parent::cli:endl and self::cli:menu[@name]">
-                    <xsl:text>.setMenu(</xsl:text>
-                </xsl:when>
-                <xsl:when test="parent::cli:endl and self::cli:menu[@ref]">
+                <xsl:when test="self::cli:menu">
                     <xsl:text>.setMenuRef(</xsl:text>
-                </xsl:when>
-                <xsl:when test="parent::cli:cli and self::cli:menu[@name]">
-                    <xsl:text>.addMenu(</xsl:text>
+                        <xsl:text>new cli.MenuRef(</xsl:text>
+                            <xsl:choose>
+                            <xsl:when test="self::cli:menu[@name]">
+                                <xsl:call-template name="T_Node2Var"/>
+                            </xsl:when>
+                            <xsl:when test="self::cli:menu[@ref]">
+                                <xsl:variable name="STR_Menu" select="@ref"/>
+                                <xsl:for-each select="//cli:menu[@name=$STR_Menu]">
+                                    <xsl:call-template name="T_Node2Var"/>
+                                </xsl:for-each>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:call-template name="T_Error">
+                                    <xsl:with-param name="STR_Message">missing menu/@name or menu/@ref attribute</xsl:with-param>
+                                </xsl:call-template>
+                            </xsl:otherwise>
+                            </xsl:choose>
+                        <xsl:text>)</xsl:text>
+                    <xsl:text>)</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:text>.addElement(</xsl:text>
+                        <xsl:text>new </xsl:text><xsl:value-of select="$STR_Class"/><xsl:text>(</xsl:text>
+                            <xsl:if test="$B_WithCreateParams">
+                                <xsl:call-template name="T_CreateNodeParams"/>
+                            </xsl:if>
+                        <xsl:text>)</xsl:text>
+                    <xsl:text>)</xsl:text>
                 </xsl:otherwise>
                 </xsl:choose>
-                    <xsl:text>new </xsl:text>
-                    <xsl:value-of select="$STR_Class"/>
-                    <xsl:text>(</xsl:text>
-                        <xsl:if test="$B_WithCreateParams">
-                            <xsl:call-template name="T_CreateNodeParams"/>
-                        </xsl:if>
-                    <xsl:text>)</xsl:text>
-                <xsl:text>)</xsl:text>
             <xsl:text>;</xsl:text>
             <xsl:value-of select="$STR_Endl"/>
 
@@ -530,7 +581,8 @@
 
         <!-- Execution method -->
         <xsl:call-template name="T_Indent1"/>
-        <xsl:text>public boolean execute(cli.CommandLine CLI_CmdLine) {</xsl:text><xsl:value-of select="$STR_Endl"/>
+        <xsl:text>public boolean execute(cli.CommandLine CLI_CmdLine) {</xsl:text>
+            <xsl:value-of select="$STR_Endl"/>
 
             <xsl:call-template name="T_Indent2"/>
                 <xsl:text>try {</xsl:text>
@@ -548,8 +600,7 @@
             <xsl:call-template name="T_Indent3"/>
                 <xsl:text>cli.Traces.trace(CLI_EXECUTION, "</xsl:text>
                 <xsl:call-template name="T_Node2Class"/>
-                <xsl:text>.execute()");</xsl:text>
-                <xsl:value-of select="$STR_Endl"/>
+                <xsl:text>.execute()");</xsl:text><xsl:value-of select="$STR_Endl"/>
 
             <!-- Step variables -->
             <xsl:call-template name="T_Indent3"/>
@@ -621,18 +672,6 @@
                 <xsl:call-template name="T_Node2BlockLabel"/>
                 <xsl:text>:</xsl:text>
                 <xsl:value-of select="$STR_Endl"/>
-            <!--<xsl:value-of select="$STR_Indent0"/>
-                <xsl:text>if (cli_Element instanceof cli.Param) {</xsl:text>
-                <xsl:value-of select="$STR_Endl"/>
-            <xsl:value-of select="$STR_Indent0"/>
-                <xsl:text>cli.Param cli_Param = (cli.Param) cli_Element;</xsl:text>
-                <xsl:value-of select="$STR_Endl"/>
-            <xsl:value-of select="$STR_Indent0"/>
-                <xsl:call-template name="T_Node2Var"/>
-                <xsl:text>.copyValue(</xsl:text>
-                <xsl:text>cli_Param</xsl:text>
-                <xsl:text>);</xsl:text>
-                <xsl:value-of select="$STR_Endl"/>-->
         </xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="$STR_Indent0"/>
@@ -656,19 +695,12 @@
         </xsl:when>
         <xsl:when test="self::cli:param">
             <xsl:value-of select="$STR_Indent0"/>
-            <xsl:text>if (</xsl:text>
-                <xsl:call-template name="T_Node2Var"/>
-                <xsl:text>.matches(cli_Element)</xsl:text>
-            <xsl:text>) {</xsl:text>
+            <xsl:text>if (</xsl:text><xsl:call-template name="T_Node2Var"/><xsl:text>.matches(cli_Element)</xsl:text><xsl:text>) {</xsl:text>
                 <xsl:value-of select="$STR_Endl"/>
         </xsl:when>
         <xsl:otherwise>
             <xsl:value-of select="$STR_Indent0"/>
-            <xsl:text>if (</xsl:text>
-                <xsl:text>cli_Element</xsl:text>
-                <xsl:text> == </xsl:text>
-                <xsl:call-template name="T_Node2Var"/>
-            <xsl:text>) {</xsl:text>
+            <xsl:text>if (cli_Element == </xsl:text><xsl:call-template name="T_Node2Var"/><xsl:text>) {</xsl:text>
                 <xsl:value-of select="$STR_Endl"/>
         </xsl:otherwise>
         </xsl:choose>
@@ -678,11 +710,15 @@
             <xsl:value-of select="$STR_Indent1"/>
                 <xsl:text>cli_Element = cli_Elements.next();</xsl:text>
                 <xsl:value-of select="$STR_Endl"/>
+            <xsl:value-of select="$STR_Indent1"/>
+                <xsl:text>if (cli_Element == null) return false;</xsl:text>
+                <xsl:value-of select="$STR_Endl"/>
         </xsl:if>
 
         <!-- Trace current keyword -->
         <xsl:value-of select="$STR_Indent1"/>
-            <xsl:text>cli.Traces.trace(CLI_EXECUTION, "word = " + cli_Element.getKeyword());</xsl:text>
+            <xsl:text>cli.Traces.trace(CLI_EXECUTION, </xsl:text>
+            <xsl:text>"word = " + cli_Element.getKeyword());</xsl:text>
             <xsl:value-of select="$STR_Endl"/>
 
         <!-- Execution -->
@@ -795,10 +831,10 @@
                     </xsl:when>
                     <xsl:when test="self::cli:param">
                         <xsl:value-of select="$STR_Indent"/>
-                        <xsl:text>if (</xsl:text>
-                            <xsl:call-template name="T_Node2Var"/>
-                            <xsl:text>.matches(cli_Element)</xsl:text>
-                        <xsl:text>) </xsl:text>
+                            <xsl:text>if (</xsl:text>
+                                <xsl:call-template name="T_Node2Var"/>
+                                <xsl:text>.matches(cli_Element)</xsl:text>
+                            <xsl:text>) </xsl:text>
                         <xsl:text>continue </xsl:text>
                             <xsl:value-of select="$STR_ParentTopLabel"/>
                             <xsl:text>;</xsl:text>
@@ -807,8 +843,7 @@
                     <xsl:otherwise>
                         <xsl:value-of select="$STR_Indent"/>
                             <xsl:text>if (</xsl:text>
-                                <xsl:text>cli_Element</xsl:text>
-                                <xsl:text> == </xsl:text>
+                                <xsl:text>cli_Element == </xsl:text>
                                 <xsl:call-template name="T_Node2Var"/>
                             <xsl:text>) </xsl:text>
                         <xsl:text>continue </xsl:text>
@@ -846,6 +881,13 @@
     </xsl:template>
 
 <xsl:template name="T_Node2Var">
+    <xsl:param name="B_UseOwnerCli" select="1"/>
+
+    <!-- Menu: access through the m_pcliOwnerCli member. -->
+    <xsl:if test="(self::cli:cli or self::cli:menu[@name]) and $B_UseOwnerCli">
+        <xsl:text>m_cliOwnerCli.</xsl:text>
+    </xsl:if>
+
     <!-- variable prefix -->
     <xsl:value-of select="$STR_VarPrefix"/>
 
@@ -903,14 +945,14 @@
             <xsl:call-template name="T_Error">
                 <xsl:with-param name="STR_Message">
                     <xsl:text>missing @type attribute</xsl:text>
-                </xsl:with-param> select=""/>
+                </xsl:with-param>
             </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
             <xsl:call-template name="T_Error">
                 <xsl:with-param name="STR_Message">
                     <xsl:text>unknown param type '</xsl:text><xsl:value-of select="@type"/><xsl:text>'</xsl:text>
-                </xsl:with-param> select=""/>
+                </xsl:with-param>
             </xsl:call-template>
         </xsl:otherwise>
         </xsl:choose>
@@ -923,14 +965,16 @@
         <xsl:call-template name="T_Error">
             <xsl:with-param name="STR_Message">
                 <xsl:text>unknown cli-node '</xsl:text><xsl:value-of select="local-name(.)"/><xsl:text>'</xsl:text>
-            </xsl:with-param> select=""/>
+            </xsl:with-param>
         </xsl:call-template>
     </xsl:otherwise>
     </xsl:choose>
 </xsl:template>
 
 <xsl:template name="T_Node2BlockLabel">
-    <xsl:call-template name="T_Node2Var"/>
+    <xsl:call-template name="T_Node2Var">
+        <xsl:with-param name="B_UseOwnerCli" select="0"/>
+    </xsl:call-template>
     <xsl:text>_lbl</xsl:text>
 </xsl:template>
 
@@ -977,8 +1021,7 @@
 <xsl:template match="cli:value-of[@param]">
     <xsl:variable name="STR_Param" select="@param"/>
     <xsl:for-each select="ancestor::cli:param[@id=$STR_Param][position()=1]">
-        <xsl:call-template name="T_Node2Var"/>
-        <xsl:text>.getValue()</xsl:text>
+        <xsl:call-template name="T_Node2Var"/><xsl:text>.getValue()</xsl:text>
     </xsl:for-each>
 </xsl:template>
 <xsl:template match="cli:out">
@@ -992,18 +1035,16 @@
     <xsl:param name="STR_String"/>
     <xsl:value-of select="
         translate(  translate(  translate(  translate(  translate(  translate(  translate(
-        translate(  translate(  translate(
+        translate(  translate(  translate(  translate(
         $STR_String,
         ':','_'),   '&lt;','_'),'&gt;','_'),'*', '_'),  '|', '_'),  '+', '_'),  '-', '_'),
-        '(', '_'),  ')', '_'),  '#','_')"/>
+        '(', '_'),  ')', '_'),  '#','_'),   '.', '_')"/>
 </xsl:template>
 
 <xsl:template name="T_Error">
     <xsl:param name="STR_Message"/>
 
     <xsl:message terminate="yes">
-        <!--<xsl:value-of select=""/><xsl:text>:</xsl:text>
-        <xsl:value-of select=""/><xsl:text>: </xsl:text>-->
         <xsl:text>Error: </xsl:text>
         <xsl:value-of select="$STR_Message"/>
         <xsl:value-of select="$STR_Endl"/>

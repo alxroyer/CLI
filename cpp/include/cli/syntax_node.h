@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,9 +30,9 @@
 #ifndef _CLI_SYNTAX_NODE_H_
 #define _CLI_SYNTAX_NODE_H_
 
-#include <cli/namespace.h>
-#include <cli/element.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/element.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -70,8 +70,16 @@ CLI_NS_BEGIN(cli)
 
     public:
         //! @brief Possible element addition.
+        //! @return The element added.
         Element& AddElement(
             Element* const PCLI_Element     //!< New element.
+            );
+
+        //! @brief Element removal.
+        //! @return true if the element has been actually removed, false otherwise.
+        const bool RemoveElement(
+            const Element* const PCLI_Element,  //!< Element to remove.
+            const bool B_AutoDelete             //!< Auto-deletion flag. true have the given object being automatically deleted when removed.
             );
 
         //! @brief Returns the list of child elements coresponding to a keyword

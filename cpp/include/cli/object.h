@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -31,7 +31,7 @@
 #define _CLI_OBJECT_H_
 
 
-#include <cli/namespace.h>
+#include "cli/namespace.h"
 
 
 CLI_NS_BEGIN(cli)

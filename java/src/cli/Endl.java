@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,19 +25,28 @@
 package cli;
 
 
+/** End of line element. */
 public class Endl extends Element
 {
+    /** Constructor.
+        @param CLI_Help Help to be attached. */
     public Endl(Help CLI_Help) {
         super(__Endl(CLI_Help.getNativeRef()));
     }
     private static final native int __Endl(int I_NativeHelpRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeEndlRef);
 
+    /** Used when this command line gives access to a menu.
+        @param CLI_MenuRef  Menu reference.
+        @return true if the menu reference has been set correctly, false otherwise. */
     public final boolean setMenuRef(MenuRef CLI_MenuRef) {
         return __setMenuRef(this.getNativeRef(), CLI_MenuRef.getNativeRef());
     }

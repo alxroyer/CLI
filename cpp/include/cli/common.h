@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -31,27 +31,27 @@
 #define _CLI_COMMON_H_
 
 // General includes
-#include <cli/namespace.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/tk.h"
 
 // Shell and output devices
-#include <cli/shell.h>
-#include <cli/io_device.h>
+#include "cli/shell.h"
+#include "cli/io_device.h"
 
 // CLI elements
-#include <cli/cli.h>
-#include <cli/keyword.h>
-#include <cli/param_string.h>
-#include <cli/param_int.h>
-#include <cli/param_float.h>
-#include <cli/param_host.h>
-#include <cli/endl.h>
-#include <cli/syntax_tag.h>
+#include "cli/cli.h"
+#include "cli/keyword.h"
+#include "cli/param_string.h"
+#include "cli/param_int.h"
+#include "cli/param_float.h"
+#include "cli/param_host.h"
+#include "cli/endl.h"
+#include "cli/syntax_tag.h"
 
 // CLI misc
-#include <cli/command_line.h>
-#include <cli/help.h>
-#include <cli/traces.h>
+#include "cli/command_line.h"
+#include "cli/help.h"
+#include "cli/traces.h"
 
 #endif // _CLI_COMMON_H_
 

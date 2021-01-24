@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,12 +22,13 @@
 
 
 # Default goal
-.DEFAULT_GOAL ?= tests
+DEFAULT_GOAL ?= tests
 .PHONY: cpptests.default
 cpptests.default: tests ;
 
 
 # Variables
+CLI_DIR := ../../..
 include vars.mak
 XML_FILES = $(patsubst %.check,%.xml,$(CHECK_FILES))
 TEST_FILES = $(patsubst %.xml,%.test,$(XML_FILES))
@@ -52,7 +53,7 @@ clean:
 deps: ;
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/tests.help
 $(CPP_DIR)/build/make/tests.help:

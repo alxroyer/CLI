@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -24,11 +24,11 @@
 
 #include <jni.h>
 
-#include <cli/command_line.h>
-#include <cli/param_string.h>
-#include <cli/param_int.h>
-#include <cli/param_float.h>
-#include <cli/param_host.h>
+#include "cli/command_line.h"
+#include "cli/param_string.h"
+#include "cli/param_int.h"
+#include "cli/param_float.h"
+#include "cli/param_host.h"
 
 #include "NativeObject.h"
 #include "NativeTraces.h"

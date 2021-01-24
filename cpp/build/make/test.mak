@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,7 +22,7 @@
 
 
 # Parameters
-CLI_XML_RES ?= $(ROOT_DIR)/samples/clisample/clisample.xml
+CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 
 # Includes
 CLI_MAIN_CPP = $(CPP_DIR)/tests/testsample.cpp
@@ -32,7 +32,7 @@ OUT_DIR = $(TARGET)$(CXX)/$(RDX)/__test
 include check.mak
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/test.help
 $(CPP_DIR)/build/make/test.help:

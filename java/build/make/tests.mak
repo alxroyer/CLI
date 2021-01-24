@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,12 +22,13 @@
 
 
 # Default goal
-.DEFAULT_GOAL ?= tests
+DEFAULT_GOAL ?= tests
 .PHONY: javatests.default
 javatests.default: tests ;
 
 
 # Variables
+CLI_DIR := ../../..
 include vars.mak
 
 JAVA_SAMPLE_FILES = $(shell find $(SAMPLES_DIR) -name "*.java")
@@ -70,7 +71,7 @@ clean:
 deps: ;
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/tests.help
 $(JAVA_DIR)/build/make/tests.help:

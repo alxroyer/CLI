@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -36,10 +36,6 @@
 
 //! @namespace cli::tk
 //! @brief CLI classes toolkit.
-
-//! @def CLI_NO_NAMESPACE
-//! @brief Define this constant if your compiler does not support namespaces.
-//!        Classes will be used instead.
 
 
 //! @brief Begin a namespace definition.

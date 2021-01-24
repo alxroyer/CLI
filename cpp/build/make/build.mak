@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -26,15 +26,15 @@ __CPP_BUILD__ = 1
 
 ##############
 # Default goal
-.DEFAULT_GOAL ?= build
+DEFAULT_GOAL ?= build
 .PHONY: cppbuild.default
 cppbuild.default: build ;
 
 
 ######################
 # Preliminary includes
-ROOT_DIR ?= ../../..
-include $(ROOT_DIR)/build/make/vars.mak
+CLI_DIR ?= ../../..
+include $(CLI_DIR)/build/make/vars.mak
 include $(CPP_DIR)/build/make/vars.mak
 
 
@@ -103,8 +103,8 @@ endif
 
 ##############
 # Includes
-ROOT_DIR ?= ../../..
-include $(ROOT_DIR)/build/make/vars.mak
+CLI_DIR ?= ../../..
+include $(CLI_DIR)/build/make/vars.mak
 
 
 ##############

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -42,12 +42,26 @@ const IOEndl cli::endl;
 const IOEndl endl;
 #endif
 
-static const TraceClass TRACE_IO_DEVICE_INSTANCES("CLI_IO_DEVICE_INSTANCES", Help()
-    .AddHelp(Help::LANG_EN, "IO device instance management")
-    .AddHelp(Help::LANG_FR, "Gestion des intances de périphériques d'entrée/sortie"));
-static const TraceClass TRACE_IO_DEVICE_OPENING("CLI_IO_DEVICE_OPENING", Help()
-    .AddHelp(Help::LANG_EN, "IO device opening management")
-    .AddHelp(Help::LANG_FR, "Gestion de l'ouverture des périphériques d'entrée/sortie"));
+//! @brief Input/Output device instance creation/deletion trace class singleton redirection.
+#define TRACE_IO_DEVICE_INSTANCES GetIODeviceInstancesTraceClass()
+//! @brief Input/Output device instance creation/deletion trace class singleton.
+static const TraceClass& GetIODeviceInstancesTraceClass(void)
+{
+    static const TraceClass cli_IODeviceInstancesTraceClass("CLI_IO_DEVICE_INSTANCES", Help()
+        .AddHelp(Help::LANG_EN, "IO device instance management")
+        .AddHelp(Help::LANG_FR, "Gestion des intances de périphériques d'entrée/sortie"));
+    return cli_IODeviceInstancesTraceClass;
+}
+//! @brief Input/Output device opening/closure trace class singleton redirection.
+#define TRACE_IO_DEVICE_OPENING GetIODeviceOpeningTraceClass()
+//! @brief Input/Output device opening/closure trace class singleton.
+static const TraceClass& GetIODeviceOpeningTraceClass(void)
+{
+    static const TraceClass cli_IODeviceOpeningTraceClass("CLI_IO_DEVICE_OPENING", Help()
+        .AddHelp(Help::LANG_EN, "IO device opening management")
+        .AddHelp(Help::LANG_FR, "Gestion de l'ouverture des périphériques d'entrée/sortie"));
+    return cli_IODeviceOpeningTraceClass;
+}
 
 
 OutputDevice::OutputDevice(
@@ -56,7 +70,8 @@ OutputDevice::OutputDevice(
         const bool B_AutoDelete)
   : m_strDbgName(MAX_DEVICE_NAME_LENGTH, STR_DbgName),
     m_strEndl(MAX_WORD_LENGTH, STR_Endl),
-    m_iInstanceLock(B_AutoDelete ? 0 : 1), m_iOpenLock(0)
+    m_iInstanceLock(B_AutoDelete ? 0 : 1), m_iOpenLock(0),
+    m_cliLastError()
 {
     // Please, no traces in constructor for consistency reasons.
 }
@@ -254,6 +269,11 @@ const OutputDevice& OutputDevice::operator <<(const IOEndl& CLI_IOEndl) const
     return *this;
 }
 
+const ResourceString OutputDevice::GetLastError(void) const
+{
+    return m_cliLastError;
+}
+
 OutputDevice& OutputDevice::GetNullDevice(void)
 {
     class NullDevice : public OutputDevice
@@ -286,7 +306,9 @@ OutputDevice& OutputDevice::GetStdOut(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const char* const STR_Out) const { fprintf(stdout, "%s", STR_Out); }
+        virtual void PutString(const char* const STR_Out) const {
+            fprintf(stdout, "%s", STR_Out);
+        }
         virtual void Beep(void) const {}
     };
 
@@ -306,7 +328,9 @@ OutputDevice& OutputDevice::GetStdErr(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const char* const STR_Out) const { fprintf(stderr, "%s", STR_Out); }
+        virtual void PutString(const char* const STR_Out) const {
+            fprintf(stderr, "%s", STR_Out);
+        }
         virtual void Beep(void) const {}
     };
 
@@ -414,26 +438,47 @@ const KEY IODevice::GetKey(const int I_Char) const
     case '9':   return KEY_9;
 
     case 'a':   return KEY_a;
+    case 'á':   return KEY_aacute;
+    case 'à':   return KEY_agrave;
+    case 'ä':   return KEY_auml;
+    case 'â':   return KEY_acirc;
     case 'b':   return KEY_b;
     case 'c':   return KEY_c;
+    case 'ç':   return KEY_ccedil;
     case 'd':   return KEY_d;
     case 'e':   return KEY_e;
+    case 'é':   return KEY_eacute;
+    case 'è':   return KEY_egrave;
+    case 'ë':   return KEY_euml;
+    case 'ê':   return KEY_ecirc;
     case 'f':   return KEY_f;
     case 'g':   return KEY_g;
     case 'h':   return KEY_h;
     case 'i':   return KEY_i;
+    case 'í':   return KEY_iacute;
+    case 'ì':   return KEY_igrave;
+    case 'ï':   return KEY_iuml;
+    case 'î':   return KEY_icirc;
     case 'j':   return KEY_j;
     case 'k':   return KEY_k;
     case 'l':   return KEY_l;
     case 'm':   return KEY_m;
     case 'n':   return KEY_n;
     case 'o':   return KEY_o;
+    case 'ó':   return KEY_oacute;
+    case 'ò':   return KEY_ograve;
+    case 'ö':   return KEY_ouml;
+    case 'ô':   return KEY_ocirc;
     case 'p':   return KEY_p;
     case 'q':   return KEY_q;
     case 'r':   return KEY_r;
     case 's':   return KEY_s;
     case 't':   return KEY_t;
     case 'u':   return KEY_u;
+    case 'ú':   return KEY_uacute;
+    case 'ù':   return KEY_ugrave;
+    case 'ü':   return KEY_uuml;
+    case 'û':   return KEY_ucirc;
     case 'v':   return KEY_v;
     case 'w':   return KEY_w;
     case 'x':   return KEY_x;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -41,12 +41,26 @@
 CLI_NS_USE(cli)
 
 
-static const TraceClass TRACE_CMD_LINE("CLI_CMD_LINE", Help()
-    .AddHelp(Help::LANG_EN, "Command line parsing")
-    .AddHelp(Help::LANG_FR, "Analyse de lignes de commande"));
-static const TraceClass TRACE_CMD_LINE_SPLIT("CLI_CMD_LINE_SPLIT", Help()
-    .AddHelp(Help::LANG_EN, "Split of command lines")
-    .AddHelp(Help::LANG_FR, "Césure de mots sur analyse de lignes de commande"));
+//! @brief Command line trace class singleton redirection.
+#define TRACE_CMD_LINE GetCmdLineTraceClass()
+//! @brief Command line trace class singleton.
+static const TraceClass& GetCmdLineTraceClass(void)
+{
+    static const TraceClass cli_CmdLineTraceClass("CLI_CMD_LINE", Help()
+        .AddHelp(Help::LANG_EN, "Command line parsing")
+        .AddHelp(Help::LANG_FR, "Analyse de lignes de commande"));
+    return cli_CmdLineTraceClass;
+}
+//! @brief Command line splitting trace class singleton redirection.
+#define TRACE_CMD_LINE_SPLIT GetCmdLineSplitTraceClass()
+//! @brief Command line splitting trace class singleton.
+static const TraceClass& GetCmdLineSplitTraceClass(void)
+{
+    static const TraceClass cli_CmdLineSplitTraceClass("CLI_CMD_LINE_SPLIT", Help()
+        .AddHelp(Help::LANG_EN, "Split of command lines")
+        .AddHelp(Help::LANG_FR, "Césure de mots sur analyse de lignes de commande"));
+    return cli_CmdLineSplitTraceClass;
+}
 
 
 CommandLine::CommandLine(void)
@@ -121,6 +135,7 @@ const bool CommandLine::Parse(
             vstr_Words.IsValid(it) && (i < i_WordCount);
             i ++)
     {
+        // Search for elements that match the current word.
         GetTraces().Trace(TRACE_CMD_LINE) << "Word " << i << " '" << vstr_Words.GetAt(it) << "'" << endl;
         Element::List cli_ExactList(MAX_CMD_LINE_WORD_COUNT), cli_NearList(MAX_CMD_LINE_WORD_COUNT);
         if (! pcli_Node->FindElements(cli_ExactList, cli_NearList, vstr_Words.GetAt(it)))
@@ -138,12 +153,14 @@ const bool CommandLine::Parse(
             {
                 if (i == 0)
                 {
+                    // End of line
                     return true;
                 }
                 else
                 {
+                    // Incomplete command
                     m_cliError
-                        .SetString(ResourceString::LANG_EN, "Uncomplete command")
+                        .SetString(ResourceString::LANG_EN, "Incomplete command")
                         .SetString(ResourceString::LANG_FR, "Command incomplète");
                     GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
                     return false;
@@ -151,6 +168,8 @@ const bool CommandLine::Parse(
             }
             else
             {
+                // No matching element.
+                // Syntax error.
                 m_cliError
                     .SetString(ResourceString::LANG_EN, ResourceString::Concat("Syntax error next to '", vstr_Words.GetAt(it), "'"))
                     .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de syntaxe près de '", vstr_Words.GetAt(it), "'"));
@@ -161,6 +180,7 @@ const bool CommandLine::Parse(
         else if ((cli_ExactList.GetCount() > 1)
                 || ((cli_ExactList.GetCount() == 0) && (cli_NearList.GetCount() > 1)))
         {
+            // Ambiguous syntax
             m_cliError
                 .SetString(ResourceString::LANG_EN, ResourceString::Concat("Ambiguous syntax next to '", vstr_Words.GetAt(it), "'"))
                 .SetString(ResourceString::LANG_FR, ResourceString::Concat("Ambiguïté de syntaxe près de '", vstr_Words.GetAt(it), "'"));
@@ -169,18 +189,34 @@ const bool CommandLine::Parse(
         }
         else
         {
-            pcli_Node = cli_NearList.GetHead();
+            // Element found.
+            if (! cli_ExactList.IsEmpty())
+            {
+                // Prefer exactly matching elements if any.
+                pcli_Node = cli_ExactList.GetHead();
+            }
+            else if (! cli_NearList.IsEmpty())
+            {
+                // First of the near elements otherwise.
+                pcli_Node = cli_NearList.GetHead();
+            }
+            else
+            {
+                CLI_ASSERT(false);
+            }
+            // Add it to the command line.
             AddElement(pcli_Node);
         }
 
         vstr_Words.MoveNext(it);
     }
 
+    // Check for final endl element.
     if (B_Execution && (i_WordCount > 0)
         && (! dynamic_cast<const Endl*>(& GetLastElement())))
     {
         m_cliError
-            .SetString(ResourceString::LANG_EN, "Uncomplete command")
+            .SetString(ResourceString::LANG_EN, "Incomplete command")
             .SetString(ResourceString::LANG_FR, "Commande incomplète");
         GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
         return false;

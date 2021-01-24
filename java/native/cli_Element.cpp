@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -24,8 +24,8 @@
 
 #include <string>
 
-#include <cli/element.h>
-#include <cli/io_device.h>
+#include "cli/element.h"
+#include "cli/io_device.h"
 
 #include "cli_Element.h"
 
@@ -83,6 +83,36 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getOutputStream(
     }
     NativeTraces::TraceReturn("Element.__getOutputStream()", "%d", (int) pcli_OutputDevice);
     return (jint) pcli_OutputDevice;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getCli(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeElementRef)
+{
+    NativeTraces::TraceMethod("Element.__getCli(I_NativeElementRef)");
+    NativeTraces::TraceParam("I_NativeElementRef", "%d", I_NativeElementRef);
+    const cli::Cli* pcli_Cli = NULL;
+    if (const cli::Element* const pcli_Element = (const cli::Element*) I_NativeElementRef)
+    {
+        pcli_Cli = & pcli_Element->GetCli();
+    }
+    NativeTraces::TraceReturn("Element.__getCli()", "%d", (int) pcli_Cli);
+    return (jint) pcli_Cli;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getShell(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeElementRef)
+{
+    NativeTraces::TraceMethod("Element.__getShell(I_NativeElementRef)");
+    NativeTraces::TraceParam("I_NativeElementRef", "%d", I_NativeElementRef);
+    const cli::Shell* pcli_Shell = NULL;
+    if (const cli::Element* const pcli_Element = (const cli::Element*) I_NativeElementRef)
+    {
+        pcli_Shell = & pcli_Element->GetShell();
+    }
+    NativeTraces::TraceReturn("Element.__getShell()", "%d", (int) pcli_Shell);
+    return (jint) pcli_Shell;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getErrorStream(

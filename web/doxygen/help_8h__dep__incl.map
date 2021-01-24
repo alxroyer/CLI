@@ -1,8 +1,0 @@
-base referer
-rect $common_8h.html 258,58 343,85
-rect $element_8h.html 115,261 195,288
-rect $shell_8h.html 125,58 186,85
-rect $menu_8cpp-source.html 261,109 341,136
-rect $traces_8h.html 121,160 190,186
-rect $syntax__tag_8cpp-source.html 245,185 357,212
-rect $help_8cpp-source.html 119,312 191,338

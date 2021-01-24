@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -24,15 +24,24 @@
 
 package cli;
 
+
+/** Menu reference element class.
+    A menu reference element is an element that may be added to a Endl element.
+    This way, when the Endl element is executed, the menu referenced is entered. */
 public class MenuRef extends Element {
 
+    /** Constructor.
+        @param CLI_Menu Menu referenced by this menu reference element. */
     public MenuRef(Menu CLI_Menu) {
         super(__MenuRef(CLI_Menu.getNativeRef()));
     }
     private static final native int __MenuRef(int I_NativeMenuRef);
 
+    /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(this.getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(this.getNativeRef());
+        }
     }
     private static final native void __finalize(int I_NativeMenuRefRef);
 

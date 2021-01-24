@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -31,13 +31,13 @@
 #define _CLI_TK_H_
 
 
-#include <cli/namespace.h>
-//! @def CLI_NO_STL
-//! @brief Define this constant if you wish to use inner rather than the STL TK implementation.
+#include "cli/namespace.h"
+
+
 #ifndef CLI_NO_STL
-    #include <cli/tk_stl.h>
+    #include "cli/tk_stl.h"
 #else
-    #include <cli/tk_inner.h>
+    #include "cli/tk_inner.h"
 #endif
 
 

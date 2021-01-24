@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -25,17 +25,25 @@
 package cli;
 
 
+/** Generic parameter element. */
 public abstract class Param extends SyntaxNode {
 
+    /** Constructor.
+        @param I_NativeRef Native instance reference. */
     protected Param(int I_NativeRef) {
         super(I_NativeRef);
     }
 
+    /** Copy value method.
+        @param CLI_Param Source parameter to copy the value from. */
     public final void copyValue(Param CLI_Param) {
         __copyValue(this.getNativeRef(), CLI_Param.getNativeRef());
     }
     private static final native boolean __copyValue(int I_NativeDestParamRef, int I_NativeSrcParamRef);
 
+    /** Determines whether an element matches this parameter.
+        @param CLI_Element Element to check the correspondance with this parameter.
+        @return true if the element matches this parameter, false if the element does not match this parameter. */
     public boolean matches(Element CLI_Element) {
         Traces.traceMethod("Param.matches(CLI_Element)");
         Traces.traceParam("this", new Integer(this.getNativeRef()).toString());
@@ -55,7 +63,9 @@ public abstract class Param extends SyntaxNode {
         Traces.traceReturn("Param.matches()", new Boolean(b_Res).toString());
         return b_Res;
     }
-    private final cli.Param getCloned() {
+    /** Source clone parameter accessor.
+        @return Source clone parameter instance. */
+    protected final cli.Param getCloned() {
         return (cli.Param) NativeObject.getObject(__getCloned(this.getNativeRef()));
     }
     private static final native int __getCloned(int I_NativeParamRef);

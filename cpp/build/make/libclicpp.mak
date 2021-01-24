@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,6 +22,7 @@
 
 
 # Includes
+CLI_DIR := ../../..
 PROJECT = libclicpp
 STATIC_LIB_PREFIX =
 PRODUCT_TYPE = STATIC_LIB
@@ -31,7 +32,7 @@ PROJ_INCLUDES = -I$(CPP_DIR)/include
 include build.mak
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/libclicpp.help
 $(CPP_DIR)/build/make/libclicpp.help: ;

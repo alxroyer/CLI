@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,10 +30,11 @@
 #ifndef _CLI_IO_DEVICE_H_
 #define _CLI_IO_DEVICE_H_
 
-#include <cli/namespace.h>
-#include <cli/object.h>
-#include <cli/debug.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/object.h"
+#include "cli/debug.h"
+#include "cli/tk.h"
+#include "cli/resource_string.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -226,6 +227,11 @@ CLI_NS_BEGIN(cli)
             ) const;
 
     public:
+        //! @brief Last error accessor.
+        //! @return Last error resource string.
+        const ResourceString GetLastError(void) const;
+
+    public:
         //! @brief Null device.
         static OutputDevice& GetNullDevice(void);
 
@@ -256,11 +262,15 @@ CLI_NS_BEGIN(cli)
 
         //! Open state lock count.
         int m_iOpenLock;
+
+    protected:
+        //! Last error.
+        mutable ResourceString m_cliLastError;
     };
 
 
     //! @brief Input characters.
-    typedef enum
+    typedef enum _KEY
     {
         NULL_KEY = '\0',    //!< Null key.
 
@@ -276,11 +286,17 @@ CLI_NS_BEGIN(cli)
         TAB = '\t',
         KEY_0 = '0', KEY_1 = '1', KEY_2 = '2', KEY_3 = '3', KEY_4 = '4', KEY_5 = '5',
         KEY_6 = '6', KEY_7 = '7', KEY_8 = '8', KEY_9 = '9',
-        KEY_a = 'a', KEY_b = 'b', KEY_c = 'c', KEY_d = 'd', KEY_e = 'e', KEY_f = 'f',
-        KEY_g = 'g', KEY_h = 'h', KEY_i = 'i', KEY_j = 'j', KEY_k = 'k', KEY_l = 'l',
-        KEY_m = 'm', KEY_n = 'n', KEY_o = 'o', KEY_p = 'p', KEY_q = 'q', KEY_r = 'r',
-        KEY_s = 's', KEY_t = 't', KEY_u = 'u', KEY_v = 'v', KEY_w = 'w', KEY_x = 'x',
-        KEY_y = 'y', KEY_z = 'z',
+        KEY_a = 'a', KEY_aacute = 'á', KEY_agrave = 'à', KEY_auml = 'ä', KEY_acirc = 'â',
+        KEY_b = 'b', KEY_c = 'c', KEY_ccedil = 'ç', KEY_d = 'd',
+        KEY_e = 'e', KEY_eacute = 'é', KEY_egrave = 'è', KEY_euml = 'ë', KEY_ecirc = 'ê',
+        KEY_f = 'f', KEY_g = 'g', KEY_h = 'h',
+        KEY_i = 'i', KEY_iacute = 'í', KEY_igrave = 'ì', KEY_iuml = 'ï', KEY_icirc = 'î',
+        KEY_j = 'j', KEY_k = 'k', KEY_l = 'l', KEY_m = 'm', KEY_n = 'n',
+        KEY_o = 'o', KEY_oacute = 'ó', KEY_ograve = 'ò', KEY_ouml = 'ö', KEY_ocirc = 'ô',
+        KEY_p = 'p', KEY_q = 'q', KEY_r = 'r', KEY_s = 's', KEY_t = 't',
+        KEY_u = 'u', KEY_uacute = 'ú', KEY_ugrave = 'ù', KEY_uuml = 'ü', KEY_ucirc = 'û',
+        KEY_v = 'v', KEY_w = 'w', KEY_x = 'x', KEY_y = 'y', KEY_z = 'z',
+
         KEY_A = 'A', KEY_B = 'B', KEY_C = 'C', KEY_D = 'D', KEY_E = 'E', KEY_F = 'F',
         KEY_G = 'G', KEY_H = 'H', KEY_I = 'I', KEY_J = 'J', KEY_K = 'K', KEY_L = 'L',
         KEY_M = 'M', KEY_N = 'N', KEY_O = 'O', KEY_P = 'P', KEY_Q = 'Q', KEY_R = 'R',

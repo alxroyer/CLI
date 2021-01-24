@@ -1,9 +1,0 @@
-base referer
-rect $common_8h.html 140,7 225,34
-rect $cli_8cpp-source.html 153,58 212,85
-rect $command__line_8cpp-source.html 116,109 249,135
-rect $config__menu_8cpp-source.html 121,159 244,186
-rect $endl_8cpp-source.html 146,210 218,237
-rect $menu_8cpp-source.html 142,261 222,287
-rect $shell_8cpp-source.html 145,311 220,338
-rect $traces__menu_8cpp-source.html 120,362 245,389

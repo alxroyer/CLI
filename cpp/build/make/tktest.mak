@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -22,11 +22,12 @@
 
 
 # Default goal
-.DEFAULT_GOAL ?= run
+DEFAULT_GOAL ?= run
 .PHONY: tktest.default
 tktest.default: run ;
 
 # Includes
+CLI_DIR := ../../..
 PROJECT = tktest
 SRC_DIR = $(CPP_DIR)/tests/tk
 PROJ_INCLUDES = -I$(CPP_DIR)/include
@@ -48,7 +49,7 @@ run: build
 	$(PRODUCT)
 
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
 .PHONY: $(CPP_DIR)/build/make/tktest.help
 $(CPP_DIR)/build/make/tktest.help: ;

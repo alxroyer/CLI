@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -58,7 +58,17 @@ const bool Console::OpenDevice(void)
         m_pData = p_Window;
     }
 
-    return true;
+    if (m_pData == NULL)
+    {
+        m_cliLastError
+            .SetString(ResourceString::LANG_EN, "ncurses configuration failed")
+            .SetString(ResourceString::LANG_FR, "La configuration de ncurses a échoué");
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 const bool Console::CloseDevice(void)

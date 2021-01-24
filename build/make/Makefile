@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2007, Alexis Royer
+# Copyright (c) 2006-2008, Alexis Royer
 #
 # All rights reserved.
 #
@@ -20,19 +20,33 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Default goal
+DEFAULT_GOAL = default
+.PHONY: Makefile.default
+Makefile.default: default ;
 
 # Includes
+CLI_DIR := ../..
+include vars.mak
 PROJECTS += $(CPP_DIR)/build/make/Makefile
 PROJECTS += $(JAVA_DIR)/build/make/Makefile
-PROJECTS += $(WEB_DIR)/user-guide/Makefile
 include all.mak
 
+# Documentation
+doc: PROJECTS = $(WEB_DIR)/user-guide/user-guide.mak
+doc: PROJECTS += $(WEB_DIR)/doxygen/doxygen.mak
+doc: PROJECTS += $(WEB_DIR)/javadoc/javadoc.mak
+.PHONY: doc
+doc: default ;
+
 # Debug and help
-include $(ROOT_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/help.mak
 
-.PHONY: $(ROOT_DIR)/build/make/Makefile.help
-$(ROOT_DIR)/build/make/Makefile.help: ;
+.PHONY: $(CLI_DIR)/build/make/Makefile.help
+$(CLI_DIR)/build/make/Makefile.help:
+	$(call PrintHelp, default,  Generate libraries and tests)
+	$(call PrintHelp, doc,      Generate/update documentation)
 
-.PHONY: $(ROOT_DIR)/build/make/Makefile.vars
-$(ROOT_DIR)/build/make/Makefile.vars:
+.PHONY: $(CLI_DIR)/build/make/Makefile.vars
+$(CLI_DIR)/build/make/Makefile.vars:
 	$(call ShowVariables,)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -58,6 +58,7 @@ const bool SingleCommand::OpenDevice(void)
 {
     if (! m_cliOutput.OpenUp(__CALL_INFO__))
     {
+        m_cliLastError = m_cliOutput.GetLastError();
         return false;
     }
 
@@ -73,6 +74,7 @@ const bool SingleCommand::CloseDevice(void)
 
     if (! m_cliOutput.CloseDown(__CALL_INFO__))
     {
+        m_cliLastError = m_cliOutput.GetLastError();
         b_Res = false;
     }
 
@@ -94,6 +96,9 @@ const KEY SingleCommand::GetKey(void) const
     }
     else
     {
+        m_cliLastError
+            .SetString(ResourceString::LANG_EN, "No more characters in command line")
+            .SetString(ResourceString::LANG_FR, "Il n'y a plus de caractères dans la ligne de commande");
         return NULL_KEY;
     }
 }

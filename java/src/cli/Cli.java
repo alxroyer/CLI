@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -27,6 +27,7 @@ package cli;
 import java.util.Collection;
 
 
+/** Command Line Interface class. */
 public abstract class Cli extends Menu
 {
     static {
@@ -34,7 +35,13 @@ public abstract class Cli extends Menu
         System.loadLibrary("cli");
     }
 
-    /** Constructor. */
+    /** Does nothing but loading the native library. */
+    public static void load() {
+    }
+
+    /** Constructor.
+        @param J_Name   Name of the CLI.
+        @param CLI_Help Help of the CLI. */
     public Cli(String J_Name, Help CLI_Help) {
         super(__Cli(J_Name, CLI_Help.getNativeRef()));
     }
@@ -42,12 +49,17 @@ public abstract class Cli extends Menu
 
     /** Destructor. */
     protected void finalize() throws Throwable {
-        __finalize(getNativeRef());
+        if (getbDoFinalize()) {
+            __finalize(getNativeRef());
+        }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeCliRef);
 
-    /** Find from name. */
+    /** Find from name.
+        @param J_CliList    Output CLI list.
+        @param J_RegExp     Regular expression describing the CLI name searched.
+        @return Number of CLI instances found. */
     public static final int findFromName(Collection<Cli> J_CliList, String J_RegExp) {
         int i_Count = 0;
         int[] ari_Refs = __findFromName(J_RegExp);
@@ -62,18 +74,28 @@ public abstract class Cli extends Menu
     }
     private static final native int[] __findFromName(String J_RegExp);
 
-    /** Name accessor. */
+    /** Name accessor.
+        @return CLI name. */
     public final String getName() {
         return __getName(this.getNativeRef());
     }
     private static final native String __getName(int I_NativeRef);
 
+    /** Menu addition.
+        @param CLI_Menu Menu to add to the CLI.
+        @return The menu itself. */
     public final Menu addMenu(Menu CLI_Menu) {
         if (__addMenu(this.getNativeRef(), CLI_Menu.getNativeRef())) {
             return CLI_Menu;
         }
         return null;
     }
-    public static final native boolean __addMenu(int I_NativeCliRef, int I_NativeMenuRef);
+    private static final native boolean __addMenu(int I_NativeCliRef, int I_NativeMenuRef);
 
+    /** Configuration menu enabling.
+        @param B_Enable Enable or disable the configuration menu. */
+    public final void enableConfigMenu(boolean B_Enable) {
+        __enableConfigMenu(this.getNativeRef(), B_Enable);
+    }
+    private static final native boolean __enableConfigMenu(int I_NativeCliRef, boolean B_Enable);
 }

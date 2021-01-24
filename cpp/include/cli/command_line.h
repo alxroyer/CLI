@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,11 +30,11 @@
 #ifndef _CLI_COMMAND_LINE_H_
 #define _CLI_COMMAND_LINE_H_
 
-#include <cli/namespace.h>
-#include <cli/object.h>
-#include <cli/element.h>
-#include <cli/resource_string.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/object.h"
+#include "cli/element.h"
+#include "cli/resource_string.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)

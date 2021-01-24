@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2007, Alexis Royer
+    Copyright (c) 2006-2008, Alexis Royer
 
     All rights reserved.
 
@@ -30,9 +30,9 @@
 #ifndef _CLI_MENU_H_
 #define _CLI_MENU_H_
 
-#include <cli/namespace.h>
-#include <cli/syntax_node.h>
-#include <cli/tk.h>
+#include "cli/namespace.h"
+#include "cli/syntax_node.h"
+#include "cli/tk.h"
 
 
 CLI_NS_BEGIN(cli)
