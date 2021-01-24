@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -29,6 +29,8 @@ PRODUCT_TYPE = STATIC_LIB
 SRC_DIR = $(CPP_DIR)/src
 CPP_FILES = $(filter-out $(SRC_DIR)/win_console.cpp,$(wildcard $(SRC_DIR)/*.cpp))
 PROJ_INCLUDES = -I$(CPP_DIR)/include
+# Include win_console.cpp also for dependency computation
+deps: CPP_FILES += $(SRC_DIR)/win_console.cpp
 include build.mak
 
 # Debug and help

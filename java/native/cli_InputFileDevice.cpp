@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -21,6 +21,9 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+
+#include "cli/pch.h"
 
 #include "cli/file_device.h"
 
@@ -64,4 +67,18 @@ extern "C" JNIEXPORT void JNICALL Java_cli_InputFileDevice__1_1finalize(
         NativeObject::Free(pcli_FileDevice);
     }
     NativeTraces::TraceReturn("InputFileDevice.__finalize()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_InputFileDevice__1_1enableSpecialCharacters(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeFileDeviceRef, jboolean B_EnableSpecialCharacters)
+{
+    NativeTraces::TraceMethod("InputFileDevice.__enableSpecialCharacters(I_NativeFileDeviceRef, B_EnableSpecialCharacters)");
+    NativeTraces::TraceParam("I_NativeFileDeviceRef", "%d", I_NativeFileDeviceRef);
+    NativeTraces::TraceParam("B_EnableSpecialCharacters", "%d", B_EnableSpecialCharacters);
+    if (cli::InputFileDevice* const pcli_FileDevice = (cli::InputFileDevice*) I_NativeFileDeviceRef)
+    {
+        pcli_FileDevice->EnableSpecialCharacters(B_EnableSpecialCharacters);
+    }
+    NativeTraces::TraceReturn("InputFileDevice.__enableSpecialCharacters()");
 }

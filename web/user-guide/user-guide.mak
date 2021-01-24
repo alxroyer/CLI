@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -38,7 +38,6 @@ CLI_SAMPLES = $(wildcard $(SAMPLES_DIR)/user-guide/*.xml)
 DB_SAMPLES = $(patsubst %.xml, $(INT_DIR)/%.db, $(notdir $(CLI_SAMPLES))) samples/circle-cpp.db samples/circle-java.db
 
 # Transformation
-# Please set DOCBOOK_XSL_HTML to a valid UNIX path.
 XSL_STYLESHEET = $(DOCBOOK_XSL_HTML)
 
 # Configuration
@@ -57,7 +56,7 @@ $(HTML_USER_GUIDE): $(wildcard *.xml *.css) $(DB_SAMPLES)
 ifneq ($(XSL_STYLESHEET),)
 	xsltproc $(XSLT_OPTIONS) "$(XSL_STYLESHEET)" "$(DB_USER_GUIDE)" > $@.tmp && mv $@.tmp $@
 else
-	@echo "Please set DOCBOOK_XSL_HTML to have the docbook user-guide being generated"
+$(warning Please set DOCBOOK_XSL_HTML to a valid UNIX path to have the docbook user-guide being generated)
 endif
 
 .PHONY: dirs

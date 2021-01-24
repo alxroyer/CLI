@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -39,9 +39,11 @@ PROJ_DEPS = jni.mak
 SRC_DIR = $(NATIVE_DIR)
 ifeq ($(TARGET),Cygwin)
 CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CPP_DIR)/src/ncurses_console.cpp,$(wildcard $(CPP_DIR)/src/*.cpp))
+deps: CPP_FILES += $(CPP_DIR)/src/ncurses_console.cpp
 endif
 ifeq ($(TARGET),Linux)
 CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CPP_DIR)/src/win_console.cpp,$(wildcard $(CPP_DIR)/src/*.cpp))
+deps: CPP_FILES += $(CPP_DIR)/src/win_console.cpp
 endif
 AUTO_DEPS = yes
 INT_DIR = $(OUT_DIR)/$(TARGET)$(CXX)/__$(PROJECT)

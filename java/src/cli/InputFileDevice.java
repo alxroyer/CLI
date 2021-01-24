@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -44,4 +44,11 @@ public class InputFileDevice extends IODevice
         super.finalize();
     }
     private static final native void __finalize(int I_NativeFileDeviceRef);
+
+    /** Special characters enabling. */
+    public InputFileDevice enableSpecialCharacters(boolean B_EnableSpecialCharacters) {
+        __enableSpecialCharacters(getNativeRef(), B_EnableSpecialCharacters);
+        return this;
+    }
+    private static final native void __enableSpecialCharacters(int I_NativeFileDeviceRef, boolean B_EnableSpecialCharacters);
 }

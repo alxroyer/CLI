@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -36,17 +36,35 @@
 
 CLI_NS_BEGIN(cli)
 
-    #ifndef CLI_MAX_CLI_REGISTRY_COUNT
-    static const int MAX_CLI_REGISTRY_COUNT = 10;
+    // General.
+
+    #ifndef CLI_MAX_RESOURCE_LENGTH
+    static const int MAX_RESOURCE_LENGTH = 256;
     #else
-    static const int MAX_CLI_REGISTRY_COUNT = MAX_CLI_CLI_REGISTRY_COUNT;
+    static const int MAX_RESOURCE_LENGTH = CLI_MAX_RESOURCE_LENGTH;
     #endif
+
+    #ifndef CLI_MAX_FILE_PATH_LENGTH
+    static const int MAX_FILE_PATH_LENGTH = 256;
+    #else
+    static const int MAX_FILE_PATH_LENGTH = CLI_MAX_FILE_PATH_LENGTH;
+    #endif
+
+    // CLI structures.
 
     #ifndef CLI_MAX_MENU_PER_CLI
     static const int MAX_MENU_PER_CLI = 50;
     #else
     static const int MAX_MENU_PER_CLI = CLI_MAX_MENU_PER_CLI;
     #endif
+
+    #ifndef CLI_MAX_WORDS_PER_NODE
+    static const int MAX_WORDS_PER_NODE = 256;
+    #else
+    static const int MAX_WORDS_PER_NODE = CLI_MAX_WORDS_PER_NODE;
+    #endif
+
+    // Command lines.
 
     #ifndef CLI_MAX_CMD_LINE_LENGTH
     static const int MAX_CMD_LINE_LENGTH = 2048;
@@ -66,35 +84,7 @@ CLI_NS_BEGIN(cli)
     static const int MAX_WORD_LENGTH = CLI_MAX_WORD_LENGTH;
     #endif
 
-    #ifndef CLI_MAX_DEVICE_NAME_LENGTH
-    static const int MAX_DEVICE_NAME_LENGTH = 256;
-    #else
-    static const int MAX_DEVICE_NAME_LENGTH = CLI_MAX_DEVICE_NAME_LENGTH;
-    #endif
-
-    #ifndef CLI_MAX_FILE_PATH_LENGTH
-    static const int MAX_FILE_PATH_LENGTH = 256;
-    #else
-    static const int MAX_FILE_PATH_LENGTH = CLI_MAX_FILE_PATH_LENGTH;
-    #endif
-
-    #ifndef CLI_MAX_IO_MUX_INPUTS
-    static const int MAX_IO_MUX_INPUTS = 100;
-    #else
-    static const int MAX_IO_MUX_INPUTS = CLI_MAX_IO_MUX_INPUTS;
-    #endif
-
-    #ifndef CLI_MAX_WORDS_PER_NODE
-    static const int MAX_WORDS_PER_NODE = 256;
-    #else
-    static const int MAX_WORDS_PER_NODE = CLI_MAX_WORDS_PER_NODE;
-    #endif
-
-    #ifndef CLI_MAX_RESOURCE_LENGTH
-    static const int MAX_RESOURCE_LENGTH = 256;
-    #else
-    static const int MAX_RESOURCE_LENGTH = CLI_MAX_RESOURCE_LENGTH;
-    #endif
+    // Traces / debug.
 
     #ifndef CLI_MAX_TRACE_CLASS_COUNT
     static const int MAX_TRACE_CLASS_COUNT = 1024;
@@ -106,6 +96,26 @@ CLI_NS_BEGIN(cli)
     static const int MAX_TRACE_CLASS_NAME_LENGTH = MAX_WORD_LENGTH;
     #else
     static const int MAX_TRACE_CLASS_NAME_LENGTH = CLI_MAX_TRACE_CLASS_NAME_LENGTH;
+    #endif
+
+    #ifndef CLI_MAX_DEVICE_NAME_LENGTH
+    static const int MAX_DEVICE_NAME_LENGTH = 256;
+    #else
+    static const int MAX_DEVICE_NAME_LENGTH = CLI_MAX_DEVICE_NAME_LENGTH;
+    #endif
+
+    // Misc
+
+    #ifndef CLI_MAX_CLI_REGISTRY_COUNT
+    static const int MAX_CLI_REGISTRY_COUNT = 10;
+    #else
+    static const int MAX_CLI_REGISTRY_COUNT = MAX_CLI_CLI_REGISTRY_COUNT;
+    #endif
+
+    #ifndef CLI_MAX_IO_MUX_INPUTS
+    static const int MAX_IO_MUX_INPUTS = 100;
+    #else
+    static const int MAX_IO_MUX_INPUTS = CLI_MAX_IO_MUX_INPUTS;
     #endif
 
 CLI_NS_END(cli)

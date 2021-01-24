@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -71,6 +71,9 @@ Cli::Cli(const char* const STR_Name, const Help& CLI_Help)
     m_pcliShell(NULL),
     m_qMenus(MAX_MENU_PER_CLI),
     m_pcliConfigMenu(NULL), m_pcliConfigMenuNode(NULL)
+    #ifdef _DEBUG
+    , m_pcliTracesMenu(NULL), m_pcliTracesMenuNode(NULL)
+    #endif
 {
     EnsureCommonDevices();
     EnsureTraces();

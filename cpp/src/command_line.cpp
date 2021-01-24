@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -274,7 +274,8 @@ const bool CommandLine::Split(
     class Do { public:
         static const bool PushWord(
             const Element& CLI_Element, tk::Queue<tk::String>& VSTR_Words,
-            const int I_Position, tk::String& STR_Word)
+            const int I_Position, tk::String& STR_Word,
+            ResourceString& CLI_Error)
         {
             if (VSTR_Words.AddTail(STR_Word))
             {
@@ -282,7 +283,14 @@ const bool CommandLine::Split(
                 STR_Word.Set("");
                 return true;
             }
-            return false;
+            else
+            {
+                CLI_Error
+                    .SetString(ResourceString::LANG_EN, "Too many words in command line")
+                    .SetString(ResourceString::LANG_FR, "Trop de mots dans la ligne de commande");
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << CLI_Error.GetString(ResourceString::LANG_EN) << " on '" << STR_Word << "'" << endl;
+                return false;
+            }
         }
     };
 
@@ -314,7 +322,7 @@ const bool CommandLine::Split(
             }
             if (! str_Word.IsEmpty())
             {
-                Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
+                if (! Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word, m_cliError)) return false;
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to -1 on \\n" << endl;
                 I_LastWordPosition = -1;
             }
@@ -330,7 +338,7 @@ const bool CommandLine::Split(
                 // Push previous word if any.
                 if (! str_Word.IsEmpty())
                 {
-                    Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
+                    if (! Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word, m_cliError)) return false;
                 }
                 // Completion management.
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to " << i << " on \"" << endl;
@@ -342,7 +350,7 @@ const bool CommandLine::Split(
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Quoted string ending at " << i << endl;
                 b_QuotedWord = false;
                 // Push the word whatever.
-                Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
+                if (! Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word, m_cliError)) return false;
                 // No completion on quoted strings.
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to -1 on \"" << endl;
                 I_LastWordPosition = -1;
@@ -353,7 +361,7 @@ const bool CommandLine::Split(
         {
             if (! str_Word.IsEmpty())
             {
-                Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
+                if (! Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word, m_cliError)) return false;
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "LastWordPosition set to -1 on blank character" << endl;
                 I_LastWordPosition = -1;
             }
@@ -376,6 +384,10 @@ const bool CommandLine::Split(
             if (! str_Word.Append(c))
             {
                 // Internal error.
+                m_cliError
+                    .SetString(ResourceString::LANG_EN, ResourceString::Concat("Too long word '", str_Word.SubString(0, 10), "...'"))
+                    .SetString(ResourceString::LANG_FR, ResourceString::Concat("Mot trop long '", str_Word.SubString(0, 10), "...'"));
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on " << c << endl;
                 return false;
             }
             if (I_LastWordPosition < 0)
@@ -397,7 +409,7 @@ const bool CommandLine::Split(
         {
             if (! str_Word.IsEmpty())
             {
-                Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word);
+                if (! Do::PushWord(*m_pcliMenu, VSTR_Words, i, str_Word, m_cliError)) return false;
             }
         }
 
@@ -412,6 +424,10 @@ const bool CommandLine::Split(
             }
             else
             {
+                m_cliError
+                    .SetString(ResourceString::LANG_EN, ResourceString::Concat("Too long word '", str_Word.SubString(0, 10), "...'"))
+                    .SetString(ResourceString::LANG_FR, ResourceString::Concat("Mot trop long '", str_Word.SubString(0, 10), "...'"));
+                GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on \\n" << endl;
                 return false;
             }
         }

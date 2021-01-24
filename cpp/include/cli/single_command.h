@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -72,6 +72,7 @@ CLI_NS_BEGIN(cli)
         virtual const KEY GetKey(void) const;
         virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
+        virtual const OutputDevice& GetActualDevice(void) const;
 
     private:
         //! Output device.

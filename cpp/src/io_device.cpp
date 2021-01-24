@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -66,10 +66,8 @@ static const TraceClass& GetIODeviceOpeningTraceClass(void)
 
 OutputDevice::OutputDevice(
         const char* const STR_DbgName,
-        const char* const STR_Endl,
         const bool B_AutoDelete)
   : m_strDbgName(MAX_DEVICE_NAME_LENGTH, STR_DbgName),
-    m_strEndl(MAX_WORD_LENGTH, STR_Endl),
     m_iInstanceLock(B_AutoDelete ? 0 : 1), m_iOpenLock(0),
     m_cliLastError()
 {
@@ -258,14 +256,15 @@ const OutputDevice& OutputDevice::operator <<(const double D_Out) const
 const OutputDevice& OutputDevice::operator <<(void* const PV_Out) const
 {
     char str_Out[128];
-    snprintf(str_Out, sizeof(str_Out), "0x%08x", (unsigned int) PV_Out);
+    // %p is not used here, because it has strange behaviours when compiled on different environments.
+    snprintf(str_Out, sizeof(str_Out), "0x%08x", (int) PV_Out);
     PutString(str_Out);
     return *this;
 }
 
 const OutputDevice& OutputDevice::operator <<(const IOEndl& CLI_IOEndl) const
 {
-    PutString(m_strEndl);
+    PutString("\n");
     return *this;
 }
 
@@ -279,7 +278,7 @@ OutputDevice& OutputDevice::GetNullDevice(void)
     class NullDevice : public OutputDevice
     {
     public:
-        NullDevice(void) : OutputDevice("null", "", false) {}
+        NullDevice(void) : OutputDevice("null", false) {}
         virtual ~NullDevice(void) {}
 
     protected:
@@ -287,7 +286,6 @@ OutputDevice& OutputDevice::GetNullDevice(void)
         virtual const bool CloseDevice(void) { return true; }
     public:
         virtual void PutString(const char* const STR_Out) const {}
-        virtual void Beep(void) const {}
     };
 
     static NullDevice cli_Null;
@@ -299,7 +297,7 @@ OutputDevice& OutputDevice::GetStdOut(void)
     class StdOutDevice : public OutputDevice
     {
     public:
-        StdOutDevice(void) : OutputDevice("stdout", "\n", false) {}
+        StdOutDevice(void) : OutputDevice("stdout", false) {}
         virtual ~StdOutDevice(void) {}
 
     protected:
@@ -309,7 +307,6 @@ OutputDevice& OutputDevice::GetStdOut(void)
         virtual void PutString(const char* const STR_Out) const {
             fprintf(stdout, "%s", STR_Out);
         }
-        virtual void Beep(void) const {}
     };
 
     static StdOutDevice cli_StdOut;
@@ -321,7 +318,7 @@ OutputDevice& OutputDevice::GetStdErr(void)
     class StdErrDevice : public OutputDevice
     {
     public:
-        StdErrDevice(void) : OutputDevice("stderr", "\n", false) {}
+        StdErrDevice(void) : OutputDevice("stderr", false) {}
         virtual ~StdErrDevice(void) {}
 
     protected:
@@ -331,19 +328,35 @@ OutputDevice& OutputDevice::GetStdErr(void)
         virtual void PutString(const char* const STR_Out) const {
             fprintf(stderr, "%s", STR_Out);
         }
-        virtual void Beep(void) const {}
     };
 
     static StdErrDevice cli_StdErr;
     return cli_StdErr;
 }
 
+void OutputDevice::Beep(void) const
+{
+    PutString("\a");
+}
+
+void OutputDevice::CleanScreen(void) const
+{
+    for (int i=0; i<200; i++)
+    {
+        PutString("\n");
+    }
+}
+
+const OutputDevice& OutputDevice::GetActualDevice(void) const
+{
+    return *this;
+}
+
 
 IODevice::IODevice(
         const char* const STR_DbgName,
-        const char* const STR_Endl,
         const bool B_AutoDelete)
-  : OutputDevice(STR_DbgName, STR_Endl, B_AutoDelete)
+  : OutputDevice(STR_DbgName, B_AutoDelete)
 {
 }
 
@@ -356,7 +369,7 @@ IODevice& IODevice::GetNullDevice(void)
     class NullDevice : public IODevice
     {
     public:
-        NullDevice(void) : IODevice("null", "", false) {}
+        NullDevice(void) : IODevice("null", false) {}
         virtual ~NullDevice(void) {}
 
     protected:
@@ -364,7 +377,6 @@ IODevice& IODevice::GetNullDevice(void)
         virtual const bool CloseDevice(void) { return true; }
     public:
         virtual void PutString(const char* const STR_Out) const {}
-        virtual void Beep(void) const {}
         virtual const KEY GetKey(void) const { return NULL_KEY; }
     };
 
@@ -377,7 +389,7 @@ IODevice& IODevice::GetStdIn(void)
     class StdInDevice : public IODevice
     {
     public:
-        StdInDevice(void) : IODevice("stdin", "", false) {
+        StdInDevice(void) : IODevice("stdin", false) {
         }
         virtual ~StdInDevice(void) {
         }
@@ -413,18 +425,10 @@ const KEY IODevice::GetKey(const int I_Char) const
 {
     switch (I_Char)
     {
-    case 3:             return BREAK;
-    case 4:             return LOGOUT;
     case 10: case 13:   return ENTER;
-    case 27:            return ESCAPE;
-    case 127:           return BACKSPACE;
-    case 1001:          return KEY_UP;
-    case 1002:          return KEY_DOWN;
-    case 1005:          return PAGE_UP;
-    case 1006:          return PAGE_DOWN;
 
-    case ' ':           return SPACE;
-    case '\t':          return TAB;
+    case ' ':   return SPACE;
+    case '\t':  return TAB;
 
     case '0':   return KEY_0;
     case '1':   return KEY_1;
@@ -528,6 +532,13 @@ const KEY IODevice::GetKey(const int I_Char) const
     case '$':   return DOLLAR;
     case '\\':  return BACKSLASH;
     case '|':   return PIPE;
+    case '~':   return TILDE;
+    case '²':   return SQUARE;
+    case '€':   return EURO;
+    case '£':   return POUND;
+    case 'µ':   return MICRO;
+    case '§':   return PARAGRAPH;
+    case '°':   return DEGREE;
 
     case '?':   return QUESTION;
     case '!':   return EXCLAMATION;
@@ -549,4 +560,9 @@ const KEY IODevice::GetKey(const int I_Char) const
         // Unrecognized character.
         return NULL_KEY;
     }
+}
+
+const ResourceString IODevice::GetLocation(void) const
+{
+    return ResourceString();
 }

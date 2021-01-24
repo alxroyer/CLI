@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -30,9 +30,9 @@
     <para>
     The basic process is the following:
     <orderedlist>
-    <listitem>creation of an XML resource file;</listitem>
-    <listitem>transformation of the XML resource file into target language code;</listitem>
-    <listitem>integration.</listitem>
+    <listitem>Creation of an XML resource file;</listitem>
+    <listitem>Transformation of the XML resource file into target language code;</listitem>
+    <listitem>Integration.</listitem>
     </orderedlist>
     The content of the XML resource file will be presented
     in the <link linkend="xmlres">next section</link>.
@@ -63,12 +63,12 @@
             <programlisting>saxon empty.xml cppclic.xsl &gt; empty.cpp</programlisting>
         or <command>xsltproc</command>:
             <programlisting>xsltproc cppclic.xsl empty.xml &gt; empty.cpp</programlisting>
-        That's all falks!
+        That's all folks!
         Have a look at the generated C++ file if you want.
         </para>
 
         <para>
-        It works with java too!
+        And it works with java also!
             <programlisting>xsltproc --param STR_CliClassName "'Empty'" javaclic.xsl empty.xml &gt; Empty.java</programlisting>
         Have a look at the generated java file.
         </para>
@@ -81,13 +81,13 @@
         <para>
         The XSL transformation stylesheets have several parameters:
         <variablelist>
-        <varlistentry><term><classname>C++</classname></term>
+        <varlistentry><term>C++:</term>
             <listitem>
                 <itemizedlist>
                 <listitem><varname>B_CliStaticCreation</varname>:
                             CLI static creation. Default is 1 (true) for compatibility reasons.
                             When set to 0, the CLI instance is not created by the XSL transformation,
-                            for dynamic instanciation for instance
+                            so that you can do the dynamic instantiation at the appropriate time
                             (inherited from Java experience).</listitem>
                 <listitem><varname>STR_VarPrefix</varname>:
                             Variables prefix. Default is <constant>m_pcli_</constant>.</listitem>
@@ -96,11 +96,11 @@
                 <listitem><varname>STR_Indent</varname>:
                             Basic indentation. Default is four spaces.</listitem>
                 <listitem><varname>STR_CliClassName</varname>:
-                            CLI class name. Default is derivated from the CLI name.</listitem>
+                            CLI class name. Default is a derivate from the CLI name.</listitem>
                 </itemizedlist>
             </listitem>
         </varlistentry>
-        <varlistentry><term><classname>Java</classname></term>
+        <varlistentry><term>Java:</term>
             <listitem>
                 <itemizedlist>
                 <listitem><varname>STR_CliClassScope</varname>:
@@ -112,13 +112,28 @@
                 <listitem><varname>STR_Indent</varname>:
                             Basic indentation. Default is four spaces.</listitem>
                 <listitem><varname>STR_CliClassName</varname>:
-                            CLI class name. Default is derivated from the CLI name.
-                            It is highly recommended you override this parameter for intergation considerations.</listitem>
+                            CLI class name. Default is a derivate from the CLI name.
+                            It is highly recommended you override this parameter for integration considerations.</listitem>
                 </itemizedlist>
             </listitem>
         </varlistentry>
         </variablelist>
         </para>
+
+        <note>
+            <para>
+            If you have a look at the output source code, the complexity of this generated code may shock you.
+            As a matter of fact, since it is some managed code, you are not supposed to get into it,
+            and even less supposed to modify it.
+            But, you may however also figure out that it is nevertheless quite well presented:
+            <itemizedlist>
+            <listitem>Indentation is respected;</listitem>
+            <listitem>User-code is highlighted thanks to a comment pattern at the beginning of the lines;</listitem>
+            <listitem>The current word sequence in analysis is presented in comments throughout the code.</listitem>
+            </itemizedlist>
+            I hope these measures could help you when something goes wrong at compile or at debug time.
+            </para>
+        </note>
 
     </section>
 
@@ -143,7 +158,7 @@
 
             <para>
             Not a big deal!
-            You create a new C++ file with a main function which we will launch the CLI in.
+            You create a new C++ file with a main function we will launch the CLI in.
             This is done through the <function>Run</function> method
             with a device parameter of the <classname>cli::Shell</classname> class.
             </para>
@@ -157,7 +172,7 @@
                       in the XML resource file;</listitem>
             <listitem>CLI retrieval through <function>cli::Cli::FindFromName</function>
                       and a regular expression.</listitem>
-            <listitem>Non-static but explicite creation of the object in user code.</listitem>
+            <listitem>Non-static but explicit creation of the object in user code.</listitem>
             </itemizedlist>
             </para>
 
@@ -229,7 +244,7 @@ int main(void) {
             </example>
 
             <example><title>Empty example with C++ integration
-                            using an explicite creation</title>
+                            using an explicit creation</title>
             <para>
             Let's use <filename>cppclic.xsl</filename> parameters:
                 <programlisting>xsltproc --param B_CliStaticCreation 0 --param STR_CliClassName "'EmptyCli'" cppclic.xsl empty.xml &gt; empty_cli.h</programlisting>
@@ -252,15 +267,15 @@ int main(void) {
         <section id="integ.java"><title id="integ.java.title">Java integration</title>
 
             <para>
-            No static instanciation works in Java.
+            No static instantiation works in Java.
             The best way to instantiate the CLI object is to retrieve the class from its name,
             then to call <function>newInstance</function> on it.
-            That's what is presented in the exemple below.
+            That's what is presented in the example below.
             </para>
 
             <example><title>Empty example with Java integration</title>
             <para>
-            Considering you have generated a <filename>Empty.java</filename> file
+            Considering you have generated an <filename>Empty.java</filename> file
             as described in <link linkend="xslt">XSLT transformation section</link>,
             you may just compile this file with <command>javac</command>,
             and another one loading the <classname>Empty</classname> class:

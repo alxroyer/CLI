@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -114,12 +114,7 @@
         <sgmltag class="element">help</sgmltag> elements can be added to CLI elements
         to document them.
         The <sgmltag class="attribute">lang</sgmltag> attribute identifies
-        the corresponding language<footnote>
-            <para>
-            Only the <sgmltag class="attvalue">en</sgmltag> language identifier
-            is available for the moment.
-            </para>
-        </footnote>.
+        the corresponding language.
         </para>
 
         <example><title>Put help everywhere.</title>
@@ -127,12 +122,16 @@
             &sample-help;
         </example>
 
+        <note>
+            Only the <sgmltag class="attvalue">en</sgmltag> and <sgmltag class="attvalue">fr</sgmltag> language identifiers
+            are available for the moment.
+        </note>
+
         <blockquote>
         Good.
         That's what I needed.
         Now, how do I execute stuff from the command lines.
         </blockquote>
-
     </section>
 
     <section><title><sgmltag class="element">cpp</sgmltag>, <sgmltag class="element">java</sgmltag>
@@ -166,13 +165,13 @@
         The trick is to use special sections as below:
             &sample-cpp-full;
         Have a C++ <function>sayHello</function> function declaration
-        in a <filename class="headerfile">hello_api.h</filename> file,
-        and it should work.
+        in a <filename class="headerfile">hello_api.h</filename> file, and it should work.
+        Declare a <function>sayHello</function> in a <classname>HelloApi</classname> class, and it should work as well.
         </example>
 
         <para>
         Note that you give straight away user code to be executed in the XML resource file.
-        This may seem weird firstly, but it is however a nice way to do to my point of view.
+        This may seem weird firstly, but it is however, to my point of view, a nice way to do.
         You've got everything in a single readable file.
         Though, it's easy to maintain.
         On the other hand, it's easy to understand what is executed on each command.
@@ -229,7 +228,7 @@
         in XML resource files.
         Indeed, CLI redirects these outputs for you.
         Basically,
-        if it is lauchned from the console, output is sent in the console,
+        if it is launched from the console, output is sent in the console,
         if it is launched from a TCP connection, output is sent on this TCP connection...
         without changing anything in your XML resource file.
         </tip>
@@ -253,11 +252,7 @@
             <listitem>strings</listitem>
             <listitem>integers</listitem>
             <listitem>floats</listitem>
-            <listitem>host names<footnote>
-                <para>
-                A full support of host names is not provided yet.
-                </para>
-            </footnote></listitem>
+            <listitem>host names</listitem>
             </itemizedlist>
         </para>
 
@@ -268,10 +263,14 @@
         </example>
 
         <para>
-        Note the way you get access to entered values:
+        Have a look at the way you get access to the entered values:
         through <sgmltag class="attribute">param</sgmltag> attributes
         of <sgmltag class="element">value-of</sgmltag> elements.
         </para>
+
+        <note>
+        A full support of host names is not provided yet.
+        </note>
 
         <!--<note>
         In C++, <sgmltag class="element">value-of</sgmltag> elements
@@ -298,7 +297,7 @@
         Tags act like labels and gotos do in C/C++.
         The equivalent of the label definition
         is a <sgmltag class="element">tag</sgmltag> element
-        with a <sgmltag class="attribute">id</sgmltag> attribute.
+        with an <sgmltag class="attribute">id</sgmltag> attribute.
         And the equivalent of a goto statement
         is a <sgmltag class="element">tag</sgmltag> element
         with a <sgmltag class="attribute">ref</sgmltag> attribute.
@@ -897,8 +896,7 @@ add circle green
         The CLI transformation is quite permissive regarding tags.
         There is no special restriction on
         whether you can reference a tag from anywhere in the syntax tree or not.
-        However, non-sens situations shall be detected afterwards
-        by the target language compiler or interpretor.
+        However, the target language compiler or interpreter shall detecte non-sense situations afterwards.
         </note>
 
         <blockquote>
@@ -931,7 +929,7 @@ add circle green
         <para>
         A <sgmltag class="element">menu</sgmltag> element
         with a <sgmltag class="attribute">name</sgmltag> attribute
-        define a new menu.
+        defines a new menu.
         Inside, you can declare new command lines.
         With a <sgmltag class="attribute">ref</sgmltag>,
         in an <sgmltag class="element">endl</sgmltag> element,

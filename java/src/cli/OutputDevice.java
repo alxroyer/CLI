@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -28,6 +28,25 @@ package cli;
 /** Generic output device. */
 public class OutputDevice extends NativeObject
 {
+    /** Java output stream attached to a CLI output device. */
+    public static class OutputStream extends java.io.OutputStream {
+        /** Constructor. */
+        public OutputStream(OutputDevice CLI_OutputDevice) {
+            m_cliOutputDevice = CLI_OutputDevice;
+        }
+
+        /** Output handler. */
+        public void write(int b) {
+            if (m_cliOutputDevice != null) {
+                byte[] arb_Bytes = { (byte) b };
+                m_cliOutputDevice.put(new String(arb_Bytes));
+            }
+        }
+
+        /** CLI output device attached to this java output stream. */
+        private final OutputDevice m_cliOutputDevice;
+    }
+
     /** Constructor.
         @param I_NativeRef Native instance reference. */
     protected OutputDevice(int I_NativeRef) {

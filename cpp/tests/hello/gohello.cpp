@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -23,6 +23,7 @@
 */
 
 
+#include "cli/pch.h"
 #include "cli/common.h"
 #include "cli/console.h"
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -73,6 +73,8 @@ CLI_NS_BEGIN(cli)
         virtual void PutString(const char* const STR_Out) const;
         //! @brief Beep handler.
         virtual void Beep(void) const;
+        //! @brief Clean screen handler.
+        virtual void CleanScreen(void) const;
 
     private:
         //! Internal data.

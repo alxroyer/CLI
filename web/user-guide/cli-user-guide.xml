@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -62,33 +62,25 @@
 <title>CLI library user guide</title>
 
 <artheader>
-  <author><firstname>Royer</firstname><surname>Alexis</surname></author>
-  <issuenum>2.1</issuenum>
-  <pubdate>Jul, 25th 2008</pubdate>
-  <title>CLI library user guide</title>
-  <!--<titleabbrev></titleabbrev>-->
-  <revhistory>
-     <revision>
-        <revnumber>1.0</revnumber>
-        <date>June, 1st 2006</date>
-        <revremark>First release.</revremark>
-     </revision>
-     <revision>
-        <revnumber>2.0</revnumber>
-        <date>Sept, 27th 2007</date>
-        <revremark>Java addition.</revremark>
-     </revision>
-     <revision>
-        <revnumber>2.1</revnumber>
-        <date>Oct, 31st 2007</date>
-        <revremark>Corrections.</revremark>
-     </revision>
-     <revision>
-        <revnumber>2.2</revnumber>
-        <date>Sep, 21st 2008</date>
-        <revremark>Few corrections.</revremark>
-     </revision>
-  </revhistory>
+    <author><firstname>Royer</firstname><surname>Alexis</surname></author>
+    <issuenum>2.1</issuenum>
+    <pubdate>May, 14th 2009</pubdate>
+    <title>CLI library user guide</title>
+    <!--<titleabbrev></titleabbrev>-->
+    <revhistory>
+        <revision>  <revnumber>2.3</revnumber><date>May, 14th 2009</date>
+                    <revremark> "Thread-safe termination", "Mono-Thread execution", "Embedded integration and memory" and "Making compilers" sections addition.<sbr/>
+                                "Define your own input/output device" section improvement.<sbr/>
+                                XSL generation note addition.</revremark></revision>
+        <revision>  <revnumber>2.2</revnumber><date>Sep, 21st 2008</date>
+                    <revremark>Few corrections.</revremark></revision>
+        <revision>  <revnumber>2.1</revnumber><date>Oct, 31st 2007</date>
+                    <revremark>Corrections.</revremark></revision>
+        <revision>  <revnumber>2.0</revnumber><date>Sept, 27th 2007</date>
+                    <revremark>Java addition.</revremark></revision>
+        <revision>  <revnumber>1.0</revnumber><date>June, 1st 2006</date>
+                    <revremark>First release.</revremark></revision>
+    </revhistory>
 </artheader>
 
     &intro;

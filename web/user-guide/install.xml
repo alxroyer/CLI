@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -30,14 +30,14 @@
     <section id="download"><title id="download.title">Download</title>
 
         <para>
-        The CLI library can downloaded from
+        The CLI library can be downloaded from
         <ulink url="http://alexis.royer.free.fr/CLI/index.html#download">here</ulink>
         in the form of gzipped archives.
         </para>
 
     </section>
 
-    <section id="prerequisit"><title id="prerequisit.title">Prerequisit</title>
+    <section id="prerequisite"><title id="prerequisite.title">Prerequisite</title>
 
         <para>
         The CLI library needs nothing special when compiled on Linux.
@@ -54,6 +54,8 @@
         </para>
 
         <para>
+        Set the <varname>JAVA_HOME</varname> and environment variable:
+            <programlisting>export JAVA_HOME="$(dirname "$(dirname "$(which javac)")")"</programlisting>
         Go to <filename class="directory">build/make</filename>:
             <programlisting>cd build/make</programlisting>
         and build:
@@ -65,12 +67,10 @@
             <listitem>C++:
                 <orderedlist>
                 <listitem>C++ CLI library compilation</listitem>
-                <listitem>Program samples compilation:
-                            tktest, cpptest, empty, hello, clisample</listitem>
+                <listitem>Program samples and tests compilation:
+                            tktest, cpptest, empty, hello, clisample, io_device</listitem>
                 <listitem>User guide samples testing:
                             all samples of this user guide are compiled, executed, and checked</listitem>
-                <listitem>Additional unit tests:
-                            io_device</listitem>
                 </orderedlist>
             </listitem>
             <listitem>Java:
@@ -84,7 +84,7 @@
             </listitem>
             <listitem>User-guide:
                 <orderedlist>
-                <listitem>User-guide update (if DOCBOOK_XSL_HTML variable is set)</listitem>
+                <listitem>User-guide update (if the <varname>DOCBOOK_XSL_HTML</varname> environment variable is set)</listitem>
                 </orderedlist>
             </listitem>
             </orderedlist>

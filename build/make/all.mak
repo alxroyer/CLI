@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -52,7 +52,8 @@ clean:
 # Debug and help
 .PHONY: $(CLI_DIR)/build/make/all.help
 $(CLI_DIR)/build/make/all.help:
-	$(call PrintHelp, default,   Dispatch default rule on sub-projects)
+	@# Do not display help on the default. Let the user Makefile do it.
+	@#$(call PrintHelp, default,   Dispatch default rule on sub-projects)
 	$(call PrintHelp, deps,      Dispatch deps rule on sub-projects)
 	$(call PrintHelp, clean,     Dispatch clean rule on sub-projects)
 

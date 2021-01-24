@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -65,12 +65,15 @@ CLI_NS_BEGIN(cli)
 
     public:
         //! @brief File accessor.
+        //! @return The source file name of the call info.
         const char* const GetFile(void) const;
 
         //! @brief Line accessor
+        //! @return The source line of the call info.
         const unsigned int GetLine(void) const;
 
         //! @brief Function accessor.
+        //! @return The source function of the call info.
         const char* const GetFunction(void) const;
 
     private:

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -23,6 +23,7 @@
 */
 
 
+#include "cli/pch.h"
 #include "cli/common.h"
 #include "cli/shell.h"
 #include "cli/file_device.h"
@@ -57,6 +58,7 @@ int main(int I_Args, char** ARSTR_Args)
     // Create devices.
     cli::OutputFileDevice cli_Output(ARSTR_Args[2], false);
     cli::InputFileDevice cli_Input(ARSTR_Args[1], cli_Output, false);
+    cli_Input.EnableSpecialCharacters(true);
 
     // Redirect only echo, prompt, output and error streams.
     cli_Shell.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());

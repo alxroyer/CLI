@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -132,9 +132,14 @@ CLI_NS_BEGIN(cli)
         //! Last error.
         ResourceString m_cliError;
 
+    private:
+        // In order to allow access to private members for iteration.
         friend class CommandLineIterator;
     };
 
+    //! @brief Command line iteration.
+    //!
+    //! Scans the results of a command line analysis described in the CommandLine class.
     class CommandLineIterator : public Object
     {
     private:

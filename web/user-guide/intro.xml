@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -31,11 +31,11 @@
     <para>
     CLI is a library and a set of tools
     that allow you to easily develop text-based user interfaces.
-    So far, what you have to do is
+    So far, what you have to do is:
         <orderedlist>
-        <listitem>writing an XML resource file;</listitem>
-        <listitem>transforming it using the tools of the library;</listitem>
-        <listitem>plugging it into an existing program.</listitem>
+        <listitem>Writing an XML resource file;</listitem>
+        <listitem>Transforming it using the tools of the library;</listitem>
+        <listitem>Plugging it into an existing program.</listitem>
         </orderedlist>
     These points are discussed in the <link linkend="howto">first section</link>.
     </para>

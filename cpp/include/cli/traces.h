@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -25,7 +25,10 @@
 
 //! @file
 //! @author Alexis Royer
-//! @brief Trace classes definition.
+//! @brief Traces management system definition.
+//!
+//! Defined by Traces and TraceClass classes.
+//! Use the singleton cli::GetTraces.
 
 #ifndef _CLI_TRACES_H_
 #define _CLI_TRACES_H_
@@ -139,6 +142,11 @@ CLI_NS_BEGIN(cli)
         //! You may also call UnsetStream() even if SetStream() has been been previously called.
         const bool UnsetStream(void);
 
+        //! @brief Determines whether the trace stream has already been set.
+        //! @return true: The stream has already been set.
+        //! @return false: No stream has been set yet.
+        const bool IsStreamSet(void) const;
+
     public:
         //! @brief Trace class declaration.
         //! @return true if the class has been declared successfully or the class was already declared.
@@ -169,6 +177,12 @@ CLI_NS_BEGIN(cli)
             );
 
     public:
+        //! @brief Trace status.
+        //! @return true if the trace is active, false otherwise.
+        const bool IsTraceOn(
+            const TraceClass& CLI_Class     //!< Trace class.
+            ) const;
+
         //! @brief Trace routine.
         //! @return Trace output stream prepared to receive the trace
         //! @note If enabled, the trace is directed to the output stream of the shell corresponding to context element.
@@ -185,7 +199,7 @@ CLI_NS_BEGIN(cli)
             const TraceClass& CLI_Class     //!< Trace class.
             );
 
-        //! @brief Trace filter states.
+        //! @brief Trace filter state display.
         const bool TraceFilterState(
             const TraceClass& CLI_Class,    //!< Trace class.
             const bool B_ShowTraces         //!< Show traces flag.
@@ -222,6 +236,7 @@ CLI_NS_BEGIN(cli)
     };
 
     //! @brief Singleton.
+    //! @return The only one Traces instance.
     Traces& GetTraces(void);
 
 CLI_NS_END(cli)

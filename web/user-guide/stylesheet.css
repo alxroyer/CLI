@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -40,6 +40,9 @@ div.note {
   color: #333333;
   background: #FFFFE0;
 }
+
+div.informalfigure { text-align: center; }
+div.informalfigure div.caption { font-size: 80%; font-style: italic; }
 
 blockquote:before { font-style: italic; content: "\"" }
 blockquote { font-style: italic }

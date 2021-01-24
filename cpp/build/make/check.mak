@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -43,8 +43,9 @@ include mkres.mak
 .PHONY: log
 log: build_depends $(CLI_LOG) ;
 
-$(CLI_LOG): $(CLI_BINARY) $(CLI_BINARY) $(CLI_TEST)
+$(CLI_LOG): $(CLI_BINARY) $(CLI_TEST) $(CPP_DIR)/tests/cleanlog.sh
 	$(CLI_BINARY) $(CLI_TEST) $(CLI_LOG) 1> /dev/null 2> /dev/null
+	dos2unix $(CPP_DIR)/tests/cleanlog.sh 2> /dev/null
 	chmod a+x $(CPP_DIR)/tests/cleanlog.sh
 	$(CPP_DIR)/tests/cleanlog.sh $(CLI_LOG)
 

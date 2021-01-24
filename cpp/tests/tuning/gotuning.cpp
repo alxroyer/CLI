@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -22,6 +22,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "cli/pch.h"
 #include "cli/common.h"
 #include "cli/console.h"
 #include "cli/traces.h"
@@ -122,11 +123,11 @@ void TunePrompt(const cli::ResourceString& CLI_Prompt)
     }
 }
 
-void TuneErrorFormatting(const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix)
+void TuneErrorFormatting(const cli::ResourceString& CLI_LocationPrefix, const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix)
 {
     if (cli::Shell* const pcli_Shell = GetShell())
     {
-        pcli_Shell->SetErrorFormatting(CLI_ErrorPrefix, CLI_ErrorSuffix);
+        pcli_Shell->SetErrorFormatting(CLI_LocationPrefix, CLI_ErrorPrefix, CLI_ErrorSuffix);
     }
 }
 

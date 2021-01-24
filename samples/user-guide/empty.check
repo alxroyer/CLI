@@ -50,10 +50,10 @@ cli-config>echo o
 cli-config>echo on
 echo is on
 cli-config>abcde
-Syntax error next to 'abcde'
+../../../samples/user-guide/empty.test:9: Syntax error next to 'abcde'
 cli-config>echo off
 echo is off
-cli-config>Syntax error next to 'abcde'
+cli-config>../../../samples/user-guide/empty.test:11: Syntax error next to 'abcde'
 cli-config>echo is on
 cli-config>beep 
   off             Set beep off

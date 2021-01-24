@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -29,7 +29,12 @@ java.default: default ;
 # Includes
 CLI_DIR := ../../..
 include vars.mak
-PROJECTS = libclijava.mak jni.mak native.mak tests.mak
+PROJECTS += libclijava.mak
+PROJECTS += jni.mak
+PROJECTS += native.mak
+PROJECTS += hello.mak
+PROJECTS += clisample.mak
+PROJECTS += tests.mak
 include $(CLI_DIR)/build/make/all.mak
 
 # Debug and help

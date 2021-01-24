@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -52,7 +52,7 @@ const tk::String SyntaxTag::GetKeyword(void) const
 {
     static char str_Buffer[256];
     memset(str_Buffer, '\0', sizeof(str_Buffer));
-    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "tag[0x%08x]", (unsigned int) this);
+    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "tag[0x%p]", this);
 
     tk::String str_Keyword(MAX_WORD_LENGTH);
     if (! str_Keyword.Set(str_Buffer))
@@ -82,7 +82,7 @@ const tk::String SyntaxRef::GetKeyword(void) const
 {
     static char str_Buffer[256];
     memset(str_Buffer, '\0', sizeof(str_Buffer));
-    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "ref[0x%08x]", (unsigned int) this);
+    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "ref[0x%p]", this);
 
     tk::String str_Keyword(MAX_WORD_LENGTH);
     if (! str_Keyword.Set(str_Buffer))

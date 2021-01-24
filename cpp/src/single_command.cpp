@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -36,7 +36,7 @@ SingleCommand::SingleCommand(
         const char* const STR_Command,
         OutputDevice& CLI_Output,
         const bool B_AutoDelete)
-  : IODevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "cmd[", STR_Command, "]"), "\n", B_AutoDelete), m_cliOutput(CLI_Output),
+  : IODevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "cmd[", STR_Command, "]"), B_AutoDelete), m_cliOutput(CLI_Output),
     m_strCommand(MAX_CMD_LINE_LENGTH, STR_Command), m_iPosition(-1)
 {
     EnsureCommonDevices();
@@ -113,4 +113,7 @@ void SingleCommand::Beep(void) const
     m_cliOutput.Beep();
 }
 
-
+const OutputDevice& SingleCommand::GetActualDevice(void) const
+{
+    return m_cliOutput.GetActualDevice();
+}

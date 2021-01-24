@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -33,6 +33,7 @@ include vars.mak
 JAVA_FILES = $(wildcard $(JAVA_SRC_DIR)/cli/*.java)
 JAVA_CLASSES = $(patsubst $(JAVA_SRC_DIR)/cli/%.java,$(OUT_DIR)/cli/%.class,$(JAVA_FILES))
 CPP_HEADERS = $(patsubst $(OUT_DIR)/cli/%.class,$(NATIVE_DIR)/cli_%.h,$(JAVA_CLASSES))
+CPP_HEADERS += $(JAVA_DIR)/native/cli_OutputDevice_OutputStream.h
 
 
 # Rules.

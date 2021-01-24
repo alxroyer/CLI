@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -65,13 +65,21 @@ CLI_NS_BEGIN(cli)
         //! @brief No assignment operator.
         InputFileDevice& operator=(const InputFileDevice&);
 
+    public:
+        //! @brief Special character enabling.
+        InputFileDevice& EnableSpecialCharacters(
+            const bool B_EnableSpecialCharacters    //!< true for enabling. false otherwise.
+            );
+
     protected:
         virtual const bool OpenDevice(void);
         virtual const bool CloseDevice(void);
     public:
         virtual const KEY GetKey(void) const;
+        virtual const ResourceString GetLocation(void) const;
         virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
+        virtual const OutputDevice& GetActualDevice(void) const;
 
     public:
         //! @brief File name accessor.
@@ -84,14 +92,20 @@ CLI_NS_BEGIN(cli)
         const int GetCurrentColumn(void) const;
 
     private:
-        //! @brief Input file name.
+        //! Input file name.
         const tk::String m_strFileName;
 
         //! Input file.
         mutable FILE* m_pfFile;
 
+        //! Special character enabling.
+        bool m_bEnableSpecialCharacters;
+
         //! Output device.
         OutputDevice& m_cliOutput;
+
+        //! Character buffer.
+        mutable std::deque<char> m_stdInputBuffer;
 
         //! Current Line.
         mutable int m_iCurrentLine;

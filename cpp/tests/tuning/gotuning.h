@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -32,7 +32,7 @@ void TuneByeMessage(const cli::ResourceString& CLI_ByeMessage);
 
 void TunePrompt(const cli::ResourceString& CLI_Prompt);
 
-void TuneErrorFormatting(const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix);
+void TuneErrorFormatting(const cli::ResourceString& CLI_LocationPrefix, const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix);
 
 void TuneLang(const cli::ResourceString::LANG E_Lang);
 

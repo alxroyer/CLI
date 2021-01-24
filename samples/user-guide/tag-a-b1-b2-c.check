@@ -40,7 +40,7 @@ a(b1|b2)c>a
   b2              
 a(b1|b2)c>a c
 a(b1|b2)c>a c 
-Syntax error next to 'c'
+../../../samples/user-guide/tag-a-b1-b2-c.test:3: Syntax error next to 'c'
 a(b1|b2)c>a c 
-Syntax error next to 'c'
+../../../samples/user-guide/tag-a-b1-b2-c.test:3: Syntax error next to 'c'
 a(b1|b2)c>exit

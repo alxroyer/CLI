@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -35,7 +35,7 @@ CLI_NS_USE(cli)
 
 
 IOMux::IOMux(const bool B_AutoDelete)
-  : IODevice("mux", "\n", B_AutoDelete),
+  : IODevice("mux", B_AutoDelete),
     m_qInputs(MAX_IO_MUX_INPUTS),
     m_bIOLocked(false)
 {
@@ -157,7 +157,7 @@ const bool IOMux::CloseDevice(void)
 
 void IOMux::PutString(const char* const STR_Out) const
 {
-    //! @warning This method should not be called. However, we redirect the call to output stream.
+    //! @warning This method should not be called. However, we redirect the call to the output stream.
     if ((m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
         // Protection against infinite loop.
         && (! m_bIOLocked))
@@ -170,7 +170,7 @@ void IOMux::PutString(const char* const STR_Out) const
 
 void IOMux::Beep(void) const
 {
-    //! @warning This method should not be called. However, we redirect the call to m_tOutput.
+    //! @warning This method should not be called. However, we redirect the call to the output stream.
     if ((m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
         // Protection against infinite loop.
         && (! m_bIOLocked))
@@ -178,6 +178,18 @@ void IOMux::Beep(void) const
         m_bIOLocked = true;
         m_arsOutputs[OUTPUT_STREAM].pcliOutput->Beep();
         m_bIOLocked = false;
+    }
+}
+
+const OutputDevice& IOMux::GetActualDevice(void) const
+{
+    if (m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
+    {
+        return m_arsOutputs[OUTPUT_STREAM].pcliOutput->GetActualDevice();
+    }
+    else
+    {
+        return OutputDevice::GetNullDevice().GetActualDevice();
     }
 }
 
@@ -217,6 +229,19 @@ const KEY IOMux::GetKey(void) const
     }
 
     return cli::NULL_KEY;
+}
+
+const ResourceString IOMux::GetLocation(void) const
+{
+    if (! m_qInputs.IsEmpty())
+    {
+        if (IODevice* const pcli_Input = m_qInputs.GetHead())
+        {
+            return pcli_Input->GetLocation();
+        }
+    }
+
+    return ResourceString();
 }
 
 const OutputDevice& IOMux::GetOutput(const STREAM_TYPE E_StreamType) const

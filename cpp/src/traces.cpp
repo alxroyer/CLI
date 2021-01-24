@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -141,6 +141,7 @@ const OutputDevice& Traces::GetStream(void) const
     else
     {
         // Default to stderr.
+        OutputDevice::GetStdErr() << "Traces::GetStream(): Default to stderr" << endl;
         return OutputDevice::GetStdErr();
     }
 }
@@ -194,6 +195,11 @@ const bool Traces::SetStream(OutputDevice& CLI_Stream)
     }
 
     return true;
+}
+
+const bool Traces::IsStreamSet(void) const
+{
+    return (m_pcliStream != NULL);
 }
 
 const bool Traces::Declare(const TraceClass& CLI_Class)
@@ -308,9 +314,8 @@ const bool Traces::SetAllFilter(const bool B_ShowTraces)
     return true;
 }
 
-const OutputDevice& Traces::Trace(const TraceClass& CLI_Class)
+const bool Traces::IsTraceOn(const TraceClass& CLI_Class) const
 {
-    Declare(CLI_Class);
     bool b_ShowTrace = false;
 
     if (const TraceClassFlag* const pcli_Flags = m_mapClasses.GetAt(CLI_Class.GetName()))
@@ -318,7 +323,14 @@ const OutputDevice& Traces::Trace(const TraceClass& CLI_Class)
         b_ShowTrace = pcli_Flags->IsVisible();
     }
 
-    if (b_ShowTrace)
+    return b_ShowTrace;
+}
+
+const OutputDevice& Traces::Trace(const TraceClass& CLI_Class)
+{
+    Declare(CLI_Class);
+
+    if (IsTraceOn(CLI_Class))
     {
         return BeginTrace(CLI_Class);
     }

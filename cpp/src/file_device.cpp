@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -40,8 +40,8 @@ InputFileDevice::InputFileDevice(
         const char* const STR_FileName,
         OutputDevice& CLI_Output,
         const bool B_AutoDelete)
-  : IODevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "input-file[", STR_FileName, "]"), "\n", B_AutoDelete),
-    m_strFileName(MAX_FILE_PATH_LENGTH, STR_FileName), m_pfFile(NULL),
+  : IODevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "input-file[", STR_FileName, "]"), B_AutoDelete),
+    m_strFileName(MAX_FILE_PATH_LENGTH, STR_FileName), m_pfFile(NULL), m_bEnableSpecialCharacters(false),
     m_cliOutput(CLI_Output),
     m_iCurrentLine(0), m_iCurrentColumn(0), m_iNextLine(1), m_iNextColumn(1)
 {
@@ -53,6 +53,12 @@ InputFileDevice::InputFileDevice(
 InputFileDevice::~InputFileDevice(void)
 {
     m_cliOutput.FreeInstance(__CALL_INFO__);
+}
+
+InputFileDevice& InputFileDevice::EnableSpecialCharacters(const bool B_EnableSpecialCharacters)
+{
+    m_bEnableSpecialCharacters = B_EnableSpecialCharacters;
+    return *this;
 }
 
 const bool InputFileDevice::OpenDevice(void)
@@ -108,33 +114,115 @@ const KEY InputFileDevice::GetKey(void) const
 {
     if (m_pfFile != NULL)
     {
-        m_iCurrentLine = m_iNextLine;
-        m_iCurrentColumn = m_iNextColumn;
-        char c_Char = NULL_KEY;
-        while ( (! feof(m_pfFile))
-                && (fread(& c_Char, sizeof(char), 1, m_pfFile) == 1))
+        // While there are still characters to read.
+        while ((! m_stdInputBuffer.empty()) || (! feof(m_pfFile)))
         {
-            if (c_Char == '\n')
+            // Check the input buffer
+            if (m_stdInputBuffer.empty())
             {
-                m_iNextLine ++;
-                m_iNextColumn = 1;
+                if ((m_pfFile != NULL) && (! feof(m_pfFile)))
+                {
+                    char str_Buffer[1024];
+                    size_t ui_Bytes = fread(str_Buffer, sizeof(char), sizeof(str_Buffer), m_pfFile);
+                    if (ui_Bytes > 0)
+                    {
+                        for (size_t ui=0; (ui<ui_Bytes) && (ui<sizeof(str_Buffer)); ui++)
+                        {
+                            m_stdInputBuffer.push_back(str_Buffer[ui]);
+                        }
+                    }
+                    else
+                    {
+                        m_cliLastError
+                            .SetString(ResourceString::LANG_EN, ResourceString::Concat("Error while reading input file '", m_strFileName, "'"))
+                            .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrée '", m_strFileName, "'"));
+                        return NULL_KEY;
+                    }
+                }
             }
-            else
+
+            // Read the next character.
+            if (! m_stdInputBuffer.empty())
             {
-                m_iNextColumn ++;
-            }
-            KEY e_Key = IODevice::GetKey(c_Char);
-            if (e_Key != NULL_KEY)
-            {
-                m_cliLastError
-                    .SetString(ResourceString::LANG_EN, ResourceString::Concat("Error while reading input file '", m_strFileName, "'"))
-                    .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrée '", m_strFileName, "'"));
-                return e_Key;
+                char c_Char = m_stdInputBuffer.front();
+                m_stdInputBuffer.pop_front();
+
+                // Next line/column management & special character management.
+                switch (c_Char)
+                {
+                case '\n':
+                    m_iCurrentLine = m_iNextLine;       m_iNextLine ++;
+                    m_iCurrentColumn = m_iNextColumn;   m_iNextColumn = 1;
+                    break;
+                case '?':
+                    if ((m_iNextLine == m_iCurrentLine) && (m_iNextColumn == m_iCurrentColumn) && (! m_bEnableSpecialCharacters))
+                    {
+                        // Income of the effective '?' character, after it has been escaped (see below).
+                        // This time, step over.
+                        m_iNextColumn ++;
+                    }
+                    else if (! m_bEnableSpecialCharacters)
+                    {
+                        // Escape the '?' character. Post it back. Do not step over yet.
+                        m_iCurrentLine = m_iNextLine;
+                        m_iCurrentColumn = m_iNextColumn;
+                        c_Char = '\\';
+                        m_stdInputBuffer.push_front('?');
+                    }
+                    else
+                    {
+                        // Just step over.
+                        m_iCurrentLine = m_iNextLine;
+                        m_iCurrentColumn = m_iNextColumn ++;
+                    }
+                    break;
+                case '\t':
+                    if (! m_bEnableSpecialCharacters)
+                    {
+                        // Change tabs into spaces.
+                        c_Char = ' ';
+                    }
+                    // Step over.
+                    m_iCurrentLine = m_iNextLine;
+                    m_iCurrentColumn = m_iNextColumn ++;
+                default:
+                    // Just step over.
+                    m_iCurrentLine = m_iNextLine;
+                    m_iCurrentColumn = m_iNextColumn ++;
+                    break;
+                }
+
+                // Character analysis.
+                KEY e_Key = IODevice::GetKey(c_Char);
+                if (e_Key == NULL_KEY)
+                {
+                    m_cliLastError
+                        .SetString(ResourceString::LANG_EN, ResourceString::Concat("Error while reading input file '", m_strFileName, "'"))
+                        .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrée '", m_strFileName, "'"));
+                }
+                else
+                {
+                    return e_Key;
+                }
             }
         }
     }
 
     return NULL_KEY;
+}
+
+const ResourceString InputFileDevice::GetLocation(void) const
+{
+    char str_Location[1024];
+    memset(str_Location, '\0', sizeof(str_Location));
+    snprintf(str_Location, sizeof(str_Location) - 1, "%s:%d: ", (const char* const) m_strFileName, GetCurrentLine());
+
+    ResourceString cli_Location;
+    for (int i_Lang = 0; i_Lang < ResourceString::LANG_COUNT; i_Lang ++)
+    {
+        cli_Location.SetString((ResourceString::LANG) i_Lang, str_Location);
+    }
+    return cli_Location;
 }
 
 void InputFileDevice::PutString(const char* const STR_Out) const
@@ -145,6 +233,11 @@ void InputFileDevice::PutString(const char* const STR_Out) const
 void InputFileDevice::Beep(void) const
 {
     m_cliOutput.Beep();
+}
+
+const OutputDevice& InputFileDevice::GetActualDevice(void) const
+{
+    return m_cliOutput.GetActualDevice();
 }
 
 const tk::String InputFileDevice::GetFileName(void) const
@@ -164,7 +257,7 @@ const int InputFileDevice::GetCurrentColumn(void) const
 
 
 OutputFileDevice::OutputFileDevice(const char* const STR_FileName, const bool B_AutoDelete)
-  : OutputDevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "output-file[", STR_FileName, "]"), "\n", B_AutoDelete),
+  : OutputDevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "output-file[", STR_FileName, "]"), B_AutoDelete),
     m_strFileName(MAX_FILE_PATH_LENGTH, STR_FileName), m_pfFile(NULL)
 {
 }

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -23,7 +23,18 @@
 
 # Includes
 CLI_DIR := ../../..
-PROJECTS = libclicpp.mak tktest.mak cpptest.mak empty.mak tuning.mak hello.mak clisample.mak tests.mak io_device.mak
+PROJECTS += libclicpp.mak
+PROJECTS += tktest.mak
+PROJECTS += cpptest.mak
+PROJECTS += empty.mak
+PROJECTS += tuning.mak
+PROJECTS += hello.mak
+PROJECTS += clisample.mak
+PROJECTS += telnet.mak
+PROJECTS += cmdlinetest.mak
+PROJECTS += io_device.mak
+PROJECTS += mt_device.mak
+PROJECTS += tests.mak
 include $(CLI_DIR)/build/make/all.mak
 
 # Debug and help

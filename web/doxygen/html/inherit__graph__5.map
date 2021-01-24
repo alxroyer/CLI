@@ -1,2 +1,1 @@
-base referer
-rect $classString.html 9,8 65,34
+<area shape="rect" id="node1" href="$classString.html" title="CLI classes toolkit." alt="" coords="5,5,61,33">

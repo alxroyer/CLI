@@ -1,5 +1,6 @@
 $(INT_DIR)/tk_main.o: ../../../cpp/tests/tk/tk_main.cpp \
-  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/namespace.h \
   ../../../cpp/include/cli/tk_inner.h ../../../cpp/include/cli/object.h \
   ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/help.h \
   ../../../cpp/include/cli/resource_string.h \

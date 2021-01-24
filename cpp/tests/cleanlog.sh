@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -28,16 +28,11 @@ CLI_LOG="$1"
 # Get the test result
 CLI_LOG_DATA=$(cat "$CLI_LOG")
 
-# Find out new lines
-#CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/\^M\^\[\[B/\n/g")
-
-# Other form of new lines
-#CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/\^\[\[B\^H/\n/g")
-
 # Backspaces
-while [ $(echo "$CLI_LOG_DATA" | cat -v | grep ".\^H ^H" | wc -l) -gt 0 ]
+while [ $(echo "$CLI_LOG_DATA" | cat -v | grep ".\^H\(\^H\)*\( \)* \^H\(\^H\)*" | wc -l) -gt 0 ]
 do
-    CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/.\^H ^H//")
+    # CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/.\^H\(\^H\)*\( \)* \^H\(\^H\)*/\1\2\3/")
+    CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | cat -v | sed -e "s/.\(\(\^H\)*\)\^H \(\( \)*\)\(\(\^H\)*\)\^H/\1\3\5/g")
 done
 
 # Windows-like end of lines
@@ -50,6 +45,9 @@ CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/M-i/é/g")
 # Remove traces menu (debug mode)
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "traces          Traces menu")
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "traces          Menu de configuration de traces")
+# Remove check menu (debug mode)
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "check           Check CLI stuff")
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "check           Vérifications du CLI")
 
 # Check line endings
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/\r\n/\n/g")

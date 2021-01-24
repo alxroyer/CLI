@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -64,7 +64,7 @@ public class TestSample {
             }
 
             // Create the input file device.
-            cli_Input = new cli.InputFileDevice(str_InputFileName, cli_Output);
+            cli_Input = new cli.InputFileDevice(str_InputFileName, cli_Output).enableSpecialCharacters(true);
         } catch (Exception e) {
             // Directly use the console.
             cli_Input = new cli.Console();

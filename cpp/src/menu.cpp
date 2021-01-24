@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -53,19 +53,9 @@ const tk::String Menu::GetName(void) const
     return GetKeyword();
 }
 
-Keyword& Menu::GetHelpNode(void)
-{
-    return *m_pcliHelp;
-}
-
 const Keyword& Menu::GetHelpNode(void) const
 {
     return *m_pcliHelp;
-}
-
-Keyword& Menu::GetExitNode(void)
-{
-    return *m_pcliExit;
 }
 
 const Keyword& Menu::GetExitNode(void) const
@@ -73,19 +63,9 @@ const Keyword& Menu::GetExitNode(void) const
     return *m_pcliExit;
 }
 
-Keyword& Menu::GetQuitNode(void)
-{
-    return *m_pcliQuit;
-}
-
 const Keyword& Menu::GetQuitNode(void) const
 {
     return *m_pcliQuit;
-}
-
-Keyword& Menu::GetPwmNode(void)
-{
-    return *m_pcliPwm;
 }
 
 const Keyword& Menu::GetPwmNode(void) const

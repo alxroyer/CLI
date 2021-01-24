@@ -1,9 +1,10 @@
-base referer
-rect $classIODevice.html 231,157 309,184
-rect $classOutputFileDevice.html 333,157 458,184
-rect $classObject.html 302,8 363,34
-rect $classConsole.html 7,232 77,258
-rect $classInputFileDevice.html 101,232 215,258
-rect $classIOMux.html 239,232 301,258
-rect $classSingleCommand.html 325,232 445,258
-rect $classTelnetConnection.html 469,232 597,258
+<area shape="rect" id="node5" href="$classIODevice.html" title="Generic input/output device." alt="" coords="279,161,351,189">
+<area shape="rect" id="node19" href="$classOutputFileDevice.html" title="Output file device." alt="" coords="375,161,495,189">
+<area shape="rect" id="node21" href="$classStringDevice.html" title="String device." alt="" coords="519,161,612,189">
+<area shape="rect" id="node2" href="$classObject.html" title="Generic object." alt="" coords="405,6,464,34">
+<area shape="rect" id="node7" href="$classConsole.html" title="Console intput/output device class." alt="" coords="5,238,72,266">
+<area shape="rect" id="node9" href="$classInputFileDevice.html" title="Input file device class." alt="" coords="96,238,203,266">
+<area shape="rect" id="node11" href="$classIOMux.html" title="Input / output device multiplexer." alt="" coords="227,238,285,266">
+<area shape="rect" id="node13" href="$classMonoThreadDevice.html" title="Mono&#45;Thread input device." alt="" coords="309,238,440,266">
+<area shape="rect" id="node15" href="$classSingleCommand.html" title="Single command device." alt="" coords="464,238,579,266">
+<area shape="rect" id="node17" href="$classTelnetConnection.html" title="Telnet connection input/output device." alt="" coords="603,238,723,266">

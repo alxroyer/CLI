@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -75,45 +75,43 @@ CLI_NS_BEGIN(cli)
         //! @brief Language setting.
         void SetLang(const ResourceString::LANG E_Lang) const;
 
+        #ifdef _DEBUG
+        //! @brief Check input/output device.
+        void CheckIODevice(void) const;
+        //! @brief Check output character device.
+        void CheckOutChar(void) const;
+        #endif
+
     private:
-        //! @brief Echo node access.
-        Keyword& GetEchoNode(void);
         //! @brief Echo node access (read-only).
         const Keyword& GetEchoNode(void) const;
-        //! @brief Echo on node access.
-        Keyword& GetEchoOnNode(void);
         //! @brief Echo on node access (read-only).
         const Keyword& GetEchoOnNode(void) const;
-        //! @brief Echo off node access.
-        Keyword& GetEchoOffNode(void);
         //! @brief Echo off node access (read-only).
         const Keyword& GetEchoOffNode(void) const;
 
-        //! @brief Beep node access.
-        Keyword& GetBeepNode(void);
         //! @brief Beep node access (read-only).
         const Keyword& GetBeepNode(void) const;
-        //! @brief Beep on node access.
-        Keyword& GetBeepOnNode(void);
         //! @brief Beep on node access (read-only).
         const Keyword& GetBeepOnNode(void) const;
-        //! @brief Beep off node access.
-        Keyword& GetBeepOffNode(void);
         //! @brief Beep off node access (read-only).
         const Keyword& GetBeepOffNode(void) const;
 
-        //! @brief Language node access.
-        Keyword& GetLangNode(void);
         //! @brief Language node access (read-only).
         const Keyword& GetLangNode(void) const;
-        //! @brief English language node access.
-        Keyword& GetEnglishLangNode(void);
         //! @brief English language node access (read-only).
         const Keyword& GetEnglishLangNode(void) const;
-        //! @brief French language node access.
-        Keyword& GetFrenchLangNode(void);
         //! @brief French language node access (read-only).
         const Keyword& GetFrenchLangNode(void) const;
+
+        #ifdef _DEBUG
+        //! @brief Check device node (read-only).
+        const Keyword& GetCheckNode(void) const;
+        //! @brief Check IO device node (read-only).
+        const Keyword& GetCheckIONode(void) const;
+        //! @brief Check output character node (read-only).
+        const Keyword& GetOutCharNode(void) const;
+        #endif
 
     private:
         //! Echo node.
@@ -136,6 +134,15 @@ CLI_NS_BEGIN(cli)
         Keyword* m_pcliEnglishLang;
         //! French language node.
         Keyword* m_pcliFrenchLang;
+
+        #ifdef _DEBUG
+        //! Check node.
+        Keyword* m_pcliCheck;
+        //! Check IO device node.
+        Keyword* m_pcliCheckIO;
+        //! Check output character node.
+        Keyword* m_pcliOutChar;
+        #endif
     };
 
 CLI_NS_END(cli)

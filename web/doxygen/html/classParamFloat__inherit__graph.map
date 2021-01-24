@@ -1,6 +1,5 @@
-base referer
-rect $classParamT.html 7,306 141,333
-rect $classParam.html 43,232 105,258
-rect $classSyntaxNode.html 27,157 121,184
-rect $classElement.html 39,82 109,109
-rect $classObject.html 43,8 105,34
+<area shape="rect" id="node2" href="$classParamT.html" title="ParamT\&lt; double \&gt;" alt="" coords="5,315,133,343">
+<area shape="rect" id="node4" href="$classParam.html" title="Base parameter class." alt="" coords="40,238,99,266">
+<area shape="rect" id="node6" href="$classSyntaxNode.html" title="Syntax node elements." alt="" coords="24,161,115,189">
+<area shape="rect" id="node8" href="$classElement.html" title="Generic CLI element." alt="" coords="35,83,104,111">
+<area shape="rect" id="node10" href="$classObject.html" title="Generic object." alt="" coords="40,6,99,34">

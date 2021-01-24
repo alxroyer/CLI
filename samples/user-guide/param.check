@@ -7,11 +7,11 @@ Params>enter string hello
 Params>enter string hello
 hello
 Params>enter string "hello
-Unterminated quoted string
+../../../samples/user-guide/param.test:4: Unterminated quoted string
 Params>enter string "hello"
   <cr>            
 Params>enter string "hello"\
-Unterminated escape sequence
+../../../samples/user-guide/param.test:4: Unterminated escape sequence
 Params>enter int 0
 0
 Params>enter float .5

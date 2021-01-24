@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -25,7 +25,7 @@
 
 //! @file
 //! @author Alexis Royer
-//! @brief cli::IOMux class definition.
+//! @brief IOMux class definition.
 
 
 #ifndef _CLI_IO_MUX_H_
@@ -74,7 +74,9 @@ CLI_NS_BEGIN(cli)
     public:
         virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
+        virtual const OutputDevice& GetActualDevice(void) const;
         virtual const KEY GetKey(void) const;
+        virtual const ResourceString GetLocation(void) const;
 
     public:
         //! @brief Output stream accessor.

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -25,8 +25,9 @@
 
 //! @file
 //! @author Alexis Royer
-//! @brief CLI library pre-compiled header.
+//! @brief CLI library default pre-compiled header.
 //!
+//! Does nothing by default.
 //! You can either modify this file or use another one of the same name instead.
 
 #ifndef _CLI_PCH_H_

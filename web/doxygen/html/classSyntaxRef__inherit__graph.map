@@ -1,3 +1,2 @@
-base referer
-rect $classElement.html 14,82 84,109
-rect $classObject.html 18,8 80,34
+<area shape="rect" id="node2" href="$classElement.html" title="Generic CLI element." alt="" coords="11,83,80,111">
+<area shape="rect" id="node4" href="$classObject.html" title="Generic object." alt="" coords="16,6,75,34">

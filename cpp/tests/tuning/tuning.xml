@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -113,24 +113,45 @@
 
     <keyword string="error">                                <help lang="en">Error format modification</help>
                                                             <help lang="fr">Modification du formattage des erreurs</help>
-        <cpp>cli::ResourceString cli_Prefix, cli_Suffix;</cpp>
+        <cpp>cli::ResourceString cli_LocationPrefix, cli_Prefix, cli_Suffix;</cpp>
         <cpp>cli::ResourceString::LANG e_Lang = cli::ResourceString::LANG_EN;</cpp>
 
         <tag id="error-loop">
-            <keyword string="prefix">                                   <help lang="en">Error prefix modification</help>
-                                                                        <help lang="fr">Modification du préfixe d'erreur</help>
-                <tag id="error-prefix-loop">
-                    <keyword string="en">                               <help lang="en">Error prefix modification in English</help>
-                                                                        <help lang="fr">Modification du préfixe d'erreur en Anglais</help>
-                        <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>   <tag ref="error-prefix-string"/>
+            <keyword string="location-prefix">                              <help lang="en">Location prefix modification</help>
+                                                                            <help lang="fr">Modification du préfixe de location</help>
+                <tag id="location-prefix-loop">
+                    <keyword string="en">                                   <help lang="en">Location prefix modification in English</help>
+                                                                            <help lang="fr">Modification du préfixe de location en Anglais</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>       <tag ref="location-prefix-string"/>
                     </keyword>
-                    <keyword string="fr">                               <help lang="en">Error prefix modification in English</help>
-                                                                        <help lang="fr">Modification du préfixe d'erreur en Anglais</help>
-                        <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>   <tag ref="error-prefix-string"/>
+                    <keyword string="fr">                                   <help lang="en">Location prefix modification in English</help>
+                                                                            <help lang="fr">Modification du préfixe de location en Anglais</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>       <tag ref="location-prefix-string"/>
+                    </keyword>
+                    <tag id="location-prefix-string" hollow="yes">
+                        <param id="location-prefix-string" type="string">   <help lang="en">Location prefix</help>
+                                                                            <help lang="fr">Préfixe de location</help>
+                            <cpp>cli_LocationPrefix.SetString(e_Lang, <value-of param="location-prefix-string"/>);</cpp>
+                            <tag ref="location-prefix-loop"/>
+                        </param>
+                    </tag>
+                    <tag ref="error-loop"/>
+                </tag>
+            </keyword>
+            <keyword string="prefix">                                       <help lang="en">Error prefix modification</help>
+                                                                            <help lang="fr">Modification du préfixe d'erreur</help>
+                <tag id="error-prefix-loop">
+                    <keyword string="en">                                   <help lang="en">Error prefix modification in English</help>
+                                                                            <help lang="fr">Modification du préfixe d'erreur en Anglais</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>       <tag ref="error-prefix-string"/>
+                    </keyword>
+                    <keyword string="fr">                                   <help lang="en">Error prefix modification in English</help>
+                                                                            <help lang="fr">Modification du préfixe d'erreur en Anglais</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>       <tag ref="error-prefix-string"/>
                     </keyword>
                     <tag id="error-prefix-string" hollow="yes">
-                        <param id="error-prefix-string" type="string">  <help lang="en">Error prefix</help>
-                                                                        <help lang="fr">Préfixe d'erreur</help>
+                        <param id="error-prefix-string" type="string">      <help lang="en">Error prefix</help>
+                                                                            <help lang="fr">Préfixe d'erreur</help>
                             <cpp>cli_Prefix.SetString(e_Lang, <value-of param="error-prefix-string"/>);</cpp>
                             <tag ref="error-prefix-loop"/>
                         </param>
@@ -138,20 +159,20 @@
                     <tag ref="error-loop"/>
                 </tag>
             </keyword>
-            <keyword string="suffix">                                   <help lang="en">Error suffix modification</help>
-                                                                        <help lang="fr">Modification du suffixe d'erreur</help>
+            <keyword string="suffix">                                       <help lang="en">Error suffix modification</help>
+                                                                            <help lang="fr">Modification du suffixe d'erreur</help>
                 <tag id="error-suffix-loop">
-                    <keyword string="en">                               <help lang="en">Error suffix modification in English</help>
-                                                                        <help lang="fr">Modification du suffixe d'erreur en Anglais</help>
-                        <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>   <tag ref="error-suffix-string"/>
+                    <keyword string="en">                                   <help lang="en">Error suffix modification in English</help>
+                                                                            <help lang="fr">Modification du suffixe d'erreur en Anglais</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>       <tag ref="error-suffix-string"/>
                     </keyword>
-                    <keyword string="fr">                               <help lang="en">Error suffix modification in English</help>
-                                                                        <help lang="fr">Modification du suffixe d'erreur en Anglais</help>
-                        <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>   <tag ref="error-suffix-string"/>
+                    <keyword string="fr">                                   <help lang="en">Error suffix modification in English</help>
+                                                                            <help lang="fr">Modification du suffixe d'erreur en Anglais</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>       <tag ref="error-suffix-string"/>
                     </keyword>
                     <tag id="error-suffix-string" hollow="yes">
-                        <param id="error-suffix-string" type="string">  <help lang="en">Error suffix</help>
-                                                                        <help lang="fr">Suffixe d'erreur</help>
+                        <param id="error-suffix-string" type="string">      <help lang="en">Error suffix</help>
+                                                                            <help lang="fr">Suffixe d'erreur</help>
                             <cpp>cli_Suffix.SetString(e_Lang, <value-of param="error-suffix-string"/>);</cpp>
                             <tag ref="error-suffix-loop"/>
                         </param>
@@ -161,7 +182,7 @@
             </keyword>
             <endl>                                          <help lang="en">Error format modification</help>
                                                             <help lang="fr">Modification du formattage des erreurs</help>
-                <cpp>TuneErrorFormatting(cli_Prefix, cli_Suffix);</cpp>
+                <cpp>TuneErrorFormatting(cli_LocationPrefix, cli_Prefix, cli_Suffix);</cpp>
             </endl>
         </tag>
     </keyword>

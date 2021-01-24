@@ -1,5 +1,4 @@
-base referer
-rect $classMenu.html 26,231 82,258
-rect $classSyntaxNode.html 7,157 101,183
-rect $classElement.html 19,82 89,109
-rect $classObject.html 23,7 85,34
+<area shape="rect" id="node2" href="$classMenu.html" title="Menu definition." alt="" coords="24,238,77,266">
+<area shape="rect" id="node4" href="$classSyntaxNode.html" title="Syntax node elements." alt="" coords="5,161,96,189">
+<area shape="rect" id="node6" href="$classElement.html" title="Generic CLI element." alt="" coords="16,83,85,111">
+<area shape="rect" id="node8" href="$classObject.html" title="Generic object." alt="" coords="21,6,80,34">

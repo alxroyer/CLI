@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -220,8 +220,11 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Assignment operator.
-            //! @warning Prefer Set() method since this method indicates failures.
-            tk::String& operator=(const tk::String& STR_String)
+            //! @return The string just assigned itself.
+            //! @warning Prefer Set() method since this method does not indicate failures.
+            tk::String& operator=(
+                    const tk::String& STR_String        //!< Source string used for assignment.
+                    )
             {
                 m_stlString = STR_String.m_stlString;
                 return *this;
@@ -290,7 +293,9 @@ CLI_NS_BEGIN(cli)
                 //! @brief Copy constructor from an STL iterator.
                 //! @note This is convenient for implicitely converting STL objects to CLI objects.
                 template <class U>
-                Iterator(const U& it)
+                Iterator(
+                        const U& it     //!< STL iterator used for initialization.
+                        )
                   : std::deque<T>::iterator(it) {}
             };
 
@@ -505,7 +510,10 @@ CLI_NS_BEGIN(cli)
             //! @brief Set a new item.
             //! @return true if the element has been set.
             //! @return false if the element has not been set.
-            const bool SetAt(const K& K_Key, const T& T_Value)
+            const bool SetAt(
+                    const K& K_Key,     //!< Key of the element set.
+                    const T& T_Value    //!< Value of the element set.
+                    )
             {
                 if (m_stlMap.count(K_Key) > 0)
                 {
@@ -518,7 +526,9 @@ CLI_NS_BEGIN(cli)
             //! @brief Unset an item.
             //! @return true if the element has been unset correctly, or if the element was not set.
             //! @return false if an error occured.
-            const bool Unset(const K& K_Key)
+            const bool Unset(
+                    const K& K_Key      //!< Key of the element unset.
+                    )
             {
                 m_stlMap.erase(K_Key);
                 return true;
@@ -532,7 +542,9 @@ CLI_NS_BEGIN(cli)
 
             //! @brief Element accessor.
             //! @return NULL if no element is set for this key.
-            const T* const GetAt(const K& K_Key) const
+            const T* const GetAt(
+                    const K& K_Key      //!< Key of the element accessed.
+                    ) const
             {
                 typename std::map<K,T>::const_iterator it = m_stlMap.find(K_Key);
                 if (it != m_stlMap.end())
@@ -550,7 +562,6 @@ CLI_NS_BEGIN(cli)
             class Iterator : public std::map<K,T>::iterator
             {
             private:
-            friend class Map;
                 //! @brief Default constructor.
                 Iterator(void) : std::map<K,T>::iterator() {}
 
@@ -558,7 +569,9 @@ CLI_NS_BEGIN(cli)
                 //! @brief Copy constructor.
                 //! @note   We cannot use implicit conversions from STL objects to CLI objects here
                 //!         because conflicting calls to Map::GetAt().
-                Iterator(const Iterator& it)
+                Iterator(
+                        const Iterator& it      //!< Element to be copied.
+                        )
                   : std::map<K,T>::iterator(it) {}
 
             private:
@@ -569,6 +582,10 @@ CLI_NS_BEGIN(cli)
                     std::map<K,T>::iterator::operator=(any);
                     return *this;
                 }
+
+            private:
+                // In order to allow access to privet members for iteration.
+                friend class Map;
             };
 
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -45,6 +45,9 @@ CLI_NS_BEGIN(cli)
     class Element;
     class OutputDevice;
     class IODevice;
+    class MonoThreadDevice;
+    class CmdLineEdition;
+    class CmdLineHistory;
 
 
     //! @brief Output stream enumeration.
@@ -87,6 +90,8 @@ CLI_NS_BEGIN(cli)
         //! @brief CLI access.
         const Cli& GetCli(void) const;
 
+        //! @brief Input stream access.
+        const IODevice& GetInput(void) const;
         //! @brief Output stream access.
         const OutputDevice& GetStream(
             const STREAM_TYPE E_StreamType          //!< Output stream identifier.
@@ -133,6 +138,8 @@ CLI_NS_BEGIN(cli)
             );
         //! @brief Error formatting.
         void SetErrorFormatting(
+            const ResourceString& CLI_LocationPrefix,   //!< Very first error prefix string, before the location.
+                                                        //!< No error prefixing when the string given is empty.
             const ResourceString& CLI_ErrorPrefix,      //!< Error prefix string.
                                                         //!< No error prefixing when the string given is empty.
             const ResourceString& CLI_ErrorSuffix       //!< Error suffix string.
@@ -171,9 +178,7 @@ CLI_NS_BEGIN(cli)
             IODevice& CLI_IODevice      //!< Input/output device to run onto.
             );
         //! @brief Release input and output devices after execution.
-        const bool CloseDevices(
-            IODevice& CLI_IODevice      //!< Input/output device to run onto.
-            );
+        const bool CloseDevices(void);
 
         //! @brief Prints the welcome message.
         void PromptWelcomeMessage(void) const;
@@ -181,29 +186,66 @@ CLI_NS_BEGIN(cli)
         void PromptByeMessage(void) const;
         //! @brief Prints the prompt message, indicating the current menu.
         void PromptMenu(void) const;
-        //! @brief Error printing.
-        void PrintError(const ResourceString& CLI_ErrorMessage) const;
+        //! @brief Error display.
+        void PrintError(
+            const ResourceString& CLI_Location,     //!< Error location
+            const ResourceString& CLI_ErrorMessage  //!< Error message
+            ) const;
 
     private:
-        friend class Menu;
         //! @brief Enters a menu.
         void EnterMenu(
             const Menu& CLI_Menu    //!< Menu to enter.
             );
+
+    public:
         //! @brief Exits the current menu.
         void ExitMenu(void);
+
         //! @brief Terminates the shell.
+        //! @warning Not thread safe. Call QuitThreadSafe() to do so.
         void Quit(void);
+
+        //! @brief Terminates the shell.
+        //! @warning The shell will actually quit as soon as the input device return a character.
+        void QuitThreadSafe(void);
+
         //! @brief Displays help depending on the context of the current line.
         void DisplayHelp(void);
+
         //! @brief Prints the working menu.
         void PrintWorkingMenu(void);
+
+    private:
+        //! @brief Beginning of execution.
+        const bool StartExecution(
+            IODevice& CLI_IODevice              //!< Input/output device to run onto.
+            );
+        //! @brief Main loop executed when the input device is not a mono-thread device.
+        void MainLoop(void);
+        //! @brief Hook called by mono-thread devices on character input.
+        void OnMonoThreadKey(
+            MonoThreadDevice& CLI_Source,       //!< Input mono-thread device.
+            const KEY E_KeyCode                 //!< Input key.
+            );
+        //! @brief Shell termination.
+        const bool FinishExecution(void);
 
     private:
         //! @brief Called when a character comes up from the input device.
         void OnKey(const KEY E_KeyCode);
         //! @brief Called when a printable character comes up from the input device.
         void OnPrintableChar(const char C_KeyCode);
+        //! @brief Called when using the 'home'/'begin' key.
+        void OnKeyBegin(void);
+        //! @brief Called when using the 'end' key.
+        void OnKeyEnd(void);
+        //! @brief Called when using the left arrow.
+        void OnKeyLeft(void);
+        //! @brief Called when using the right arrow.
+        void OnKeyRight(void);
+        //! @brief Clean screen routine.
+        void OnCleanScreen(void);
         //! @brief Called when a backspace comes up from the input device.
         void OnBackspace(void);
         //! @brief Called when an escape character comes up from the input device.
@@ -222,37 +264,18 @@ CLI_NS_BEGIN(cli)
         void OnExecute(void);
         //! @brief Moves in history.
         void OnHistory(
-            const int I_Translation         //!< Number of steps in translation.
+            const int I_Navigation          //!< Number of steps in history navigation.
+                                            //!< Positive values mean navigating to older command lines.
+                                            //!< Negative values mean navigating to newer command lines.
             );
 
     private:
-        //! @brief Appends the current line.
-        void PrintLine(
-            const char* const STR_Append    //!< String to append.
-            );
-        //! @brief Appends the current line.
-        void PrintLine(
-            const char C_Append             //!< Character to append.
-            );
-        //! @brief Deletes last characters of the current line.
-        void Backspace(
-            const int I_BackspaceCount      //!< Number of characters to delete.
-            );
         //! @brief Prints an help line for a given element.
         void PrintHelp(
             const Element& CLI_Element      //!< Element to print the help for.
             );
         //! @brief Sends a beep signal.
         void Beep(void);
-        //! @brief Pushes a command line in the history stack.
-        void PushHistory(
-            const char* const STR_Line      //!< Command line to push.
-            );
-        //! @brief History line retrieval.
-        const tk::String GetHistoryLine(
-            const unsigned int UI_BackwardIndex //!< Backward index in history lines.
-                                                //!< 0 means the current line.
-            ) const;
 
     private:
         //! CLI reference.
@@ -271,7 +294,7 @@ CLI_NS_BEGIN(cli)
         //! Non-default Prompt.
         ResourceString m_cliNoDefaultPrompt;
         //! Error formatting: prefix and suffix.
-        ResourceString m_cliErrorFormatting[2];
+        ResourceString m_cliErrorFormatting[3];
         //! Current language.
         ResourceString::LANG m_eLang;
         //! Beep enabled.
@@ -279,11 +302,20 @@ CLI_NS_BEGIN(cli)
         //! Menu stack.
         tk::Queue<const Menu*> m_qMenus;
         //! Current line.
-        tk::String m_strLine;
+        CmdLineEdition& m_cliCmdLine;
         //! History.
-        tk::Queue<tk::String> m_qHistory;
-        //! History index.
-        int m_iHistoryIndex;
+        CmdLineHistory& m_cliHistory;
+        //! Thread safe command.
+        enum {
+            THREAD_SAFE_NONE,   //!< No current thread safe command.
+            THREAD_SAFE_QUIT    //!< Have the shell quit as soon as possible.
+        } m_eThreadSafeCmd;
+        //! Final traces restoration.
+        bool m_bRestoreTracesOnFinish;
+
+    private:
+        // In order to allow access to private method OnMonoThreadKey().
+        friend class MonoThreadDevice;
     };
 
 CLI_NS_END(cli)

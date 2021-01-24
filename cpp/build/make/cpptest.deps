@@ -1,6 +1,7 @@
 $(INT_DIR)/cli_test.o: ../../../cpp/tests/cpp/cli_test.cpp \
-  ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/cli.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/menu.h \
+  ../../../cpp/include/cli/syntax_node.h \
   ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
   ../../../cpp/include/cli/help.h \
   ../../../cpp/include/cli/resource_string.h \

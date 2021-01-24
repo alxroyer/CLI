@@ -13,7 +13,7 @@ Circle>add circle
   green           
   red             
 Circle>add circle 
-Incomplete command
+../../../samples/user-guide/circle-color.test:1: Incomplete command
 Circle>add circle black 
   <cr>            
 Circle>add circle black 

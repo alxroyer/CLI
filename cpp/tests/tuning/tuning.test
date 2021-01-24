@@ -15,7 +15,7 @@ bye en "See you soon!" fr "A bientôt !"
 bye
 
 lang en
-error prefix en "   Beginning of error >>> " fr "   Début d'erreur >>> " suffix en " <<< End of error" fr " <<< Fin d'erreur"
+error location-prefix en "   Beginning of error [ " fr "   Début d'erreur [ " prefix en "] >>> " fr "] >>> " suffix en " <<< End of error" fr " <<< Fin d'erreur"
 lang en
 invalid command
 lang fr

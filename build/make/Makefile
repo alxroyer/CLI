@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -32,6 +32,16 @@ PROJECTS += $(CPP_DIR)/build/make/Makefile
 PROJECTS += $(JAVA_DIR)/build/make/Makefile
 include all.mak
 
+# C++ only
+cpp: PROJECTS = $(CPP_DIR)/build/make/Makefile
+.PHONY: cpp
+cpp: default ;
+
+# Java only
+java: PROJECTS = $(JAVA_DIR)/build/make/Makefile
+.PHONY: java
+java: default ;
+
 # Documentation
 doc: PROJECTS = $(WEB_DIR)/user-guide/user-guide.mak
 doc: PROJECTS += $(WEB_DIR)/doxygen/doxygen.mak
@@ -45,6 +55,8 @@ include $(CLI_DIR)/build/make/help.mak
 .PHONY: $(CLI_DIR)/build/make/Makefile.help
 $(CLI_DIR)/build/make/Makefile.help:
 	$(call PrintHelp, default,  Generate libraries and tests)
+	$(call PrintHelp, cpp,      Generate/update C++ items)
+	$(call PrintHelp, java,     Generate/update Java items)
 	$(call PrintHelp, doc,      Generate/update documentation)
 
 .PHONY: $(CLI_DIR)/build/make/Makefile.vars

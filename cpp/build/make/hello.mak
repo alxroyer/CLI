@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2008, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer
 #
 # All rights reserved.
 #
@@ -39,6 +39,6 @@ $(CPP_DIR)/build/make/hello.vars:
 	$(call ShowVariables,)
 
 # Dependencies
-$(CLI_OBJ): $(CLI_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
-$(CLI_GO_OBJ): $(CLI_GO_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
+$(CLI_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
+$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)
 $(PRODUCT): $(CPP_LIB)

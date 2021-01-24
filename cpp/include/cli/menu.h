@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -83,20 +83,12 @@ CLI_NS_BEGIN(cli)
         virtual void OnExit(void) const;
 
     private:
-        //! @brief Help node access.
-        Keyword& GetHelpNode(void);
         //! @brief Help node access (read-only).
         const Keyword& GetHelpNode(void) const;
-        //! @brief Exit node access.
-        Keyword& GetExitNode(void);
         //! @brief Exit node access (read-only).
         const Keyword& GetExitNode(void) const;
-        //! @brief Quit node access.
-        Keyword& GetQuitNode(void);
         //! @brief Quit node access (read-only).
         const Keyword& GetQuitNode(void) const;
-        //! @brief Print working menu node access.
-        Keyword& GetPwmNode(void);
         //! @brief Print working menu node access (read-only).
         const Keyword& GetPwmNode(void) const;
 

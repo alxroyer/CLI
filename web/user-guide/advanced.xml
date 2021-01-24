@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -32,43 +32,129 @@
     Here is some further additional information for C++ advanced users.
     </para>
 
+    <section id="adv.noxmlres"><title>Without the XML resource file</title>
+
+        <para>
+        Some of you could find the library interesting for what it already implements,
+        but not the XML resource file, too limitative maybe.
+        </para>
+
+        <para>
+        Indeed the XML resource file aims to facilitate and enfast the development.
+        But you could plan using library objects directly,
+        and maybe inherit from them in order to improve the stuff.
+        </para>
+
+        <para>
+        Well... Up to you!
+        </para>
+
+    </section>
+
+    <section id="adv.traces"><title>Traces</title>
+
+        <para>
+        The CLI library has an internal traces system.
+        All traces are attached to a class of traces.
+        Therefore you may control which classes of traces have to be displayed through the filter.
+        When compiled in debug, the CLI library natively includes a traces menu to see and change this filter.
+        </para>
+
+        <para>
+        The <classname>cli::Traces</classname> and <classname>cli::TraceClass</classname> classes
+        are defined in <filename class="headerfile">cli/traces.h</filename>, which is available to you.
+        The traces system can be accessed through the singleton <function>cli::GetTraces</function>.
+        This gives you the opportunity to use it to control the trace filter
+        through the <function>cli::Traces::SetFilter</function> and <function>cli::Traces::SetAllFilter</function> methods.
+        You may also use it for your own traces through the <function>cli::Traces::Trace</function> method.
+        </para>
+
+        <para>
+        <classname>cli::Traces</classname> uses an output device that defaults to stderr.
+        You may change this device through the <function>cli::Traces::SetStream</function> method,
+        and redirect traces to a file for instances.
+        Changing this device for the null device is a way to disable all traces.
+        </para>
+
+        <note>
+        The io_device unit test gives an example of traces redirection to a file.
+        </note>.
+
+    </section>
+
     <section id="adv.iodevices"><title>Define your own input/output device</title>
 
         <para>
         The CLI library has generic C++ classes defining input/output devices:
         <classname>cli::OutputDevice</classname> and <classname>cli::IODevice</classname>.
         The CLI library gives several implementations of this generic class:
+            <informalfigure>
+                <mediaobject>
+                    <imageobject><imagedata fileref="../doxygen/html/classOutputDevice__inherit__graph.png" srccredit="doxygen"/></imageobject>
+                <textobject><phrase>Input/output devices class hierarchy.</phrase></textobject>
+                <caption><para>Input/output devices class hierarchy.</para></caption>
+                </mediaobject>
+            </informalfigure>
         <variablelist>
         <varlistentry><term><classname>cli::Console</classname></term>
-            <listitem>Console input/output device</listitem></varlistentry>
-        <varlistentry><term><classname>cli::TelnetConnection</classname></term>
-            <listitem>Telnet connection input/output device<footnote>
-                <para>The telnet protocole is not fully managed for the moment.
-                Use simple TCP client connections for now
-                with <application>teraterm</application> for instance.</para>
-            </footnote>.</listitem></varlistentry>
+            <listitem>Console input/output device.</listitem></varlistentry>
         <varlistentry><term><classname>cli::InputFileDevice</classname></term>
             <listitem>Reading from a file can be useful for replaying scripts for instance.</listitem></varlistentry>
-        <varlistentry><term><classname>cli::OutputFileDevice</classname></term>
-            <listitem>Redirect output to a file thanks to this device.</listitem></varlistentry>
+        <varlistentry><term><classname>cli::IOMux</classname></term>
+            <listitem>Input and output can be multiplexed thanks to this class.
+                More information is available in the dedicated <link linkend="adv.IOMux">section</link>.</listitem></varlistentry>
+        <varlistentry><term><classname>cli::MonoThreadDevice</classname></term>
+            <listitem>Makes the shell run in the mono-thread mode.
+                More information is available in the dedicated <link linkend="adv.mono-thread">section</link>.</listitem></varlistentry>
         <varlistentry><term><classname>cli::SingleCommand</classname></term>
             <listitem>Single command device object.
                 This device allows you define a single command line
                 and have it executed.</listitem></varlistentry>
-        <varlistentry><term><classname>cli::IOMux</classname></term>
-            <listitem>Input and output can be multiplexed thanks to this class.
-                More information is available in the <link linkend="adv.IOMux">next section</link>.</listitem></varlistentry>
+        <varlistentry><term><classname>cli::TelnetConnection</classname></term>
+            <listitem>Telnet connection input/output device.</listitem></varlistentry>
+        <varlistentry><term><classname>cli::OutputFileDevice</classname></term>
+            <listitem>Redirect output to a file thanks to this device.</listitem></varlistentry>
+        <varlistentry><term><classname>cli::StringDevice</classname></term>
+            <listitem>Output to a string object.
+                This device can be useful for unit-test among others.</listitem></varlistentry>
         </variablelist>
         </para>
 
+        <note>
+        The telnet protocol is not fully managed for the moment.
+        Use simple TCP client connections for now
+        with <application>teraterm</application> for instance.
+        </note>
+
         <para>
-        Although an input/output device is planned for RS232,
-        you could need it right now,
-        or you could need some support for other devices.
-        Feel free to create new classes inheriting from <classname>cli::IODevice</classname>,
-        and implementing what you need.
+        You may need some support for other devices (such as RS232 for instance).
+        Feel free to create new classes inheriting from <classname>cli::IODevice</classname>, and implement what you need.
         That should not be too hard.
         </para>
+
+        <para>
+        Please note the <command>check io-device</command> commands
+        in the <command>cli-config</command> menu in debug mode.
+        These two commands allow you to test your personal device:
+        <variablelist>
+        <varlistentry><term><command>check io-device</command></term>
+                      <listitem>This command asks you to press each character managed by the library,
+                                in order to make a complete inventory.</listitem></varlistentry>
+        <varlistentry><term><command>check io-device outputs</command></term>
+                      <listitem>This commands tries to output every <type>char</type> from range 0 to 255.</listitem></varlistentry>
+        </variablelist>
+        </para>
+
+        <note>
+        Since version 2.3, the <classname>cli::OutputDevice</classname> basic class does not manage an "end of line" pattern anymore.
+        It is up to the sub-classes to trap <code class="value">'\n'</code> characters in the virtual <function>PutString</function> method,
+        and do the appropriate stuff at this time.
+        </note>
+
+        <tip>
+        If you implement output redirection, please override the <function>GetActualDevice</function> virtual method, like <classname>cli::IOMux</classname> does.
+        This method has been designed to improve consistency, and prevent infinite loops in different cases.
+        </tip>
 
     </section>
 
@@ -81,7 +167,7 @@
         and redirect outputs to other devices.
         </para>
 
-        <para>
+        <!--<para>
         This device may seem complex at first.
         I must admit it was not easy to describe the thing in two lines.
         Therefore, I've added a special section for this device in this user guide.
@@ -106,50 +192,98 @@
         I guess some of you could design a text-based user interface which takes input from
         either the console, telnet connections, or files.
         <classname>cli::IOMux</classname> could be useful in that case too.
+        </para> -->
+
+        <para>
+        This device may seem complex at first.
+        It can be useful however to create simple compilers as described in the following <link linkend="adv.compilers">section</link>.
         </para>
 
     </section>
 
-    <section id="adv.traces"><title>Traces</title>
+    <section id="adv.quit"><title>Thread-safe termination</title>
 
         <para>
-        The CLI library has an internal traces system.
-        All traces are attached to a class of traces.
-        Therefore you may control which classes of traces to be displayed through the filter.
-        When compiled in debug, the CLI library natively includes a traces menu to see and change this filter.
+        Some of you may need the ability to stop the CLI execution immediately on certain events.
         </para>
 
         <para>
-        The <classname>cli::Traces</classname> and <classname>cli::TraceClass</classname> classes
-        are defined in <filename class="headerfile">cli/traces.h</filename> which is available to you.
-        The traces system can be accessed through the singleton <function>GetTraces</function>.
-        This gives you the opportunity to use it to control the trace filter
-        through the <function>Traces::SetFilter</function> and <function>Traces::SetAllFilter</function> methods.
-        You may also use it for your own traces through the <function>Traces::Trace</function> method.
+        It is strongly recommended not to kill brutally the thread the CLI is running within.
         </para>
 
         <para>
-        <classname>cli::Traces</classname> uses an output device that defaults to stderr.
-        You may change this device through the <function>cli::Traces::SetStream</function> method,
-        and redirect traces to a file for instances
-        <footnote><para>The io_device unit test shows how to redirect traces to a file.</para></footnote>.
-        Changing this device for the null device is way to disable traces.
+        The <function>cli::Shell::QuitThreadSafe</function> method has been designed for that need.
+        This method indicates the shell that it should stop its execution as soon as possible, i.e. as soon as a character is entered for most cases.
+        By the way, if the input device of the shell is a personal input device you have designed for your special needs,
+        you could also have this device return <code class="value">cli::NULL_KEY</code> immediately.
         </para>
 
     </section>
 
-    <section id="adv.noxmlres"><title>Without the XML resource file</title>
+    <section id="adv.mono-thread"><title>Mono-thread execution</title>
 
         <para>
-        Some of you could find the library interesting for what it already implements,
-        but not the XML resource file, too limitative maybe.
+        The regular integration of the CLI is to have the shell running its main loop in a dedicated thread or a process,
+        waiting for the input device to return characters, thanks to the blocking call <function>cli::IODevice::GetKey</function>.
         </para>
 
         <para>
-        Indeed the XML resource file aims to facilitate and enfast the development.
-        But you could plan using library objects directly,
-        and maybe inherit from them in order to improve the stuff.
-        Well... Up to you!
+        This is often source of problems when the integration takes place in a mono-thread application (such as Windows MFC for instance).
+        Such kind of applications is not usually designed to safely manage threading and access concurrency.
+        That's the reason why a "mono-thread" execution mode has been developed.
+        </para>
+
+        <para>
+        It is available by simply giving a <classname>cli::MonoThreadDevice</classname> input device to the shell for its execution.
+        It is up to you to:
+        <itemizedlist>
+        <listitem>Inherit from this virtual class;</listitem>
+        <listitem>Have your characters being trapped by the mono-thread application;</listitem>
+        <listitem>Give them to the shell thanks to the protected <function>cli::MonoThreadDevice::OnKey</function> handler.</listitem>
+        </itemizedlist>
+        </para>
+
+    </section>
+
+    <section id="adv.dimension"><title>Embedded integration and memory management</title>
+
+        <para>
+        When integrating the CLI in an embedded context, memory considerations become a critical point.
+        </para>
+
+        <para>
+        The library basically uses the STL library for strings, queues and maps basic objects.
+        But in an embedded integration, it is usually preferred not to use STL at all, because the memory is not known to be safely managed.
+        That's the reason why an <emphasis>inner</emphasis> toolkit implement is provided with the CLI library.
+        This toolkit, activable through the <varname>CLI_NO_STL</varname> compilation directive,
+        provides an implementation of strings, queues and maps with a limit of memory extension.
+        </para>
+
+        <para>
+        Eventually, you may also have a look at the header file <filename>constraints.h</filename>.
+        This header defines a set of constants that are overridable at compile time.
+        </para>
+
+    </section>
+
+    <section id="adv.compilers"><title>Making compilers</title>
+
+        <para>
+        The CLI library can be used to make out compilers of simple syntaxes.
+        I'm used to combine the <classname>cli::InputFileDevice</classname> class to read from files,
+        and the <classname>cli::IOMux</classname> class to read from a set of files one after the other.
+        </para>
+
+        <para>
+        The <classname>cli::InputFileDevice</classname> provides two methods very useful in that case:
+        <variablelist>
+        <varlistentry><term><function>EnableSpecialCharacters</function></term>
+                <listitem>Makes the <classname>cli::InputFileDevice</classname> object enable or disable special characters reading.
+                When the special characters are disabled, tabulations will be understood like spaces, interrogation dots will be escaped...
+                which is more convenient for a compiler implementation.</listitem></varlistentry>
+        <varlistentry><term><function>GetLocation</function></term>
+                <listitem>When an error occurs, this method can be called to retrieve the current position of reading in the input file.</listitem></varlistentry>
+        </variablelist>
         </para>
 
     </section>

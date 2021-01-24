@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -76,7 +76,6 @@ CLI_NS_BEGIN(cli)
         //! @brief Constructor.
         OutputDevice(
             const char* const STR_DbgName,  //!< Debug name. Useful for traces only.
-            const char* const STR_Endl,     //!< Carriage return pattern.
             const bool B_AutoDelete         //!< Auto-deletion flag.
             );
 
@@ -248,14 +247,19 @@ CLI_NS_BEGIN(cli)
             ) const = 0;
 
         //! @brief Beep handler.
-        virtual void Beep(void) const = 0;
+        virtual void Beep(void) const;
+
+        //! @brief Clean screen.
+        virtual void CleanScreen(void) const;
+
+        //! @brief Actual device handler.
+        //!
+        //! Allows one to find out the actual output device the characters would be output to.
+        virtual const OutputDevice& GetActualDevice(void) const;
 
     private:
         //! Debug name. Useful for traces only.
         const tk::String m_strDbgName;
-
-        //! Carriage return pattern.
-        const tk::String m_strEndl;
 
         //! Instance lock count.
         int m_iInstanceLock;
@@ -280,8 +284,9 @@ CLI_NS_BEGIN(cli)
         ESCAPE = 27,        //!< Escape.
         SPACE = 32,         //!< Space.
         BACKSPACE = '\b',   //!< Backspace.
-        //DELETE = 128,       //!< Delete key.
-        //CLEAR = 129,        //!< Clear key.
+        DELETE = 128,       //!< Delete key.
+        CLS = 129,          //!< Clean screen key.
+        INSERT = 500,       //!< Insert key.
 
         TAB = '\t',
         KEY_0 = '0', KEY_1 = '1', KEY_2 = '2', KEY_3 = '3', KEY_4 = '4', KEY_5 = '5',
@@ -319,6 +324,14 @@ CLI_NS_BEGIN(cli)
         DOLLAR = '$',
         BACKSLASH = '\\',
         PIPE = '|',
+        TILDE = '~',
+        SQUARE = '²',
+        EURO = '€',
+        POUND = '£',
+        MICRO = 'µ',
+        PARAGRAPH = '§',
+        DEGREE = '°',
+        COPYRIGHT = '©',
 
         QUESTION = '?',
         EXCLAMATION = '!',
@@ -328,6 +341,7 @@ CLI_NS_BEGIN(cli)
         SEMI_COLUMN = ';',
         QUOTE = '\'',
         DOUBLE_QUOTE = '"',
+        BACK_QUOTE = '`',
 
         OPENING_BRACE = '(',
         CLOSING_BRACE = ')',
@@ -337,21 +351,38 @@ CLI_NS_BEGIN(cli)
         CLOSING_BRACKET = ']',
 
         KEY_UP = 1001,              //!< Up arrow key.
-        KEY_DOWN = 1002,           //!< Down arrow key.
-        KEY_LEFT = 1003,           //!< Left arrow key.
-        KEY_RIGHT = 1004,          //!< Right arrow key.
-        PAGE_UP = 1005,            //!< Page up arrow key.
-        PAGE_DOWN = 1006,          //!< Page down arrow key.
-        KEY_BEGIN = 1007,          //!< Begin key.
-        KEY_END = 1008,            //!< End key.
-        //INSERT = 1009,             //!< Insert key.
+        KEY_DOWN = 1002,            //!< Down arrow key.
+        KEY_LEFT = 1003,            //!< Left arrow key.
+        KEY_RIGHT = 1004,           //!< Right arrow key.
+        PAGE_UP = 1005,             //!< Page up arrow key.
+        PAGE_DOWN = 1006,           //!< Page down arrow key.
+        PAGE_LEFT = 1007,           //!< Page left arrow key.
+        PAGE_RIGHT = 1008,          //!< Page right arrow key.
 
-        //COPY,               //!< Copy.
-        //CUT,                //!< Cut.
-        //PASTE,              //!< Paste.
+        KEY_BEGIN = 1020,           //!< Begin key.
+        KEY_END = 1021,             //!< End key.
 
-        //UNDO,               //!< Undo.
-        //REDO,               //!< Redo.
+        COPY = 2001,                //!< Copy.
+        CUT = 2002,                 //!< Cut.
+        PASTE = 2003,               //!< Paste.
+
+        UNDO = 2004,                //!< Undo.
+        REDO = 2005,                //!< Redo.
+        PREVIOUS = 2006,            //!< Previous key.
+        NEXT = 2007,                //!< Forward key.
+
+        F1 = 0x0f000001,
+        F2 = 0x0f000002,
+        F3 = 0x0f000003,
+        F4 = 0x0f000004,
+        F5 = 0x0f000005,
+        F6 = 0x0f000006,
+        F7 = 0x0f000007,
+        F8 = 0x0f000008,
+        F9 = 0x0f000009,
+        F10 = 0x0f00000a,
+        F11 = 0x0f00000b,
+        F12 = 0x0f00000c,
     } KEY;
 
 
@@ -369,7 +400,6 @@ CLI_NS_BEGIN(cli)
         //! @brief Constructor.
         IODevice(
             const char* const STR_DbgName,  //!< Debug name.
-            const char* const STR_Endl,     //!< Carriage return pattern.
             const bool B_AutoDelete         //!< Auto-deletion flag.
             );
 
@@ -383,6 +413,9 @@ CLI_NS_BEGIN(cli)
     public:
         //! @brief Input key capture handler.
         virtual const KEY GetKey(void) const = 0;
+
+        //! @brief Input location.
+        virtual const ResourceString GetLocation(void) const;
 
     public:
         //! @brief Null device.

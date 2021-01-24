@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 #include "cli/shell.h"
 #include "cli/io_device.h"
 #include "cli/io_mux.h"
+#include "cli/mt_device.h"
 #include "cli/cli.h"
 #include "cli/menu.h"
 #include "cli/command_line.h"
@@ -40,6 +41,8 @@
 #include "cli/assert.h"
 #include "consistency.h"
 #include "constraints.h"
+#include "command_line_edition.h"
+#include "command_line_history.h"
 
 CLI_NS_USE(cli)
 
@@ -65,10 +68,10 @@ Shell::Shell(const Cli& CLI_Cli)
   : m_pcliCli(& CLI_Cli), m_pcliInput(NULL),
     m_eLang(Help::LANG_EN), m_bBeep(true),
     m_qMenus(MAX_MENU_PER_CLI),
-    m_strLine(MAX_CMD_LINE_LENGTH),
-    // History stack owns HISTORY_STACK_SIZE + 1 elements for HISTORY_STACK_SIZE previous and another next one.
-    m_qHistory(HISTORY_STACK_SIZE + 1),
-    m_iHistoryIndex(0)
+    m_cliCmdLine(* new CmdLineEdition()),
+    m_cliHistory(* new CmdLineHistory(HISTORY_STACK_SIZE)),
+    m_eThreadSafeCmd(THREAD_SAFE_NONE),
+    m_bRestoreTracesOnFinish(false)
 {
     EnsureCommonDevices();
     EnsureTraces();
@@ -79,8 +82,7 @@ Shell::Shell(const Cli& CLI_Cli)
         m_artStream[i].bEnable = true;
     }
 
-    if ((! m_qMenus.AddHead(& CLI_Cli))
-        || (! m_qHistory.AddHead(m_strLine)))
+    if (! m_qMenus.AddHead(& CLI_Cli))
     {
         GetTraces().Trace(INTERNAL_ERROR) << "Could not set initial shell status." << endl;
     }
@@ -107,6 +109,9 @@ Shell::~Shell(void)
             m_artStream[i].pcliStream = NULL;
         }
     }
+
+    delete & m_cliCmdLine;
+    delete & m_cliHistory;
 }
 
 const Cli& Shell::GetCli(void) const
@@ -115,20 +120,34 @@ const Cli& Shell::GetCli(void) const
     return *m_pcliCli;
 }
 
+const IODevice& Shell::GetInput(void) const
+{
+    if (m_pcliInput != NULL)
+    {
+        return *m_pcliInput;
+    }
+    else
+    {
+        return IODevice::GetStdIn();
+    }
+}
+
 const OutputDevice& Shell::GetStream(const STREAM_TYPE E_StreamType) const
 {
     if ((E_StreamType >= 0) && (E_StreamType < STREAM_TYPES_COUNT))
     {
         if (m_artStream[E_StreamType].bEnable)
         {
-            if (const IOMux* const pcli_IOMux = dynamic_cast<const IOMux*>(m_artStream[E_StreamType].pcliStream))
+            // This is a hack to have IOMux multiplexing output correctly.
+            const OutputDevice* pcli_Stream = m_artStream[E_StreamType].pcliStream;
+            while (const IOMux* const pcli_IOMux = dynamic_cast<const IOMux*>(pcli_Stream))
             {
-                // This is a hack to have IOMux multiplexing outputs correctly.
-                return pcli_IOMux->GetOutput(E_StreamType);
+                pcli_Stream = & pcli_IOMux->GetOutput(E_StreamType);
             }
-            else if (m_artStream[E_StreamType].pcliStream != NULL)
+
+            if (pcli_Stream != NULL)
             {
-                return *m_artStream[E_StreamType].pcliStream;
+                return *pcli_Stream;
             }
         }
     }
@@ -161,7 +180,7 @@ const bool Shell::SetStream(const STREAM_TYPE E_StreamType, OutputDevice& CLI_St
             {
                 if (! pcli_Stream->CloseDown(__CALL_INFO__))
                 {
-                    PrintError(pcli_Stream->GetLastError());
+                    PrintError(ResourceString(), pcli_Stream->GetLastError());
                     b_Res = false;
                 }
             }
@@ -182,7 +201,7 @@ const bool Shell::SetStream(const STREAM_TYPE E_StreamType, OutputDevice& CLI_St
                 if (! CLI_Stream.OpenUp(__CALL_INFO__))
                 {
                     // Store nothing on error.
-                    PrintError(CLI_Stream.GetLastError());
+                    PrintError(ResourceString(), CLI_Stream.GetLastError());
                     CLI_Stream.FreeInstance(__CALL_INFO__);
                     return false;
                 }
@@ -237,10 +256,11 @@ void Shell::SetPrompt(const ResourceString& CLI_Prompt)
     m_cliNoDefaultPrompt = CLI_Prompt;
 }
 
-void Shell::SetErrorFormatting(const ResourceString& CLI_ErrorPrefix, const ResourceString& CLI_ErrorSuffix)
+void Shell::SetErrorFormatting(const ResourceString& CLI_LocationPrefix, const ResourceString& CLI_ErrorPrefix, const ResourceString& CLI_ErrorSuffix)
 {
-    m_cliErrorFormatting[0] = CLI_ErrorPrefix;
-    m_cliErrorFormatting[1] = CLI_ErrorSuffix;
+    m_cliErrorFormatting[0] = CLI_LocationPrefix;
+    m_cliErrorFormatting[1] = CLI_ErrorPrefix;
+    m_cliErrorFormatting[2] = CLI_ErrorSuffix;
 }
 
 void Shell::SetLang(const ResourceString::LANG E_Lang)
@@ -265,40 +285,149 @@ const bool Shell::GetBeep(void) const
 
 void Shell::Run(IODevice& CLI_IODevice)
 {
-    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' starts running." << endl;
-    if (OpenDevices(CLI_IODevice))
+    if (StartExecution(CLI_IODevice))
     {
-        // Check the CLI is the first menu, and remember the reference.
-        if (const Cli* const pcli_Cli = dynamic_cast<const Cli*>(m_qMenus.GetHead()))
+        if (MonoThreadDevice* const pcli_MTDevice = dynamic_cast<MonoThreadDevice*>(m_pcliInput))
         {
-            PromptWelcomeMessage();
-            PromptMenu();
-            while (! m_qMenus.IsEmpty())
-            {
-                const KEY e_Key = CLI_IODevice.GetKey();
-                if (e_Key != NULL_KEY)
-                {
-                    OnKey(e_Key);
-                }
-                else
-                {
-                    while (! m_qMenus.IsEmpty())
-                    {
-                        m_qMenus.RemoveTail();
-                    }
-                }
-            }
-            PromptByeMessage();
-
-            // Restore the CLI reference.
-            if (! m_qMenus.AddTail(pcli_Cli))
-            {
-                GetTraces().Trace(INTERNAL_ERROR) << "Could not restore a valid status on shell exit." << endl;
-            }
+            // Simply attach the shell and wait for characters to be input.
+            pcli_MTDevice->AttachShell(*this);
+        }
+        else
+        {
+            MainLoop();
+            FinishExecution();
         }
     }
-    CloseDevices(CLI_IODevice);
+    else
+    {
+        FinishExecution();
+    }
+}
+
+const bool Shell::StartExecution(IODevice& CLI_IODevice)
+{
+    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' starts running." << endl;
+    // Open devices.
+    if (OpenDevices(CLI_IODevice))
+    {
+        // Trace device management.
+        m_bRestoreTracesOnFinish = false;
+        if (! GetTraces().IsStreamSet())
+        {
+            GetTraces().SetStream(CLI_IODevice);
+            m_bRestoreTracesOnFinish = true;
+        }
+
+        // Check the CLI is the first menu.
+        if ((m_pcliCli != NULL) && (m_qMenus.GetHead() == m_pcliCli))
+        {
+            // Enter the shell.
+            PromptWelcomeMessage();
+            PromptMenu();
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void Shell::MainLoop(void)
+{
+    // While there are menus in the menu stack, it means we are still waiting for command lines.
+    while (! m_qMenus.IsEmpty())
+    {
+        bool b_QuitShell = true;
+
+        if ((m_eThreadSafeCmd != THREAD_SAFE_QUIT)      // Thread safe processing.
+            && (m_pcliInput != NULL))
+        {
+            // Get an input key.
+            const KEY e_Key = m_pcliInput->GetKey();
+
+            if ((m_eThreadSafeCmd != THREAD_SAFE_QUIT)  // Thread safe processing.
+                && (e_Key != NULL_KEY))                 // End of input.
+            {
+                // Process the input key.
+                OnKey(e_Key);
+                b_QuitShell = false;
+            }
+        }
+
+        if (b_QuitShell)
+        {
+            Quit();
+        }
+    }
+}
+
+void Shell::OnMonoThreadKey(MonoThreadDevice& CLI_Source, const KEY E_KeyCode)
+{
+    bool b_QuitShell = true;
+
+    if ((! m_qMenus.IsEmpty())                      // Menu stack control.
+                                                    // If there are menus in the menu stack,
+                                                    // it means we are still waiting for command lines.
+        && (m_eThreadSafeCmd != THREAD_SAFE_QUIT)   // Thread safe processing (should be useless in mono-thread).
+        && (E_KeyCode != NULL_KEY)                  // End of input.
+        && (& CLI_Source == m_pcliInput))           // Input source control.
+    {
+        // Process the input key.
+        OnKey(E_KeyCode);
+        b_QuitShell = false;
+    }
+
+    // Possibly quit the shell depending on the input.
+    if (b_QuitShell)
+    {
+        // Let's quit the shell.
+        Quit();
+    }
+
+    // Eventually finish execution if needed.
+    if (m_qMenus.IsEmpty()                          // Menu stack control.
+                                                    // If there are no menus left in the menu stack,
+                                                    // it means the thing is done.
+        || (m_eThreadSafeCmd == THREAD_SAFE_QUIT))  // Thread safe processing (should be useless in mono-thread).
+    {
+        // Detach the shell of the mono-thread device.
+        CLI_Source.DetachShell(*this);
+        // Finish execution.
+        FinishExecution();
+    }
+}
+
+const bool Shell::FinishExecution(void)
+{
+    bool b_Res = true;
+
+    // Leave the shell.
+    PromptByeMessage();
+
+    // Restore the CLI reference.
+    if (! m_qMenus.AddTail(m_pcliCli))
+    {
+        GetTraces().Trace(INTERNAL_ERROR) << "Could not restore a valid status on shell exit." << endl;
+        b_Res = false;
+    }
+
+    // Trace device management.
+    if (m_bRestoreTracesOnFinish)
+    {
+        if (! GetTraces().UnsetStream())
+        {
+            b_Res = false;
+        }
+    }
+
+    // Close devices.
+    if (! CloseDevices())
+    {
+        b_Res = false;
+    }
     GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' end of run." << endl;
+
+    return b_Res;
 }
 
 const bool Shell::IsRunning(void) const
@@ -356,7 +485,7 @@ const bool Shell::OpenDevices(IODevice& CLI_IODevice)
         }
         else if (! m_pcliInput->OpenUp(__CALL_INFO__))
         {
-            PrintError(m_pcliInput->GetLastError());
+            PrintError(ResourceString(), m_pcliInput->GetLastError());
             b_Res = false;
         }
 
@@ -370,7 +499,7 @@ const bool Shell::OpenDevices(IODevice& CLI_IODevice)
             }
             else if (! m_artStream[i].pcliStream->OpenUp(__CALL_INFO__))
             {
-                PrintError(m_artStream[i].pcliStream->GetLastError());
+                PrintError(ResourceString(), m_artStream[i].pcliStream->GetLastError());
                 b_Res = false;
             }
         }
@@ -379,7 +508,7 @@ const bool Shell::OpenDevices(IODevice& CLI_IODevice)
     return b_Res;
 }
 
-const bool Shell::CloseDevices(IODevice& CLI_IODevice)
+const bool Shell::CloseDevices(void)
 {
     GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' closing devices." << endl;
 
@@ -397,7 +526,7 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
             }
             else if (! m_artStream[i].pcliStream->CloseDown(__CALL_INFO__))
             {
-                PrintError(m_artStream[i].pcliStream->GetLastError());
+                PrintError(ResourceString(), m_artStream[i].pcliStream->GetLastError());
                 b_Res = false;
             }
         }
@@ -410,7 +539,7 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
         }
         else if (! m_pcliInput->CloseDown(__CALL_INFO__))
         {
-            PrintError(m_pcliInput->GetLastError());
+            PrintError(ResourceString(), m_pcliInput->GetLastError());
             b_Res = false;
         }
     }
@@ -420,11 +549,12 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
         // Output.
         for (int i=0; i<STREAM_TYPES_COUNT; i++)
         {
-            if (m_artStream[i].pcliStream == & CLI_IODevice)
+            if (m_artStream[i].pcliStream == m_pcliInput)
             {
                 if (! m_artStream[i].pcliStream->FreeInstance(__CALL_INFO__))
                 {
-                    PrintError(m_artStream[i].pcliStream->GetLastError());
+                    PrintError(ResourceString(), m_artStream[i].pcliStream->GetLastError());
+                    b_Res = false;
                 }
                 m_artStream[i].pcliStream = NULL;
             }
@@ -435,7 +565,8 @@ const bool Shell::CloseDevices(IODevice& CLI_IODevice)
         {
             if (! m_pcliInput->FreeInstance(__CALL_INFO__))
             {
-                PrintError(m_pcliInput->GetLastError());
+                PrintError(ResourceString(), m_pcliInput->GetLastError());
+                b_Res = false;
             }
             m_pcliInput = NULL;
         }
@@ -497,19 +628,22 @@ void Shell::PromptMenu(void) const
             }
         }
 
-        // Eventually echo the current 
-        GetStream(ECHO_STREAM) << m_strLine;
+        // Eventually echo the current line.
+        m_cliCmdLine.PrintCmdLine(GetStream(ECHO_STREAM));
     }
 }
 
-void Shell::PrintError(const ResourceString& CLI_ErrorMessage) const
+void Shell::PrintError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
 {
     // Retrieve error formatting prefix and suffix.
-    const tk::String str_ErrorPrefix = m_cliErrorFormatting[0].GetString(GetLang());
-    const tk::String str_ErrorSuffix = m_cliErrorFormatting[1].GetString(GetLang());
+    const tk::String str_LocationPrefix = m_cliErrorFormatting[0].GetString(GetLang());
+    const tk::String str_ErrorPrefix = m_cliErrorFormatting[1].GetString(GetLang());
+    const tk::String str_ErrorSuffix = m_cliErrorFormatting[2].GetString(GetLang());
 
     // Print out the error.
     GetStream(ERROR_STREAM)
+        << str_LocationPrefix
+        << CLI_Location.GetString(GetLang())
         << str_ErrorPrefix
         << CLI_ErrorMessage.GetString(GetLang())
         << str_ErrorSuffix
@@ -518,32 +652,34 @@ void Shell::PrintError(const ResourceString& CLI_ErrorMessage) const
 
 void Shell::ExitMenu(void)
 {
-    tk::String str_Mem = m_strLine;
-    if (! m_strLine.Set(""))
-        GetTraces().Trace(INTERNAL_ERROR) << "Shell::ExitMenu(): Could not reset m_strLine" << endl;
+    const tk::String tk_Left = m_cliCmdLine.GetLeft(), tk_Right = m_cliCmdLine.GetRight();
+    m_cliCmdLine.Reset();
     OnExit(false);
-    if (! m_strLine.Set(str_Mem))
-        GetTraces().Trace(INTERNAL_ERROR) << "Shell::ExitMenu(): Could not restore str_Mem in m_strLine" << endl;
+    m_cliCmdLine.Set(tk_Left, tk_Right);
 }
 
 void Shell::Quit(void)
 {
+    // Remove all menus of the menu stack to let the shell quit.
     while (! m_qMenus.IsEmpty())
     {
         ExitMenu();
     }
 }
 
+void Shell::QuitThreadSafe(void)
+{
+    m_eThreadSafeCmd = THREAD_SAFE_QUIT;
+}
+
 void Shell::DisplayHelp(void)
 {
     if (! m_qMenus.IsEmpty())
     {
-        const tk::String str_Mem = m_strLine;
-        if (! m_strLine.Set(""))
-            GetTraces().Trace(INTERNAL_ERROR) << "Shell::DisplayHelp(): Could not reset m_strLine" << endl;
+        const tk::String tk_Left = m_cliCmdLine.GetLeft(), tk_Right = m_cliCmdLine.GetRight();
+        m_cliCmdLine.Reset();
         OnHelp(false, true);
-        if (! m_strLine.Set(str_Mem))
-            GetTraces().Trace(INTERNAL_ERROR) << "Shell::DisplayHelp(): Could not reset str_Mem in m_strLine" << endl;
+        m_cliCmdLine.Set(tk_Left, tk_Right);
     }
 }
 
@@ -573,7 +709,10 @@ void Shell::EnterMenu(const Menu& CLI_Menu)
         ResourceString cli_Error = ResourceString()
             .SetString(ResourceString::LANG_EN, tk::String::Concat(MAX_RESOURCE_LENGTH, "Too many menus. Cannot enter '", CLI_Menu.GetName(), "'."))
             .SetString(ResourceString::LANG_FR, tk::String::Concat(MAX_RESOURCE_LENGTH, "Trop de menus. Impossible d'entrer dans le menu '", CLI_Menu.GetName(), "'."));
-        PrintError(cli_Error);
+        PrintError(
+            (m_pcliInput != NULL) ? m_pcliInput->GetLocation() : ResourceString(),
+            cli_Error
+        );
     }
     //  PromptMenu();
 }
@@ -581,19 +720,27 @@ void Shell::EnterMenu(const Menu& CLI_Menu)
 void Shell::OnKey(const KEY E_KeyCode)
 {
     // In general, history navigation is lost.
-    const int i_HistoryIndexBackup = m_iHistoryIndex;
-    m_iHistoryIndex = 0;
+    // Except for navigation keys, in history, and within the line.
+    switch (E_KeyCode)
+    {
+    case KEY_UP: case KEY_DOWN: case PAGE_UP: case PAGE_DOWN:
+    case KEY_BEGIN: case KEY_END: case KEY_LEFT: case KEY_RIGHT:
+        break;
+    default:
+        m_cliHistory.EnableNavigationMemory(false);
+        break;
+    }
 
     switch (E_KeyCode)
     {
-    case KEY_UP:    m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(1);                           break;
-    case KEY_DOWN:  m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(-1);                          break;
-    case PAGE_UP:   m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(HISTORY_PAGE);                break;
-    case PAGE_DOWN: m_iHistoryIndex = i_HistoryIndexBackup;
-                    OnHistory(- (signed int) HISTORY_PAGE); break;
+    case KEY_UP:    OnHistory(1);                           break;
+    case KEY_DOWN:  OnHistory(-1);                          break;
+    case PAGE_UP:   OnHistory(HISTORY_PAGE);                break;
+    case PAGE_DOWN: OnHistory(- (signed int) HISTORY_PAGE); break;
+    case KEY_BEGIN: OnKeyBegin();                           break;
+    case KEY_END:   OnKeyEnd();                             break;
+    case KEY_LEFT:  OnKeyLeft();                            break;
+    case KEY_RIGHT: OnKeyRight();                           break;
     case BACKSPACE: OnBackspace();                          break;
     case ENTER:     OnExecute();                            break;
     case BREAK:
@@ -601,11 +748,12 @@ void Shell::OnKey(const KEY E_KeyCode)
     case LOGOUT:    OnExit(true);                           break;
     case TAB:       OnHelp(true, false);                    break;
     case QUESTION:
-        if (m_strLine.GetChar(m_strLine.GetLength() - 1) == '\\')
+        if (m_cliCmdLine.GetLine().GetChar(m_cliCmdLine.GetLine().GetLength() - 1) == '\\')
             OnPrintableChar(E_KeyCode);
         else
             OnHelp(true, true);
         break;
+    case CLS:       OnCleanScreen();                        break;
 
     case KEY_a: case KEY_aacute: case KEY_agrave: case KEY_auml: case KEY_acirc:
     case KEY_b: case KEY_c: case KEY_ccedil: case KEY_d:
@@ -644,6 +792,12 @@ void Shell::OnKey(const KEY E_KeyCode)
     case DOLLAR:
     case BACKSLASH:
     case PIPE:
+    case TILDE:
+    case SQUARE:
+    case EURO:
+    case POUND:
+    case MICRO:
+    case PARAGRAPH:
 
     case EXCLAMATION:
     case COLUMN:
@@ -663,24 +817,77 @@ void Shell::OnKey(const KEY E_KeyCode)
         break;
 
     default:
+        // Non managed character. Just ignore.
         break;
     }
 }
 
 void Shell::OnPrintableChar(const char C_KeyCode)
 {
-    PrintLine(C_KeyCode);
+    m_cliCmdLine.Put(GetStream(ECHO_STREAM), C_KeyCode);
+}
+
+void Shell::OnKeyBegin(void)
+{
+    m_cliCmdLine.Home(GetStream(ECHO_STREAM));
+}
+
+void Shell::OnKeyEnd(void)
+{
+    m_cliCmdLine.End(GetStream(ECHO_STREAM));
+}
+
+void Shell::OnKeyLeft(void)
+{
+    if (! m_cliCmdLine.GetLeft().IsEmpty())
+    {
+        m_cliCmdLine.MoveCursor(GetStream(ECHO_STREAM), -1);
+    }
+    else
+    {
+        Beep();
+    }
+}
+
+void Shell::OnKeyRight(void)
+{
+    if (! m_cliCmdLine.GetRight().IsEmpty())
+    {
+        m_cliCmdLine.MoveCursor(GetStream(ECHO_STREAM), 1);
+    }
+    else
+    {
+        Beep();
+    }
+}
+
+void Shell::OnCleanScreen(void)
+{
+    m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
+    m_cliCmdLine.Reset();
+    GetStream(OUTPUT_STREAM).CleanScreen();
+    if (! m_qMenus.IsEmpty())
+    {
+        PromptMenu();
+    }
 }
 
 void Shell::OnBackspace(void)
 {
-    Backspace(1);
+    if (! m_cliCmdLine.GetLeft().IsEmpty())
+    {
+        m_cliCmdLine.Delete(GetStream(ECHO_STREAM), -1);
+    }
+    else
+    {
+        Beep();
+    }
 }
 
 void Shell::OnEscape(void)
 {
-    m_strLine.Set("");
-    GetStream(ECHO_STREAM) << endl;
+    m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
+    m_cliCmdLine.Reset();
     if (! m_qMenus.IsEmpty())
     {
         PromptMenu();
@@ -689,24 +896,21 @@ void Shell::OnEscape(void)
 
 void Shell::OnExit(const bool B_Edition)
 {
-    if (m_strLine.IsEmpty())
+    // Reset the current line if needed.
+    if (B_Edition)
     {
-        if (B_Edition)
-        {
-            GetStream(ECHO_STREAM) << endl;
-        }
-        if (const Menu* const pcli_Menu = m_qMenus.RemoveTail())
-        {
-            pcli_Menu->OnExit();
-        }
-        if (B_Edition)
-        {
-            PromptMenu();
-        }
+        m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
     }
-    else
+
+    m_cliCmdLine.Reset();
+
+    if (const Menu* const pcli_Menu = m_qMenus.RemoveTail())
     {
-        Beep();
+        pcli_Menu->OnExit();
+    }
+    if (B_Edition)
+    {
+        PromptMenu();
     }
 }
 
@@ -716,7 +920,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
     {
         // Parse the command line.
         CommandLine cli_CommandLine;
-        if (cli_CommandLine.Parse(*m_qMenus.GetTail(), m_strLine, false))
+        if (cli_CommandLine.Parse(*m_qMenus.GetTail(), m_cliCmdLine.GetLeft(), false))
         {
             // Research matching elements.
             Element::List cli_Exact(MAX_WORDS_PER_NODE), cli_Elements(MAX_WORDS_PER_NODE);
@@ -749,9 +953,9 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
                         && (! dynamic_cast<const Param*>(cli_Elements.GetHead())))
                 {
                     // Straight forward completion.
-                    Backspace(cli_CommandLine.GetNumBackspacesForCompletion());
-                    PrintLine(cli_Elements.GetHead()->GetKeyword());
-                    PrintLine(" ");
+                    m_cliCmdLine.Delete(GetStream(ECHO_STREAM), - cli_CommandLine.GetNumBackspacesForCompletion());
+                    m_cliCmdLine.Put(GetStream(ECHO_STREAM), cli_Elements.GetHead()->GetKeyword());
+                    m_cliCmdLine.Put(GetStream(ECHO_STREAM), ' ');
                 }
                 else
                 {
@@ -817,7 +1021,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
 
                 if (B_Edition)
                 {
-                    GetStream(ECHO_STREAM) << endl;
+                    m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
                 }
 
                 // For each matching keyword...
@@ -837,38 +1041,42 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
             // Completion so far.
             else if ((! B_HelpOnly) && (! str_CompletionSoFar.IsEmpty()))
             {
-                Backspace(cli_CommandLine.GetNumBackspacesForCompletion());
-                PrintLine(str_CompletionSoFar);
+                m_cliCmdLine.Delete(GetStream(ECHO_STREAM), - cli_CommandLine.GetNumBackspacesForCompletion());
+                m_cliCmdLine.Put(GetStream(ECHO_STREAM), str_CompletionSoFar);
             }
         }
         else
         {
             if (B_Edition)
             {
-                GetStream(ECHO_STREAM) << endl;
+                m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
             }
-            PrintError(cli_CommandLine.GetLastError());
+            PrintError(
+                (m_pcliInput != NULL) ? m_pcliInput->GetLocation() : ResourceString(),
+                cli_CommandLine.GetLastError()
+            );
             if (B_Edition)
             {
                 PromptMenu();
             }
         }
     }
+
 }
 
 void Shell::OnExecute(void)
 {
-    GetStream(ECHO_STREAM) << endl;
+    m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
 
     if (! m_qMenus.IsEmpty())
     {
         // First of all, store the line in history stack.
-        PushHistory(m_strLine);
+        m_cliHistory.Push(m_cliCmdLine);
 
         // Append "\n" to the line and parse it.
         tk::String str_Line(MAX_CMD_LINE_LENGTH + 1);
         CommandLine cli_CommandLine;
-        if (str_Line.Set(m_strLine) && str_Line.Append("\n")
+        if (str_Line.Set(m_cliCmdLine.GetLine()) && str_Line.Append("\n")
             && cli_CommandLine.Parse(*m_qMenus.GetTail(), str_Line, true))
         {
             bool b_Executed = false;
@@ -902,81 +1110,31 @@ void Shell::OnExecute(void)
                     const ResourceString cli_ExecutionError = ResourceString()
                         .SetString(ResourceString::LANG_EN, "Execution error")
                         .SetString(ResourceString::LANG_FR, "Erreur d'exécution");
-                    PrintError(cli_ExecutionError);
+                    PrintError(
+                        (m_pcliInput != NULL) ? m_pcliInput->GetLocation() : ResourceString(),
+                        cli_ExecutionError
+                    );
                 }
             }
         }
         else
         {
-            PrintError(cli_CommandLine.GetLastError());
+            PrintError(
+                (m_pcliInput != NULL) ? m_pcliInput->GetLocation() : ResourceString(),
+                cli_CommandLine.GetLastError()
+            );
         }
-        m_strLine.Set("");
+        m_cliCmdLine.Reset();
         PromptMenu();
     }
 }
 
-void Shell::OnHistory(const int I_Translation)
+void Shell::OnHistory(const int I_Navigation)
 {
-    // First check the translation remains in bounds of the history stack.
-    if ((m_iHistoryIndex + I_Translation >= 0)
-        && (m_iHistoryIndex + I_Translation < (signed) m_qHistory.GetCount()))
-    {
-        // If this is the current line, save it into the history stack.
-        if (m_iHistoryIndex == 0)
-        {
-            m_qHistory.GetHead().Set(m_strLine);
-        }
-        // Clean up the current line.
-        Backspace(m_strLine.GetLength());
-        // Translate the history index.
-        m_iHistoryIndex += I_Translation;
-        // Print out this line.
-        PrintLine(GetHistoryLine(m_iHistoryIndex));
-    }
-    else
+    if (! m_cliHistory.Navigate(m_cliCmdLine, GetStream(ECHO_STREAM), I_Navigation))
     {
         // Out of stack.
         Beep();
-    }
-}
-
-void Shell::PrintLine(const char* const STR_Append)
-{
-    if (m_strLine.Append(STR_Append))
-    {
-        GetStream(ECHO_STREAM) << STR_Append;
-    }
-    else
-    {
-        const ResourceString cli_LineError = ResourceString()
-            .SetString(ResourceString::LANG_EN, "Line too long")
-            .SetString(ResourceString::LANG_FR, "Ligne trop longue");
-        GetStream(ERROR_STREAM) << endl;
-        PrintError(cli_LineError);
-        PromptMenu();
-    }
-}
-
-void Shell::PrintLine(const char C_Append)
-{
-    char arc_Buffer[] = { C_Append, '\0' };
-    PrintLine(arc_Buffer);
-}
-
-void Shell::Backspace(const int I_BackspaceCount)
-{
-    unsigned int i_BackspaceCount = I_BackspaceCount;
-    if (i_BackspaceCount > m_strLine.GetLength())
-    {
-        Beep();
-        i_BackspaceCount = m_strLine.GetLength();
-    }
-
-    if (! m_strLine.Set(m_strLine.SubString(0, m_strLine.GetLength() - i_BackspaceCount)))
-        GetTraces().Trace(INTERNAL_ERROR) << "Shell::Backspace(): Could not reduce m_strLine" << endl;
-    for (unsigned int i=0; i<i_BackspaceCount; i++)
-    {
-        GetStream(ECHO_STREAM) << "\b" << " " << "\b";
     }
 }
 
@@ -1034,48 +1192,3 @@ void Shell::Beep(void)
     }
 }
 
-void Shell::PushHistory(const char* const STR_Line)
-{
-    if (// Check the line is not empty.
-        (STR_Line != NULL) && (strlen(STR_Line) > 0)
-        // Check it is not the same as the previous one.
-        && (STR_Line != GetHistoryLine(1)))
-    {
-        // Limit to HISTORY_STACK_SIZE.
-        while (m_qHistory.GetCount() > HISTORY_STACK_SIZE)
-        {
-            m_qHistory.RemoveTail();
-        }
-        // Ensure there is at least one element.
-        if (m_qHistory.IsEmpty())
-        {
-            if (! m_qHistory.AddTail(tk::String(MAX_CMD_LINE_LENGTH)))
-            {
-                ResourceString cli_Error = ResourceString()
-                    .SetString(ResourceString::LANG_EN, "History stack error")
-                    .SetString(ResourceString::LANG_FR, "Erreur de la file d'historique");
-                PrintError(cli_Error);
-            }
-        }
-        // Backup the current line.
-        m_qHistory.GetHead().Set(STR_Line);
-        // Add a new empty element.
-        m_qHistory.AddHead(tk::String(MAX_CMD_LINE_LENGTH, ""));
-    }
-    m_iHistoryIndex = 0;
-}
-
-const tk::String Shell::GetHistoryLine(const unsigned int UI_BackwardIndex) const
-{
-    tk::Queue<tk::String>::Iterator it = m_qHistory.GetIterator();
-    for (unsigned int ui=UI_BackwardIndex; ui>0; ui--)
-    {
-        if ((! m_qHistory.MoveNext(it))
-            || (! m_qHistory.IsValid(it)))
-        {
-            return tk::String(MAX_CMD_LINE_LENGTH);
-        }
-    }
-
-    return m_qHistory.GetAt(it);
-}

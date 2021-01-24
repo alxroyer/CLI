@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2008, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer
 
     All rights reserved.
 
@@ -33,6 +33,8 @@
 #else
     #include <winsock2.h> // Windows sockets
     #define close closesocket
+    // Disable disturbing macros.
+    #undef DELETE
 #endif
 #include <stdio.h> // close
 #include <string.h>
@@ -44,9 +46,31 @@
 CLI_NS_USE(cli)
 
 
+//! @brief Telnet input buffer size.
 #ifndef CLI_TELNET_INPUT_BUFFER_SIZE
     #define CLI_TELNET_INPUT_BUFFER_SIZE 1024
 #endif
+
+//! @brief Telnet connection trace class singleton redirection.
+#define CLI_TELNET_IN GetTelnetInTraceClass()
+//! @brief Telnet connection trace class singleton.
+static const TraceClass& GetTelnetInTraceClass(void)
+{
+    static const TraceClass cli_TelnetInTraceClass("CLI_TELNET_IN", Help()
+        .AddHelp(Help::LANG_EN, "CLI telnet connection input traces")
+        .AddHelp(Help::LANG_FR, "Traces d'entrées d'une connexion telnet CLI"));
+    return cli_TelnetInTraceClass;
+}
+//! @brief Telnet connection trace class singleton redirection.
+#define CLI_TELNET_OUT GetTelnetOutTraceClass()
+//! @brief Telnet connection trace class singleton.
+static const TraceClass& GetTelnetOutTraceClass(void)
+{
+    static const TraceClass cli_TelnetOutTraceClass("CLI_TELNET_OUT", Help()
+        .AddHelp(Help::LANG_EN, "CLI telnet connection output traces")
+        .AddHelp(Help::LANG_FR, "Traces de sorties d'une connexion telnet CLI"));
+    return cli_TelnetOutTraceClass;
+}
 
 
 
@@ -54,6 +78,9 @@ TelnetServer::TelnetServer(Shell& CLI_Shell, const unsigned long UL_TcpPort)
   : m_cliShell(CLI_Shell),
     m_ulTcpPort(UL_TcpPort)
 {
+    // Does nothing but registers the appropriate trace classes.
+    GetTraces().Trace(CLI_TELNET_IN);
+    GetTraces().Trace(CLI_TELNET_OUT);
 }
 
 TelnetServer::~TelnetServer(void)
@@ -63,6 +90,19 @@ TelnetServer::~TelnetServer(void)
 void TelnetServer::StartServer(void)
 {
     const int i_ServerSocket = socket(AF_INET, SOCK_STREAM, 0);
+    #ifdef CLI_WIN_NETWORK
+    // Winsock needs to be initialized.
+    if (i_ServerSocket < 0)
+    {
+        WORD wVersionRequested = MAKEWORD(2, 2);
+        WSADATA wsaData;
+        int err = WSAStartup(wVersionRequested, & wsaData);
+        if (err == 0)
+        {
+            ((int&) i_ServerSocket) = socket(AF_INET, SOCK_STREAM, 0);
+        }
+    }
+    #endif
     if (i_ServerSocket < 0)
     {
         const ResourceString cli_Error = ResourceString()
@@ -131,7 +171,11 @@ const bool TelnetServer::AcceptConnection(const int I_ConnectionSocket)
     int i_Pid = 0;
 
 #ifdef CLI_TELNET_MULTI_CLIENT
+    #ifndef CLI_WIN_NETWORK
     if (i_Pid = fork())
+    #else
+#error CLI_TELNET_MULTI_CLIENT / CLI_WIN_NETWORK incompatibility. Do not use CLI_TELNET_MULTI_CLIENT when compiling for non POSIX operating systems.
+    #endif
     {
         // Server side.
         return true;
@@ -151,8 +195,12 @@ const bool TelnetServer::AcceptConnection(const int I_ConnectionSocket)
         m_cliShell.GetStream(OUTPUT_STREAM)
             << cli_InfoStart.GetString(m_cliShell.GetLang())
             << " " << i_Pid << cli::endl;
-        TelnetConnection* const pcli_Connection = new TelnetConnection(m_cliShell, I_ConnectionSocket, true);
-        m_cliShell.Run(*pcli_Connection);
+        if (TelnetConnection* const pcli_Connection = new TelnetConnection(m_cliShell, I_ConnectionSocket, true))
+        {
+            pcli_Connection->UseInstance(__CALL_INFO__);
+            m_cliShell.Run(*pcli_Connection);
+            pcli_Connection->FreeInstance(__CALL_INFO__);
+        }
         const ResourceString cli_InfoEnd = ResourceString()
             .SetString(ResourceString::LANG_EN, "Connection done")
             .SetString(ResourceString::LANG_FR, "Début de connexion");
@@ -171,7 +219,7 @@ TelnetConnection::TelnetConnection(
         Shell& CLI_Shell,
         const int I_ConnectionSocket,
         const bool B_AutoDelete)
-  : IODevice("telnet", "\r\n", B_AutoDelete),
+  : IODevice("telnet", B_AutoDelete),
     m_iSocket(I_ConnectionSocket),
     m_qChars(CLI_TELNET_INPUT_BUFFER_SIZE)
 {
@@ -191,7 +239,6 @@ const bool TelnetConnection::CloseDevice(void)
 #ifdef CLI_TELNET_MULTI_CLIENT
     close(m_iSocket);
 #endif
-    delete this;
     return true;
 }
 
@@ -201,28 +248,148 @@ const KEY TelnetConnection::GetKey(void) const
     {
         // Dequeue the received characters
         const int i_Front = m_qChars.RemoveHead();
+        GetTraces().Trace(CLI_TELNET_IN) << "i_Char = " << i_Front << endl;
 
         // Special character management.
         switch (i_Front)
         {
+        case 1:     return KEY_BEGIN;   // CTRL+A
+        case 3:     return BREAK;       // CTRL+C
+        case 4:     return LOGOUT;      // CTRL+D
+        case 5:     return KEY_END;     // CTRL+E
+        case 8:     return BACKSPACE;   // CTRL+H
+        case 13:
+            if (! m_qChars.IsEmpty())
+            {
+                GetTraces().Trace(CLI_TELNET_IN) << "i_Char2 = " << m_qChars.GetHead() << endl;
+                if (m_qChars.GetHead() == 10)
+                {
+                    // Process only the character 13 when the sequence is 13-10.
+                    m_qChars.RemoveHead();
+                    return ENTER;
+                }
+            }
+            break;
+        case 12:    return CLS;         // CTRL+L
+        case 14:    return NEXT;        // CTRL+N
+        case 16:    return PREVIOUS;    // CTRL+P
+        case 25:    return REDO;        // CTRL+Y
+        case 26:    return UNDO;        // CTRL+Z
         case 27:
             if (! m_qChars.IsEmpty())
             {
-                if ((m_qChars.GetHead() == 91) && (m_qChars.GetCount() >= 2))
+                GetTraces().Trace(CLI_TELNET_IN) << "i_Char2 = " << m_qChars.GetHead() << endl;
+                if (m_qChars.GetHead() == 91)
                 {
                     m_qChars.RemoveHead();
-                    const int i_Special = m_qChars.RemoveHead();
 
-                    switch (i_Special)
+                    if (! m_qChars.IsEmpty())
                     {
-                    case 65: return KEY_UP;
-                    case 66: return KEY_DOWN;
-                    case 67: return KEY_RIGHT;
-                    case 68: return KEY_LEFT;
-                    default:
+                        const int i_Special = m_qChars.RemoveHead();
+                        GetTraces().Trace(CLI_TELNET_IN) << "i_Char3 = " << i_Special << endl;
+
+                        switch (i_Special)
+                        {
+                        // All characters that will be followed by a 126 character.
+                        case 49: // INSERT
+                        case 50: // KEY_BEGIN;
+                        case 51: // PAGE_UP;
+                        case 52: // DELETE;
+                        case 53: // KEY_END;
+                        case 54: // PAGE_DOWN;
+                            if (! m_qChars.IsEmpty())
+                            {
+                                const int i_Finish = m_qChars.RemoveHead();
+                                GetTraces().Trace(CLI_TELNET_IN) << "i_Char4 = " << i_Finish << endl;
+
+                                if (i_Finish == 126)
+                                {
+                                    switch (i_Special)
+                                    {
+                                    case 49: return INSERT;
+                                    case 50: return KEY_BEGIN;
+                                    case 51: return PAGE_UP;
+                                    case 52: return DELETE;
+                                    case 53: return KEY_END;
+                                    case 54: return PAGE_DOWN;
+                                    }
+                                }
+                                else if ((i_Special == 49) && (! m_qChars.IsEmpty()))
+                                {
+                                    // Function keys.
+                                    const int i_Function = i_Finish;
+                                    const int i_FunctionFinish = m_qChars.RemoveHead();
+                                    GetTraces().Trace(CLI_TELNET_IN) << "i_Char5 = " << i_FunctionFinish << endl;
+
+                                    if (i_FunctionFinish == 126)
+                                    {
+                                        switch (i_Function)
+                                        {
+                                        case 49: return F1;
+                                        case 50: return F2;
+                                        case 51: return F3;
+                                        case 52: return F4;
+                                        case 53: return F5;
+                                        case 55: return F6;
+                                        case 56: return F7;
+                                        case 57: return F8;
+                                        }
+                                    }
+
+                                    // Unhandled.
+                                    if (! m_qChars.AddHead(i_FunctionFinish))
+                                    {
+                                        GetTraces().Trace(INTERNAL_ERROR)
+                                            << "TelnetConnection::GetKey(): "
+                                            << "Unable to restore previously removed character from m_qChars"
+                                            << endl;
+                                    }
+                                }
+                                else if ((i_Special == 50) && (! m_qChars.IsEmpty()))
+                                {
+                                    // Function keys.
+                                    const int i_Function = i_Finish;
+                                    const int i_FunctionFinish = m_qChars.RemoveHead();
+                                    GetTraces().Trace(CLI_TELNET_IN) << "i_Char5 = " << i_FunctionFinish << endl;
+
+                                    if (i_FunctionFinish == 126)
+                                    {
+                                        switch (i_Function)
+                                        {
+                                        case 48: return F9;
+                                        case 49: return F10;
+                                        case 51: return F11;
+                                        case 52: return F12;
+                                        }
+                                    }
+
+                                    // Unhandled.
+                                    if (! m_qChars.AddHead(i_FunctionFinish))
+                                    {
+                                        GetTraces().Trace(INTERNAL_ERROR)
+                                            << "TelnetConnection::GetKey(): "
+                                            << "Unable to restore previously removed character from m_qChars"
+                                            << endl;
+                                    }
+                                }
+
+                                // Unhandled.
+                                if (! m_qChars.AddHead(i_Finish))
+                                {
+                                    GetTraces().Trace(INTERNAL_ERROR)
+                                        << "TelnetConnection::GetKey(): "
+                                        << "Unable to restore previously removed character from m_qChars"
+                                        << endl;
+                                }
+                            }
+                        case 65: return KEY_UP;
+                        case 66: return KEY_DOWN;
+                        case 67: return KEY_RIGHT;
+                        case 68: return KEY_LEFT;
+                        }
+
                         // Unhandled.
-                        if ((! m_qChars.AddHead(i_Special))
-                            || (! m_qChars.AddHead(91)))
+                        if (! m_qChars.AddHead(i_Special))
                         {
                             GetTraces().Trace(INTERNAL_ERROR)
                                 << "TelnetConnection::GetKey(): "
@@ -230,14 +397,90 @@ const KEY TelnetConnection::GetKey(void) const
                                 << endl;
                         }
                     }
+
+                    // Unhandled.
+                    if (! m_qChars.AddHead(91))
+                    {
+                        GetTraces().Trace(INTERNAL_ERROR)
+                            << "TelnetConnection::GetKey(): "
+                            << "Unable to restore previously removed character from m_qChars"
+                            << endl;
+                    }
                 }
             }
+            else
+            {
+                return ESCAPE;
+            }
             break;
+        case 96:    return BACK_QUOTE;
+        case 126:   return TILDE;
+        case 127:   return DELETE;
 
-        case 8:
-            return BACKSPACE;
+        // Accentuated characters.
+        case -31:   return KEY_aacute;
+        case -32:   return KEY_agrave;
+        case -28:   return KEY_auml;
+        case -30:   return KEY_acirc;
+        case -25:   return KEY_ccedil;
+        case -23:   return KEY_eacute;
+        case -24:   return KEY_egrave;
+        case -21:   return KEY_euml;
+        case -22:   return KEY_ecirc;
+        case -19:   return KEY_iacute;
+        case -20:   return KEY_igrave;
+        case -17:   return KEY_iuml;
+        case -18:   return KEY_icirc;
+        case -13:   return KEY_oacute;
+        case -14:   return KEY_ograve;
+        case -10:   return KEY_ouml;
+        case -12:   return KEY_ocirc;
+        case -6:    return KEY_uacute;
+        case -7:    return KEY_ugrave;
+        case -4:    return KEY_uuml;
+        case -5:    return KEY_ucirc;
+        // Accentuated characters copied from the output itself.
+        case -96:   return KEY_aacute;
+        case -123:  return KEY_agrave;
+        case -124:  return KEY_auml;
+        case -125:  return KEY_acirc;
+        case -121:  return KEY_ccedil;
+        case -126:  return KEY_eacute;
+        case -118:  return KEY_egrave;
+        case -119:  return KEY_euml;
+        case -120:  return KEY_ecirc;
+        case -95:   return KEY_iacute;
+        case -115:  return KEY_igrave;
+        case -117:  return KEY_iuml;
+        case -116:  return KEY_icirc;
+        case -94:   return KEY_oacute;
+        case -107:  return KEY_ograve;
+        case -108:  return KEY_ouml;
+        case -109:  return KEY_ocirc;
+        //case -93:   return KEY_uacute;    // Conflicts with POUND!
+        case -105:  return KEY_ugrave;
+        case -127:  return KEY_uuml;
+        case -106:  return KEY_ucirc;
+
+        // Special characters.
+        case -75:   return MICRO;
+        case -26:   return MICRO;       // Copied from the output itself.
+        case -78:   return SQUARE;
+        case -3:    return SQUARE;      // Copied from the output itself.
+        case -80:   return DEGREE;
+        case -8:    return DEGREE;      // Copied from the output itself.
+        case -87:   return COPYRIGHT;
+        case -72:   return COPYRIGHT;   // Copied from the output itself.
+        case -89:   return PARAGRAPH;
+        case -11:   return PARAGRAPH;   // Copied from the output itself.
+        case -93:   return POUND;
+        case -100:  return POUND;       // Copied from the output itself.
+        case -128:  return EURO;
+        case -79:   return EURO;    // Copied from the output itself.
         }
 
+        // Unhandled
+        // Use default behaviour.
         const KEY e_Char = IODevice::GetKey(i_Front);
         if (e_Char != NULL_KEY)
         {
@@ -245,6 +488,7 @@ const KEY TelnetConnection::GetKey(void) const
         }
         else
         {
+            // Unknown character.
             return GetKey();
         }
     }
@@ -284,30 +528,86 @@ void TelnetConnection::PutString(const char* const STR_Out) const
 {
     if (STR_Out != NULL)
     {
-        const int i_Len = send(m_iSocket, STR_Out, (int) strlen(STR_Out), 0);
-        if (i_Len != (signed) strlen(STR_Out))
+        const int i_StringLen = (int) strlen(STR_Out);
+        if (i_StringLen > 0)
+        if (char* const str_Out = new char[i_StringLen + 1])
         {
-            m_cliLastError
-                .SetString(ResourceString::LANG_EN, "Telnet emission error")
-                .SetString(ResourceString::LANG_FR, "Echec d'émission en telnet");
+            memcpy(str_Out, STR_Out, i_StringLen + 1);
 
-            if (i_Len < 0)
+            // Conversions.
+            for (int i=0; i<i_StringLen; i++)
             {
-                GetTraces().Trace(INTERNAL_ERROR) << "send failed" << endl;
+                switch (str_Out[i])
+                {
+                case KEY_aacute:    str_Out[i] = (char) -96;    break;
+                case KEY_agrave:    str_Out[i] = (char) -123;   break;
+                case KEY_auml:      str_Out[i] = (char) -124;   break;
+                case KEY_acirc:     str_Out[i] = (char) -125;   break;
+                case KEY_ccedil:    str_Out[i] = (char) -121;   break;
+                case KEY_eacute:    str_Out[i] = (char) -126;   break;
+                case KEY_egrave:    str_Out[i] = (char) -118;   break;
+                case KEY_euml:      str_Out[i] = (char) -119;   break;
+                case KEY_ecirc:     str_Out[i] = (char) -120;   break;
+                case KEY_iacute:    str_Out[i] = (char) -95;    break;
+                case KEY_igrave:    str_Out[i] = (char) -115;   break;
+                case KEY_iuml:      str_Out[i] = (char) -117;   break;
+                case KEY_icirc:     str_Out[i] = (char) -116;   break;
+                case KEY_oacute:    str_Out[i] = (char) -94;    break;
+                case KEY_ograve:    str_Out[i] = (char) -107;   break;
+                case KEY_ouml:      str_Out[i] = (char) -108;   break;
+                case KEY_ocirc:     str_Out[i] = (char) -109;   break;
+                case KEY_uacute:    str_Out[i] = (char) -93;    break;
+                case KEY_ugrave:    str_Out[i] = (char) -105;   break;
+                case KEY_uuml:      str_Out[i] = (char) -127;   break;
+                case KEY_ucirc:     str_Out[i] = (char) -106;   break;
+                case SQUARE:        str_Out[i] = (char) -3;     break;
+                case EURO:          str_Out[i] = (char) -79;    break;
+                case POUND:         str_Out[i] = (char) -100;   break;
+                case MICRO:         str_Out[i] = (char) -26;    break;
+                case PARAGRAPH:     str_Out[i] = (char) -11;    break;
+                case DEGREE:        str_Out[i] = (char) -8;     break;
+                case COPYRIGHT:     str_Out[i] = (char) -72;    break;
+                }
             }
-            else if ((unsigned) i_Len < strlen(STR_Out))
+
+            // Send the buffer.
+            const int i_Len = send(m_iSocket, str_Out, i_StringLen, 0);
+            if (i_Len != i_StringLen)
             {
-                GetTraces().Trace(INTERNAL_ERROR)
-                    << "send incomplete"
-                    << " (only " << i_Len << " characters sent"
-                    << " over " << (unsigned int) strlen(STR_Out) << ")" << endl;
+                // Something has failed regarding output
+                // Check whether the trace stream is not this output stream.
+                // If it is, change to stderr in order to avoid infinite loops.
+                if (& GetTraces().GetStream().GetActualDevice() == this)
+                {
+                    GetTraces().SetStream(GetStdErr());
+                    GetTraces().Trace(CLI_TELNET_OUT) << "Trace stream changed to stderr" << endl;
+                }
+
+                m_cliLastError
+                    .SetString(ResourceString::LANG_EN, "Telnet emission error")
+                    .SetString(ResourceString::LANG_FR, "Echec d'émission en telnet");
+
+                if (i_Len < 0)
+                {
+                    GetTraces().Trace(CLI_TELNET_OUT) << "send failed" << endl;
+                }
+                else if (i_Len < i_StringLen)
+                {
+                    GetTraces().Trace(CLI_TELNET_OUT)
+                        << "send incomplete"
+                        << " (only " << i_Len << " characters sent"
+                        << " over " << i_StringLen << ")" << endl;
+                }
+                else if (i_Len > i_StringLen)
+                {
+                    GetTraces().Trace(CLI_TELNET_OUT)
+                        << "strange send return value"
+                        << " (" << i_Len << " for " << i_StringLen << " characters sent)" << endl;
+                }
             }
-            else if ((unsigned) i_Len > strlen(STR_Out))
-            {
-                GetTraces().Trace(INTERNAL_ERROR)
-                    << "strange send return value"
-                    << " (" << i_Len << " for " << (unsigned int) strlen(STR_Out) << " characters sent)" << endl;
-            }
+
+            // Free the local output buffer.
+            delete [] str_Out;
         }
     }
 }
@@ -316,18 +616,3 @@ void TelnetConnection::Beep(void) const
 {
 }
 
-/*const OutputDevice& TelnetConnection::GetErrorStream(void) const
-{
-    // First try to send error to the device set in the shell.
-    if (const OutputDevice* const pcli_ErrorDevice = & m_cliShell.GetStream(ERROR_STREAM))
-    {
-        if (pcli_ErrorDevice != this)
-        {
-            // Do not report error to this device which has caused the error.
-            return *pcli_ErrorDevice;
-        }
-    }
-
-    // Default to standard error.
-    return OutputDevice::GetStdErr();
-}*/
