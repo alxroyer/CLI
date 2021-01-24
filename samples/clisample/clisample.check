@@ -13,7 +13,7 @@ What *!?    I couldn't hear you.
 sample-cli>enter sample-menu
 Entering sample-menu
 sample-menu> hel
-  hello           Hello world
+  hello           'Hello world' command
   help            Get help
 sample-menu> hello 
 Hello world

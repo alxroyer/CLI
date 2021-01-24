@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -93,10 +93,44 @@ public abstract class Cli extends Menu
     }
     private static final native boolean __addMenu(int I_NativeCliRef, int I_NativeMenuRef);
 
+    /** Menu retrieval.
+        @param J_MenuName Menu name.
+        @return The menu identified by the given name, null if not found. */
+    public final Menu getMenu(String J_MenuName) {
+        if (J_MenuName != null) {
+            int i_MenuRef = __getMenu(this.getNativeRef(), J_MenuName);
+            NativeObject cli_Menu = NativeObject.getObject(i_MenuRef);
+            if ((cli_Menu != null) && (cli_Menu instanceof Menu)) {
+                return (Menu) cli_Menu;
+            }
+        }
+
+        return null;
+    }
+    private static final native int __getMenu(int I_NativeCliRef, String J_MenuName);
+
     /** Configuration menu enabling.
         @param B_Enable Enable or disable the configuration menu. */
     public final void enableConfigMenu(boolean B_Enable) {
         __enableConfigMenu(this.getNativeRef(), B_Enable);
     }
     private static final native boolean __enableConfigMenu(int I_NativeCliRef, boolean B_Enable);
+
+    /** Handler called when an error occures.
+        This method may be overriden by final menu classes.
+        @return true if the error can be displayed by the shell, false if it should not be displayed. */
+    public boolean onError(ResourceString location, ResourceString message) {
+        return true;
+    }
+    private final boolean __onError(int I_NativeLocationRef, int I_NativeErrorMessageRef) {
+        Traces.traceMethod("Menu.__onError()");
+        boolean b_Res = true;
+        ResourceString cli_Location = (ResourceString) NativeObject.getObject(I_NativeLocationRef);
+        ResourceString cli_ErrorMessage = (ResourceString) NativeObject.getObject(I_NativeErrorMessageRef);
+        if ((cli_Location != null) && (cli_ErrorMessage != null)) {
+            b_Res = onError(cli_Location, cli_ErrorMessage);
+        }
+        Traces.traceReturn("Menu.__onError()", new Boolean(b_Res).toString());
+        return b_Res;
+    }
 }

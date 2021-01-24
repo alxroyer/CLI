@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -68,7 +68,7 @@ extern "C" JNIEXPORT jstring JNICALL Java_cli_ParamHost__1_1getValue(JNIEnv* PJ_
 {
     NativeTraces::TraceMethod("ParamHost.__getValue(I_NativeParamRef)");
     NativeTraces::TraceParam("I_NativeParamRef", "%d", I_NativeParamRef);
-    jstring pj_Value = 0;
+    jstring pj_Value = NULL;
     if (const cli::ParamHost* const pcli_Param = (const cli::ParamHost*) I_NativeParamRef)
     {
         if (PJ_Env != NULL)

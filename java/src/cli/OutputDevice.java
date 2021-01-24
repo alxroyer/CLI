@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -93,9 +93,21 @@ public class OutputDevice extends NativeObject
     }
     private static final native void __endl(int I_NativeOutputDeviceRef);
 
+    /** Makes the output device beep. */
+    public final void beep() {
+        __beep(this.getNativeRef());
+    }
+    private static final native void __beep(int I_NativeOutputDeviceRef);
+
+    /** Cleans the screen. */
+    public final void cleanScreen() {
+        __cleanScreen(this.getNativeRef());
+    }
+    private static final native void __cleanScreen(int I_NativeOutputDeviceRef);
+
     /** Null device singleton.
         @return The null output device. */
-    public static final OutputDevice getNullDevice() {
+    public static OutputDevice getNullDevice() {
         if (m_cliNullDevice == null) {
             m_cliNullDevice = new OutputDevice(__getNullDevice());
         }

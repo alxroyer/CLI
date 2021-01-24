@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,7 +30,7 @@
         <endl></endl>
         <keyword string="a">
             <keyword string="b">
-                <tag ref="my-tag"/>
+                <tag ref="my-tag" max="unbounded"/>
             </keyword>
         </keyword>
     </tag>

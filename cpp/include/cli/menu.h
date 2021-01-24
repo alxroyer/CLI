@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -81,6 +81,9 @@ CLI_NS_BEGIN(cli)
         virtual const bool Execute(const CommandLine& CLI_CommandLine) const;
         //! @brief Handler on menu exit.
         virtual void OnExit(void) const;
+        //! @brief Handler on prompt display.
+        //! @return Prompt to display. Empty string for default.
+        virtual const tk::String OnPrompt(void) const;
 
     private:
         //! @brief Help node access (read-only).

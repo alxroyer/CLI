@@ -64,6 +64,9 @@ virtual const bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="
 virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#9266fecb42e97f2cb73f7091d3d2a79b">OnExit</a> (void) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handler on menu exit. <br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const tk::String&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#2f154c0ab96a25232b1d50b1036eb6a2">OnPrompt</a> (void) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handler on prompt display.  <a href="#2f154c0ab96a25232b1d50b1036eb6a2"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <a class="el" href="classMenu.html">Menu</a> definition. 
@@ -109,9 +112,33 @@ Corresponding help. </td></tr>
 </dl>
 </div>
 </div><p>
+<hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="2f154c0ab96a25232b1d50b1036eb6a2"></a><!-- doxytag: member="Menu::OnPrompt" ref="2f154c0ab96a25232b1d50b1036eb6a2" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const tk::String Menu::OnPrompt           </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Handler on prompt display. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Prompt to display. Empty string for default. </dd></dl>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="menu_8h-source.html">menu.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Oct 2 00:12:10 2009 for CLI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Oct 2 06:48:32 2010 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

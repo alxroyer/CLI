@@ -19,9 +19,9 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_ee6a9aa9a640f270615eb3e35f15e577.html">cpp</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_abe96eb95ad174add5efba054496e689.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_f5078bb9ca74415e8a4de78627e0b78d.html">cli</a></div>
+<a class="el" href="dir_69a8c1199e71e63ec9f0fe73525e22e1.html">cpp</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_2de52d0db2a2e5dd0e7d073a61e4c664.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_315889ed66ba5ab59127150a8f424ec4.html">cli</a></div>
 <h1>menu.h</h1><a href="menu_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
-<a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI</span>
+<a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
 <a name="l00004"></a>00004 <span class="comment">    All rights reserved.</span>
 <a name="l00005"></a>00005 <span class="comment"></span>
@@ -89,48 +89,49 @@
 <a name="l00079"></a>00079         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> ExecuteReserved(<span class="keyword">const</span> CommandLine&amp; CLI_CommandLine) <span class="keyword">const</span>;
 <a name="l00081"></a>00081         <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> Execute(<span class="keyword">const</span> CommandLine&amp; CLI_CommandLine) <span class="keyword">const</span>;
 <a name="l00083"></a>00083         <span class="keyword">virtual</span> <span class="keywordtype">void</span> OnExit(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085     <span class="keyword">private</span>:
-<a name="l00087"></a>00087         <span class="keyword">const</span> Keyword&amp; GetHelpNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00089"></a>00089         <span class="keyword">const</span> Keyword&amp; GetExitNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00091"></a>00091         <span class="keyword">const</span> Keyword&amp; GetQuitNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00093"></a>00093         <span class="keyword">const</span> Keyword&amp; GetPwmNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095     <span class="keyword">private</span>:
-<a name="l00097"></a>00097         Keyword* m_pcliHelp;
-<a name="l00099"></a>00099         Keyword* m_pcliExit;
-<a name="l00101"></a>00101         Keyword* m_pcliQuit;
-<a name="l00103"></a>00103         Keyword* m_pcliPwm;
-<a name="l00104"></a>00104     };
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106 
-<a name="l00108"></a><a class="code" href="classMenuRef.html">00108</a>     <span class="keyword">class </span><a class="code" href="classMenuRef.html">MenuRef</a> : <span class="keyword">public</span> <a class="code" href="classElement.html">Element</a>
-<a name="l00109"></a>00109     {
-<a name="l00110"></a>00110     <span class="keyword">private</span>:
-<a name="l00112"></a>00112         <a class="code" href="classMenuRef.html">MenuRef</a>(<span class="keywordtype">void</span>);
-<a name="l00114"></a>00114         <a class="code" href="classMenuRef.html">MenuRef</a>(<span class="keyword">const</span> <a class="code" href="classMenuRef.html">MenuRef</a>&amp;);
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116     <span class="keyword">public</span>:
-<a name="l00118"></a>00118         <a class="code" href="classMenuRef.html">MenuRef</a>(
-<a name="l00119"></a>00119             <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; CLI_Menu        
-<a name="l00120"></a>00120             );
-<a name="l00121"></a>00121 
-<a name="l00123"></a>00123         <span class="keyword">virtual</span> <a class="code" href="classMenuRef.html#9345301e8a0d5afbec0268481b795278">~MenuRef</a>(<span class="keywordtype">void</span>);
+<a name="l00086"></a>00086         <span class="keyword">virtual</span> <span class="keyword">const</span> tk::String OnPrompt(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088     <span class="keyword">private</span>:
+<a name="l00090"></a>00090         <span class="keyword">const</span> Keyword&amp; GetHelpNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00092"></a>00092         <span class="keyword">const</span> Keyword&amp; GetExitNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00094"></a>00094         <span class="keyword">const</span> Keyword&amp; GetQuitNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00096"></a>00096         <span class="keyword">const</span> Keyword&amp; GetPwmNode(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098     <span class="keyword">private</span>:
+<a name="l00100"></a>00100         Keyword* m_pcliHelp;
+<a name="l00102"></a>00102         Keyword* m_pcliExit;
+<a name="l00104"></a>00104         Keyword* m_pcliQuit;
+<a name="l00106"></a>00106         Keyword* m_pcliPwm;
+<a name="l00107"></a>00107     };
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 
+<a name="l00111"></a><a class="code" href="classMenuRef.html">00111</a>     <span class="keyword">class </span><a class="code" href="classMenuRef.html">MenuRef</a> : <span class="keyword">public</span> <a class="code" href="classElement.html">Element</a>
+<a name="l00112"></a>00112     {
+<a name="l00113"></a>00113     <span class="keyword">private</span>:
+<a name="l00115"></a>00115         <a class="code" href="classMenuRef.html">MenuRef</a>(<span class="keywordtype">void</span>);
+<a name="l00117"></a>00117         <a class="code" href="classMenuRef.html">MenuRef</a>(<span class="keyword">const</span> <a class="code" href="classMenuRef.html">MenuRef</a>&amp;);
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119     <span class="keyword">public</span>:
+<a name="l00121"></a>00121         <a class="code" href="classMenuRef.html">MenuRef</a>(
+<a name="l00122"></a>00122             <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; CLI_Menu        
+<a name="l00123"></a>00123             );
 <a name="l00124"></a>00124 
-<a name="l00125"></a>00125     <span class="keyword">private</span>:
-<a name="l00127"></a>00127         <a class="code" href="classMenuRef.html">MenuRef</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classMenuRef.html">MenuRef</a>&amp;);
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129     <span class="keyword">public</span>:
-<a name="l00131"></a>00131         <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; <a class="code" href="classMenuRef.html#a614bcc181e21b5328ceb8aedde52402">GetMenu</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133     <span class="keyword">protected</span>:
-<a name="l00135"></a><a class="code" href="classMenuRef.html#e4fc187462c53bcd3c238bbe766bdac8">00135</a>         <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>* <span class="keyword">const</span> <a class="code" href="classMenuRef.html#e4fc187462c53bcd3c238bbe766bdac8">m_pcliMenu</a>;
-<a name="l00136"></a>00136     };
-<a name="l00137"></a>00137 
-<a name="l00138"></a>00138 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
-<a name="l00139"></a>00139 
-<a name="l00140"></a>00140 <span class="preprocessor">#endif // _CLI_MENU_H_</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Oct 2 00:11:52 2009 for CLI by&nbsp;
+<a name="l00126"></a>00126         <span class="keyword">virtual</span> <a class="code" href="classMenuRef.html#9345301e8a0d5afbec0268481b795278">~MenuRef</a>(<span class="keywordtype">void</span>);
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128     <span class="keyword">private</span>:
+<a name="l00130"></a>00130         <a class="code" href="classMenuRef.html">MenuRef</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classMenuRef.html">MenuRef</a>&amp;);
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132     <span class="keyword">public</span>:
+<a name="l00134"></a>00134         <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; <a class="code" href="classMenuRef.html#a614bcc181e21b5328ceb8aedde52402">GetMenu</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136     <span class="keyword">protected</span>:
+<a name="l00138"></a><a class="code" href="classMenuRef.html#e4fc187462c53bcd3c238bbe766bdac8">00138</a>         <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>* <span class="keyword">const</span> <a class="code" href="classMenuRef.html#e4fc187462c53bcd3c238bbe766bdac8">m_pcliMenu</a>;
+<a name="l00139"></a>00139     };
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141 <a class="code" href="namespace_8h.html#ccc91ffc41bd59ab273a690a7b425450">CLI_NS_END</a>(cli)
+<a name="l00142"></a>00142 
+<a name="l00143"></a>00143 <span class="preprocessor">#endif // _CLI_MENU_H_</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sat Oct 2 06:48:29 2010 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

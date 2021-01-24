@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,9 +28,9 @@
 //! @brief Cli class definition.
 
 //! @mainpage
-//! @author Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+//! @author Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 //!
-//! The CLI library allows you to easily define Command Line Interfaces.
+//! The CLI toolkit allows you to easily define Command Line Interfaces.
 //!
 //! Within a single XML file, you define the tree of menus, keywords and parameters, and match them directly to some target language code.
 //!
@@ -127,6 +127,12 @@ CLI_NS_BEGIN(cli)
             Menu* const PCLI_Menu       //!< New menu.
             );
 
+        //! @brief Menu retrieval.
+        //! @return The menu identified by the given name, NULL if not found.
+        const Menu* const GetMenu(
+            const char* const STR_MenuName  //!< Menu name.
+            ) const;
+
     public:
         //! @brief Set the shell reference when executing.
         void SetShell(
@@ -140,7 +146,11 @@ CLI_NS_BEGIN(cli)
         //! @brief Reserved commands execution.
         virtual const bool ExecuteReserved(const CommandLine& CLI_CommandLine) const;
         //! @brief Handler on error.
-        virtual void OnError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const;
+        //! @return true if the error can be displayed by the shell, false if it should not be displayed.
+        virtual const bool OnError(
+            const ResourceString& CLI_Location,     //!< Location of the error.
+            const ResourceString& CLI_ErrorMessage  //!< Message of the error.
+            ) const;
         //! @brief Handler on menu exit.
         virtual void OnExit(void) const;
 

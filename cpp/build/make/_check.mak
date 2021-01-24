@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -45,14 +45,17 @@ include _mkres.mak
 .PHONY: log
 log: build_depends $(CLI_LOG) ;
 
-$(CLI_LOG): $(CLI_BINARY) $(CLI_TEST) $(CPP_DIR)/tests/cleanlog.sh
+$(CLI_LOG): $(CLI_BINARY) $(CLI_TEST) $(CLI_DIR)/samples/cleanlog.sh
+	dos2unix $(CLI_TEST) 2> /dev/null
 	$(CLI_BINARY) $(CLI_TEST) $(CLI_LOG) 1> /dev/null 2> /dev/null
-	dos2unix $(CPP_DIR)/tests/cleanlog.sh 2> /dev/null
-	chmod a+x $(CPP_DIR)/tests/cleanlog.sh
-	$(CPP_DIR)/tests/cleanlog.sh $(CLI_LOG)
+	dos2unix $(CLI_DIR)/samples/cleanlog.sh 2> /dev/null
+	chmod a+x $(CLI_DIR)/samples/cleanlog.sh
+	$(CLI_DIR)/samples/cleanlog.sh $(CLI_LOG)
+	dos2unix $(CLI_LOG) 2> /dev/null
 
 .PHONY: check
 check: build_depends $(CLI_LOG) $(CLI_CHECK)
+	dos2unix $(CLI_CHECK) 2> /dev/null
 	diff $(CLI_LOG) $(CLI_CHECK)
 
 # Debug and help

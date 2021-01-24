@@ -1,4 +1,10 @@
 pwm
+menu "menu0"
+pwm
+menu "menu0 (stand-alone)"
+pwm
+exit
+pwm
 menu1
 pwm
 menu1

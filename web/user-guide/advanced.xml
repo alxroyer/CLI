@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,12 +29,323 @@
 
     <para>
     Some of you may have special needs.
-    Here is some further additional information for C++ advanced users.
+    Here is some additional information for advanced users.
     </para>
 
     <para>
-    Almost all the following topics are also applicable to Java: just transpose the C++ class names to the corresponding Java classes.
+    Many topics are addressed to C++ users,
+    but please note that they are generally also applicable to Java:
+    just transpose the C++ class names to the corresponding Java classes.
     </para>
+
+    <section id="adv.menus"><title id="adv.menus.title">Advanced menu management</title>
+
+        <section id="adv.menus.handlers"><title id="adv.menus.handlers.title"><sgmltag class="element">handler</sgmltag>
+                    - <sgmltag class="element">menu</sgmltag> elements special features</title>
+
+            <para>
+            <sgmltag class="element">menu</sgmltag> elements may be provided with <sgmltag class="element">handler</sgmltag> elements.
+            These <sgmltag class="element">handler</sgmltag> elements allow you to trigger native code on certain events.
+            </para>
+
+            <para>
+            The CLI library manages three kind of handlers:
+            <variablelist>
+            <varlistentry><term><sgmltag class="attvalue">error</sgmltag></term>
+                <listitem>
+                    <sgmltag class="attvalue">error</sgmltag> handlers are available on the root <sgmltag class="element">cli</sgmltag> element,
+                    and are called when the CLI library displays an error.
+                    This can be useful when writing CLI-based compilers, trapping syntax errors by the way.
+                    <sgmltag class="attvalue">error</sgmltag> handlers return a boolean value: <code>false</code> disables the regular error display.
+                </listitem></varlistentry>
+            <varlistentry><term><sgmltag class="attvalue">exit</sgmltag></term>
+                <listitem>
+                    <sgmltag class="attvalue">exit</sgmltag> handlers are called when the menu exits.
+                    When the CLI quits, the shell calls <sgmltag class="attvalue">exit</sgmltag> handlers for each menu in the current stack of menus.
+                </listitem></varlistentry>
+            <varlistentry><term><sgmltag class="attvalue">prompt</sgmltag></term>
+                <listitem>
+                    <sgmltag class="attvalue">prompt</sgmltag> handlers must return a string.
+                    They allow the user application to dynamically change the prompt for the menu,
+                    depending on the current state of the application.
+                    This can be useful when writing configuration menus, for several items, with the same set of commands.
+                    Instead of copy/paste the menu, juste changing the name of it, for each item,
+                    you may use the same menu with a <sgmltag class="attvalue">prompt</sgmltag> handler.
+                </listitem></varlistentry>
+            </variablelist>
+            </para>
+
+            <example><title>Menu handlers</title>
+            The example below contains one main menu and a sub-menu:
+            <orderedlist>
+            <listitem>The main menu contains a <sgmltag class="attvalue">error</sgmltag> handler.
+                    The code attached is called each time the CLI displays an error.
+                    The parameters <varname>location</varname> and <varname>message</varname> are provided and may be used.</listitem>
+            <listitem>Both menus contain a <sgmltag class="attvalue">exit</sgmltag> handler.
+                    The code attached is called whenever the menus exit respectively.</listitem>
+            <listitem>Both menus contain a <sgmltag class="attvalue">prompt</sgmltag> handler.
+                    The one for the main menu does nothing as far as it returns an empty string.
+                    The one for the sub-menu however changes the prompt of it,
+                    depending on the <sgmltag class="attvalue">menu-id</sgmltag> parameter value set previously.</listitem>
+            </orderedlist>
+
+                <informaltable frame="none">
+                <tgroup cols="2">
+                <tbody>
+                <row>
+                <entry valign="top">
+
+                    &sample-menu-handler;
+
+                </entry>
+                <entry><!-- Vertical spacing --></entry>
+                <entry valign="top">
+<programlisting>
+
+
+
+
+
+
+
+
+
+
+
+
+
+(2)
+
+
+
+
+
+(3)
+
+
+
+
+
+
+
+
+
+
+(1)
+
+
+
+
+
+
+
+
+
+(2)
+
+
+
+(3)
+
+
+
+
+</programlisting>
+                </entry>
+                </row>
+                </tbody>
+                </tgroup>
+                </informaltable>
+            </example>
+
+        </section>
+
+        <section id="adv.menus.cpp"><title id="adv.menus.cpp.title"><sgmltag class="element">menu</sgmltag> element management from native code</title>
+
+            <para>
+            It is sometime useful to let the user application decide whether a menu should be enterd or not.
+            </para>
+
+            <para>
+            Let's explain the need with an example.
+            Imagine the case of a command line leading to the configuration menu of network interfaces.
+            Such a command line would contain a string parameter so that the user can give the name of the network interface to configure.
+            When using a <sgmltag class="element">menu</sgmltag> element,
+            the menu would automatically be entered,
+            even though we face a troublesome situation, such as a wrong interface name for instance.
+            However, basically, when the user types in a wrong interface name,
+            we would rather expect the application to print out an error message and <emphasis>not</emphasis> enter the configuration menu.
+            </para>
+
+            <para>
+            The example below explains how to implement such behaviour:
+            </para>
+
+            <example><title>Menu management from native code</title>
+            The example below contains one main menu and a sub-menu,
+            however the sub-menu is not directly accessed thanks to a <sgmltag class="element">menu</sgmltag> element.
+            Native code methods are used instead:
+            <orderedlist>
+            <listitem>Depending on a condition, the C++ <function>cli::Shell::EnterMenu</function> method is called.
+                    The <function>cli::Cli::GetMenu</function> method is used in order to retrieve the given <classname>cli::Menu</classname> reference.</listitem>
+            <listitem>The same thing can be done for Java, thanks to the <function>cli.Shell.enterMenu</function> and <function>cli.Cli.getMenu</function> methods.</listitem>
+            <listitem>An error message is displayed when the menu cannot be entered.</listitem>
+            </orderedlist>
+                <informaltable frame="none">
+                <tgroup cols="2">
+                <tbody>
+                <row>
+                <entry valign="top">
+<programlisting>
+
+
+
+
+
+,--
+|
++--
+|
+|
+|
+|
+|
+`-&gt;
+
+
+</programlisting>
+                </entry>
+                <entry><!-- Vertical spacing --></entry>
+                <entry valign="top">
+
+                    &sample-menu-cpp;
+
+                </entry>
+                <entry><!-- Vertical spacing --></entry>
+                <entry valign="top">
+<programlisting>
+
+
+
+
+
+(1)
+(3)
+(2)
+(3)
+
+
+
+
+
+
+
+</programlisting>
+                </entry>
+                </row>
+                </tbody>
+                </tgroup>
+                </informaltable>
+            </example>
+
+        </section>
+
+    </section>
+
+    <section id="adv.shellfeatures"><title id="adv.shellfeatures.title"><classname>Shell</classname> advanced features</title>
+
+        <para>
+        The features described in the table below are available from native code.
+        Please refer to <productname>doxygen</productname> or <productname>javadoc</productname> documentation for additional information.
+        </para>
+
+        <table><title><classname>Shell</classname> advanced features</title>
+        <tgroup cols="3" colsep="1" rowsep="1" align="left">
+        <colspec colname="description"/><colspec colname="cpp"/><colspec colname="java"/>
+        <spanspec spanname="section" namest="description" nameend="java" align="left"/>
+        <thead>
+            <row>   <entry>Description</entry>
+                    <entry>C++</entry>
+                    <entry>Java</entry></row>
+        </thead>
+        <tbody>
+            <row>   <entry spanname="section">Input management</entry></row>
+            <row>   <entry>Input stream access</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#d2291c8673fec28e2f8151f09413b6a1"><function>Shell::GetInput</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#getInput()"><function>Shell.getInput</function></ulink></entry></row>
+            <row>   <entry>Output stream access</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#70af9792100a23e8b5f509737269ffe1"><function>Shell::GetStream</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#getStream(int)"><function>Shell.getStream</function></ulink></entry></row>
+            <row>   <entry>Output stream positionning</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#b8ef37dc6a98ba279bf0901e2cd9155c"><function>Shell::SetStream</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#setStream(int,%20cli.OutputDevice)"><function>Shell.setStream</function></ulink></entry></row>
+            <row>   <entry>Enabled/disabled stream accessor</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#de17c6ad4098d8ce4fe9bf5bcc96f172"><function>Shell::StreamEnabled</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#streamEnabled(int)"><function>Shell.streamEnabled</function></ulink></entry></row>
+            <row>   <entry>Enable/disable stream</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#bf9b1288aa95e7a4668d43f6e4aa497d"><function>Shell::EnableStream</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#enableStream(int,%20boolean)"><function>Shell.enableStream</function></ulink></entry></row>
+            <row>   <entry spanname="section">Presentation</entry></row>
+            <row>   <entry>Welcome message setting</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#8778b8def7fbd6df15c9e615530097d4"><function>Shell::SetWelcomeMessage</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#setWelcomeMessage(cli.ResourceString)"><function>Shell.setWelcomeMessage</function></ulink></entry></row>
+            <row>   <entry>Bye message setting</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#e80179cef20af1e277ccec1d78d6b775"><function>Shell::SetByeMessage</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#setByeMessage(cli.ResourceString)"><function>Shell.setByeMessage</function></ulink></entry></row>
+            <row>   <entry>Prompt message positionning</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#f4e5a2eaa80d146926bcde65351a3e4d"><function>Shell::SetPrompt</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#setPrompt(cli.ResourceString)"><function>Shell.setPrompt</function></ulink></entry></row>
+            <row>   <entry>Error formatting</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ab4770bb61ea7038152429ec06c21940"><function>Shell::SetErrorFormatting</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#setErrorFormatting(cli.ResourceString,%20cli.ResourceString,%20cli.ResourceString,%20cli.ResourceString)"><function>Shell.setErrorFormatting</function></ulink></entry></row>
+            <row>   <entry>Help margin accessor</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#88ecb7b84507a6a0a328bbad2f7dc546"><function>Shell::GetHelpMargin</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#getHelpMargin()"><function>Shell.getHelpMargin</function></ulink></entry></row>
+            <row>   <entry>Help offset accessor</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#b634fad29d7130768a0d035b4b84fa5c"><function>Shell::GetHelpOffset</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#getHelpOffset()"><function>Shell.getHelpOffset</function></ulink></entry></row>
+            <row>   <entry spanname="section">Language settings</entry></row>
+            <row>   <entry>Language setting</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#4da46821d20e0c7519dec0ad3e381c3a"><function>Shell::SetLang</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#setLang(int)"><function>Shell.setLang</function></ulink></entry></row>
+            <row>   <entry>Language access</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#fae8f69c25a41e89d184e3c49b1b3918"><function>Shell::GetLang</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#getLang()"><function>Shell.getLang</function></ulink></entry></row>
+            <row>   <entry spanname="section">Beep settings</entry></row>
+            <row>   <entry>Beep configuration setting</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#d14c863b1b25d88be7575e0ed6ee36ae"><function>Shell::SetBeep</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#setBeep(boolean)"><function>Shell.setBeep</function></ulink></entry></row>
+            <row>   <entry>Beep configuration access</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#0ac2a73a2b92fcdc38f682a6c2267590"><function>Shell::GetBeep</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#getBeep()"><function>Shell.getBeep</function></ulink></entry></row>
+            <row>   <entry spanname="section">Execution</entry></row>
+            <row>   <entry>Enters a menu</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#4cb1766fc8b8c632d168ca1e0ef74b54"><function>Shell::EnterMenu</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#enterMenu(cli.Menu)"><function>Shell.enterMenu</function></ulink></entry></row>
+            <row>   <entry>Exits the current menu</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#b244951b902a334a0b042d48af9989fd"><function>Shell::ExitMenu</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#exitMenu()"><function>Shell.exitMenu</function></ulink></entry></row>
+            <row>   <entry>Terminates the shell</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#3d082082d4a4ee56c6d4e82564ae868b"><function>Shell::Quit</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#quit()"><function>Shell.quit</function></ulink></entry></row>
+            <row>   <entry>Terminates the shell</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#14b1f93386a3f66d65beec6fbbd80a20"><function>Shell::QuitThreadSafe</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#quitThreadSafe()"><function>Shell.quitThreadSafe</function></ulink></entry></row>
+            <row>   <entry spanname="section">Basic command access</entry></row>
+            <row>   <entry>Displays help depending on the context of the current line</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#10d22c619c06ef903ffde6153cf7ec1e"><function>Shell::DisplayHelp</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#displayHelp()"><function>Shell.displayHelp</function></ulink></entry></row>
+            <row>   <entry>Prints the working menu</entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#9e18d5399d3855c50f1d54015e09bc86"><function>Shell::PrintWorkingMenu</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#printWorkingMenu()"><function>Shell.printWorkingMenu</function></ulink></entry></row>
+            <row>   <entry spanname="section">Debug</entry></row>
+            <row>   <entry>Configuration menu enabling</entry>
+                    <entry><ulink url="../doxygen/html/classCli.html#fcef4a4232b6a21d8a6262adb51b8b49"><function>Cli::EnableConfigMenu</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/Cli.html#enableConfigMenu(boolean)"><function>Cli.enableConfigMenu</function></ulink></entry></row>
+        </tbody>
+        </tgroup>
+        </table>
+    </section>
 
     <section id="adv.noxmlres"><title>Without the XML resource file</title>
 

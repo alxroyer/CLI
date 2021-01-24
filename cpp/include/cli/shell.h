@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -140,10 +140,12 @@ CLI_NS_BEGIN(cli)
         void SetErrorFormatting(
             const ResourceString& CLI_LocationPrefix,   //!< Very first error prefix string, before the location.
                                                         //!< No error prefixing when the string given is empty.
-            const ResourceString& CLI_ErrorPrefix,      //!< Error prefix string.
-                                                        //!< No error prefixing when the string given is empty.
-            const ResourceString& CLI_ErrorSuffix       //!< Error suffix string.
-                                                        //!< No error suffixing when the string given is empty.
+            const ResourceString& CLI_LocationSuffix,   //!< Location suffix string.
+                                                        //!< No location suffixing when the string given is empty.
+            const ResourceString& CLI_ErrorPrefix,      //!< Error message prefix string.
+                                                        //!< No error message prefixing when the string given is empty.
+            const ResourceString& CLI_ErrorSuffix       //!< Error message suffix string.
+                                                        //!< No error message suffixing when the string given is empty.
             );
 
         //! @brief Language setting.
@@ -201,13 +203,12 @@ CLI_NS_BEGIN(cli)
             const ResourceString& CLI_ErrorMessage  //!< Error message
             ) const;
 
-    private:
+    public:
         //! @brief Enters a menu.
         void EnterMenu(
             const Menu& CLI_Menu    //!< Menu to enter.
             );
 
-    public:
         //! @brief Exits the current menu.
         void ExitMenu(void);
 
@@ -305,7 +306,7 @@ CLI_NS_BEGIN(cli)
         //! Non-default Prompt.
         ResourceString m_cliNoDefaultPrompt;
         //! Error formatting: prefix and suffix.
-        ResourceString m_cliErrorFormatting[3];
+        ResourceString m_cliErrorFormatting[4];
         //! Current language.
         ResourceString::LANG m_eLang;
         //! Beep enabled.

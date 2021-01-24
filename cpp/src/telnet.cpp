@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -528,51 +528,58 @@ void TelnetConnection::PutString(const char* const STR_Out) const
 {
     if (STR_Out != NULL)
     {
-        const int i_StringLen = (int) strlen(STR_Out);
-        if (i_StringLen > 0)
-        if (char* const str_Out = new char[i_StringLen + 1])
+        const int i_InLen = (int) strlen(STR_Out);
+        int i_OutLen = i_InLen;
+        for (int i=0; i<i_InLen; i++) {
+            if (STR_Out[i] == '\n') {
+                i_OutLen ++;
+            }
+        }
+        if (i_OutLen > 0)
+        if (char* const str_Out = new char[i_OutLen + 1])
         {
-            memcpy(str_Out, STR_Out, i_StringLen + 1);
+            memset(str_Out, '\0', i_OutLen + 1);
 
             // Conversions.
-            for (int i=0; i<i_StringLen; i++)
+            for (int i=0, o=0; i<i_InLen; i++)
             {
-                switch (str_Out[i])
+                switch (STR_Out[i])
                 {
-                case KEY_aacute:    str_Out[i] = (char) -96;    break;
-                case KEY_agrave:    str_Out[i] = (char) -123;   break;
-                case KEY_auml:      str_Out[i] = (char) -124;   break;
-                case KEY_acirc:     str_Out[i] = (char) -125;   break;
-                case KEY_ccedil:    str_Out[i] = (char) -121;   break;
-                case KEY_eacute:    str_Out[i] = (char) -126;   break;
-                case KEY_egrave:    str_Out[i] = (char) -118;   break;
-                case KEY_euml:      str_Out[i] = (char) -119;   break;
-                case KEY_ecirc:     str_Out[i] = (char) -120;   break;
-                case KEY_iacute:    str_Out[i] = (char) -95;    break;
-                case KEY_igrave:    str_Out[i] = (char) -115;   break;
-                case KEY_iuml:      str_Out[i] = (char) -117;   break;
-                case KEY_icirc:     str_Out[i] = (char) -116;   break;
-                case KEY_oacute:    str_Out[i] = (char) -94;    break;
-                case KEY_ograve:    str_Out[i] = (char) -107;   break;
-                case KEY_ouml:      str_Out[i] = (char) -108;   break;
-                case KEY_ocirc:     str_Out[i] = (char) -109;   break;
-                case KEY_uacute:    str_Out[i] = (char) -93;    break;
-                case KEY_ugrave:    str_Out[i] = (char) -105;   break;
-                case KEY_uuml:      str_Out[i] = (char) -127;   break;
-                case KEY_ucirc:     str_Out[i] = (char) -106;   break;
-                case SQUARE:        str_Out[i] = (char) -3;     break;
-                case EURO:          str_Out[i] = (char) -79;    break;
-                case POUND:         str_Out[i] = (char) -100;   break;
-                case MICRO:         str_Out[i] = (char) -26;    break;
-                case PARAGRAPH:     str_Out[i] = (char) -11;    break;
-                case DEGREE:        str_Out[i] = (char) -8;     break;
-                case COPYRIGHT:     str_Out[i] = (char) -72;    break;
+                case KEY_aacute:    str_Out[o++] = (char) -96;    break;
+                case KEY_agrave:    str_Out[o++] = (char) -123;   break;
+                case KEY_auml:      str_Out[o++] = (char) -124;   break;
+                case KEY_acirc:     str_Out[o++] = (char) -125;   break;
+                case KEY_ccedil:    str_Out[o++] = (char) -121;   break;
+                case KEY_eacute:    str_Out[o++] = (char) -126;   break;
+                case KEY_egrave:    str_Out[o++] = (char) -118;   break;
+                case KEY_euml:      str_Out[o++] = (char) -119;   break;
+                case KEY_ecirc:     str_Out[o++] = (char) -120;   break;
+                case KEY_iacute:    str_Out[o++] = (char) -95;    break;
+                case KEY_igrave:    str_Out[o++] = (char) -115;   break;
+                case KEY_iuml:      str_Out[o++] = (char) -117;   break;
+                case KEY_icirc:     str_Out[o++] = (char) -116;   break;
+                case KEY_oacute:    str_Out[o++] = (char) -94;    break;
+                case KEY_ograve:    str_Out[o++] = (char) -107;   break;
+                case KEY_ouml:      str_Out[o++] = (char) -108;   break;
+                case KEY_ocirc:     str_Out[o++] = (char) -109;   break;
+                case KEY_uacute:    str_Out[o++] = (char) -93;    break;
+                case KEY_ugrave:    str_Out[o++] = (char) -105;   break;
+                case KEY_uuml:      str_Out[o++] = (char) -127;   break;
+                case KEY_ucirc:     str_Out[o++] = (char) -106;   break;
+                case SQUARE:        str_Out[o++] = (char) -3;     break;
+                case EURO:          str_Out[o++] = (char) -79;    break;
+                case POUND:         str_Out[o++] = (char) -100;   break;
+                case MICRO:         str_Out[o++] = (char) -26;    break;
+                case PARAGRAPH:     str_Out[o++] = (char) -11;    break;
+                case DEGREE:        str_Out[o++] = (char) -8;     break;
+                case COPYRIGHT:     str_Out[o++] = (char) -72;    break;
+                case '\n':          str_Out[o++] = '\r'; str_Out[o++] = '\n'; break;
                 }
             }
 
             // Send the buffer.
-            const int i_Len = send(m_iSocket, str_Out, i_StringLen, 0);
-            if (i_Len != i_StringLen)
+            const int i_Len = send(m_iSocket, str_Out, i_OutLen, 0);
+            if (i_Len != i_OutLen)
             {
                 // Something has failed regarding output
                 // Check whether the trace stream is not this output stream.
@@ -591,18 +598,18 @@ void TelnetConnection::PutString(const char* const STR_Out) const
                 {
                     GetTraces().Trace(CLI_TELNET_OUT) << "send failed" << endl;
                 }
-                else if (i_Len < i_StringLen)
+                else if (i_Len < i_OutLen)
                 {
                     GetTraces().Trace(CLI_TELNET_OUT)
                         << "send incomplete"
                         << " (only " << i_Len << " characters sent"
-                        << " over " << i_StringLen << ")" << endl;
+                        << " over " << i_OutLen << ")" << endl;
                 }
-                else if (i_Len > i_StringLen)
+                else if (i_Len > i_OutLen)
                 {
                     GetTraces().Trace(CLI_TELNET_OUT)
                         << "strange send return value"
-                        << " (" << i_Len << " for " << i_StringLen << " characters sent)" << endl;
+                        << " (" << i_Len << " for " << i_OutLen << " characters sent)" << endl;
                 }
             }
 

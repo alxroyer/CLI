@@ -1,5 +1,15 @@
 menus>pwm
   /menus
+menus>menu "menu0"
+No such menu 'menu0'
+menus>pwm
+  /menus
+menus>menu "menu0 (stand-alone)"
+menu0 (stand-alone)>pwm
+  /menus/menu0 (stand-alone)
+menu0 (stand-alone)>exit
+menus>pwm
+  /menus
 menus>menu1
 menu1>pwm
   /menus/menu1

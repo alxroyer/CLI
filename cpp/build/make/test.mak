@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -25,6 +25,7 @@
 CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 
 # Includes
+CLI_DIR := ../../..
 CLI_MAIN_CPP = $(CPP_DIR)/tests/testsample.cpp
 CLI_XSLT_OPTS = --param STR_ClassPrefix "'Ccli'"
 INT_DIR = $(TARGET)$(CXX)/$(RDX)/__test

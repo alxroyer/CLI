@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -21,6 +21,20 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
+
+Version 2.5
+(Sep, 30th 2010)
+    Major modifications:
+        * Schema addition: XSD and RelaxNG
+        * Automatic documentation of a user CLI
+        * 'members' and 'constructor' sections addition
+        * 'prompt' handler addition
+    Miscellaneous:
+        * Java: _build.mak makefile addition
+        * Java: implementation completion (native cli.OutputDevice and cli.IODevice)
+        * User-code menu management: Cli::GetMenu() addition and Shell::EnterMenu() declared as public
+        * 'error' handler improvement (return value controlling the regular error display)
+        * str_LocationSuffix configuration parameter addition
 
 Version 2.4
 (Oct, 1st 2009)

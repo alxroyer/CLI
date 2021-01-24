@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -257,7 +257,7 @@ const OutputDevice& OutputDevice::operator <<(void* const PV_Out) const
 {
     char str_Out[128];
     // %p is not used here, because it has strange behaviours when compiled on different environments.
-    snprintf(str_Out, sizeof(str_Out), "0x%08x", (int) PV_Out);
+    snprintf(str_Out, sizeof(str_Out), "0x%08x", (unsigned int) PV_Out);
     PutString(str_Out);
     return *this;
 }

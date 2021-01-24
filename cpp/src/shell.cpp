@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -76,6 +76,9 @@ Shell::Shell(const Cli& CLI_Cli)
 {
     EnsureCommonDevices();
     EnsureTraces();
+
+    // Members initialization.
+    m_cliErrorFormatting[1] = ResourceString().SetString(ResourceString::LANG_EN, ": ");
 
     for (int i=0; i<STREAM_TYPES_COUNT; i++)
     {
@@ -281,11 +284,12 @@ void Shell::SetPrompt(const ResourceString& CLI_Prompt)
     m_cliNoDefaultPrompt = CLI_Prompt;
 }
 
-void Shell::SetErrorFormatting(const ResourceString& CLI_LocationPrefix, const ResourceString& CLI_ErrorPrefix, const ResourceString& CLI_ErrorSuffix)
+void Shell::SetErrorFormatting(const ResourceString& CLI_LocationPrefix, const ResourceString& CLI_LocationSuffix, const ResourceString& CLI_ErrorPrefix, const ResourceString& CLI_ErrorSuffix)
 {
     m_cliErrorFormatting[0] = CLI_LocationPrefix;
-    m_cliErrorFormatting[1] = CLI_ErrorPrefix;
-    m_cliErrorFormatting[2] = CLI_ErrorSuffix;
+    m_cliErrorFormatting[1] = CLI_LocationSuffix;
+    m_cliErrorFormatting[2] = CLI_ErrorPrefix;
+    m_cliErrorFormatting[3] = CLI_ErrorSuffix;
 }
 
 void Shell::SetLang(const ResourceString::LANG E_Lang)
@@ -649,7 +653,15 @@ void Shell::PromptMenu(void) const
         {
             if (const Menu* const pcli_Menu = m_qMenus.GetTail())
             {
-                GetStream(PROMPT_STREAM) << pcli_Menu->GetKeyword() << ">";
+                const tk::String cli_Prompt = pcli_Menu->OnPrompt();
+                if (! cli_Prompt.IsEmpty())
+                {
+                    GetStream(PROMPT_STREAM) << cli_Prompt << ">";
+                }
+                else
+                {
+                    GetStream(PROMPT_STREAM) << pcli_Menu->GetKeyword() << ">";
+                }
             }
         }
 
@@ -661,21 +673,20 @@ void Shell::PromptMenu(void) const
 void Shell::PrintError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
 {
     // First of all, call the CLI handler.
-    GetCli().OnError(CLI_Location, CLI_ErrorMessage);
+    if (GetCli().OnError(CLI_Location, CLI_ErrorMessage))
+    {
+        // Retrieve error formatting prefix and suffix.
+        const tk::String str_LocationPrefix = m_cliErrorFormatting[0].GetString(GetLang());
+        const tk::String str_LocationSuffix = m_cliErrorFormatting[1].GetString(GetLang());
+        const tk::String str_ErrorPrefix = m_cliErrorFormatting[2].GetString(GetLang());
+        const tk::String str_ErrorSuffix = m_cliErrorFormatting[3].GetString(GetLang());
 
-    // Retrieve error formatting prefix and suffix.
-    const tk::String str_LocationPrefix = m_cliErrorFormatting[0].GetString(GetLang());
-    const tk::String str_ErrorPrefix = m_cliErrorFormatting[1].GetString(GetLang());
-    const tk::String str_ErrorSuffix = m_cliErrorFormatting[2].GetString(GetLang());
-
-    // Print out the error.
-    GetStream(ERROR_STREAM)
-        << str_LocationPrefix
-        << CLI_Location.GetString(GetLang())
-        << str_ErrorPrefix
-        << CLI_ErrorMessage.GetString(GetLang())
-        << str_ErrorSuffix
-        << endl;
+        // Print out the error.
+        GetStream(ERROR_STREAM)
+            << str_LocationPrefix << CLI_Location.GetString(GetLang()) << str_LocationSuffix
+            << str_ErrorPrefix << CLI_ErrorMessage.GetString(GetLang()) << str_ErrorSuffix
+            << endl;
+    }
 }
 
 void Shell::ExitMenu(void)
@@ -724,7 +735,15 @@ void Shell::PrintWorkingMenu(void)
     {
         if (const Menu* const pcli_Menu = m_qMenus.GetAt(it))
         {
-            GetStream(OUTPUT_STREAM) << "/" << pcli_Menu->GetKeyword();
+            const tk::String cli_Prompt = pcli_Menu->OnPrompt();
+            if (! cli_Prompt.IsEmpty())
+            {
+                GetStream(OUTPUT_STREAM) << "/" << cli_Prompt;
+            }
+            else
+            {
+                GetStream(OUTPUT_STREAM) << "/" << pcli_Menu->GetKeyword();
+            }
         }
     }
     GetStream(OUTPUT_STREAM) << endl;

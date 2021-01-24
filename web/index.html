@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,7 +24,7 @@
 
 <html>
 <head>
-    <title>CLI library - How to quickly develop a command line interface</title>
+    <title>CLI toolkit - How to quickly implement a command line interface</title>
     <style type="text/css">
     <!--
     body {
@@ -47,7 +45,7 @@
     </style>
 </head>
 <body>
-<p align="right"><font size="-2">Last updated on Oct, 1st 2009</font></p>
+<p align="right"><font size="-2">Last updated on Sep, 30th 2010</font></p>
     <center><font size="+3"><b>CLI</b></font></center>
 
 <table>
@@ -55,61 +53,68 @@
 <td width="200" valign="top">
     <a class="menu" href="#news">News</a><br/>
     <a class="menu" href="#presentation">Presentation</a><br/>
-    <a class="menu" href="#howto">Howto</a><br/>
-    <a class="menu" href="#use">Main interests</a><br/>
     <a class="menu" href="#license">License</a><br/>
+    <a class="menu" href="#changes">Changes</a><br/>
+    <a class="menu" href="user-guide/cli-user-guide.html">User guide</a><br/>
+    <a class="menu" href="doxygen/html/index.html">Doxygen</a><br/>
+    <a class="menu" href="javadoc/html/index.html">Javadoc</a><br/>
     <a class="menu" href="#download">Download</a><br/>
-    <a class="menu" href="#history">History</a><br/>
-    <a class="menu" href="#evolutions">Evolutions</a><br/>
     <a class="menu" href="#contact">Contact</a>
 </td>
 
 <td valign="top">
 
 <a name="news"/>
-    <h1>News</h1>
+    <h1>Latest news</h1>
     <table>
-    <tr><td width="10%"/><td valign="top" align="right"><i>Oct, 1st 2009</i></td><td width="5%"/>
-                         <td valign="top">New version 2.4 release<br/>
-                                >>>
+    <tr><td width="10%"/><td valign="top" align="right"><i>Sep, 30th 2010</i></td><td width="5%"/>
+                         <td valign="top">New version 2.5 release<br/>
+                                &gt;&gt;&gt;
                                 <span align="right"><a href="#history">[changes]</a></span>
                                 <span align="right"><a href="#download">[download]</a></span>
                                 &lt;&lt;&lt;</td>
-        <td width="10%"/></tr>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
+    <!--<tr><td width="10%"/><td valign="top" align="right"><i>Oct, 1st 2009</i></td><td width="5%"/>
+                         <td valign="top">New version 2.4 release<br/>
+                                &gt;&gt;&gt;
+                                <span align="right"><a href="#history">[changes]</a></span>
+                                <span align="right"><a href="#download">[download]</a></span>
+                                &lt;&lt;&lt;</td>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>-->
+    <tr><td width="10%"/><td valign="top" align="right"><i>Oct, 1st 2009</i></td><td width="5%"/>
+                         <td valign="top">Sourceforge registration.
+                                          &gt;&gt;&gt; <a href="https://sourceforge.net/projects/aroyer-cli/">[aroyer-cli]</a> &lt;&lt;&lt;<br/>
+                                          (The main location of the project remains this page)</td>
+        <td width="10%"/></tr><!--<tr><td/><td colspan="3"><hr/></td></tr>
     <tr><td width="10%"/><td valign="top" align="right"><i>May, 18th 2009</i></td><td width="5%"/>
                          <td valign="top">Version 2.3 release</td>
-        <td width="10%"/></tr>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
     <tr><td width="10%"/><td valign="top" align="right"><i>Sep, 21st 2008</i></td><td width="5%"/>
                          <td valign="top">Version 2.2 release</td>
-        <td width="10%"/></tr>
-    <!--<tr><td width="10%"/><td valign="top"><i>Oct, 31st 2007</i></td><td width="5%"/>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
+    <tr><td width="10%"/><td valign="top"><i>Oct, 31st 2007</i></td><td width="5%"/>
                          <td valign="top">The CLI library is now available for C++ and Java</td>
-        <td width="10%"/></tr>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
     <tr><td width="10%"/><td valign="top"><i>Sept, 27th 2007</i></td><td width="5%"/>
                          <td valign="top">License modification</td>
-        <td width="10%"/></tr>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
     <tr><td width="10%"/><td valign="top"><i>Apr, 30th 2007</i></td><td width="5%"/>
                          <td valign="top">1.0 First official release. Lots of C++ improvements</td>
-        <td width="10%"/></tr>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
     <tr><td width="10%"/><td valign="top"><i>Sept, 27th 2006</i></td><td width="5%"/>
                          <td valign="top">Linux and Windows support</td>
-        <td width="10%"/></tr>-->
-    <tr><td width="10%"/><td valign="top" align="right"><i>...</i></td><td width="5%"/>
-                         <td valign="top"></td>
-        <td width="10%"/></tr>
+        <td width="10%"/></tr><tr><td/><td colspan="3"><hr/></td></tr>
     <tr><td width="10%"/><td valign="top" align="right"><i>May, 17th 2006</i></td><td width="5%"/>
                          <td valign="top">Very first beta release</td>
-        <td width="10%"/></tr>
+        <td width="10%"/></tr>-->
     </table>
-    <p align="right"><font size="-2">Anterior information is available in the <a href="#history">history section</a></font></p>
+    <p><font size="-2">Refer to the <a href="#history">history section</a> for all changes.</font></p>
 
 <a name="presentation"/>
     <h1>Presentation</h1>
 
     <p>
-    CLI stands for <i>Command Line Interface</i>.
-    It is essentially a library,
-    and a set of tools that allow you do such kind of things:
+    CLI is a toolkit that allows you to easily implement C++ and Java <i>Command Line Interfaces</i> as below:
     <center>
     <table>
     <tr><td bgcolor="#ffffcc" align="center"><i>XML resource file</i></td></tr>
@@ -143,15 +148,12 @@
     </p>
 
     <p>
-    When the user enters 'say', he/she can then enter either <i>'hello'</i> or <i>'bye'</i>.
-    When he/she enters <i>'hello'</i> and presses the return key,
-    the CLI library automatically calls the user-defined function <i>'sayHello()'</i>.
+    This 'Hello world' example shows the direct relationship
+    between the XML resource file and the CLI execution of the user-defined function <i>'sayHello()'</i> for instance.
     </p>
 
     <p>
-    This 'Hello world' example shows the direct relationship
-    between the XML resource file and the CLI execution.
-    Here is now a more complete list of the CLI library features:
+    Here is list of the main features of the CLI toolkit:
     <ol>
         <li><b>Edition facilities:</b>
             The user can use left and right arrows, begin and end, delete and backspace keys for command line edition.
@@ -161,7 +163,7 @@
         </li>
         <li><b>Completion and help:</b>
             The user has facilities to get into the set of commands.
-            The CLI library automatically manages completion,
+            The CLI toolkit automatically manages completion,
             and help can be set for every keyword and parameter.
         </li>
         <li><b>Menus:</b>
@@ -170,24 +172,27 @@
             and so on...
         </li>
         <li><b>XML resource file:</b>
-            All the command lines syntaxes can be described in an XML resource file, natively managing keywords, parameters, tags...
+            All the command lines syntaxe can be described in an XML resource file, natively managing keywords, parameters, tags...
             This XML resource file provides the ability to directly insert the final native calls attached to each command,
             making the link with a global application.
         </li>
+        <li><b>Automatic documentation generation:</b>
+            Based on the XML resource file, the CLI toolkit provides a stylesheet automatically generating CLI documentations.
+        </li>
         <li><b>Generic input/output:</b>
             Input/output can be easily redirected.
-            The CLI library currently gives support for the following regular input/output devices:
+            The CLI toolkit currently gives support for the following regular input/output devices:
             console, telnet connections, files and strings.
             But you may implement your own intput/output device for your special needs.
         </li>
         <li><b>Traces:</b>
-            An inner traces management system is available with the library.
+            An inner traces management system is available with the toolkit.
         </li>
     </ol>
     </p>
 
 <a name="howto"/>
-    <h1>Howto</h1>
+    <p><u>How does it work?</u></p>
 
     <p>
     Considering you already have the user code to execute at end,
@@ -195,7 +200,7 @@
     <ol>
         <li>Edit an <b>XML resource file</b>;</li>
         <li><b>Transform</b> the XML resource file into target language code;</li>
-        <li>Depending on the target language, <b>integrate</b> the result of the transformation.</li>
+        <li><b>Integrate</b> the result of the transformation.</li>
     </ol>
     </p>
 
@@ -211,56 +216,57 @@
     <p>
     In Java, compile the Java source file resulting of the transformation.
     Then use the CLI object defined in it and the CLI library to launch it.
-    Just ensure you have the CLI library available from your paths.
+    Just ensure you have the native CLI library available from your system paths.
     That's it.
     </p>
 
     <p>
     The transformation step is just an XSLT transformation
-    using an XSL stylesheet provided with the library.
+    using an XSL stylesheet provided with the toolkit.
     Therefore, the most difficult (and it aims to be easy) is the XML resource file edition.
     Have a look at the <a href="user-guide/cli-user-guide.html">CLI user guide</a> for more information.
     </p>
 
 
 <a name="use"/>
-    <h1>Main interests</h1>
+    <p><u>Main interests</u></p>
 
     <p>
     Here is a list of possible interests you could have in this projects:
     <ul>
         <li><b>Text-based user interface:</b>
-            The CLI library is essentially a text-based user interface,
-            so, obviously, it can be used to define such kind of interfaces.
-            We must admit that graphical user interfaces are much more attractive,
-            however text-based interfaces have the advantage to easily get a file for input.
-            Instructions can be saved and replayed later on.</li>
-        <li><b>Monitoring:</b>
+            The CLI toolkit basically aims to implement text-based user interfaces.
+            Graphical user interfaces are generally more attractive,
+            however text-based interfaces also have their advantages:
+                few means prerequesits,
+                fast execution,
+                integration facilities (see automation below),
+                analysis facilities...</li>
+        <li><b>Monitoring and debug:</b>
             It is sometimes useful to have a secondary user interface,
-            for monitoring operations for instance,
-            fully dissociated from the primary one.</li>
+            to monitor and debug an application.</li>
         <li><b>Configuration files:</b>
-            You can easily define a specific configuration file syntax with the CLI library.
-            Therefore, you could use it instead of .ini files or XML files.</li>
+            You can easily define a specific configuration file syntax with the CLI toolkit.
+            Therefore, you could use it instead of .ini or XML files.</li>
         <li><b>Automation:</b>
             Since CLI is text-based, it is compatible with automation.
             Automated test tools generally need to interact with tested equipments or softwares.
-            The CLI library is an easy way to implement an entry point on target equipments for unit tests.</li>
+            The CLI toolkit is an easy way to implement an entry point on target equipments for unit tests.</li>
         <li><b>Simple compilers:</b>
-            The CLI library can be used for its command line parsing ability,
-            making in that way compilers of simple syntaxes.</li>
-        <li><b>Reuse of code:</b>
+            The CLI toolkit can be used for its command line parsing ability,
+            making by that way compilers of simple syntaxes.</li>
+        <!--<li><b>Reuse of code:</b>
             Eventually, if the XML CLI definition does not fit your needs,
             but you are interested in what the library does on the other hand,
             you could directly use the C++ objects of the library.
             You shall therefore have a look at
             the <a href="doxygen/html/index.html">doxygen</a>
-            or <a href="javadoc/html/index.html">javadoc</a> documentation of the library.</li>
+            or <a href="javadoc/html/index.html">javadoc</a> documentation of the library.</li>-->
     </ul>
     </p>
 
     <p>
-    If you find any other interest in this library,
+    If you find any other interest in this project,
     please
     <script type='text/javascript'>
     <!--
@@ -296,74 +302,10 @@
     </p>
 
 
-<a name="download"/>
-    <h1>Download</h1>
-
-    <table>
-
-    <tr>
-    <td>Oct, 1st 2009</td>
-    <td><a href="cli-2.4.tgz">cli-2.4.tgz</a></td>
-    <td>Bug corrections  &amp; improvements (see <a href="#history">history</a>).</td>
-    </tr>
-
-    <tr>
-    <td>May, 18th 2009</td>
-    <td><a href="cli-2.3.tgz">cli-2.3.tgz</a></td>
-    <td>Left and right arrows management.
-        Clean screen management.
-        Plus other stuff (see <a href="#history">history</a>).</td>
-    </tr>
-
-    <tr>
-    <td>Sep, 21st 2008</td>
-    <td><a href="cli-2.2.tgz">cli-2.2.tgz</a></td>
-    <td>Bug corrections  &amp; improvements (see <a href="#history">history</a>).</td>
-    </tr>
-
-    <tr>
-    <td>Oct, 31st 2007</td>
-    <td><a href="cli-2.1.tgz">cli-2.1.tgz</a></td>
-    <td>Java support and various improvements.</td>
-    </tr>
-
-    <tr>
-    <td>Sept, 27th 2007</td>
-    <td><a href="cppcli-2.0.tgz">cppcli-2.0.tgz</a></td>
-    <td>License modification.</td>
-    </tr>
-
-    <tr>
-    <td>Apr, 30th 2007</td>
-    <td><a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a></td>
-    <td>Not a beta anymore!
-        Improved again, and fully C++ coding now.
-        <a href="#history">History section</a> tells more about improvements.</td>
-    </tr>
-
-    <tr>
-    <td>Sept, 27th 2006</td>
-    <td><a href="cppcli-1.0.beta1.tgz">cppcli-1.0.beta1.tgz</a></td>
-    <td>This version has been improved a lot, and tested on both Linux and Windows.
-        Since things have been cleaned up,
-        compatibility is not strictly respected with the previous release,
-        but it should not be a big deal.
-        Have a look at the <a href="#history">history section</a> for details about improvements.
-        However <a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a> is now available.</td>
-    </tr>
-
-    <tr>
-    <td>May, 17th 2006</td>
-    <td><a href="cppcli-1.0.beta1-1.tgz">cppcli-1.0.beta1-1.tgz</a></td>
-    <td>Very first release.
-        You'd probably better get <a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a>.</td>
-    </tr>
-
-    </table>
-
-
-<a name="history">
-    <h1>History</h1>
+<a name="changes"/>
+    <h1>Changes</h1>
+<a name="history"/>
+    <h2>History</h2>
 
     <table border="1">
 
@@ -371,6 +313,36 @@
     <th bgcolor="#eeeeee">date</th>
     <th bgcolor="#eeeeee">version</th>
     <th bgcolor="#eeeeee">Description</th>
+    </tr>
+
+    <tr>
+    <td valign="top" bgcolor="#ffffcc">Sep, 30th 2010</td>
+    <td valign="top" align="center" bgcolor="#ffffcc">2.5</td>
+    <td>
+        Major modifications:
+        <ul>
+        <li>Schema addition: XSD and RelaxNG</li>
+        <li>Automatic documentation of a user CLI</li>
+        <li>'members' and 'constructor' sections addition</li>
+        <li>'prompt' handler addition</li>
+        </ul>
+        Miscellaneous:
+        <ul>
+        <li>Java: _build.mak makefile addition</li>
+        <li>Java: implementation completion (native cli.OutputDevice and cli.IODevice)</li>
+        <li>User-code menu management: Cli::GetMenu() addition and Shell::EnterMenu() declared as public</li>
+        <li>'error' handler improvement (return value controlling the regular error display)</li>
+        <li>str_LocationSuffix configuration parameter addition</li>
+        </ul>
+        Bug corrections:
+        <ul>
+        <li>Bug(major)! C++: auto \r on \n missing for telnet connections</li>
+        <li>Bug(minor)! C++: io_device.cpp cast correction for pointer display</li>
+        <li>Bug(minor)! Fatal error when building deps of java/build/make/native.mak under cygwin from make (but direct commands from the shell)</li>
+        <li>Bug(minor)! Do not directly use STL in 'file_device.h'</li>
+        <li>Bug(minor)! XSL: Enable resource names with space characters (menus...)</li>
+        </ul>
+    </td>
     </tr>
 
     <tr>
@@ -388,7 +360,7 @@
         <li>C++: stdout and stderr flushing addition for a better rendering.</li>
         <li>Java: implementation completion (ResourceString and Help revision, IODevice.getLocation(), Shell...)</li>
         <li>Java: OutputDevice.printStackStrace() method addition for a better output management</li>
-        <li>Java: finalization & native creation improvements</li>
+        <li>Java: finalization &amp; native creation improvements</li>
         <li>Java: cli.jar archive improvement</li>
         <li>Java: XSL minor comment improvements</li>
         <li>XSL improvements for other XSLT processor out of xsltproc</li>
@@ -445,7 +417,7 @@
         <li>major! History cannot store more than 100 command lines</li>
         <li>minor! InputFileDevice::GetKey(): unknown characters do not end the file anymore.</li>
         <li>minor! Spelling error: "Uncomplete" changed to "Incomplete" in CommandLine::Parse().</li>
-        <li>minor! System includes (#include <>) changed into project includes (#include "").</li>
+        <li>minor! System includes (#include &lt;&gt;) changed into project includes (#include "").</li>
         <li>minor! When an input file does not exist (cli::InputFileDevice), no error message is printed out.
                      => Addition of a m_cliLastError member in cli::OutputDevice, that can be set by all subclasses.</li>
         <li>minor! TAB when the line is empty does nothing.</li>
@@ -488,7 +460,7 @@
             <li>Assertions improvements</li>
             <li>ncurses and Windows consoles modifications</li>
             <li>Traces consistency improvement. Addition of Traces::UnsetStream()</li>
-            <li>C++ XSL revisions (inherited from java experience):</li>
+            <li>C++ XSL revisions (inherited from java experience):
                     CLI tree created in the scope of the CLI class;
                     Both static and dynamic CLI instantiation;
                     Generation of CLI_EXECUTION traces</li>
@@ -507,7 +479,7 @@
         <li>License modification:
             The former LGPL license has been abandoned for a BSD-like license.
             This is the decision of the author (myself) in order to have fewer constraints
-            on using and modifying the library in any kind of softwares (even commercial ones),
+            on using and modifying the toolkit in any kind of softwares (even commercial ones),
             which is what I wanted initially.</li>
         </ul>
         Miscellanous:
@@ -607,12 +579,17 @@
 
     </table>
 
+    <p>
+    The following charts gives the evolution of the number of code lines throughout the time:
+    <div align="center"><img src="count-lines.png"/></div>
+    </p>
+
 
 <a name="evolutions"/>
-    <h1>Evolutions</h1>
+    <h2>Evolutions</h2>
 
     <p>
-    To my point of view, the major aims of the CLI library have been reached so far, and I'm quite proud of that.
+    To my point of view, the major aims of the CLI toolkit have been reached so far, and I'm quite proud of that.
     That's the reason why there are not many modifications expected in the next times.
     But once again, if you feel the need for any other evolution, please     <script type='text/javascript'>
     <!--
@@ -639,11 +616,88 @@
     <li><b>Other target languages:</b>
         Supported languages are C++ and Java at present.
         Next ones could be Perl or python...</li>
-    <li><b>XSD definition:</b>
-        Write the XSD definition of the XML resource files.</li>
+    <li><b>Full tag[@ref]/@max management:</b>
+        Introduced with automatic documentation generation, this attribute could be fully managed in order to better control command line options.</li>
+    <li><b>Memory pools:</b>
+        Implement memory pools in order to provide memory management with embedded integration contexts.</li>
     <li>...</li>
     </ul>
     </p>
+
+<a name="download"/>
+    <h1>Download</h1>
+
+    <p>The latest version of the toolkit is also available on <a href="https://sourceforge.net/projects/aroyer-cli/">Sourceforge</a>.</p>
+
+    <table>
+
+    <tr>
+    <td>Sep, 30th 2010</td>
+    <td><a href="cli-2.5.tgz">cli-2.5.tgz</a></td>
+    <td>Schema, automatic documentation, 'members' and 'constructor' sections and 'prompt' handler additions.
+        Plus other stuff (see <a href="#history">history</a>).</td>
+    </tr>
+
+    <tr>
+    <td>Oct, 1st 2009</td>
+    <td><a href="cli-2.4.tgz">cli-2.4.tgz</a></td>
+    <td>Bug corrections  &amp; improvements (see <a href="#history">history</a>).</td>
+    </tr>
+
+    <tr>
+    <td>May, 18th 2009</td>
+    <td><a href="cli-2.3.tgz">cli-2.3.tgz</a></td>
+    <td>Left and right arrows management.
+        Clean screen management.
+        Plus other stuff (see <a href="#history">history</a>).</td>
+    </tr>
+
+    <tr>
+    <td>Sep, 21st 2008</td>
+    <td><a href="cli-2.2.tgz">cli-2.2.tgz</a></td>
+    <td>Bug corrections  &amp; improvements (see <a href="#history">history</a>).</td>
+    </tr>
+
+    <tr>
+    <td>Oct, 31st 2007</td>
+    <td><a href="cli-2.1.tgz">cli-2.1.tgz</a></td>
+    <td>Java support and various improvements.</td>
+    </tr>
+
+    <tr>
+    <td>Sept, 27th 2007</td>
+    <td><a href="cppcli-2.0.tgz">cppcli-2.0.tgz</a></td>
+    <td>License modification.</td>
+    </tr>
+
+    <tr>
+    <td>Apr, 30th 2007</td>
+    <td><a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a></td>
+    <td>Not a beta anymore!
+        Improved again, and fully C++ coding now.
+        <a href="#history">History section</a> tells more about improvements.</td>
+    </tr>
+
+    <tr>
+    <td>Sept, 27th 2006</td>
+    <td><a href="cppcli-1.0.beta1.tgz">cppcli-1.0.beta1.tgz</a></td>
+    <td>This version has been improved a lot, and tested on both Linux and Windows.
+        Since things have been cleaned up,
+        compatibility is not strictly respected with the previous release,
+        but it should not be a big deal.
+        Have a look at the <a href="#history">history section</a> for details about improvements.
+        However <a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a> is now available.</td>
+    </tr>
+
+    <tr>
+    <td>May, 17th 2006</td>
+    <td><a href="cppcli-1.0.beta1-1.tgz">cppcli-1.0.beta1-1.tgz</a></td>
+    <td>Very first release.
+        You'd probably better get <a href="cppcli-1.0.tgz">cppcli-1.0.tgz</a>.</td>
+    </tr>
+
+    </table>
+
 
 <a name="contact"/>
     <h1>Contact</h1>

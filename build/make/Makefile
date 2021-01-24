@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -28,6 +28,8 @@ Makefile.default: $(.DEFAULT_GOAL) ;
 # Includes
 CLI_DIR := ../..
 include _vars.mak
+PROJECTS += schema.mak
+PROJECTS += cli2help.mak
 PROJECTS += $(CPP_DIR)/build/make/Makefile
 PROJECTS += $(JAVA_DIR)/build/make/Makefile
 DEFAULT_HELP = Generate libraries and tests
@@ -49,6 +51,9 @@ doc: PROJECTS = $(WEB_DIR)/user-guide/user-guide.mak
 doc: PROJECTS += $(WEB_DIR)/doxygen/doxygen.mak
 doc: PROJECTS += $(WEB_DIR)/javadoc/javadoc.mak
 doc: default ;
+clean: PROJECTS += $(WEB_DIR)/user-guide/user-guide.mak
+clean: PROJECTS += $(WEB_DIR)/doxygen/doxygen.mak
+clean: PROJECTS += $(WEB_DIR)/javadoc/javadoc.mak
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak

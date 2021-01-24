@@ -49,6 +49,9 @@ typedef tk::Queue&lt; const <a class="el" href="classCli.html">Cli</a> * &gt;&nb
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classMenu.html">Menu</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCli.html#a9b67aca58b34f57a8f50c48c1baa9a1">AddMenu</a> (<a class="el" href="classMenu.html">Menu</a> *const PCLI_Menu)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classMenu.html">Menu</a> addition.  <a href="#a9b67aca58b34f57a8f50c48c1baa9a1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classMenu.html">Menu</a> *const&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCli.html#956b2557c9da19118b445683df60d4c6">GetMenu</a> (const char *const STR_MenuName) const</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classMenu.html">Menu</a> retrieval.  <a href="#956b2557c9da19118b445683df60d4c6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCli.html#4b31c55366703eba5c83cfe03951b651">SetShell</a> (<a class="el" href="classShell.html">Shell</a> &amp;CLI_Shell) const</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the shell reference when executing.  <a href="#4b31c55366703eba5c83cfe03951b651"></a><br></td></tr>
@@ -64,10 +67,9 @@ virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 virtual const bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCli.html#7669a0025d9247525b97e46efa9375d7">ExecuteReserved</a> (const <a class="el" href="classCommandLine.html">CommandLine</a> &amp;CLI_CommandLine) const</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reserved commands execution. <br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="61e2c000d188f271617ca2bb3c87aa2a"></a><!-- doxytag: member="Cli::OnError" ref="61e2c000d188f271617ca2bb3c87aa2a" args="(const ResourceString &amp;CLI_Location, const ResourceString &amp;CLI_ErrorMessage) const" -->
-virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCli.html#61e2c000d188f271617ca2bb3c87aa2a">OnError</a> (const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_Location, const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_ErrorMessage) const</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCli.html#687c16dd233ad0be562a3c2bc3982fdf">OnError</a> (const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_Location, const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_ErrorMessage) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handler on error. <br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Handler on error.  <a href="#687c16dd233ad0be562a3c2bc3982fdf"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="775913806833ee44f814a317d17e9a3d"></a><!-- doxytag: member="Cli::OnExit" ref="775913806833ee44f814a317d17e9a3d" args="(void) const " -->
 virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCli.html#775913806833ee44f814a317d17e9a3d">OnExit</a> (void) const </td></tr>
 
@@ -217,6 +219,34 @@ New menu. </td></tr>
 </dl>
 </div>
 </div><p>
+<a class="anchor" name="956b2557c9da19118b445683df60d4c6"></a><!-- doxytag: member="Cli::GetMenu" ref="956b2557c9da19118b445683df60d4c6" args="(const char *const STR_MenuName) const" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classMenu.html">Menu</a>* const Cli::GetMenu           </td>
+          <td>(</td>
+          <td class="paramtype">const char *const &nbsp;</td>
+          <td class="paramname"> <em>STR_MenuName</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+<a class="el" href="classMenu.html">Menu</a> retrieval. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The menu identified by the given name, NULL if not found. </dd></dl>
+<dl compact><dt><b>Parameters: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>STR_MenuName</em>&nbsp;</td><td>
+<a class="el" href="classMenu.html">Menu</a> name. </td></tr>
+</table>
+</dl>
+</div>
+</div><p>
 <a class="anchor" name="4b31c55366703eba5c83cfe03951b651"></a><!-- doxytag: member="Cli::SetShell" ref="4b31c55366703eba5c83cfe03951b651" args="(Shell &amp;CLI_Shell) const" -->
 <div class="memitem">
 <div class="memproto">
@@ -240,6 +270,45 @@ Set the shell reference when executing.
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>CLI_Shell</em>&nbsp;</td><td>
 <a class="el" href="classShell.html">Shell</a> reference. </td></tr>
+</table>
+</dl>
+</div>
+</div><p>
+<a class="anchor" name="687c16dd233ad0be562a3c2bc3982fdf"></a><!-- doxytag: member="Cli::OnError" ref="687c16dd233ad0be562a3c2bc3982fdf" args="(const ResourceString &amp;CLI_Location, const ResourceString &amp;CLI_ErrorMessage) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const bool Cli::OnError           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classResourceString.html">ResourceString</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>CLI_Location</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classResourceString.html">ResourceString</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>CLI_ErrorMessage</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Handler on error. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>true if the error can be displayed by the shell, false if it should not be displayed. </dd></dl>
+<dl compact><dt><b>Parameters: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>CLI_Location</em>&nbsp;</td><td>
+Location of the error. </td></tr>
+<tr><td valign="top"><em>CLI_ErrorMessage</em>&nbsp;</td><td>
+Message of the error. </td></tr>
 </table>
 </dl>
 </div>
@@ -274,7 +343,7 @@ true for enabling, false otherwise. </td></tr>
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="cli_8h-source.html">cli.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Oct 2 00:11:58 2009 for CLI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Oct 2 06:48:31 2010 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -138,7 +138,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Cli__1_1addMenu(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeCliRef, jint I_NativeMenuRef)
 {
-    NativeTraces::TraceMethod("Cli.addMenu(I_NativeCliRef, I_NativeMenuRef)");
+    NativeTraces::TraceMethod("Cli.__addMenu(I_NativeCliRef, I_NativeMenuRef)");
     NativeTraces::TraceParam("I_NativeCliRef", "%d", I_NativeCliRef);
     NativeTraces::TraceParam("I_NativeMenuRef", "%d", I_NativeMenuRef);
     jboolean b_Res = false;
@@ -151,15 +151,35 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Cli__1_1addMenu(
             b_Res = true;
         }
     }
-    NativeTraces::TraceReturn("Cli.addMenu()", "%d", (int) b_Res);
+    NativeTraces::TraceReturn("Cli.__addMenu()", "%d", (int) b_Res);
     return b_Res;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Cli__1_1getMenu(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeCliRef, jstring PJ_MenuName)
+{
+    NativeTraces::TraceMethod("Cli.__getMenu(I_NativeCliRef, I_NativeMenuRef)");
+    NativeTraces::TraceParam("I_NativeCliRef", "%d", I_NativeCliRef);
+    const cli::Menu* pcli_Menu = NULL;
+    if (const cli::Cli* const pcli_Cli = (const cli::Cli*) I_NativeCliRef)
+    {
+        if (const char* const str_MenuName = PJ_Env->GetStringUTFChars(PJ_MenuName, 0))
+        {
+            NativeTraces::TraceParam("PJ_MenuName", "%s", str_MenuName);
+            pcli_Menu = pcli_Cli->GetMenu(str_MenuName);
+            PJ_Env->ReleaseStringUTFChars(PJ_MenuName, str_MenuName);
+        }
+    }
+    NativeTraces::TraceReturn("Cli.__getMenu()", "%d", (int) pcli_Menu);
+    return (jint) pcli_Menu;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_Cli__1_1enableConfigMenu(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeCliRef, jboolean B_Enable)
 {
-    NativeTraces::TraceMethod("Cli.enableConfigMenu(I_NativeCliRef, B_Enable)");
+    NativeTraces::TraceMethod("Cli.__enableConfigMenu(I_NativeCliRef, B_Enable)");
     NativeTraces::TraceParam("I_NativeCliRef", "%d", I_NativeCliRef);
     NativeTraces::TraceParam("B_Enable", "%d", B_Enable);
     jboolean b_Res = false;
@@ -171,7 +191,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Cli__1_1enableConfigMenu(
             b_Res = true;
         }
     }
-    NativeTraces::TraceReturn("Cli.enableConfigMenu()", "%d", b_Res);
+    NativeTraces::TraceReturn("Cli.__enableConfigMenu()", "%d", b_Res);
     return b_Res;
 }
 

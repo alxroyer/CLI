@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -64,13 +64,13 @@
         or <command>xsltproc</command>:
             <programlisting>xsltproc cppclic.xsl empty.xml &gt; empty.cpp</programlisting>
         That's all folks!
-        Have a look at the generated C++ file if you want.
+        Have a look at the <ulink url="misc/empty.cpp">generated C++ file</ulink> if you want.
         </para>
 
         <para>
         And it works with java also!
-            <programlisting>xsltproc --param STR_CliClassName "'Empty'" javaclic.xsl empty.xml &gt; Empty.java</programlisting>
-        Have a look at the generated java file.
+            <programlisting>xsltproc --stringparam STR_CliClassName "Empty" javaclic.xsl empty.xml &gt; Empty.java</programlisting>
+        Have a look at the <ulink url="misc/Empty.java">generated Java file</ulink>.
         </para>
 
         <para>
@@ -95,6 +95,8 @@
                             Classes prefix. Default is empty.</listitem>
                 <listitem><varname>STR_Indent</varname>:
                             Basic indentation. Default is four spaces.</listitem>
+                <listitem><varname>STR_UserIndent</varname>:
+                            User code indentation. makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
                 <listitem><varname>STR_CliClassName</varname>:
                             CLI class name. Default is a derivate from the CLI name.</listitem>
                 </itemizedlist>
@@ -111,6 +113,8 @@
                             Classes prefix. Default is empty.</listitem>
                 <listitem><varname>STR_Indent</varname>:
                             Basic indentation. Default is four spaces.</listitem>
+                <listitem><varname>STR_UserIndent</varname>:
+                            User code indentation. makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
                 <listitem><varname>STR_CliClassName</varname>:
                             CLI class name. Default is a derivate from the CLI name.
                             It is highly recommended you override this parameter for integration considerations.</listitem>
@@ -128,7 +132,7 @@
             But, you may however also figure out that it is nevertheless quite well presented:
             <itemizedlist>
             <listitem>Indentation is respected;</listitem>
-            <listitem>User-code is highlighted thanks to a comment pattern at the beginning of the lines;</listitem>
+            <listitem>User-code is highlighted thanks to the <varname>STR_UserIndent</varname> pattern at the beginning of the lines;</listitem>
             <listitem>The current word sequence in analysis is presented in comments throughout the code.</listitem>
             </itemizedlist>
             I hope these measures could help you when something goes wrong at compile or at debug time.

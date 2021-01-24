@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,21 +41,21 @@
                     <param type="int" id="X">
                         <cpp>c.SetXPosition(<value-of param="X"/>);</cpp>
                         <java>c.setXPosition(<value-of param="X"/>);</java>
-                        <tag ref="circle"/>
+                        <tag ref="circle" max="1"/>
                     </param>
                 </keyword>
                 <keyword string="y_position">
                     <param type="int" id="Y">
                         <cpp>c.SetYPosition(<value-of param="Y"/>);</cpp>
                         <java>c.setYPosition(<value-of param="Y"/>);</java>
-                        <tag ref="circle"/>
+                        <tag ref="circle" max="1"/>
                     </param>
                 </keyword>
                 <keyword string="radius">
                     <param type="int" id="R">
                         <cpp>c.SetRadius(<value-of param="R"/>);</cpp>
                         <java>c.setRadius(<value-of param="R"/>);</java>
-                        <tag ref="circle"/>
+                        <tag ref="circle" max="1"/>
                     </param>
                 </keyword>
             </tag>

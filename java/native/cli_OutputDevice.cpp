@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -96,13 +96,37 @@ extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1endl(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeOutputDeviceRef)
 {
-    NativeTraces::TraceMethod("OutputDevice.__endl(I_NativeOutputDeviceRef, PJ_Text)");
+    NativeTraces::TraceMethod("OutputDevice.__endl(I_NativeOutputDeviceRef)");
     NativeTraces::TraceParam("I_NativeOutputDeviceRef", "%d", I_NativeOutputDeviceRef);
     if (const cli::OutputDevice* const pcli_OutputDevice = (const cli::OutputDevice*) I_NativeOutputDeviceRef)
     {
         pcli_OutputDevice->operator<<(cli::endl);
     }
     NativeTraces::TraceReturn("OutputDevice.__endl()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1beep(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeOutputDeviceRef)
+{
+    NativeTraces::TraceMethod("OutputDevice.__beep(I_NativeOutputDeviceRef)");
+    if (const cli::OutputDevice* const pcli_OutputDevice = (const cli::OutputDevice*) I_NativeOutputDeviceRef)
+    {
+        pcli_OutputDevice->Beep();
+    }
+    NativeTraces::TraceReturn("OutputDevice.__beep()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1cleanScreen(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeOutputDeviceRef)
+{
+    NativeTraces::TraceMethod("OutputDevice.__cleanScreen(I_NativeOutputDeviceRef)");
+    if (const cli::OutputDevice* const pcli_OutputDevice = (const cli::OutputDevice*) I_NativeOutputDeviceRef)
+    {
+        pcli_OutputDevice->CleanScreen();
+    }
+    NativeTraces::TraceReturn("OutputDevice.__cleanScreen()");
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1getNullDevice(

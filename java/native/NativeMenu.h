@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -45,13 +45,23 @@ const bool __NativeMenu__OnExit(
     JNIEnv* const PJ_Env, const std::string& STR_Class,
     const cli::Menu& CLI_Menu);
 
+const std::string __NativeMenu__OnPrompt(
+    JNIEnv* const PJ_Env, const std::string& STR_Class,
+    const cli::Menu& CLI_Menu);
 
-template <class TMenu> class NativeMenu : public TMenu
+
+//! @brief Template class implementing native C++ objects matched cli.Cli with and cli.Menu derived class.
+template <
+    class TMenu //!< Either cli::Cli or cli::Menu.
+> class NativeMenu : public TMenu
 {
 public:
     NativeMenu(
-            JNIEnv* const PJ_Env, const char* const STR_Class,
-            const char* const STR_Name, const cli::Help& CLI_Help)
+            JNIEnv* const PJ_Env,           //!< Parameter directly given by JNI.
+            const char* const STR_Class,    //!< Parameter directly given by JNI.
+            const char* const STR_Name,     //!< Name of the menu (regular cli::Cli or cli::Menu constructor parameter).
+            const cli::Help& CLI_Help       //!< Help of the menu (regular cli::Cli or cli::Menu constructor parameter).
+            )
       : TMenu(STR_Name, CLI_Help),
         m_pjEnv(PJ_Env), m_strClass(STR_Class)
     {
@@ -67,14 +77,21 @@ public:
         return __NativeMenu__Execute(m_pjEnv, m_strClass, *this, CLI_CmdLine);
     }
 
-    virtual void OnError(const cli::ResourceString& CLI_Location, const cli::ResourceString& CLI_ErrorMessage) const
+    //! @warning This handler is available for cli::Cli derived classes only. This handler shall not be called for regular menus.
+    virtual const bool OnError(const cli::ResourceString& CLI_Location, const cli::ResourceString& CLI_ErrorMessage) const
     {
-        __NativeMenu__OnError(m_pjEnv, m_strClass, *this, CLI_Location, CLI_ErrorMessage);
+        return __NativeMenu__OnError(m_pjEnv, m_strClass, *this, CLI_Location, CLI_ErrorMessage);
     }
 
     virtual void OnExit(void) const
     {
         __NativeMenu__OnExit(m_pjEnv, m_strClass, *this);
+    }
+
+    virtual const cli::tk::String OnPrompt(void) const
+    {
+        const std::string std_Prompt = __NativeMenu__OnPrompt(m_pjEnv, m_strClass, *this);
+        return cli::tk::String(std_Prompt.size(), std_Prompt.c_str());
     }
 
 private:

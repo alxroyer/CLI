@@ -1,5 +1,7 @@
-/*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -20,13 +22,40 @@
     LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+-->
 
 
-public class GoHello {
-    public static void main(String ARSTR_Args[]) {
-        Hello my_Cli = new Hello();
-        cli.Shell my_Shell = new cli.Shell(my_Cli);
-        my_Shell.run(new cli.Console());
-    }
-}
+<cli xmlns="http://alexis.royer.free.fr/CLI" name="my-config">
+    <keyword string="show">
+        <keyword string="ip">
+            <keyword string="config">
+                <endl></endl>
+            </keyword>
+            <keyword string="stats">
+                <endl></endl>
+            </keyword>
+        </keyword>
+    </keyword>
+    <keyword string="edit">
+        <keyword string="config">
+            <endl>
+                <menu name="edit">
+                    <keyword string="set">
+                        <keyword string="ip">
+                            <keyword string="address">
+                                <param type="host" id="addr">
+                                    <endl></endl>
+                                </param>
+                            </keyword>
+                        </keyword>
+                    </keyword>
+                    <keyword string="reset">
+                        <keyword string="stats">
+                            <endl></endl>
+                        </keyword>
+                    </keyword>
+                </menu>
+            </endl>
+        </keyword>
+    </keyword>
+</cli>

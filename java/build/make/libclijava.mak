@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -29,45 +29,23 @@ libclijava.default: $(.DEFAULT_GOAL) ;
 # Variables.
 CLI_DIR := ../../..
 include _vars.mak
-
-JAVA_FILES = $(wildcard $(JAVA_DIR)/src/cli/*.java)
-JAVA_CLASSES = $(patsubst %.java,$(OUT_DIR)/cli/%.class,$(notdir $(JAVA_FILES)))
+PRODUCT = libclijava
+SRC_DIR = $(JAVA_DIR)/src
+JAVA_FILES = $(wildcard $(SRC_DIR)/cli/*.java)
+JAR_OBJ = $(JAVA_ARCHIVE)
+include _build.mak
 
 # Rules.
-.PHONY: build
-build: dirs $(JAVA_ARCHIVE) ;
-
-.PHONY: dirs
-dirs:
-	@mkdir -p $(OUT_DIR)
-	@mkdir -p $(OUT_DIR)/cli
-
-$(JAVA_ARCHIVE): $(JAVA_FILES)
-	javac $(JAVAC_FLAGS) $(JAVA_FILES)
-	cd $(RDX) && jar $(JAR_FLAGS) -cf $(notdir $(JAVA_ARCHIVE)) cli/*.class
-
-%.class: %.java
-	javac $<
-
 .PHONY: deps
 deps: ;
-
-.PHONY: clean
-clean:
-	$(RM) $(JAVA_ARCHIVE) $(JAVA_CLASSES)
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/libclijava.help
 help: $(JAVA_DIR)/build/make/libclijava.help
-$(JAVA_DIR)/build/make/libclijava.help:
-	$(call PrintHelp, build, Generate Java library)
-	$(call PrintHelp, dirs, Check output and intermediate directories)
-	$(call PrintHelp, clean, Clean intermediate and output files)
+$(JAVA_DIR)/build/make/libclijava.help: ;
 
 .PHONY: $(JAVA_DIR)/build/make/libclijava.vars
 vars: $(JAVA_DIR)/build/make/libclijava.vars
-$(JAVA_DIR)/build/make/libclijava.vars:
-	$(call ShowVariables,JAVA_FILES JAVA_CLASSES)
-
+$(JAVA_DIR)/build/make/libclijava.vars: ;

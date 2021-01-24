@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -35,14 +35,14 @@ CLI_XSLT_OPTS ?=
 
 # Includes
 PROJECT ?= $(patsubst %.xml,%,$(notdir $(CLI_XML_RES)))
-PROJECT_DEPS ?= libclicpp.mak
+PROJECT_DEPS ?= $(CLI_DIR)/cpp/build/make/libclicpp.mak
 PRODUCT ?= $(CLI_BINARY)
 CPP_FILES ?= $(CLI_XML_CPP) $(CLI_MAIN_CPP)
 AUTO_DEPS ?= no
 PROJ_INCLUDES ?= -I$(CPP_DIR)/include -I$(dir $(CLI_XML_RES))
 PROJ_LIBS ?= -L$(dir $(CPP_LIB)) -lclicpp -lncurses
 PROJ_CLEAN += $(CLI_XML_CPP)
-include _build.mak
+include $(CLI_DIR)/cpp/build/make/_build.mak
 
 # Rules
 $(CLI_XML_CPP): $(CLI_XML_RES) $(CLI_XSL)

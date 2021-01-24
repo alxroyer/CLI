@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -128,9 +128,21 @@
         </note>
 
         <blockquote>
-        Good.
-        That's what I needed.
-        Now, how do I execute stuff from the command lines.
+        That's what I needed, but wait a minute!
+        I will have to write down a user manual for this interface
+        and I'm afraid about describing the thing twice,
+        between my user manual on one hand,
+        and the help provided with the commands on the other hand.
+        Any suggestion?
+        </blockquote>
+
+        <para>
+        For sure, automatic documentation generation will help you.
+        This feature is described in a <link linkend="xmlres.cli2help">later section</link>.
+        </para>
+
+        <blockquote>
+        Good! Now, how do I execute stuff from the command lines.
         </blockquote>
     </section>
 
@@ -186,18 +198,27 @@
                     you may use this section for very first includes
                     or for pre-processing for instance</listitem>
 
-        <listitem>(auto-generated) CLI imports.</listitem>
-        <listitem><sgmltag class="attvalue">import</sgmltag> section:
-                    this section basically receives user imports.</listitem>
+        <listitem>(auto-generated) CLI includes.</listitem>
+        <listitem><sgmltag class="attvalue">include</sgmltag> section:
+                    this section basically receives user includes.</listitem>
 
         <listitem>(auto-generated) CLI definition:
-                    the static CLI structure, and the related command executions are defined here.</listitem>
+                    the static CLI structure, and the related command executions are defined here.
+                    Within that section, the following subsections are available for each menu:
+                    <orderedlist>
+                    <listitem><sgmltag class="attvalue">members</sgmltag> section:
+                                this section receives member variables or methods for the current menu.</listitem>
+                    <listitem><sgmltag class="attvalue">constructor</sgmltag> section:
+                                this section receives code to be placed in the constructor of the current menu.</listitem>
+                    </orderedlist>
+        </listitem>
 
         <listitem><sgmltag class="attvalue">tail</sgmltag> section:
                     very last section.</listitem>
         </orderedlist>
 
-        Java sections look the same except for include section, which is named import section in Java.
+        Java sections look the same except for <sgmltag class="attvalue">include</sgmltag> section,
+        which is named <sgmltag class="attvalue">import</sgmltag> section in Java.
         </para>
 
         <note>
@@ -290,7 +311,7 @@
 
     </section>
 
-    <section><title><sgmltag class="element">tag</sgmltag>
+    <section id="xmlres.tag"><title id="xmlres.tag.title"><sgmltag class="element">tag</sgmltag>
                 - How to make jumps in the syntax tree</title>
 
         <para>
@@ -306,21 +327,21 @@
         <para>
         Thanks to tags, you can define such kind of patterns:
             <itemizedlist>
-            <listitem><inlineequation>a*</inlineequation></listitem>
-            <listitem><inlineequation>a+</inlineequation></listitem>
-            <listitem><inlineequation>(ab)*</inlineequation></listitem>
-            <listitem><inlineequation>(ab)+</inlineequation></listitem>
-            <listitem><inlineequation>(a|b)*</inlineequation></listitem>
-            <listitem><inlineequation>(a|b)+</inlineequation></listitem>
-            <listitem><inlineequation>a(b1|b2)c</inlineequation></listitem>
-            <listitem><inlineequation>a(b1|b2|)c</inlineequation></listitem>
+            <listitem><command>a*</command></listitem>
+            <listitem><command>a+</command></listitem>
+            <listitem><command>(ab)*</command></listitem>
+            <listitem><command>(ab)+</command></listitem>
+            <listitem><command>a(b1|b2)c</command></listitem>
+            <listitem><command>a(b1|b2|)c</command></listitem>
+            <listitem><command>(a|b)*</command></listitem>
+            <listitem><command>(a|b)+</command></listitem>
             </itemizedlist>
         The following examples show you how to do such syntax patterns.
         </para>
 
         <example><title>How to make
-                        a <inlineequation>a*</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
+                        <command>a*</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -338,7 +359,7 @@
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
                 &sample-tag-a-star;
             </entry>
@@ -349,8 +370,8 @@
         </example>
 
         <example><title>How to make
-                        a <inlineequation>a+</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
+                        <command>a+</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -368,7 +389,7 @@
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
                 &sample-tag-a-plus;
             </entry>
@@ -379,8 +400,8 @@
         </example>
 
         <example><title>How to make
-                        a <inlineequation>(ab)*</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
+                        <command>(ab)*</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -400,7 +421,7 @@
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
                 &sample-tag-ab-star;
             </entry>
@@ -411,8 +432,8 @@
         </example>
 
         <example><title>How to make
-                        a <inlineequation>(ab)+</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
+                        <command>(ab)+</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -432,7 +453,7 @@
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
                 &sample-tag-ab-plus;
             </entry>
@@ -442,82 +463,15 @@
             </informaltable>
         </example>
 
-        <example><title>How to make
-                        a <inlineequation>(a|b)*</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
-            <informaltable frame="none">
-            <tgroup cols="2">
-            <tbody>
-            <row>
-            <entry valign="top">
-<programlisting>
-
-
-,-&gt;
-|
-|
-+--
-|
-|
-`--
-
-
-
-</programlisting>
-            </entry>
-            <entry><!-- Vertical spacing --></entry>
-            <entry valign="top">
-                &sample-tag-a-b-star;
-            </entry>
-            </row>
-            </tbody>
-            </tgroup>
-            </informaltable>
-        </example>
-
-        <example><title>How to make
-                        a <inlineequation>(a|b)+</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
-            <informaltable frame="none">
-            <tgroup cols="2">
-            <tbody>
-            <row>
-            <entry valign="top">
-<programlisting>
-
-
-,-&gt;
-|
-|
-+--
-|
-|
-|
-`--
-
-
-
-</programlisting>
-            </entry>
-            <entry><!-- Vertical spacing --></entry>
-            <entry valign="top">
-                &sample-tag-a-b-plus;
-            </entry>
-            </row>
-            </tbody>
-            </tgroup>
-            </informaltable>
-        </example>
-
         <para>
         Let me show you how to make a
-        <inlineequation>a(b1|b2|)c</inlineequation> syntax pattern
-        before <inlineequation>a(b1|b2)c</inlineequation>.
+        <command>a(b1|b2|)c</command> syntax pattern
+        before <command>a(b1|b2)c</command>.
         </para>
 
         <example><title>How to make
-                        a <inlineequation>a(b1|b2|)c</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
+                        <command>a(b1|b2|)c</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -542,7 +496,7 @@
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
                 &sample-tag-a-b1-b2-nil-c;
             </entry>
@@ -553,15 +507,15 @@
         </example>
 
         <para>
-        Now, in order to forbid execution to go from keyword <inlineequation>a</inlineequation>
+        Now, in order to forbid the CLI to go directly from keyword <command>a</command>
         to tag <sgmltag class="value">my-tag</sgmltag>,
         just add a <sgmltag class="attribute">hollow</sgmltag> attribute
         with a <sgmltag class="value">yes</sgmltag> value.
         </para>
 
         <example><title>How to make
-                        a <inlineequation>a(b1|b2)c</inlineequation> syntax pattern
-                        with a <sgmltag class="element">tag</sgmltag> element</title>
+                        <command>a(b1|b2)c</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -586,7 +540,7 @@
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
                 &sample-tag-a-b1-b2-c;
             </entry>
@@ -597,11 +551,89 @@
         </example>
 
         <para>
-        In lesser theoretical words,
-        this allows you to define recursive command lines
-        and command lines with options.
-        I don't really know if recursive command lines are really useful in user interfaces.
-        On the other hand, optional parameters are usually used in text based user interfaces.
+        Now let us combine <command>|</command> and <command>*</command> patterns.
+        </para>
+
+        <example><title>How to make
+                        <command>(a|b)*</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
+            <informaltable frame="none">
+            <tgroup cols="2">
+            <tbody>
+            <row>
+            <entry valign="top">
+<programlisting>
+
+
+,---&gt;
+|
+|
+| ,--
+| |
+| |
+| +--
+| |
+| `-&gt;
+`----
+
+
+
+</programlisting>
+            </entry>
+            <entry><!-- Spacing --></entry>
+            <entry valign="top">
+                &sample-tag-a-b-star;
+            </entry>
+            </row>
+            </tbody>
+            </tgroup>
+            </informaltable>
+        </example>
+
+        <example><title>How to make
+                        <command>(a|b)+</command> syntax patterns
+                        with <sgmltag class="element">tag</sgmltag> elements</title>
+            <informaltable frame="none">
+            <tgroup cols="2">
+            <tbody>
+            <row>
+            <entry valign="top">
+<programlisting>
+
+
+,---&gt;
+|
+| ,--
+| |
+| |
+| +--
+| |
+| `-&gt;
+|
+`----
+
+
+
+</programlisting>
+            </entry>
+            <entry><!-- Spacing --></entry>
+            <entry valign="top">
+                &sample-tag-a-b-plus;
+            </entry>
+            </row>
+            </tbody>
+            </tgroup>
+            </informaltable>
+        </example>
+
+        <note>
+        This user-guide has formerly proposed other directions for <command>(a|b)+</command> and <command>(a|b)*</command> patterns.
+        Since version 2.5, you are now advised to proceed as described above,
+        so that automatic documentation generation works better (see <link linkend="xmlres.cli2help" endterm="xmlres.cli2help.title"/>).
+        </note>
+
+        <para>
+        In lesser theoretical words, <sgmltag class="element">tag</sgmltag> elements allow you to define command lines with options.
         </para>
 
         <example><title>An optional command line</title>
@@ -659,35 +691,11 @@
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
-            <!--<programlistingco>
-                <areaspec>
-                <area id="sample-circle-cli-decl" coords="5"/>
-                <area id="sample-circle-cli-valid" coords="7"/>
-                <areaset id="sample-circle-cli-values" coords="">
-                    <area id="sample-circle-cli-X" coords="10"/>
-                    <area id="sample-circle-cli-Y" coords="16"/>
-                    <area id="sample-circle-cli-R" coords="22"/>
-                </areaset>
-                </areaspec>-->
-
                     &sample-circle-pos-cli;
-
-                <!--<calloutlist>
-                <callout arearefs="sample-circle-cli-decl">
-                    <para>Declare an object with optional values.</para>
-                </callout>
-                <callout arearefs="sample-circle-cli-valid">
-                    <para>Valid the object with its current values.</para>
-                </callout>
-                <callout arearefs="sample-circle-cli-values">
-                    <para>Set optional values.</para>
-                </callout>
-                </calloutlist>
-            </programlistingco>-->
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
 <programlisting>
 
@@ -801,35 +809,11 @@ add circle x_position -1 y_position -1 radius 3
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
-            <!--<programlistingco>
-                <areaspec>
-                <area id="sample-circle-cli-decl" coords="5"/>
-                <area id="sample-circle-cli-valid" coords="7"/>
-                <areaset id="sample-circle-cli-values" coords="">
-                    <area id="sample-circle-cli-X" coords="10"/>
-                    <area id="sample-circle-cli-Y" coords="16"/>
-                    <area id="sample-circle-cli-R" coords="22"/>
-                </areaset>
-                </areaspec>-->
-
                     &sample-circle-color-cli;
-
-                <!--<calloutlist>
-                <callout arearefs="sample-circle-cli-decl">
-                    <para>Declare an object with optional values.</para>
-                </callout>
-                <callout arearefs="sample-circle-cli-valid">
-                    <para>Valid the object with its current values.</para>
-                </callout>
-                <callout arearefs="sample-circle-cli-values">
-                    <para>Set optional values.</para>
-                </callout>
-                </calloutlist>
-            </programlistingco>-->
             </entry>
-            <entry><!-- Vertical spacing --></entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
 <programlisting>
 
@@ -893,6 +877,17 @@ add circle green
         </example>
 
         <note>
+        The <sgmltag class="attribute">max</sgmltag> attribute of <sgmltag class="element">tag</sgmltag> elements have been introduced in version 2.5.
+        The CLI library does not implement it at present.
+        It is only managed by the automatic documentation generation (see <link linkend="xmlres.cli2help" endterm="xmlres.cli2help.title"/>),
+        and should be implemented for real in latter versions of the library.
+        This attribute may receive the <sgmltag class="attvalue">1</sgmltag> or the <sgmltag class="attvalue">unbounded</sgmltag> value.
+        It indicates the maximum number of times this <sgmltag class="element">tag</sgmltag> link can be followed syntaxically speaking.
+        All theoretical examples presented the <sgmltag class="attvalue">unbounded</sgmltag> value,
+        the example below presents a regular use of the <sgmltag class="attvalue">1</sgmltag> value.
+        </note>
+
+        <note>
         The CLI transformation is quite permissive regarding tags.
         There is no special restriction on
         whether you can reference a tag from anywhere in the syntax tree or not.
@@ -922,32 +917,56 @@ add circle green
                 - Classify user-defined command lines in menus</title>
 
         <para>
-        Menus allow you to gather sets of commands under a common topic.
-        Menus are accessed through command lines.
+        The <sgmltag class="element">cli</sgmltag> element basically implements the main menu of a CLI interface.
+        You may also define sub-menus, gathering sets of commands under a common topic by the way.
+        Menus are then accessed through command lines.
         </para>
 
         <para>
-        A <sgmltag class="element">menu</sgmltag> element
-        with a <sgmltag class="attribute">name</sgmltag> attribute
-        defines a new menu.
-        Inside, you can declare new command lines.
-        With a <sgmltag class="attribute">ref</sgmltag>,
-        in an <sgmltag class="element">endl</sgmltag> element,
-        it references a defined menu.
+        A <sgmltag class="element">menu</sgmltag> element with a <sgmltag class="attribute">name</sgmltag> attribute defines a new menu.
+        Inside, you can declare new command lines as you would proceed in the <sgmltag class="element">cli</sgmltag> element.
+        This <sgmltag class="element">menu</sgmltag> element can be placed:
+        <itemizedlist>
+        <listitem>in a <sgmltag class="element">endl</sgmltag> element.
+            The menu is directly available from the command it is attached to.</listitem>
+        <listitem>in the <sgmltag class="element">cli</sgmltag> element.
+            The menu is then referenced thanks to <sgmltag class="element">menu</sgmltag> elements
+            with a <sgmltag class="attribute">ref</sgmltag> attribute
+            in <sgmltag class="element">endl</sgmltag> elements.</listitem>
+        </itemizedlist>
         </para>
 
-        <note>
-        Basically, the CLI defines the main menu itself.
-        </note>
+        <para>
+        It is now time to introduce the <command>pwm</command> command.
+        If you have tried any example of this user-guide, you may have noticed a basic command <command>pwm</command> meaning <acronym>Print Working Menu</acronym>.
+        The same way <command>pwd</command> gives you the working directory in a UNIX shells,
+        this command gives you the current working menu, and the current stack of menus.
+        </para>
 
         <example><title>Classify user-defined command lines in menus</title>
         Consider a CLI controlling a configuration.
         A common organization is to offer consultation commands in the main menu,
-        and to reserve modification commands in an edition mode.
+        and to reserve modification commands in an edition mode:
+        <orderedlist>
+        <listitem>The <command>edit config</command> command leads to a <sgmltag class="attvalue">edit</sgmltag> sub-menu,
+            thanks to the <sgmltag class="element">menu</sgmltag> element directly contained in the <sgmltag class="element">endl</sgmltag> element.</listitem>
+        <listitem>The commands defined from the <sgmltag class="attvalue">edit</sgmltag> sub-menu are available
+            only once the <command>edit config</command> has been entered.</listitem>
+        <listitem>No need to define basic commands for menus.
+            The <command>pwm</command> behaves as usual.
+            The <command>exit</command> command allows the user to quit the current menu and come back to the parent one.
+            The <command>quit</command> command directly quits the CLI.</listitem>
+        </orderedlist>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
             <row>
+            <entry valign="top">
+
+                &sample-menu-config;
+
+            </entry>
+            <entry><!-- Spacing --></entry>
             <entry valign="top">
 <programlisting>
 
@@ -964,24 +983,20 @@ add circle green
 
 
 
-,--
-|
-|
-|
-`-&gt;
+(1)
+(1) (3)
+
+
+
+
+(2)
 
 
 
 
 
 
-
-
-
-
-
-
-
+(2)
 
 
 
@@ -991,12 +1006,6 @@ add circle green
 
 </programlisting>
             </entry>
-            <entry><!-- Vertical spacing --></entry>
-            <entry valign="top">
-
-                &sample-edit-config;
-
-            </entry>
             </row>
             </tbody>
             </tgroup>
@@ -1004,31 +1013,107 @@ add circle green
         </example>
 
         <note>
-        No need to define exit commands for menus.
-        The base <command>exit</command> command
-        allows the user to quit the current menu
-        and to come back to the previous one.
-        The base <command>quit</command> command directly quits the CLI.
+        Advanced menu features are discussed in the advanced section.
+        Please refer to the <link linkend="adv.menus" endterm="adv.menus.title"/> section for more information.
         </note>
 
-        <note>
-        If you have tried this example and the previous ones,
-        you may have noticed a basic command <command>pwm</command>
-        meaning <acronym>Print Working Menu</acronym>.
-        The same way <command>pwd</command> gives you the working directory
-        in a UNIX shells,
-        this command gives you the current working menu,
-        and the current stack of menus.
-        </note>
+        <blockquote>
+        Thank you for this detailed documentation.
+        Do you provide a schema in order to check automatically this XML resource syntax?
+        </blockquote>
+    </section>
 
-        <note>
-        You may have native code being executed when a menu exit.
-        This is done with native tags (<sgmltag class="element">cpp</sgmltag> or <sgmltag class="element">java</sgmltag>)
-        within a <sgmltag class="element">handler</sgmltag> element
-        with the attribute <sgmltag class="attribute">name</sgmltag>
-        set to <sgmltag class="attvalue">exit</sgmltag>.
-        See the example above.
-        </note>
+    <section id="xmlres.schema">
+    <title id="xmlres.schema.title">Schema checking</title>
+
+        <para>
+        This toolkit is provided with two schema files: <filename>cli.xsd</filename> and <filename>cli.rng</filename>.
+        </para>
+
+        <para>
+        <filename>cli.xsd</filename> is a Regular W3C Xml Schema 1.0 file.
+        Because of W3C limitations, some constraints are not checked with this Xml Schema:
+        <itemizedlist>
+        <listitem><sgmltag class="element">menu[@name]</sgmltag> / <sgmltag class="element">menu[@ref]</sgmltag>
+            and <sgmltag class="element">tag[@id]</sgmltag> / <sgmltag class="element">tag[@ref]</sgmltag> elements distinction,</listitem>
+        <listitem><sgmltag class="element">menu</sgmltag> and <sgmltag class="element">tag</sgmltag> foreign key constraints.</listitem>
+        </itemizedlist>
+        However <filename>cli.xsd</filename> can be used in order to have a first level of syntax checking.
+        </para>
+
+        <example><title>Xml Schema validation</title>
+<programlisting>$ xmllint --schema $CLI_DIR/schema/cli.xsd --noout my-cli.xml
+my-cli.xml validates</programlisting>
+        </example>
+
+        <para>
+        <filename>cli.rng</filename> is a Relax NG schema.
+        Relax NG permits the description of elements having the same name but different attributes,
+        however it still does not cover all the constraints that should be checked:
+        <itemizedlist>
+        <listitem><sgmltag class="element">menu</sgmltag> names and <sgmltag class="element">tag</sgmltag> identifiers unicity,</listitem>
+        <listitem><sgmltag class="element">menu</sgmltag> and <sgmltag class="element">tag</sgmltag> foreign key constraints.</listitem>
+        </itemizedlist>
+        But once again, <filename>cli.rng</filename> can be used in order to have a first level of syntax checking.
+        </para>
+
+        <example><title>Xml Schema validation</title>
+<programlisting>$ xmllint --relaxng $CLI_DIR/cli.rng --noout --noout my-cli.xml
+my-cli.xml validates</programlisting>
+        </example>
+
+    </section>
+
+    <section id="xmlres.cli2help">
+    <title id="xmlres.cli2help.title">
+        <filename>cli2help.xsl</filename>
+        - Automatic documentation generation</title>
+
+        <para>
+        The CLI toolkit is provided with a <filename>cli2help.xsl</filename> XSL stylesheet.
+        This stylesheet generates CLI documentation automatically.
+        </para>
+
+        <example><title><filename>cli2help.xsl</filename> automatic documentation generation</title>
+        Based on the following sample <ulink url="misc/clisample.xml">clisample.xml</ulink> CLI XML resource file,
+        the XSL transformation below automatically generates the given documentation <ulink url="misc/clisample.html">clisample.html</ulink>.
+        <programlisting>$ xsltproc cli2helpxsl clisample.xml &gt; clisample.html</programlisting>
+        </example>
+
+        <para>
+        This XSL stylesheet is not as clever as a human being,
+        therefore here is a couple of directions in order to generate a smart documentation:
+        <itemizedlist>
+        <listitem>The <filename>cli2help.xsl</filename> XSL stylesheet consider backward and forward tags.
+            Backward tags basically implement non mandatory options, and are presented <command>[this way]</command>.
+            Forward tags implement mandatory options following <command>a(b1|b2)c</command> patterns.
+            <itemizedlist>
+            <listitem>Avoid exotic tag nesting, in order to let the XSL transformation have a simple understanding of the organization of the options.
+                Please refer to the <link linkend="xmlres.tag"><sgmltag class="element">tag</sgmltag> section</link>
+                for the implementation of such regular patterns.
+            </listitem>
+            </itemizedlist>
+        </listitem>
+        <listitem>Commands are found back, are processed backwardly, from their <sgmltag class="element">endl</sgmltag> final elements.
+            <itemizedlist>
+            <listitem>Check the number of <sgmltag class="element">endl</sgmltag> elements you declare for a single human-understandable command.
+                Let's consider two command lines <command>say hello</command> and <command>say bye</command>,
+                they may be considered like two different command lines,
+                or rather like a single one with a mandatory parameter <command>say (hello|bye)</command>.
+                It's up to you to choose which presentation is better, and use <sgmltag class="element">tag</sgmltag> elements when needed.
+            </listitem>
+            <listitem>Some commands are documented with <sgmltag class="element">help</sgmltag> elements for each syntax node,
+                but the final syntax node help may be not enough representative for a user documentation.
+                In such a situation, use a dummy tag at the end of the command line, in order to force the help for a given command.
+                Dummy tags are <sgmltag class="element">tag</sgmltag> elements with a <sgmltag class="attribute">id</sgmltag> attribute,
+                but no reference from the rest of the CLI XML resource file.
+                Dummy tags can be documented with <sgmltag class="element">help</sgmltag> elements as well,
+                but this help has no effect during the CLI execution.
+            </listitem>
+            </itemizedlist>
+        </listitem>
+        </itemizedlist>
+        </para>
 
     </section>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,13 +26,16 @@
 
 
 <cli xmlns="http://alexis.royer.free.fr/CLI" name="(a|b)*">
-    <tag id="my-tag">
+    <tag id="my-tag1">
         <endl></endl>
         <keyword string="a">
-            <tag ref="my-tag"/>
+            <tag ref="my-tag2"/>
         </keyword>
         <keyword string="b">
-            <tag ref="my-tag"/>
+            <tag ref="my-tag2"/>
         </keyword>
+        <tag id="my-tag2" hollow="yes">
+            <tag ref="my-tag1" max="unbounded"/>
+        </tag>
     </tag>
 </cli>

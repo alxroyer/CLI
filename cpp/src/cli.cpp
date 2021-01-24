@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -174,6 +174,31 @@ Menu& Cli::AddMenu(Menu* const PCLI_Menu)
     return *PCLI_Menu;
 }
 
+const Menu* const Cli::GetMenu(const char* const STR_MenuName) const
+{
+    // First of all, look in the menu list
+    for (   tk::Queue<const Menu*>::Iterator it = m_qMenus.GetIterator();
+            m_qMenus.IsValid(it);
+            m_qMenus.MoveNext(it))
+    {
+        if (const Menu* const pcli_Menu = m_qMenus.GetAt(it))
+        {
+            if (pcli_Menu->GetName() == STR_MenuName)
+            {
+                return pcli_Menu;
+            }
+        }
+    }
+
+    // Possibly look for the CLI itself.
+    if (GetName() == STR_MenuName)
+    {
+        return this;
+    }
+
+    return NULL;
+}
+
 void Cli::SetShell(Shell& CLI_Shell) const
 {
     m_pcliShell = & CLI_Shell;
@@ -297,8 +322,10 @@ const bool Cli::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     return Menu::ExecuteReserved(CLI_CommandLine);
 }
 
-void Cli::OnError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
+const bool Cli::OnError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
 {
+    // Default return is true, in order to have the shell display the error.
+    return true;
 }
 
 void Cli::OnExit(void) const

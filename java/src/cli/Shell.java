@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -136,12 +136,24 @@ public class Shell extends NativeObject {
 
     /** Error formatting.
         @param CLI_LocationPrefix   Very first error prefix string, before the location. No error prefixing when the string given is empty.
+        @param CLI_LocationSuffix   Location suffix string. No location suffixing when the string given is empty.
         @param CLI_ErrorPrefix      Error prefix string. No error prefixing when the string given is empty.
         @param CLI_ErrorSuffix      Error suffix string. No error suffixing when the string given is empty. */
-    public final void setErrorFormatting(ResourceString CLI_LocationPrefix, ResourceString CLI_ErrorPrefix, ResourceString CLI_ErrorSuffix) {
-        __setErrorFormatting(this.getNativeRef(), CLI_LocationPrefix.getNativeRef(), CLI_ErrorPrefix.getNativeRef(), CLI_ErrorSuffix.getNativeRef());
+    public final void setErrorFormatting(
+            ResourceString CLI_LocationPrefix, ResourceString CLI_LocationSuffix,
+            ResourceString CLI_ErrorPrefix, ResourceString CLI_ErrorSuffix
+    ) {
+        __setErrorFormatting(
+            this.getNativeRef(),
+            CLI_LocationPrefix.getNativeRef(), CLI_LocationSuffix.getNativeRef(),
+            CLI_ErrorPrefix.getNativeRef(), CLI_ErrorSuffix.getNativeRef()
+        );
     }
-    private static final native void __setErrorFormatting(int I_NativeShellRef, int I_NativeLocationPrefixRef, int I_NativeErrorPrefixRef, int I_NativeErrorSuffixRef);
+    private static final native void __setErrorFormatting(
+            int I_NativeShellRef,
+            int I_NativeLocationPrefixRef, int I_NativeLocationSuffixRef,
+            int I_NativeErrorPrefixRef, int I_NativeErrorSuffixRef
+    );
 
     /** Language setting.
         @param E_Lang New value. */
@@ -206,6 +218,15 @@ public class Shell extends NativeObject {
         return __getHelpOffset(this.getNativeRef());
     }
     private static final native int __getHelpOffset(int I_NativeShellRef);
+
+    /** Enter a menu.
+        @param CLI_Menu Menu to enter. */
+    public final void enterMenu(Menu CLI_Menu) {
+        if (CLI_Menu != null) {
+            __enterMenu(this.getNativeRef(), CLI_Menu.getNativeRef());
+        }
+    }
+    private static final native void __enterMenu(int I_NativeShellRef, int I_NativeMenuRef);
 
     /** Exits the current menu. */
     public final void exitMenu() {

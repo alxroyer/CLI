@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,11 +26,10 @@
 
 
 <xsl:stylesheet
-	version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:cli="http://alexis.royer.free.fr/CLI"
+        version="1.0"
+        xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:cli="http://alexis.royer.free.fr/CLI"
         xmlns:db="http://docbook.org/docbook-ng">
-	<!--xmlns:date="http://exslt.org/dates and times"-->
 <xsl:output method="xml" encoding="iso-8859-1"/>
 
 
@@ -45,22 +44,18 @@
 </xsl:template>
 
 <xsl:template match="cli:endl">
+    <!-- Start the 'endl' element -->
     <xsl:call-template name="T_Indent"/>
-    <xsl:text>&lt;endl</xsl:text>
-        <xsl:apply-templates select="@*"/>
-        <xsl:text>&gt;</xsl:text>
-    <xsl:choose>
-        <xsl:when test="count(cli:cpp) + count(cli:java) = 0"><xsl:apply-templates/></xsl:when>
-        <xsl:otherwise>
-            <xsl:value-of select="$STR_Endl"/>
-            <xsl:for-each select="cli:cpp|cli:java">
-                <xsl:apply-templates select="."/>
-            </xsl:for-each>
-            <xsl:call-template name="T_Indent"/>
-        </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>&lt;/endl&gt;</xsl:text>
-        <xsl:value-of select="$STR_Endl"/>
+    <xsl:text>&lt;endl</xsl:text><xsl:apply-templates select="@*"/><xsl:text>&gt;</xsl:text>
+    <!-- Display native code -->
+    <xsl:if test="cli:cpp or cli:java or cli:menu"><xsl:value-of select="$STR_Endl"/></xsl:if>
+    <xsl:for-each select="cli:cpp|cli:java"><xsl:apply-templates select="."/></xsl:for-each>
+    <!-- Display menus and menu references -->
+    <xsl:if test="(cli:cpp or cli:java) and cli:menu"><xsl:value-of select="$STR_Endl"/></xsl:if>
+    <xsl:for-each select="cli:menu"><xsl:apply-templates select="."/></xsl:for-each>
+    <!-- Finish the 'endl' element -->
+    <xsl:if test="cli:cpp or cli:java or cli:menu"><xsl:call-template name="T_Indent"/></xsl:if>
+    <xsl:text>&lt;/endl&gt;</xsl:text><xsl:value-of select="$STR_Endl"/>
 </xsl:template>
 
 <xsl:template match="cli:help">
@@ -87,6 +82,10 @@
     <xsl:text>&lt;out/&gt;</xsl:text>
 </xsl:template>
 
+<xsl:template match="cli:err">
+    <xsl:text>&lt;err/&gt;</xsl:text>
+</xsl:template>
+
 <xsl:template match="cli:value-of">
     <xsl:text>&lt;value-of</xsl:text>
     <xsl:apply-templates select="@*"/>
@@ -108,7 +107,10 @@
 </xsl:template>
 
 <xsl:template match="cli:*">
-    <xsl:if test="self::cli:menu">
+    <xsl:if test="self::cli:menu and (count(preceding-sibling::cli:*) &gt; count(preceding-sibling::cli:help))">
+        <xsl:value-of select="$STR_Endl"/>
+    </xsl:if>
+    <xsl:if test="self::cli:handler and not(preceding-sibling::cli:handler) and (count(preceding-sibling::cli:*) &gt; count(preceding-sibling::cli:help))">
         <xsl:value-of select="$STR_Endl"/>
     </xsl:if>
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -154,6 +154,11 @@ const bool Menu::Execute(const CommandLine& CLI_CommandLine) const
 
 void Menu::OnExit(void) const
 {
+}
+
+const tk::String Menu::OnPrompt(void) const
+{
+    return tk::String(0);
 }
 
 

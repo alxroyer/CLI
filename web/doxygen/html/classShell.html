@@ -68,9 +68,9 @@ const <a class="el" href="classIODevice.html">IODevice</a> &amp;&nbsp;</td><td c
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html#f4e5a2eaa80d146926bcde65351a3e4d">SetPrompt</a> (const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_Prompt)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Prompt message positionning.  <a href="#f4e5a2eaa80d146926bcde65351a3e4d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html#24051dbc899ff4149c49d16fa848cc6b">SetErrorFormatting</a> (const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_LocationPrefix, const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_ErrorPrefix, const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_ErrorSuffix)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html#ab4770bb61ea7038152429ec06c21940">SetErrorFormatting</a> (const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_LocationPrefix, const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_LocationSuffix, const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_ErrorPrefix, const <a class="el" href="classResourceString.html">ResourceString</a> &amp;CLI_ErrorSuffix)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Error formatting.  <a href="#24051dbc899ff4149c49d16fa848cc6b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Error formatting.  <a href="#ab4770bb61ea7038152429ec06c21940"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html#4da46821d20e0c7519dec0ad3e381c3a">SetLang</a> (const <a class="el" href="classResourceString.html#88d585d899c8482aeb434571923739b3">ResourceString::LANG</a> E_Lang)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Language setting.  <a href="#4da46821d20e0c7519dec0ad3e381c3a"></a><br></td></tr>
@@ -95,6 +95,9 @@ const <a class="el" href="classIODevice.html">IODevice</a> &amp;&nbsp;</td><td c
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const unsigned int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html#b634fad29d7130768a0d035b4b84fa5c">GetHelpOffset</a> (void) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classHelp.html">Help</a> offset accessor.  <a href="#b634fad29d7130768a0d035b4b84fa5c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html#4cb1766fc8b8c632d168ca1e0ef74b54">EnterMenu</a> (const <a class="el" href="classMenu.html">Menu</a> &amp;CLI_Menu)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enters a menu.  <a href="#4cb1766fc8b8c632d168ca1e0ef74b54"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="anchor" name="b244951b902a334a0b042d48af9989fd"></a><!-- doxytag: member="Shell::ExitMenu" ref="b244951b902a334a0b042d48af9989fd" args="(void)" -->
 void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classShell.html#b244951b902a334a0b042d48af9989fd">ExitMenu</a> (void)</td></tr>
 
@@ -362,7 +365,7 @@ Prompt string. When an empty string is given, the default prompt (depending on t
 </dl>
 </div>
 </div><p>
-<a class="anchor" name="24051dbc899ff4149c49d16fa848cc6b"></a><!-- doxytag: member="Shell::SetErrorFormatting" ref="24051dbc899ff4149c49d16fa848cc6b" args="(const ResourceString &amp;CLI_LocationPrefix, const ResourceString &amp;CLI_ErrorPrefix, const ResourceString &amp;CLI_ErrorSuffix)" -->
+<a class="anchor" name="ab4770bb61ea7038152429ec06c21940"></a><!-- doxytag: member="Shell::SetErrorFormatting" ref="ab4770bb61ea7038152429ec06c21940" args="(const ResourceString &amp;CLI_LocationPrefix, const ResourceString &amp;CLI_LocationSuffix, const ResourceString &amp;CLI_ErrorPrefix, const ResourceString &amp;CLI_ErrorSuffix)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -371,6 +374,12 @@ Prompt string. When an empty string is given, the default prompt (depending on t
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classResourceString.html">ResourceString</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>CLI_LocationPrefix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classResourceString.html">ResourceString</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>CLI_LocationSuffix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -400,10 +409,12 @@ Error formatting.
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em>CLI_LocationPrefix</em>&nbsp;</td><td>
 Very first error prefix string, before the location. No error prefixing when the string given is empty. </td></tr>
+<tr><td valign="top"><em>CLI_LocationSuffix</em>&nbsp;</td><td>
+Location suffix string. No location suffixing when the string given is empty. </td></tr>
 <tr><td valign="top"><em>CLI_ErrorPrefix</em>&nbsp;</td><td>
-Error prefix string. No error prefixing when the string given is empty. </td></tr>
+Error message prefix string. No error message prefixing when the string given is empty. </td></tr>
 <tr><td valign="top"><em>CLI_ErrorSuffix</em>&nbsp;</td><td>
-Error suffix string. No error suffixing when the string given is empty. </td></tr>
+Error message suffix string. No error message suffixing when the string given is empty. </td></tr>
 </table>
 </dl>
 </div>
@@ -604,6 +615,33 @@ Tells whether this shell is running or not.
 
 </div>
 </div><p>
+<a class="anchor" name="4cb1766fc8b8c632d168ca1e0ef74b54"></a><!-- doxytag: member="Shell::EnterMenu" ref="4cb1766fc8b8c632d168ca1e0ef74b54" args="(const Menu &amp;CLI_Menu)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Shell::EnterMenu           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classMenu.html">Menu</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>CLI_Menu</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Enters a menu. 
+<p>
+<dl compact><dt><b>Parameters: </b></dt><dd>
+<table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em>CLI_Menu</em>&nbsp;</td><td>
+<a class="el" href="classMenu.html">Menu</a> to enter. </td></tr>
+</table>
+</dl>
+</div>
+</div><p>
 <a class="anchor" name="3d082082d4a4ee56c6d4e82564ae868b"></a><!-- doxytag: member="Shell::Quit" ref="3d082082d4a4ee56c6d4e82564ae868b" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
@@ -652,7 +690,7 @@ Terminates the shell.
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="shell_8h-source.html">shell.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Oct 2 00:12:22 2009 for CLI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sat Oct 2 06:48:33 2010 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>

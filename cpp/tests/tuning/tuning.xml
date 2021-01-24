@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -113,7 +113,7 @@
 
     <keyword string="error">                                <help lang="en">Error format modification</help>
                                                             <help lang="fr">Modification du formattage des erreurs</help>
-        <cpp>cli::ResourceString cli_LocationPrefix, cli_Prefix, cli_Suffix;</cpp>
+        <cpp>cli::ResourceString cli_LocationPrefix, cli_LocationSuffix, cli_Prefix, cli_Suffix;</cpp>
         <cpp>cli::ResourceString::LANG e_Lang = cli::ResourceString::LANG_EN;</cpp>
 
         <tag id="error-loop">
@@ -124,8 +124,8 @@
                                                                             <help lang="fr">Modification du préfixe de location en Anglais</help>
                         <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>       <tag ref="location-prefix-string"/>
                     </keyword>
-                    <keyword string="fr">                                   <help lang="en">Location prefix modification in English</help>
-                                                                            <help lang="fr">Modification du préfixe de location en Anglais</help>
+                    <keyword string="fr">                                   <help lang="en">Location prefix modification in French</help>
+                                                                            <help lang="fr">Modification du préfixe de location en Français</help>
                         <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>       <tag ref="location-prefix-string"/>
                     </keyword>
                     <tag id="location-prefix-string" hollow="yes">
@@ -133,6 +133,27 @@
                                                                             <help lang="fr">Préfixe de location</help>
                             <cpp>cli_LocationPrefix.SetString(e_Lang, <value-of param="location-prefix-string"/>);</cpp>
                             <tag ref="location-prefix-loop"/>
+                        </param>
+                    </tag>
+                    <tag ref="error-loop"/>
+                </tag>
+            </keyword>
+            <keyword string="location-suffix">                              <help lang="en">Location suffix modification</help>
+                                                                            <help lang="fr">Modification du suffixe de location</help>
+                <tag id="location-suffix-loop">
+                    <keyword string="en">                                   <help lang="en">Location suffix modification in English</help>
+                                                                            <help lang="fr">Modification du suffixe de location en Anglais</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>       <tag ref="location-suffix-string"/>
+                    </keyword>
+                    <keyword string="fr">                                   <help lang="en">Location suffix modification in French</help>
+                                                                            <help lang="fr">Modification du suffixe de location en Français</help>
+                        <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>       <tag ref="location-suffix-string"/>
+                    </keyword>
+                    <tag id="location-suffix-string" hollow="yes">
+                        <param id="location-suffix-string" type="string">   <help lang="en">Location suffix</help>
+                                                                            <help lang="fr">Suffixe de location</help>
+                            <cpp>cli_LocationSuffix.SetString(e_Lang, <value-of param="location-suffix-string"/>);</cpp>
+                            <tag ref="location-suffix-loop"/>
                         </param>
                     </tag>
                     <tag ref="error-loop"/>
@@ -182,7 +203,7 @@
             </keyword>
             <endl>                                          <help lang="en">Error format modification</help>
                                                             <help lang="fr">Modification du formattage des erreurs</help>
-                <cpp>TuneErrorFormatting(cli_LocationPrefix, cli_Prefix, cli_Suffix);</cpp>
+                <cpp>TuneErrorFormatting(cli_LocationPrefix, cli_LocationSuffix, cli_Prefix, cli_Suffix);</cpp>
             </endl>
         </tag>
     </keyword>

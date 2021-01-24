@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -33,6 +33,21 @@
 #include "NativeTraces.h"
 
 
+extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1getKey(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeDeviceRef)
+{
+    NativeTraces::TraceMethod("IODevice.__getKey(I_NativeDeviceRef)");
+    NativeTraces::TraceParam("I_NativeDeviceRef", "%d", I_NativeDeviceRef);
+    cli::KEY e_Key = cli::NULL_KEY;
+    if (const cli::IODevice* const pcli_IODevice = (const cli::IODevice*) I_NativeDeviceRef)
+    {
+        e_Key = pcli_IODevice->GetKey();
+    }
+    NativeTraces::TraceReturn("IODevice.__getKey()", "%d", (int) e_Key);
+    return (jint) e_Key;
+}
+
 extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1getLocation(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeDeviceRef)
@@ -51,3 +66,20 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1getLocation(
     return (jint) pcli_Location;
 }
 
+extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1getNullDevice(
+        JNIEnv* PJ_Env, jclass PJ_Class)
+{
+    NativeTraces::TraceMethod("IODevice.__getNullDevice()");
+    const cli::IODevice* const pcli_NullDevice = & cli::IODevice::GetNullDevice();
+    NativeTraces::TraceReturn("IODevice.__getNullDevice()", "%d", (int) pcli_NullDevice);
+    return (jint) pcli_NullDevice;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1getStdIn(
+        JNIEnv* PJ_Env, jclass PJ_Class)
+{
+    NativeTraces::TraceMethod("IODevice.__getStdIn()");
+    const cli::IODevice* const pcli_StdInDevice = & cli::IODevice::GetStdIn();
+    NativeTraces::TraceReturn("IODevice.__getStdIn()", "%d", (int) pcli_StdInDevice);
+    return (jint) pcli_StdInDevice;
+}

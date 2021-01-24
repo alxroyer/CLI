@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -89,20 +89,6 @@ public abstract class Menu extends SyntaxNode {
         return b_Res;
     }
 
-    /** Handler called when an error occures.
-        This method may be overriden by final menu classes. */
-    public void onError(ResourceString location, ResourceString message) {
-    }
-    private final void __onError(int I_NativeLocationRef, int I_NativeErrorMessageRef) {
-        Traces.traceMethod("Menu.__onError()");
-        ResourceString cli_Location = (ResourceString) NativeObject.getObject(I_NativeLocationRef);
-        ResourceString cli_ErrorMessage = (ResourceString) NativeObject.getObject(I_NativeErrorMessageRef);
-        if ((cli_Location != null) && (cli_ErrorMessage != null)) {
-            onError(cli_Location, cli_ErrorMessage);
-        }
-        Traces.traceReturn("Menu.__onError()");
-    }
-
     /** Handler called when the menu exits.
         This method may be overriden by final menu classes. */
     public void onExit() {
@@ -111,6 +97,18 @@ public abstract class Menu extends SyntaxNode {
         Traces.traceMethod("Menu.__onExit()");
         onExit();
         Traces.traceReturn("Menu.__onExit()");
+    }
+
+    /** Handler called when then menu displays its prompt.
+        @return The prompt to display. An empty string for the default prompt. */
+    public String onPrompt() {
+        return "";
+    }
+    private final String __onPrompt() {
+        Traces.traceMethod("Menu.__onPrompt()");
+        String j_Prompt = onPrompt();
+        Traces.traceReturn("Menu.__onPrompt()", j_Prompt);
+        return j_Prompt;
     }
 
 }

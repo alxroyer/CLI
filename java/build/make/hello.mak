@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -27,47 +27,33 @@
 hello.default: $(.DEFAULT_GOAL) ;
 
 # Includes
+CLI_DIR := ../../..
 include _vars.mak
+PRODUCT = hello
+SRC_DIR = $(JAVA_DIR)/src/cli/test
+JAVA_FILES = $(CLI_GO_JAVA) $(CLI_JAVA)
+PROJECT_DEPS = native.mak
+include _build.mak
+PROJ_CLEAN += $(CLI_JAVA)
 
 # Variables
 CLI_XML_RES = $(CLI_DIR)/samples/user-guide/hello.xml
 CLI_XSL = $(JAVA_DIR)/xsl/javaclic.xsl
 CLI_JAVA = $(patsubst %.xml,$(JAVA_DIR)/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
 CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
-CLI_CLASS = $(OUT_DIR)/cli/test/$(CLI_JAVA_CLASS_NAME).class
 CLI_GO_JAVA = $(JAVA_DIR)/src/cli/test/GoHello.java
-CLI_GO_CLASS = $(OUT_DIR)/cli/test/GoHello.class
 
 # Rules
-.PHONY: depends
-depends:
-	$(call MkDispatch,libclijava.mak native.mak)
-
-.PHONY: build
-build: depends $(CLI_CLASS) $(CLI_GO_CLASS) ;
-
 run:
 	cd $(OUT_DIR) && java cli.test.GoHello
 
-$(CLI_GO_CLASS): $(CLI_GO_JAVA) $(wildcard $(JAVA_DIR)/src/cli/*.java)
-	@mkdir -p $(OUT_DIR)
-	javac $(JAVA_PATH) $(JAVAC_FLAGS) $<
-
-$(CLI_CLASS): $(CLI_JAVA) $(wildcard $(JAVA_DIR)/src/cli/*.java)
-	@mkdir -p $(OUT_DIR)
-	javac $(JAVA_PATH) $(JAVAC_FLAGS) $<
-
 $(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
-	@mkdir -p $(OUT_DIR)
+	mkdir -p $(dir $(OUT_DIR))
 	echo "package cli.test;" > $(CLI_JAVA)
 	xsltproc --stringparam STR_CliClassName $(CLI_JAVA_CLASS_NAME) $(CLI_XSL) $(CLI_XML_RES) >> $(CLI_JAVA)
 
 .PHONY: deps
 deps: ;
-
-.PHONY: clean
-clean:
-	$(RM) $(CLI_JAVA) $(CLI_CLASS) $(CLI_TEST_SAMPLE_CLASS) $(CLI_LOG)
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
@@ -75,12 +61,12 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(JAVA_DIR)/build/make/hello.help
 help: $(JAVA_DIR)/build/make/hello.help
 $(JAVA_DIR)/build/make/hello.help:
-	$(call PrintHelp, build, Build the Hello sample project)
 	$(call PrintHelp, run, 	 Run the Hello sample)
-	$(call PrintHelp, clean, Clean intermediate and output files)
 
 .PHONY: $(JAVA_DIR)/build/make/hello.vars
 vars: $(JAVA_DIR)/build/make/hello.vars
 $(JAVA_DIR)/build/make/hello.vars:
-	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_CLASS CLI_GO_JAVA CLI_GO_CLASS)
+	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_GO_JAVA)
 
+# Dependencies
+build: $(JAVA_FILES)

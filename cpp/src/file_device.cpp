@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -219,7 +219,7 @@ const ResourceString InputFileDevice::GetLocation(void) const
 {
     char str_Location[1024];
     memset(str_Location, '\0', sizeof(str_Location));
-    snprintf(str_Location, sizeof(str_Location) - 1, "%s:%d: ", (const char* const) m_strFileName, GetCurrentLine());
+    snprintf(str_Location, sizeof(str_Location) - 1, "%s:%d", (const char* const) m_strFileName, GetCurrentLine());
 
     ResourceString cli_Location;
     for (int i_Lang = 0; i_Lang < ResourceString::LANG_COUNT; i_Lang ++)

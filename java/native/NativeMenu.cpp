@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -158,7 +158,7 @@ const bool __NativeMenu__OnError(
         if (const jclass pj_MenuClass = PJ_Env->FindClass(STR_Class.c_str()))
         {
             NativeTraces::TraceValue("pj_MenuClass", "0x%08x", pj_MenuClass);
-            if (const jmethodID pj_OnErrorMethodID = PJ_Env->GetMethodID(pj_MenuClass, "__onError", "(II)V"))
+            if (const jmethodID pj_OnErrorMethodID = PJ_Env->GetMethodID(pj_MenuClass, "__onError", "(II)Z"))
             {
                 NativeTraces::TraceValue("pj_OnErrorMethodID", "0x%08x", pj_OnErrorMethodID);
                 if (const jobject pj_Object = NativeObject::GetJavaObject(PJ_Env, (int) & CLI_Menu))
@@ -168,8 +168,7 @@ const bool __NativeMenu__OnError(
                         if (NativeObject::CreateFromNative(PJ_Env, CLI_ErrorMessage))
                         {
                             NativeTraces::TraceValue("pj_Object", "0x%08x", pj_Object);
-                            PJ_Env->CallVoidMethod(pj_Object, pj_OnErrorMethodID, (int) & CLI_Location, (int) & CLI_ErrorMessage);
-                            b_Res = true;
+                            b_Res = PJ_Env->CallBooleanMethod(pj_Object, pj_OnErrorMethodID, (int) & CLI_Location, (int) & CLI_ErrorMessage);
 
                             NativeObject::DeleteFromNative(PJ_Env, CLI_Location);
                         }
@@ -213,4 +212,44 @@ const bool __NativeMenu__OnExit(
     }
     NativeTraces::TraceReturn("__NativeMenu__OnExit()", "%d", (int) b_Res);
     return b_Res;
+}
+
+const std::string __NativeMenu__OnPrompt(
+        JNIEnv* const PJ_Env, const std::string& STR_Class,
+        const cli::Menu& CLI_Menu)
+{
+    NativeTraces::TraceMethod("__NativeMenu__OnPrompt()");
+    NativeTraces::TraceParam("PJ_Env", "0x%08x", PJ_Env);
+    NativeTraces::TraceParam("STR_Class", "%s", STR_Class.c_str());
+    NativeTraces::TraceParam("CLI_Menu", "%d", (int) & CLI_Menu);
+
+    std::string std_Prompt;
+    if (PJ_Env != NULL)
+    {
+        // Java menu execution.
+        if (const jclass pj_MenuClass = PJ_Env->FindClass(STR_Class.c_str()))
+        {
+            NativeTraces::TraceValue("pj_MenuClass", "0x%08x", pj_MenuClass);
+            if (const jmethodID pj_OnPromptMethodID = PJ_Env->GetMethodID(pj_MenuClass, "__onPrompt", "()Ljava/lang/String;"))
+            {
+                NativeTraces::TraceValue("pj_OnPromptMethodID", "0x%08x", pj_OnPromptMethodID);
+                if (const jobject pj_Object = NativeObject::GetJavaObject(PJ_Env, (int) & CLI_Menu))
+                {
+                    NativeTraces::TraceValue("pj_Object", "0x%08x", pj_Object);
+                    if (const jobject pj_Prompt = PJ_Env->CallObjectMethod(pj_Object, pj_OnPromptMethodID))
+                    {
+                        NativeTraces::TraceValue("pj_Prompt", "0x%08x", pj_Prompt);
+                        if (const char* const str_Prompt = PJ_Env->GetStringUTFChars((const jstring) pj_Prompt, 0))
+                        {
+                            NativeTraces::TraceValue("pj_Prompt", "%s", str_Prompt);
+                            std_Prompt = str_Prompt;
+                            PJ_Env->ReleaseStringUTFChars((const jstring) pj_Prompt, str_Prompt);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    NativeTraces::TraceReturn("__NativeMenu__OnExit()", "%s", std_Prompt.c_str());
+    return std_Prompt;
 }

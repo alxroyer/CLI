@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -30,50 +30,49 @@ javatest.default: $(.DEFAULT_GOAL) ;
 CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 
 # Includes
+CLI_DIR := ../../..
 include _vars.mak
+PRODUCT = TestSample
+SRC_DIR = $(JAVA_DIR)/src/cli/test
+JAVA_FILES = $(CLI_TEST_SAMPLE_JAVA) $(CLI_JAVA)
+PROJECT_DEPS += libclijava.mak
+PROJECT_DEPS += jni.mak
+PROJECT_DEPS += native.mak
+include _build.mak
+PROJ_CLEAN += $(CLI_JAVA) $(CLI_LOG)
 
 # Variables
 CLI_XSL = $(JAVA_DIR)/xsl/javaclic.xsl
 CLI_JAVA = $(patsubst %.xml,$(JAVA_DIR)/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
 CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
-CLI_CLASS = $(OUT_DIR)/cli/test/$(CLI_JAVA_CLASS_NAME).class
 CLI_TEST_SAMPLE_JAVA = $(JAVA_DIR)/src/cli/test/TestSample.java
-CLI_TEST_SAMPLE_CLASS = $(OUT_DIR)/cli/test/TestSample.class
 CLI_TEST = $(patsubst %.xml,%.test,$(CLI_XML_RES))
-CLI_LOG = $(patsubst %.class,%.log,$(CLI_CLASS))
+CLI_LOG = $(OUT_DIR)/cli/test/$(CLI_JAVA_CLASS_NAME).log
 CLI_CHECK = $(patsubst %.xml,%.check,$(CLI_XML_RES))
 
 # Rules
 .PHONY: check
-check: depends $(CLI_LOG) $(CLI_CHECK)
+check: $(CLI_LOG) $(CLI_CHECK)
+	dos2unix $(CLI_CHECK) 2> /dev/null
 	diff $(CLI_LOG) $(CLI_CHECK)
 
 .PHONY: log
-log: depends $(CLI_LOG) ;
-$(CLI_LOG): $(JAVA_ARCHIVE) $(JAVA_DYN_LIB) $(CLI_TEST_SAMPLE_CLASS) $(CLI_CLASS) $(CLI_TEST) $(CPP_DIR)/tests/cleanlog.sh
+log: $(CLI_LOG) ;
+$(CLI_LOG): $(CLI_JAVA) build $(CLI_TEST) $(CLI_DIR)/samples/cleanlog.sh
+	dos2unix $(CLI_TEST) 2> /dev/null
 	java $(JAVA_PATH) -Djava.library.path=$(OUT_DIR) cli.test.TestSample cli.test.$(CLI_JAVA_CLASS_NAME) $(CLI_TEST) $(CLI_LOG)
-	$(CPP_DIR)/tests/cleanlog.sh $(CLI_LOG)
-
-.PHONY: depends
-depends:
-	$(call MkDispatch,libclijava.mak native.mak)
-
-$(CLI_TEST_SAMPLE_CLASS): $(CLI_TEST_SAMPLE_JAVA) $(wildcard $(JAVA_DIR)/src/cli/*.java)
-	@mkdir -p $(OUT_DIR)
-	javac $(JAVA_PATH) $(JAVAC_FLAGS) $<
-
-$(CLI_CLASS): $(CLI_JAVA) $(wildcard $(JAVA_DIR)/src/cli/*.java)
-	@mkdir -p $(OUT_DIR)
-	javac $(JAVA_PATH) $(JAVAC_FLAGS) $<
+	dos2unix $(CLI_DIR)/samples/cleanlog.sh 2> /dev/null
+	chmod a+x $(CLI_DIR)/samples/cleanlog.sh
+	$(CLI_DIR)/samples/cleanlog.sh $(CLI_LOG)
+	dos2unix $(CLI_LOG) 2> /dev/null
 
 $(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
-	@mkdir -p $(OUT_DIR)
+	mkdir -p $(dir $(CLI_JAVA))
 	echo "package cli.test;" > $(CLI_JAVA)
 	xsltproc --stringparam STR_CliClassName $(CLI_JAVA_CLASS_NAME) $(CLI_XSL) $(CLI_XML_RES) >> $(CLI_JAVA)
 
-.PHONY: clean
-clean:
-	$(RM) $(CLI_JAVA) $(CLI_CLASS) $(CLI_TEST_SAMPLE_CLASS) $(CLI_LOG)
+.PHONY: deps
+deps: ;
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
@@ -83,10 +82,11 @@ help: $(JAVA_DIR)/build/make/test.help
 $(JAVA_DIR)/build/make/test.help:
 	$(call PrintHelp, check, Check test output)
 	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
-	$(call PrintHelp, clean, Clean intermediate and output files)
 
 .PHONY: $(JAVA_DIR)/build/make/test.vars
 vars: $(JAVA_DIR)/build/make/test.vars
 $(JAVA_DIR)/build/make/test.vars:
-	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_CLASS CLI_TEST_SAMPLE_JAVA CLI_TEST_SAMPLE_CLASS CLI_TEST CLI_LOG CLI_CHECK)
+	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_TEST_SAMPLE_JAVA CLI_TEST CLI_LOG CLI_CHECK)
 
+# Dependencies
+build: $(JAVA_FILES)

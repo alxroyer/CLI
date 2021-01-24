@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -123,11 +123,11 @@ void TunePrompt(const cli::ResourceString& CLI_Prompt)
     }
 }
 
-void TuneErrorFormatting(const cli::ResourceString& CLI_LocationPrefix, const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix)
+void TuneErrorFormatting(const cli::ResourceString& CLI_LocationPrefix, const cli::ResourceString& CLI_LocationSuffix, const cli::ResourceString& CLI_ErrorPrefix, const cli::ResourceString& CLI_ErrorSuffix)
 {
     if (cli::Shell* const pcli_Shell = GetShell())
     {
-        pcli_Shell->SetErrorFormatting(CLI_LocationPrefix, CLI_ErrorPrefix, CLI_ErrorSuffix);
+        pcli_Shell->SetErrorFormatting(CLI_LocationPrefix, CLI_LocationSuffix, CLI_ErrorPrefix, CLI_ErrorSuffix);
     }
 }
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -34,6 +34,12 @@ public class IODevice extends OutputDevice
         super(I_NativeRef);
     }
 
+    /** Input key capture. */
+    public int getKey() {
+        return __getKey(this.getNativeRef());
+    }
+    private static final native int __getKey(int I_NativeDeviceRef);
+
     /** Location accessor.
         @return The location as a resource string. */
     public ResourceString getLocation() {
@@ -42,4 +48,26 @@ public class IODevice extends OutputDevice
         return cli_Location;
     }
     private static final native int __getLocation(int I_NativeDeviceRef);
+
+    /** Null device singleton.
+        @return The null output device. */
+    public static final IODevice getNullDevice() {
+        if (m_cliNullDevice == null) {
+            m_cliNullDevice = new IODevice(__getNullDevice());
+        }
+        return m_cliNullDevice;
+    }
+    private static final native int __getNullDevice();
+    private static IODevice m_cliNullDevice = null;
+
+    /** Standard input device singleton.
+        @return The standard input device. */
+    public static final IODevice getStdIn() {
+        if (m_cliStdIn == null) {
+            m_cliStdIn = new IODevice(__getStdIn());
+        }
+        return m_cliStdIn;
+    }
+    private static final native int __getStdIn();
+    private static IODevice m_cliStdIn = null;
 }

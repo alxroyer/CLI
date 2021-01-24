@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,7 +25,8 @@
 -->
 
 
-<cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello">
+<cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"><help lang="en">Hello menu</help>
+                                                          <help lang="fr">Menu Hello</help>
     <keyword string="say"><help lang="en">Say something.</help>
                           <help lang="fr">Dire quelque chose.</help>
         <keyword string="hello"><help lang="en">Say hello.</help>

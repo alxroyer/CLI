@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,42 +25,19 @@
 -->
 
 
-<cli xmlns="http://alexis.royer.free.fr/CLI" name="my-config">
-    <keyword string="show">
-        <keyword string="ip">
-            <keyword string="config">
-                <endl></endl>
-            </keyword>
-            <keyword string="stats">
-                <endl></endl>
-            </keyword>
-        </keyword>
-    </keyword>
-    <keyword string="edit">
-        <keyword string="config">
-            <endl><menu ref="edit"/></endl>
-        </keyword>
+<cli xmlns="http://alexis.royer.free.fr/CLI" name="menu-cpp">
+    <keyword string="menu">
+        <param id="menu-id" type="int">
+            <endl>
+                <cpp>if (<value-of param="menu-id"/> &gt;= 0) { GetShell().EnterMenu(* GetCli().GetMenu("sub-menu")); }</cpp>
+                <cpp>else { <err/> &lt;&lt; "Invalid menu identifier " &lt;&lt; <value-of param="menu-id"/> &lt;&lt; cli::endl; }</cpp>
+
+                <java>if (<value-of param="menu-id"/> &gt;= 0) { getShell().enterMenu(getCli().getMenu("sub-menu")); }</java>
+                <java>else { <err/>.put("Invalid menu identifier " + <value-of param="menu-id"/>).endl(); }</java>
+            </endl>
+        </param>
     </keyword>
 
-    <menu name="edit">
-        <keyword string="set">
-            <keyword string="ip">
-                <keyword string="address">
-                    <param type="host" id="addr">
-                        <endl></endl>
-                    </param>
-                </keyword>
-            </keyword>
-        </keyword>
-        <keyword string="reset">
-            <keyword string="stats">
-                <endl></endl>
-            </keyword>
-        </keyword>
-
-        <handler name="exit">
-            <cpp><out/> &lt;&lt; "Leaving edit config menu" &lt;&lt; cli::endl;</cpp>
-            <java><out/>.put("Leaving edit config menu").endl();</java>
-        </handler>
+    <menu name="sub-menu">
     </menu>
 </cli>

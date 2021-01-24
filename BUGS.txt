@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -23,34 +23,42 @@
 -------------------------------------------------------------------------------
 
 KNOWN ISSUES
-    C++
-        Bug(minor)! Build info when building in debug under Cygwin
-                Info: resolving _ESCDELAY by linking to __imp__ESCDELAY (auto-import)
-                Info: resolving _stdscr by linking to __imp__stdscr (auto-import)
-        Bug(minor)! Incomplete ncurses implementation of cli::Console. Missing:
-                CTRL+INSER, SHIFT+SUPPR, SHIFT+INSER,
-                CONTROL+arrows, 
-                '€' (input and output), '©'
-        Bug(minor)! Incomplete Windows implementation of cli::Console. Missing:
-                ALT+C/X/V/Z/Y,
-                SHIFT+INS, SHIFT+SUPPR,
-                'á', 'í', 'ì', 'ó', 'ò', 'ú', '€', '©'
-        Bug(minor)! Incomplete Telnet implementation. Missing:
-                CTRL+arrows,
-                ALT+C/X/V/Z/Y
-                CTRL+INS, SHIFT+INS, SHIFT+SUPPR
-                bad output for '€'
-                input -93 conflicts between '£' and 'ú' (when 'ú' is copied from the output itself)
-        Bug(minor)! Improve windows clean screen behavior.
-        Bug(minor)! Do not directly use STL in 'file_device.h'.
-    JAVA
-        Bug(minor)! Fatal error when building deps of java/build/make/native.mak under cygwin from make (but direct commands from the shell)
-    XSL
-        (Bug minor!) xsltproc infinite loop with interleaved tags.
+    * Bug(minor)! cli2help: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.
+    * Bug(minor)! C++: Build info when building in debug under Cygwin
+            Info: resolving _ESCDELAY by linking to __imp__ESCDELAY (auto-import)
+            Info: resolving _stdscr by linking to __imp__stdscr (auto-import)
+    * Bug(minor)! C++: Incomplete ncurses implementation of cli::Console. Missing:
+            CTRL+INSER, SHIFT+SUPPR, SHIFT+INSER,
+            CONTROL+arrows, 
+            '€' (input and output), '©'
+    * Bug(minor)! C++: Incomplete Windows implementation of cli::Console. Missing:
+            ALT+C/X/V/Z/Y,
+            SHIFT+INS, SHIFT+SUPPR,
+            'á', 'í', 'ì', 'ó', 'ò', 'ú', '€', '©'
+    * Bug(minor)! C++: Incomplete Telnet implementation. Missing:
+            CTRL+arrows,
+            ALT+C/X/V/Z/Y
+            CTRL+INS, SHIFT+INS, SHIFT+SUPPR
+            bad output for '€'
+            input -93 conflicts between '£' and 'ú' (when 'ú' is copied from the output itself)
+    * Bug(minor)! C++: Improve windows clean screen behavior.
+    * Bug(minor)! C++: Window telnet multi-client not implemented.
+            Note: fork() for Windows incompatibility
+    * Bug(minor)! Java(Linux): warning: unmappable character for encoding UTF8 ... "Traces d'ex?cution du CLI"
+    * Bug(minor)! XSL: xsltproc infinite loop with interleaved tags.
             <tag id="tag1">...<tag ref="tag2"/>...</tag>
             <tag id="tag2">...<tag ref="tag1"/>...</tag>
             Seems non-sens however.
 
+
+FIXED in 2.5
+(Sep, 30th 2010)
+    * Bug(major)! C++: auto \r on \n missing for telnet connections
+    * Bug(minor)! C++: io_device.cpp cast correction for pointer display
+    * Bug(minor)! Fatal error when building deps of java/build/make/native.mak under cygwin from make (but direct commands from the shell)
+            Dependency addition between native.mak and libclijava.mak/jni.mak for deps rule
+    * Bug(minor)! Do not directly use STL in 'file_device.h'
+    * Bug(minor)! XSL: Enable resource names with space characters (menus...)
 
 FIXED in 2.4
 (Oct, 1st 2009)

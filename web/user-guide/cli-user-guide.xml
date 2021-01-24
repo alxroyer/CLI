@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -55,7 +55,9 @@
     <!ENTITY sample-circle-java         SYSTEM "samples/circle-java.db">
     <!ENTITY sample-circle-pos-cli      SYSTEM "samples/circle-pos.db">
     <!ENTITY sample-circle-color-cli    SYSTEM "samples/circle-color.db">
-    <!ENTITY sample-edit-config         SYSTEM "samples/edit-config.db">
+    <!ENTITY sample-menu-config         SYSTEM "samples/menu-config.db">
+    <!ENTITY sample-menu-handler        SYSTEM "samples/menu-handler.db">
+    <!ENTITY sample-menu-cpp            SYSTEM "samples/menu-cpp.db">
 ]>
 
 <article xmlns="http://docbook.org/docbook-ng">
@@ -63,17 +65,33 @@
 
 <artheader>
     <author><firstname>Royer</firstname><surname>Alexis</surname></author>
-    <issuenum>2.1</issuenum>
-    <pubdate>Oct, 1st 2009</pubdate>
+    <issuenum>2.5</issuenum>
+    <pubdate>Sep, 30th 2010</pubdate>
     <title>CLI library user guide</title>
     <!--<titleabbrev></titleabbrev>-->
     <revhistory>
+        <revision>  <revnumber>2.5</revnumber><date>Sep, 8th 2010</date>
+                    <revremark> New features:
+                                    schemas,
+                                    "member" and "constructor" sections,
+                                    "prompt" handler
+                                    and automatic help document generation.<sbr/>
+                                New sections:
+                                    "Shell advanced features".<sbr/>
+                                Improvements:
+                                    (a|b)+, (a|b)* samples.</revremark></revision>
         <revision>  <revnumber>2.4</revnumber><date>Oct, 1st 2009</date>
                     <revremark>Few corrections.</revremark></revision>
         <revision>  <revnumber>2.3</revnumber><date>May, 14th 2009</date>
-                    <revremark> "Thread-safe termination", "Mono-Thread execution", "Embedded integration and memory" and "Making compilers" sections addition.<sbr/>
-                                "Define your own input/output device" section improvement.<sbr/>
-                                XSL generation note addition.</revremark></revision>
+                    <revremark> New features:
+                                    "Thread-safe termination",
+                                    and "Mono-Thread execution".<sbr/>
+                                New sections:
+                                    "Embedded integration and memory"
+                                    and "Making compilers".<sbr/>
+                                Improvements:
+                                    "Define your own input/output device",
+                                    and XSL generation note addition.</revremark></revision>
         <revision>  <revnumber>2.2</revnumber><date>Sep, 21st 2008</date>
                     <revremark>Few corrections.</revremark></revision>
         <revision>  <revnumber>2.1</revnumber><date>Oct, 31st 2007</date>

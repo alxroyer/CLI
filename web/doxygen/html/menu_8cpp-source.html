@@ -19,9 +19,9 @@
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
 <div class="nav">
-<a class="el" href="dir_ee6a9aa9a640f270615eb3e35f15e577.html">cpp</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_a44934a216507e551836306841a18604.html">src</a></div>
+<a class="el" href="dir_69a8c1199e71e63ec9f0fe73525e22e1.html">cpp</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_c73a7521d978c97217c5617d7512bb77.html">src</a></div>
 <h1>menu.cpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
-<a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI</span>
+<a name="l00002"></a>00002 <span class="comment">    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI</span>
 <a name="l00003"></a>00003 <span class="comment"></span>
 <a name="l00004"></a>00004 <span class="comment">    All rights reserved.</span>
 <a name="l00005"></a>00005 <span class="comment"></span>
@@ -178,23 +178,28 @@
 <a name="l00156"></a>00156 <span class="keyword"></span>{
 <a name="l00157"></a>00157 }
 <a name="l00158"></a>00158 
-<a name="l00159"></a>00159 
-<a name="l00160"></a>00160 MenuRef::MenuRef(<span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; CLI_Menu)
-<a name="l00161"></a>00161   : <a class="code" href="classElement.html">Element</a>(<span class="stringliteral">""</span>, <a class="code" href="classHelp.html">Help</a>()),
-<a name="l00162"></a>00162     m_pcliMenu(&amp; CLI_Menu)
-<a name="l00163"></a>00163 {
-<a name="l00164"></a>00164 }
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166 <a class="code" href="classMenuRef.html#9345301e8a0d5afbec0268481b795278">MenuRef::~MenuRef</a>(<span class="keywordtype">void</span>)
-<a name="l00167"></a>00167 {
-<a name="l00168"></a>00168 }
-<a name="l00169"></a>00169 
-<a name="l00170"></a>00170 <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; <a class="code" href="classMenuRef.html#a614bcc181e21b5328ceb8aedde52402">MenuRef::GetMenu</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
-<a name="l00171"></a>00171 <span class="keyword"></span>{
-<a name="l00172"></a>00172     <span class="keywordflow">return</span> *<a class="code" href="classMenuRef.html#e4fc187462c53bcd3c238bbe766bdac8">m_pcliMenu</a>;
+<a name="l00159"></a>00159 <span class="keyword">const</span> tk::String <a class="code" href="classMenu.html#2f154c0ab96a25232b1d50b1036eb6a2">Menu::OnPrompt</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00160"></a>00160 <span class="keyword"></span>{
+<a name="l00161"></a>00161     <span class="keywordflow">return</span> tk::String(0);
+<a name="l00162"></a>00162 }
+<a name="l00163"></a>00163 
+<a name="l00164"></a>00164 
+<a name="l00165"></a>00165 MenuRef::MenuRef(<span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; CLI_Menu)
+<a name="l00166"></a>00166   : <a class="code" href="classElement.html">Element</a>(<span class="stringliteral">""</span>, <a class="code" href="classHelp.html">Help</a>()),
+<a name="l00167"></a>00167     m_pcliMenu(&amp; CLI_Menu)
+<a name="l00168"></a>00168 {
+<a name="l00169"></a>00169 }
+<a name="l00170"></a>00170 
+<a name="l00171"></a>00171 <a class="code" href="classMenuRef.html#9345301e8a0d5afbec0268481b795278">MenuRef::~MenuRef</a>(<span class="keywordtype">void</span>)
+<a name="l00172"></a>00172 {
 <a name="l00173"></a>00173 }
 <a name="l00174"></a>00174 
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Fri Oct 2 00:11:52 2009 for CLI by&nbsp;
+<a name="l00175"></a>00175 <span class="keyword">const</span> <a class="code" href="classMenu.html">Menu</a>&amp; <a class="code" href="classMenuRef.html#a614bcc181e21b5328ceb8aedde52402">MenuRef::GetMenu</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00176"></a>00176 <span class="keyword"></span>{
+<a name="l00177"></a>00177     <span class="keywordflow">return</span> *<a class="code" href="classMenuRef.html#e4fc187462c53bcd3c238bbe766bdac8">m_pcliMenu</a>;
+<a name="l00178"></a>00178 }
+<a name="l00179"></a>00179 
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sat Oct 2 06:48:29 2010 for CLI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.1 </small></address>
 </body>
