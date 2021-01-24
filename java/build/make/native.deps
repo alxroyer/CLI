@@ -1,3 +1,43 @@
+$(INT_DIR)/NativeMenu.o: ../../../java/native/NativeMenu.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/menu.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/param.h \
+  ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/debug.h \
+  ../../../java/native/NativeMenu.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/command_line.h \
+  ../../../java/native/NativeObject.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/io_device.h \
+  ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h
+$(INT_DIR)/NativeObject.o: ../../../java/native/NativeObject.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/command_line.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/param_string.h \
+  ../../../cpp/include/cli/param.h ../../../cpp/include/cli/syntax_node.h \
+  ../../../cpp/include/cli/param_int.h \
+  ../../../cpp/include/cli/param_float.h \
+  ../../../cpp/include/cli/param_host.h \
+  ../../../cpp/include/cli/param_string.h \
+  ../../../java/native/NativeObject.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h
+$(INT_DIR)/NativeTraces.o: ../../../java/native/NativeTraces.cpp \
+  ../../../cpp/include/cli/pch.h ../../../java/native/NativeTraces.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h
 $(INT_DIR)/cli_Cli.o: ../../../java/native/cli_Cli.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/cli.h \
   ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/menu.h \
@@ -39,7 +79,8 @@ $(INT_DIR)/cli_Element.o: ../../../java/native/cli_Element.cpp \
   ../../../cpp/include/cli/resource_string.h \
   ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
   ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
-  ../../../java/native/cli_Element.h ../../../java/native/NativeTraces.h \
+  ../../../java/native/cli_Element.h ../../../java/native/NativeObject.h \
+  ../../../cpp/include/cli/object.h ../../../java/native/NativeTraces.h \
   ../../../cpp/include/cli/traces.h
 $(INT_DIR)/cli_Endl.o: ../../../java/native/cli_Endl.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/endl.h \
@@ -62,6 +103,26 @@ $(INT_DIR)/cli_Help.o: ../../../java/native/cli_Help.cpp \
   ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
   ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h \
   ../../../cpp/include/cli/help.h
+$(INT_DIR)/cli_IODevice.o: ../../../java/native/cli_IODevice.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../java/native/cli_IODevice.h ../../../java/native/NativeObject.h \
+  ../../../cpp/include/cli/object.h ../../../java/native/NativeTraces.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/help.h
+$(INT_DIR)/cli_IOMux.o: ../../../java/native/cli_IOMux.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_mux.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/help.h \
+  ../../../java/native/cli_IOMux.h ../../../java/native/NativeObject.h \
+  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/io_device.h \
+  ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h
 $(INT_DIR)/cli_InputFileDevice.o:  \
  ../../../java/native/cli_InputFileDevice.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/file_device.h \
@@ -75,17 +136,6 @@ $(INT_DIR)/cli_InputFileDevice.o:  \
   ../../../cpp/include/cli/io_device.h \
   ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h \
   ../../../cpp/include/cli/help.h
-$(INT_DIR)/cli_IOMux.o: ../../../java/native/cli_IOMux.cpp \
-  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_mux.h \
-  ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
-  ../../../cpp/include/cli/tk_stl.h \
-  ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/help.h \
-  ../../../java/native/cli_IOMux.h ../../../java/native/NativeObject.h \
-  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/io_device.h \
-  ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h
 $(INT_DIR)/cli_Keyword.o: ../../../java/native/cli_Keyword.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/keyword.h \
   ../../../cpp/include/cli/namespace.h \
@@ -206,6 +256,18 @@ $(INT_DIR)/cli_ParamString.o: ../../../java/native/cli_ParamString.cpp \
   ../../../java/native/NativeObject.h ../../../cpp/include/cli/object.h \
   ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
   ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h
+$(INT_DIR)/cli_ResourceString.o:  \
+ ../../../java/native/cli_ResourceString.cpp \
+  ../../../cpp/include/cli/pch.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
+  ../../../java/native/cli_ResourceString.h \
+  ../../../java/native/NativeObject.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/include/cli/help.h
 $(INT_DIR)/cli_Shell.o: ../../../java/native/cli_Shell.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/shell.h \
   ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
@@ -288,41 +350,6 @@ $(INT_DIR)/cli_Traces.o: ../../../java/native/cli_Traces.cpp \
   ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
   ../../../java/native/cli_CommandLine.h \
   ../../../java/native/NativeTraces.h
-$(INT_DIR)/NativeMenu.o: ../../../java/native/NativeMenu.cpp \
-  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/param.h \
-  ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/include/cli/syntax_node.h \
-  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/help.h \
-  ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
-  ../../../cpp/include/cli/endl.h ../../../java/native/NativeMenu.h \
-  ../../../cpp/include/cli/help.h ../../../cpp/include/cli/command_line.h \
-  ../../../java/native/NativeObject.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
-  ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h
-$(INT_DIR)/NativeObject.o: ../../../java/native/NativeObject.cpp \
-  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/command_line.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/help.h \
-  ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
-  ../../../cpp/include/cli/param_string.h \
-  ../../../cpp/include/cli/param.h ../../../cpp/include/cli/syntax_node.h \
-  ../../../cpp/include/cli/param_int.h \
-  ../../../cpp/include/cli/param_float.h \
-  ../../../cpp/include/cli/param_host.h \
-  ../../../cpp/include/cli/param_string.h \
-  ../../../java/native/NativeObject.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
-  ../../../java/native/NativeTraces.h ../../../cpp/include/cli/traces.h
-$(INT_DIR)/NativeTraces.o: ../../../java/native/NativeTraces.cpp \
-  ../../../cpp/include/cli/pch.h ../../../java/native/NativeTraces.h \
-  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/help.h \
-  ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h
 $(INT_DIR)/cli.o: ../../../cpp/src/cli.cpp ../../../cpp/include/cli/pch.h \
   ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/namespace.h \
   ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/syntax_node.h \
@@ -383,8 +410,9 @@ $(INT_DIR)/config_menu.o: ../../../cpp/src/config_menu.cpp \
   ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
   ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/command_line.h \
   ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/src/config_menu.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/menu.h
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/lib_info.h \
+  ../../../cpp/src/config_menu.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/menu.h
 $(INT_DIR)/consistency.o: ../../../cpp/src/consistency.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_device.h \
   ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
@@ -487,14 +515,6 @@ $(INT_DIR)/mt_device.o: ../../../cpp/src/mt_device.cpp \
   ../../../cpp/include/cli/resource_string.h \
   ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/help.h \
   ../../../cpp/include/cli/assert.h
-$(INT_DIR)/ncurses_console.o: ../../../cpp/src/ncurses_console.cpp \
-  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/console.h \
-  ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
-  ../../../cpp/include/cli/tk_stl.h \
-  ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/help.h
 $(INT_DIR)/object.o: ../../../cpp/src/object.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/object.h \
   ../../../cpp/include/cli/namespace.h
@@ -570,9 +590,9 @@ $(INT_DIR)/shell.o: ../../../cpp/src/shell.cpp \
   ../../../cpp/include/cli/element.h ../../../cpp/include/cli/menu.h \
   ../../../cpp/include/cli/command_line.h ../../../cpp/include/cli/endl.h \
   ../../../cpp/include/cli/param.h ../../../cpp/include/cli/traces.h \
-  ../../../cpp/include/cli/assert.h ../../../cpp/src/consistency.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/src/constraints.h \
-  ../../../cpp/src/command_line_edition.h \
+  ../../../cpp/include/cli/assert.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/src/consistency.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/src/constraints.h ../../../cpp/src/command_line_edition.h \
   ../../../cpp/include/cli/object.h ../../../cpp/include/cli/tk.h \
   ../../../cpp/src/command_line_history.h
 $(INT_DIR)/single_command.o: ../../../cpp/src/single_command.cpp \
@@ -663,3 +683,11 @@ $(INT_DIR)/win_console.o: ../../../cpp/src/win_console.cpp \
   ../../../cpp/include/cli/resource_string.h \
   ../../../cpp/include/cli/io_mux.h ../../../cpp/include/cli/shell.h \
   ../../../cpp/include/cli/help.h ../../../cpp/include/cli/traces.h
+$(INT_DIR)/ncurses_console.o: ../../../cpp/src/ncurses_console.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/console.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_stl.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/help.h

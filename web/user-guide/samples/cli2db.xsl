@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,7 +41,7 @@ public class GoCliSample {
             // Launch the shell.
             cli_Shell.run(cli_Input);
         } catch (Exception e) {
-            e.printStackTrace();
+            cli_Input.printStackTrace(e);
         }
     }
 

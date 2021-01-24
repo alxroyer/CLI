@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -60,6 +60,13 @@ CLI_NS_BEGIN(cli)
         virtual const bool Execute(const CommandLine& CLI_CmdLine) const;
 
     private:
+        //! @brief 'show version' command.
+        void ShowVersion(void) const;
+        //! @brief 'show author' command.
+        void ShowAuthor(void) const;
+        //! @brief 'show license' command.
+        void ShowLicense(void) const;
+
         //! @brief 'echo on' command.
         void EchoOn(void) const;
 
@@ -83,6 +90,15 @@ CLI_NS_BEGIN(cli)
         #endif
 
     private:
+        //! @brief Show node access (read-only).
+        const Keyword& GetShowNode(void) const;
+        //! @brief Show version node access (read-only).
+        const Keyword& GetShowVersionNode(void) const;
+        //! @brief Show author node access (read-only).
+        const Keyword& GetShowAuthorNode(void) const;
+        //! @brief Show license node access (read-only).
+        const Keyword& GetShowLicenseNode(void) const;
+
         //! @brief Echo node access (read-only).
         const Keyword& GetEchoNode(void) const;
         //! @brief Echo on node access (read-only).
@@ -114,6 +130,15 @@ CLI_NS_BEGIN(cli)
         #endif
 
     private:
+        //! Show node.
+        Keyword* m_pcliShow;
+        //! Show version node.
+        Keyword* m_pcliShowVersion;
+        //! Show author node.
+        Keyword* m_pcliShowAuthor;
+        //! Show license node.
+        Keyword* m_pcliShowLicense;
+
         //! Echo node.
         Keyword* m_pcliEcho;
         //! Echo on node.

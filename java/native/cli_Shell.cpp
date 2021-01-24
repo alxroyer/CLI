@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -66,6 +66,36 @@ extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1finalize(
     }
 }
 
+extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getCli(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__getCli(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    const cli::Cli* pcli_Cli = NULL;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Cli = & pcli_Shell->GetCli();
+    }
+    NativeTraces::TraceReturn("Shell.__getCli()", "%d", (int) pcli_Cli);
+    return (jint) pcli_Cli;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getInput(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__getInput(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    const cli::IODevice* pcli_Input = NULL;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Input = & pcli_Shell->GetInput();
+    }
+    NativeTraces::TraceReturn("Shell.__getInput()", "%d", (int) pcli_Input);
+    return (jint) pcli_Input;
+}
+
 extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeShellRef, jint E_StreamType)
@@ -90,12 +120,16 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1setStream(
     NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
     NativeTraces::TraceParam("E_StreamType", "%d", E_StreamType);
     NativeTraces::TraceParam("I_NativeDeviceRef", "%d", I_NativeDeviceRef);
-    bool b_Res = false;
+    jboolean b_Res = false;
     if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
     {
-        if (cli::OutputDevice* const pcli_Device = (cli::OutputDevice*) I_NativeDeviceRef)
+        if (((E_StreamType >= 0) && (E_StreamType < cli::STREAM_TYPES_COUNT))
+            || (E_StreamType == cli::ALL_STREAMS))
         {
-            b_Res = pcli_Shell->SetStream((cli::STREAM_TYPE) E_StreamType, *pcli_Device);
+            if (cli::OutputDevice* const pcli_Device = (cli::OutputDevice*) I_NativeDeviceRef)
+            {
+                b_Res = pcli_Shell->SetStream((cli::STREAM_TYPE) E_StreamType, *pcli_Device);
+            }
         }
     }
     NativeTraces::TraceReturn("Shell.__setStream()", "%d", (int) b_Res);
@@ -109,7 +143,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1streamEnabled(
     NativeTraces::TraceMethod("Shell.__streamEnabled(I_NativeShellRef, E_StreamType)");
     NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
     NativeTraces::TraceParam("E_StreamType", "%d", E_StreamType);
-    bool b_Res = false;
+    jboolean b_Res = false;
     if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
     {
         b_Res = pcli_Shell->StreamEnabled((cli::STREAM_TYPE) E_StreamType);
@@ -126,13 +160,147 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1enableStream(
     NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
     NativeTraces::TraceParam("E_StreamType", "%d", E_StreamType);
     NativeTraces::TraceParam("B_Enable", "%d", (int) B_Enable);
-    bool b_Res = false;
+    jboolean b_Res = false;
     if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
     {
         b_Res = pcli_Shell->EnableStream((cli::STREAM_TYPE) E_StreamType, B_Enable);
     }
     NativeTraces::TraceReturn("Shell.__enableStream()", "%d", (int) b_Res);
     return b_Res;
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setWelcomeMessage(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef, jint I_NativeWelcomeMessageRef)
+{
+    NativeTraces::TraceMethod("Shell.__setWelcomeMessage(I_NativeShellRef, I_NativeWelcomeMessageRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    NativeTraces::TraceParam("I_NativeWelcomeMessageRef", "%d", I_NativeWelcomeMessageRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        if (const cli::ResourceString* const pcli_WelcomeMessage = (const cli::ResourceString*) I_NativeWelcomeMessageRef)
+        {
+            pcli_Shell->SetWelcomeMessage(*pcli_WelcomeMessage);
+        }
+    }
+    NativeTraces::TraceReturn("Shell.__setWelcomeMessage()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setByeMessage(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef, jint I_NativeByeMessageRef)
+{
+    NativeTraces::TraceMethod("Shell.__setByeMessage(I_NativeShellRef, I_NativeWelcomeMessageRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    NativeTraces::TraceParam("I_NativeByeMessageRef", "%d", I_NativeByeMessageRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        if (const cli::ResourceString* const pcli_ByeMessage = (const cli::ResourceString*) I_NativeByeMessageRef)
+        {
+            pcli_Shell->SetByeMessage(*pcli_ByeMessage);
+        }
+    }
+    NativeTraces::TraceReturn("Shell.__setByeMessage()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setPrompt(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef, jint I_NativePromptRef)
+{
+    NativeTraces::TraceMethod("Shell.__setPrompt(I_NativeShellRef, I_NativePromptRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    NativeTraces::TraceParam("I_NativePromptRef", "%d", I_NativePromptRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        if (const cli::ResourceString* const pcli_Prompt = (const cli::ResourceString*) I_NativePromptRef)
+        {
+            pcli_Shell->SetPrompt(*pcli_Prompt);
+        }
+    }
+    NativeTraces::TraceReturn("Shell.__setPrompt()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setErrorFormatting(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef, jint I_NativeLocationPrefixRef, jint I_NativeErrorPrefixRef, jint I_NativeErrorSuffixRef)
+{
+    NativeTraces::TraceMethod("Shell.__setErrorFormatting(I_NativeShellRef, I_NativeLocationPrefixRef, I_NativeErrorPrefixRef, I_NativeErrorSuffixRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    NativeTraces::TraceParam("I_NativeLocationPrefixRef", "%d", I_NativeLocationPrefixRef);
+    NativeTraces::TraceParam("I_NativeErrorPrefixRef", "%d", I_NativeErrorPrefixRef);
+    NativeTraces::TraceParam("I_NativeErrorSuffixRef", "%d", I_NativeErrorSuffixRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        const cli::ResourceString* const pcli_LocationPrefix = (const cli::ResourceString*) I_NativeLocationPrefixRef;
+        const cli::ResourceString* const pcli_ErrorPrefix = (const cli::ResourceString*) I_NativeErrorPrefixRef;
+        const cli::ResourceString* const pcli_ErrorSuffix = (const cli::ResourceString*) I_NativeErrorSuffixRef;
+        if ((pcli_LocationPrefix != NULL) && (pcli_ErrorPrefix != NULL) && (pcli_ErrorSuffix != NULL))
+        {
+            pcli_Shell->SetErrorFormatting(*pcli_LocationPrefix, *pcli_ErrorPrefix, *pcli_ErrorSuffix);
+        }
+    }
+    NativeTraces::TraceReturn("Shell.__setErrorFormatting()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setLang(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef, jint E_Lang)
+{
+    NativeTraces::TraceMethod("Shell.__setLang(I_NativeShellRef, E_Lang)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    NativeTraces::TraceParam("E_Lang", "%d", E_Lang);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        if ((E_Lang >= 0) && (E_Lang < cli::ResourceString::LANG_COUNT))
+        {
+            pcli_Shell->SetLang((cli::ResourceString::LANG) E_Lang);
+        }
+    }
+    NativeTraces::TraceReturn("Shell.__setLang()");
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getLang(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__getLang(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    jint e_Lang = cli::ResourceString::LANG_DEFAULT;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        e_Lang = pcli_Shell->GetLang();
+    }
+    NativeTraces::TraceReturn("Shell.__getLang()", "%d", e_Lang);
+    return e_Lang;
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setBeep(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef, jboolean B_Enable)
+{
+    NativeTraces::TraceMethod("Shell.__setBeep(I_NativeShellRef, B_Enable)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    NativeTraces::TraceParam("B_Enable", "%d", (int) B_Enable);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Shell->SetBeep(B_Enable);
+    }
+    NativeTraces::TraceReturn("Shell.__setBeep()");
+}
+
+extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1getBeep(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__getBeep(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    jboolean b_Beep = false;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        b_Beep = pcli_Shell->GetBeep();
+    }
+    NativeTraces::TraceReturn("Shell.__getBeep()", "%d", (int) b_Beep);
+    return b_Beep;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1run(
@@ -142,7 +310,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1run(
     NativeTraces::TraceMethod("Shell.__run(I_NativeShellRef, I_NativeIODeviceRef)");
     NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
     NativeTraces::TraceParam("I_NativeIODeviceRef", "%d", I_NativeIODeviceRef);
-    bool b_Res = false;
+    jboolean b_Res = false;
     if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
     {
         if (cli::IODevice* const pcli_IODevice = (cli::IODevice*) I_NativeIODeviceRef)
@@ -155,4 +323,114 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1run(
     }
     NativeTraces::TraceReturn("Shell.__run()", "%d", (int) b_Res);
     return b_Res;
+}
+
+extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1isRunning(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__isRunning(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    jboolean b_IsRunning = false;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        b_IsRunning = pcli_Shell->IsRunning();
+    }
+    NativeTraces::TraceReturn("Shell.__isRunning()", "%d", (int) b_IsRunning);
+    return b_IsRunning;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getHelpMargin(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__getHelpMargin(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    jint i_HelpMargin = 0;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        i_HelpMargin = pcli_Shell->GetHelpMargin();
+    }
+    NativeTraces::TraceReturn("Shell.__getHelpMargin()", "%d", i_HelpMargin);
+    return i_HelpMargin;
+}
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getHelpOffset(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__getHelpOffset(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    jint i_HelpOffset = 0;
+    if (const cli::Shell* const pcli_Shell = (const cli::Shell*) I_NativeShellRef)
+    {
+        i_HelpOffset = pcli_Shell->GetHelpOffset();
+    }
+    NativeTraces::TraceReturn("Shell.__getHelpOffset()", "%d", i_HelpOffset);
+    return i_HelpOffset;
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1exitMenu(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__exitMenu(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Shell->ExitMenu();
+    }
+    NativeTraces::TraceReturn("Shell.__exitMenu()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1quit(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__quit(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Shell->Quit();
+    }
+    NativeTraces::TraceReturn("Shell.__quit()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1quitThreadSafe(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__quitThreadSafe(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Shell->QuitThreadSafe();
+    }
+    NativeTraces::TraceReturn("Shell.__quitThreadSafe()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1displayHelp(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__displayHelp(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Shell->DisplayHelp();
+    }
+    NativeTraces::TraceReturn("Shell.__displayHelp()");
+}
+
+extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1printWorkingMenu(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeShellRef)
+{
+    NativeTraces::TraceMethod("Shell.__printWorkingMenu(I_NativeShellRef)");
+    NativeTraces::TraceParam("I_NativeShellRef", "%d", I_NativeShellRef);
+    if (cli::Shell* const pcli_Shell = (cli::Shell*) I_NativeShellRef)
+    {
+        pcli_Shell->PrintWorkingMenu();
+    }
+    NativeTraces::TraceReturn("Shell.__printWorkingMenu()");
 }

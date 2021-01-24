@@ -5,6 +5,9 @@ p?
 cli-config
 pwm
 help
+show version
+show author
+show license
 echo ?o?n
 abcde
 echo off

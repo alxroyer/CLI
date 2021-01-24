@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -105,7 +105,7 @@ CLI_NS_BEGIN(cli)
         OutputDevice& m_cliOutput;
 
         //! Character buffer.
-        mutable std::deque<char> m_stdInputBuffer;
+        mutable tk::Queue<char> m_tkInputBuffer;
 
         //! Current Line.
         mutable int m_iCurrentLine;

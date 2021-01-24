@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -32,6 +32,10 @@
     Here is some further additional information for C++ advanced users.
     </para>
 
+    <para>
+    Almost all the following topics are also applicable to Java: just transpose the C++ class names to the corresponding Java classes.
+    </para>
+
     <section id="adv.noxmlres"><title>Without the XML resource file</title>
 
         <para>
@@ -56,7 +60,7 @@
         <para>
         The CLI library has an internal traces system.
         All traces are attached to a class of traces.
-        Therefore you may control which classes of traces have to be displayed through the filter.
+        By the way, you can control which traces have to be displayed thanks to the traces class filter.
         When compiled in debug, the CLI library natively includes a traces menu to see and change this filter.
         </para>
 
@@ -87,7 +91,7 @@
         <para>
         The CLI library has generic C++ classes defining input/output devices:
         <classname>cli::OutputDevice</classname> and <classname>cli::IODevice</classname>.
-        The CLI library gives several implementations of this generic class:
+        The CLI library gives several implementations of these generic classes:
             <informalfigure>
                 <mediaobject>
                     <imageobject><imagedata fileref="../doxygen/html/classOutputDevice__inherit__graph.png" srccredit="doxygen"/></imageobject>
@@ -167,36 +171,9 @@
         and redirect outputs to other devices.
         </para>
 
-        <!--<para>
-        This device may seem complex at first.
-        I must admit it was not easy to describe the thing in two lines.
-        Therefore, I've added a special section for this device in this user guide.
-        In order to give you an idea of what it could be useful for,
-        I tell you why I created it for.
-        </para>
-
-        <para>
-        I was thinking in some kind of new language or script for personal needs.
-        XML could be a solution, however it was hardly readable for a script.
-        Then I've decided to write (yet) another language,
-        but I didn't want to get annoyed with stuff like parsing.
-        I've designed the syntax in a way it could be processed by the CLI library,
-        and described it in an XML resource file.
-        The rest of the compiler implementation is another subject.
-        Eventually I've used the IOMux class to process several files one after the other.
-        I've redirected error to stderr, and output to a Java file.
-        </para>
-
-        <para>
-        I've used it for some kind of compiler application, but there may be other uses to this device.
-        I guess some of you could design a text-based user interface which takes input from
-        either the console, telnet connections, or files.
-        <classname>cli::IOMux</classname> could be useful in that case too.
-        </para> -->
-
         <para>
         This device may seem complex at first.
-        It can be useful however to create simple compilers as described in the following <link linkend="adv.compilers">section</link>.
+        It can be useful however to create simple compilers as described in the <link linkend="adv.compilers">section after</link>.
         </para>
 
     </section>
@@ -285,6 +262,10 @@
                 <listitem>When an error occurs, this method can be called to retrieve the current position of reading in the input file.</listitem></varlistentry>
         </variablelist>
         </para>
+
+        <note>
+        The <ulink url="http://alexis.royer.free.fr/Watch">Watch project</ulink> does implement such kind of design.
+        </note>
 
     </section>
 

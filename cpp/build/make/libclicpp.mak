@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -31,17 +31,7 @@ CPP_FILES = $(filter-out $(SRC_DIR)/win_console.cpp,$(wildcard $(SRC_DIR)/*.cpp)
 PROJ_INCLUDES = -I$(CPP_DIR)/include
 # Include win_console.cpp also for dependency computation
 deps: CPP_FILES += $(SRC_DIR)/win_console.cpp
-include build.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/libclicpp.help
-$(CPP_DIR)/build/make/libclicpp.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/libclicpp.vars
-$(CPP_DIR)/build/make/libclicpp.vars:
-	$(call ShowVariables,)
+include _build.mak
 
 # Dependencies
 include $(AUTO_DEPS_FILE)

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,9 +22,9 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= run
+.DEFAULT_GOAL = run
 .PHONY: tktest.default
-tktest.default: run ;
+tktest.default: $(.DEFAULT_GOAL) ;
 
 # Includes
 CLI_DIR := ../../..
@@ -41,22 +41,12 @@ CPP_FILES += $(CPP_DIR)/src/resource_string.cpp
 CPP_FILES += $(CPP_DIR)/src/debug.cpp
 CPP_FILES += $(CPP_DIR)/src/consistency.cpp
 PROJ_CPP_FLAGS += -DCLI_NO_STL
-include build.mak
+include _build.mak
 
 # Rules
 .PHONY: run
 run: build
 	$(PRODUCT)
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/tktest.help
-$(CPP_DIR)/build/make/tktest.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/tktest.vars
-$(CPP_DIR)/build/make/tktest.vars:
-	$(call ShowVariables,)
 
 # Dependencies
 include $(AUTO_DEPS_FILE)

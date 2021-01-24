@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,12 +22,12 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= build
+.DEFAULT_GOAL = build
 .PHONY: clisample.default
-clisample.default: build ;
+clisample.default: $(.DEFAULT_GOAL) ;
 
 # Includes
-include vars.mak
+include _vars.mak
 
 # Variables
 CLI_XML_RES = $(CLI_DIR)/samples/clisample/clisample.xml
@@ -62,20 +62,25 @@ $(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
 	echo "package cli.test;" > $(CLI_JAVA)
 	xsltproc --stringparam STR_CliClassName $(CLI_JAVA_CLASS_NAME) $(CLI_XSL) $(CLI_XML_RES) >> $(CLI_JAVA)
 
+.PHONY: deps
+deps: ;
+
 .PHONY: clean
 clean:
 	$(RM) $(CLI_JAVA) $(CLI_CLASS) $(CLI_TEST_SAMPLE_CLASS) $(CLI_LOG)
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/clisample.help
+help: $(JAVA_DIR)/build/make/clisample.help
 $(JAVA_DIR)/build/make/clisample.help:
 	$(call PrintHelp, build, Build the CLI sample project)
 	$(call PrintHelp, run, 	 Run the CLI sample)
 	$(call PrintHelp, clean, Clean intermediate and output files)
 
 .PHONY: $(JAVA_DIR)/build/make/clisample.vars
+vars: $(JAVA_DIR)/build/make/clisample.vars
 $(JAVA_DIR)/build/make/clisample.vars:
 	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_CLASS CLI_GO_JAVA CLI_GO_CLASS)
 

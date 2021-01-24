@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -27,6 +27,8 @@
 
 #include <jni.h>
 
+#include "cli/assert.h"
+#include "cli/debug.h"
 #include "cli/command_line.h"
 #include "cli/param_string.h"
 #include "cli/param_int.h"
@@ -185,10 +187,13 @@ const std::string NativeObject::GetJavaClassName(const cli::Object& CLI_Object)
     std::string str_ClassName;
     if (0) {}
     else if (dynamic_cast<const cli::CommandLine*>(& CLI_Object)) { str_ClassName = "cli/CommandLine"; }
-    else if (dynamic_cast<const cli::ParamString*>(& CLI_Object)) { str_ClassName = "cli/ParamString"; }
-    else if (dynamic_cast<const cli::ParamInt*>(& CLI_Object)) { str_ClassName = "cli/ParamInt"; }
+    else if (dynamic_cast<const cli::Help*>(& CLI_Object)) { str_ClassName = "cli/Help"; }
     else if (dynamic_cast<const cli::ParamFloat*>(& CLI_Object)) { str_ClassName = "cli/ParamFloat"; }
     else if (dynamic_cast<const cli::ParamHost*>(& CLI_Object)) { str_ClassName = "cli/ParamHost"; }
+    else if (dynamic_cast<const cli::ParamInt*>(& CLI_Object)) { str_ClassName = "cli/ParamInt"; }
+    else if (dynamic_cast<const cli::ParamString*>(& CLI_Object)) { str_ClassName = "cli/ParamString"; }
+    else if (dynamic_cast<const cli::ResourceString*>(& CLI_Object)) { str_ClassName = "cli/ResourceString"; }
+    else { CLI_ASSERT(false); }
 
     NativeTraces::TraceReturn("NativeObject::GetJavaClassName()", "%s", str_ClassName.c_str());
     return str_ClassName;

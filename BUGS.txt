@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -42,6 +42,7 @@ KNOWN ISSUES
                 bad output for '€'
                 input -93 conflicts between '£' and 'ú' (when 'ú' is copied from the output itself)
         Bug(minor)! Improve windows clean screen behavior.
+        Bug(minor)! Do not directly use STL in 'file_device.h'.
     JAVA
         Bug(minor)! Fatal error when building deps of java/build/make/native.mak under cygwin from make (but direct commands from the shell)
     XSL
@@ -50,6 +51,10 @@ KNOWN ISSUES
             <tag id="tag2">...<tag ref="tag1"/>...</tag>
             Seems non-sens however.
 
+
+FIXED in 2.4
+(Oct, 1st 2009)
+    * Bug(major)! DELETE key management missing in cli::Shell class.
 
 FIXED in 2.3
 (May, 18th 2009)

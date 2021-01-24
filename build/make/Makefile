@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -21,44 +21,41 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Default goal
-DEFAULT_GOAL = default
+.DEFAULT_GOAL = default
 .PHONY: Makefile.default
-Makefile.default: default ;
+Makefile.default: $(.DEFAULT_GOAL) ;
 
 # Includes
 CLI_DIR := ../..
-include vars.mak
+include _vars.mak
 PROJECTS += $(CPP_DIR)/build/make/Makefile
 PROJECTS += $(JAVA_DIR)/build/make/Makefile
-include all.mak
+DEFAULT_HELP = Generate libraries and tests
+include _all.mak
 
 # C++ only
-cpp: PROJECTS = $(CPP_DIR)/build/make/Makefile
 .PHONY: cpp
+cpp: PROJECTS = $(CPP_DIR)/build/make/Makefile
 cpp: default ;
 
 # Java only
-java: PROJECTS = $(JAVA_DIR)/build/make/Makefile
 .PHONY: java
+java: PROJECTS = $(JAVA_DIR)/build/make/Makefile
 java: default ;
 
 # Documentation
+.PHONY: doc
 doc: PROJECTS = $(WEB_DIR)/user-guide/user-guide.mak
 doc: PROJECTS += $(WEB_DIR)/doxygen/doxygen.mak
 doc: PROJECTS += $(WEB_DIR)/javadoc/javadoc.mak
-.PHONY: doc
 doc: default ;
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(CLI_DIR)/build/make/Makefile.help
+help: $(CLI_DIR)/build/make/Makefile.help
 $(CLI_DIR)/build/make/Makefile.help:
-	$(call PrintHelp, default,  Generate libraries and tests)
 	$(call PrintHelp, cpp,      Generate/update C++ items)
 	$(call PrintHelp, java,     Generate/update Java items)
 	$(call PrintHelp, doc,      Generate/update documentation)
-
-.PHONY: $(CLI_DIR)/build/make/Makefile.vars
-$(CLI_DIR)/build/make/Makefile.vars:
-	$(call ShowVariables,)

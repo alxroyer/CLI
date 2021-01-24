@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -295,6 +295,10 @@ const bool Cli::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     #endif
 
     return Menu::ExecuteReserved(CLI_CommandLine);
+}
+
+void Cli::OnError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
+{
 }
 
 void Cli::OnExit(void) const

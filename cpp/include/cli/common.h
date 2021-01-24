@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -32,6 +32,7 @@
 
 // General includes
 #include "cli/namespace.h"
+#include "cli/lib_info.h"
 #include "cli/tk.h"
 
 // Shell and output devices

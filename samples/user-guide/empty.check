@@ -41,6 +41,33 @@ cli-config>help
   lang            Language setting
   pwm             Print Working Menu
   quit            Quit
+  show            Show CLI information
+cli-config>show version
+CLI version 2.4
+cli-config>show author
+Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+cli-config>show license
+Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+    * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 cli-config>echo 
   off             Set echo off
   on              Set echo on
@@ -50,10 +77,10 @@ cli-config>echo o
 cli-config>echo on
 echo is on
 cli-config>abcde
-../../../samples/user-guide/empty.test:9: Syntax error next to 'abcde'
+../../../samples/user-guide/empty.test:12: Syntax error next to 'abcde'
 cli-config>echo off
 echo is off
-cli-config>../../../samples/user-guide/empty.test:11: Syntax error next to 'abcde'
+cli-config>../../../samples/user-guide/empty.test:14: Syntax error next to 'abcde'
 cli-config>echo is on
 cli-config>beep 
   off             Set beep off
@@ -77,6 +104,7 @@ cli-config>help
   lang            Modification de la langue
   pwm             Affichage du menu courant
   quit            Quitter
+  show            Afficher les informations du CLI
 cli-config>exit
 myCLI>help
   cli-config      Menu de configuration du CLI
@@ -98,4 +126,5 @@ cli-config>help
   lang            Language setting
   pwm             Print Working Menu
   quit            Quit
+  show            Show CLI information
 cli-config>quit

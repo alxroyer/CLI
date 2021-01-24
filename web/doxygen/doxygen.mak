@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,13 +22,13 @@
 
 
 # Default goal
-DEFAULT_GOAL = doxygen
+.DEFAULT_GOAL = doxygen
 .PHONY: doxygen.default
-doxygen.default: doxygen ;
+doxygen.default: $(.DEFAULT_GOAL) ;
 
 # Directories
 CLI_DIR ?= ../..
-include $(CLI_DIR)/build/make/vars.mak
+include $(CLI_DIR)/build/make/_vars.mak
 
 # Rules
 .PHONY: doxygen
@@ -43,12 +43,10 @@ clean:
 	rm -rf html
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(WEB_DIR)/doxygen/doxygen.vars
-$(WEB_DIR)/doxygen/doxygen.vars: ;
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(WEB_DIR)/doxygen/doxygen.help
+help: $(WEB_DIR)/doxygen/doxygen.help
 $(WEB_DIR)/doxygen/doxygen.help:
 	$(call PrintHelp, doxygen,   Generate doxygen documentation)
 	$(call PrintHelp, clean,     Clean up output documentation)

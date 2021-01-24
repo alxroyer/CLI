@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,6 +36,10 @@
 CLI_NS_USE(cli)
 
 
+//! @brief Maximum input buffer length;
+static const unsigned int MAX_INPUT_BUFFER_LEN = 1024;
+
+
 InputFileDevice::InputFileDevice(
         const char* const STR_FileName,
         OutputDevice& CLI_Output,
@@ -43,6 +47,7 @@ InputFileDevice::InputFileDevice(
   : IODevice(tk::String::Concat(MAX_DEVICE_NAME_LENGTH, "input-file[", STR_FileName, "]"), B_AutoDelete),
     m_strFileName(MAX_FILE_PATH_LENGTH, STR_FileName), m_pfFile(NULL), m_bEnableSpecialCharacters(false),
     m_cliOutput(CLI_Output),
+    m_tkInputBuffer(MAX_INPUT_BUFFER_LEN),
     m_iCurrentLine(0), m_iCurrentColumn(0), m_iNextLine(1), m_iNextColumn(1)
 {
     EnsureCommonDevices();
@@ -115,20 +120,20 @@ const KEY InputFileDevice::GetKey(void) const
     if (m_pfFile != NULL)
     {
         // While there are still characters to read.
-        while ((! m_stdInputBuffer.empty()) || (! feof(m_pfFile)))
+        while ((! m_tkInputBuffer.IsEmpty()) || (! feof(m_pfFile)))
         {
             // Check the input buffer
-            if (m_stdInputBuffer.empty())
+            if (m_tkInputBuffer.IsEmpty())
             {
                 if ((m_pfFile != NULL) && (! feof(m_pfFile)))
                 {
-                    char str_Buffer[1024];
+                    char str_Buffer[MAX_INPUT_BUFFER_LEN];
                     size_t ui_Bytes = fread(str_Buffer, sizeof(char), sizeof(str_Buffer), m_pfFile);
                     if (ui_Bytes > 0)
                     {
                         for (size_t ui=0; (ui<ui_Bytes) && (ui<sizeof(str_Buffer)); ui++)
                         {
-                            m_stdInputBuffer.push_back(str_Buffer[ui]);
+                            m_tkInputBuffer.AddTail(str_Buffer[ui]);
                         }
                     }
                     else
@@ -142,10 +147,9 @@ const KEY InputFileDevice::GetKey(void) const
             }
 
             // Read the next character.
-            if (! m_stdInputBuffer.empty())
+            if (! m_tkInputBuffer.IsEmpty())
             {
-                char c_Char = m_stdInputBuffer.front();
-                m_stdInputBuffer.pop_front();
+                char c_Char = m_tkInputBuffer.RemoveHead();
 
                 // Next line/column management & special character management.
                 switch (c_Char)
@@ -167,7 +171,7 @@ const KEY InputFileDevice::GetKey(void) const
                         m_iCurrentLine = m_iNextLine;
                         m_iCurrentColumn = m_iNextColumn;
                         c_Char = '\\';
-                        m_stdInputBuffer.push_front('?');
+                        m_tkInputBuffer.AddHead('?');
                     }
                     else
                     {

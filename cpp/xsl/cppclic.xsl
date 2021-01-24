@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -619,7 +619,7 @@
         <xsl:with-param name="STR_ParentClass" select="'cli::Cli'"/>
     </xsl:call-template>
 
-    <xsl:value-of select="$STR_Endl"/>
+    <!--<xsl:value-of select="$STR_Endl"/>-->
 </xsl:template>
 
     <xsl:template name="T_ImplementMenu">
@@ -916,6 +916,19 @@
             <xsl:call-template name="T_Node2Class"/>
         </xsl:variable>
 
+        <!-- Error handler -->
+        <xsl:call-template name="T_Indent1"/>
+            <xsl:text>public: virtual void OnError(const cli::ResourceString&amp; location, const cli::ResourceString&amp; message) const {</xsl:text>
+            <xsl:value-of select="$STR_Endl"/>
+        <xsl:for-each select="cli:handler[@name='error']">
+            <xsl:call-template name="T_Indent2"/>
+            <xsl:apply-templates select="cli:cpp"/>
+        </xsl:for-each>
+        <xsl:call-template name="T_Indent1"/>
+            <xsl:text>}</xsl:text>
+            <xsl:value-of select="$STR_Endl"/>
+        <xsl:value-of select="$STR_Endl"/>
+
         <!-- Exit handler -->
         <xsl:call-template name="T_Indent1"/>
             <xsl:text>public: virtual void OnExit(void) const {</xsl:text>
@@ -932,12 +945,16 @@
 
 <xsl:template name="T_NodeCreation">
     <xsl:variable name="STR_Class">
-        <xsl:call-template name="T_Node2Class" select="/cli:cli"/>
+        <xsl:for-each select="/cli:cli">
+        <xsl:call-template name="T_Node2Class"/>
+        </xsl:for-each>
     </xsl:variable>
     <xsl:variable name="STR_Var">
-        <xsl:call-template name="T_Node2Var" select="/cli:cli">
+        <xsl:for-each select="/cli:cli">
+        <xsl:call-template name="T_Node2Var">
             <xsl:with-param name="B_UseOwnerCli" select="0"/>
         </xsl:call-template>
+        </xsl:for-each>
     </xsl:variable>
 
     <xsl:text>// ----- Node creation -----</xsl:text>

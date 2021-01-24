@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,7 +36,7 @@ public class TestSample {
                 Class j_CliClass = Class.forName(str_ClassName);
                 cli_Cli = (cli.Cli) j_CliClass.newInstance();
             } catch (Exception e) {
-                e.printStackTrace();
+                cli.OutputDevice.getStdErr().printStackTrace(e);
                 return;
             }
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class TestSample {
             // Launch the shell.
             cli_Shell.run(cli_Input);
         } catch (Exception e) {
-            e.printStackTrace();
+            cli_Input.printStackTrace(e);
         }
     }
 

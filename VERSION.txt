@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -22,7 +22,7 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
 
-CLI version 2.3.
+CLI version 2.4.
 
 See http://alexis.royer.free.fr/CLI/ or CHANGES.txt for release notes.
-See http://alexis.royer.free.fr/CLI/or BUGS.txt for known and fixed issues.
+See http://alexis.royer.free.fr/CLI/ or BUGS.txt for known and fixed issues.

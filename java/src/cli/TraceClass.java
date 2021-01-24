@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,10 +28,10 @@ package cli;
 /** Trace class description. */
 public class TraceClass extends NativeObject
 {
-    /** Constructor with a single trace class name given.
-        @param STR_ClassName Trace class name. */
-    public TraceClass(String STR_ClassName) {
-        super(__TraceClass(STR_ClassName, 0));
+    /** Copy constructor.
+        @param CLI_Class Source class object. */
+    public TraceClass(TraceClass CLI_Class) {
+        super(__TraceClass(CLI_Class.getClassName(), CLI_Class.getHelp().getNativeRef()));
     }
     /** Constructor with a trace class name and a corresponding help given.
         @param STR_ClassName Trace class name.
@@ -45,6 +45,7 @@ public class TraceClass extends NativeObject
     protected void finalize() throws Throwable {
         if (getbDoFinalize()) {
             __finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
         }
         super.finalize();
     }
@@ -58,10 +59,12 @@ public class TraceClass extends NativeObject
     private static final native String __getClassName(int I_NativeTraceClassRef);
 
     /** Help string accessor.
-        @param E_Language Identifier of the requested help string.
         @return Help string. null if an error occured. */
-    public String getHelp(int E_Language) {
-        return __getHelp(getNativeRef(), E_Language);
+    public Help getHelp() {
+        Help cli_Help = (Help) NativeObject.getObject(__getHelp(this.getNativeRef()));
+        // This trace class instance will not be deleted by the native code.
+        NativeObject.forget(cli_Help);
+        return cli_Help;
     }
-    private static final native String __getHelp(int I_NativeTraceClassRef, int E_Language);
+    private static final native int __getHelp(int I_NativeTraceClassRef);
 }

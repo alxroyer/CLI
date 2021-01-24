@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -43,14 +43,17 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Cli__1_1Cli(
     cli::Cli* pcli_Cli = NULL;
     if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
     {
-        if (const char* const str_Name = PJ_Env->GetStringUTFChars(PJ_Name, 0))
+        if (PJ_Env != NULL)
         {
-            NativeTraces::TraceParam("PJ_Name", "%s", str_Name);
-            if ((pcli_Cli = new NativeMenu<cli::Cli>(PJ_Env, "cli/Cli", str_Name, *pcli_Help)))
+            if (const char* const str_Name = PJ_Env->GetStringUTFChars(PJ_Name, 0))
             {
-                NativeObject::Use(pcli_Cli);
+                NativeTraces::TraceParam("PJ_Name", "%s", str_Name);
+                if ((pcli_Cli = new NativeMenu<cli::Cli>(PJ_Env, "cli/Cli", str_Name, *pcli_Help)))
+                {
+                    NativeObject::Use(pcli_Cli);
+                }
+                PJ_Env->ReleaseStringUTFChars(PJ_Name, str_Name);
             }
-            PJ_Env->ReleaseStringUTFChars(PJ_Name, str_Name);
         }
     }
     NativeTraces::TraceReturn("Cli.__Cli()", "%d", (int) pcli_Cli);

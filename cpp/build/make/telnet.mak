@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -27,17 +27,7 @@ PROJECT = telnet
 CLI_XML_RES = $(CPP_DIR)/tests/hello/hello.xml
 SRC_DIR = $(CPP_DIR)/tests/telnet
 CLI_MAIN_CPP = $(SRC_DIR)/gotelnet.cpp
-include mkres.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/telnet.help
-$(CPP_DIR)/build/make/telnet.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/telnet.vars
-$(CPP_DIR)/build/make/telnet.vars:
-	$(call ShowVariables,)
+include _mkres.mak
 
 # Dependencies
 $(CLI_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)

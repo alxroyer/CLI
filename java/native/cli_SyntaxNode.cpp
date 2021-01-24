@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,7 +41,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_SyntaxNode__1_1addElement(
     NativeTraces::TraceMethod("SyntaxNode.__addElement(I_NativeSyntaxNodeRef, I_NativeElementRef)");
     NativeTraces::TraceParam("I_NativeSyntaxNodeRef", "%d", I_NativeSyntaxNodeRef);
     NativeTraces::TraceParam("I_NativeElementRef", "%d", I_NativeElementRef);
-    bool b_Res = false;
+    jboolean b_Res = false;
     if (cli::SyntaxNode* const pcli_SyntaxNode = (cli::SyntaxNode*) I_NativeSyntaxNodeRef)
     {
         if (cli::Element* const pcli_Element = (cli::Element*) I_NativeElementRef)

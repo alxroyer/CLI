@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -33,4 +33,13 @@ public class IODevice extends OutputDevice
     protected IODevice(int I_NativeRef) {
         super(I_NativeRef);
     }
+
+    /** Location accessor.
+        @return The location as a resource string. */
+    public ResourceString getLocation() {
+        ResourceString cli_Location = (ResourceString) NativeObject.getObject(__getLocation(this.getNativeRef()));
+        NativeObject.forget(cli_Location);
+        return cli_Location;
+    }
+    private static final native int __getLocation(int I_NativeDeviceRef);
 }

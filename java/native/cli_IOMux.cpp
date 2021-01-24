@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -89,7 +89,8 @@ JNIEXPORT jboolean JNICALL Java_cli_IOMux__1_1setOutput(
     jboolean b_Res = false;
     if (cli::IOMux* const pcli_IOMux = (cli::IOMux*) I_NativeIOMuxRef)
     {
-        if ((E_StreamType >= 0) && (E_StreamType < cli::STREAM_TYPES_COUNT))
+        if (((E_StreamType >= 0) && (E_StreamType < cli::STREAM_TYPES_COUNT))
+            || (E_StreamType == cli::ALL_STREAMS))
         {
             if (cli::OutputDevice* const pcli_Stream = (cli::OutputDevice*) I_NativeStreamRef)
             {

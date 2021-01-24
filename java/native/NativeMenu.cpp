@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,8 +28,11 @@
 #include <deque>
 #include <iostream>
 
+#include "cli/menu.h"
+#include "cli/shell.h"
 #include "cli/param.h"
 #include "cli/endl.h"
+#include "cli/debug.h"
 
 #include "NativeMenu.h"
 #include "NativeObject.h"
@@ -47,6 +50,7 @@ const bool __NativeMenu__Execute(
     NativeTraces::TraceParam("CLI_CmdLine", "%d", (int) & CLI_CmdLine);
 
     jboolean b_Res = false;
+
     if (PJ_Env != NULL)
     {
         // For each parameter, create a corresponding Java object.
@@ -108,10 +112,10 @@ const bool __NativeMenu__Execute(
                                 && (str_CommandLine != "quit")
                                 && (str_CommandLine != "traces"))
                             {
-                                std::cerr
+                                CLI_Menu.GetShell().GetStream(cli::ERROR_STREAM)
                                     << "Java failed while executing command: "
-                                    << "'" << str_CommandLine << "'"
-                                    << std::endl;
+                                    << "'" << str_CommandLine.c_str() << "'"
+                                    << cli::endl;
                             }
                         }
                     }
@@ -133,6 +137,49 @@ const bool __NativeMenu__Execute(
     }
 
     NativeTraces::TraceReturn("__NativeMenu__Execute()", "%d", (int) b_Res);
+    return b_Res;
+}
+
+const bool __NativeMenu__OnError(
+        JNIEnv* const PJ_Env, const std::string& STR_Class,
+        const cli::Menu& CLI_Menu, const cli::ResourceString& CLI_Location, const cli::ResourceString& CLI_ErrorMessage)
+{
+    NativeTraces::TraceMethod("__NativeMenu__OnError()");
+    NativeTraces::TraceParam("PJ_Env", "0x%08x", PJ_Env);
+    NativeTraces::TraceParam("STR_Class", "%s", STR_Class.c_str());
+    NativeTraces::TraceParam("CLI_Menu", "%d", (int) & CLI_Menu);
+    NativeTraces::TraceParam("CLI_Location", "%d", (int) & CLI_Location);
+    NativeTraces::TraceParam("CLI_ErrorMessage", "%d", (int) & CLI_ErrorMessage);
+
+    jboolean b_Res = false;
+    if (PJ_Env != NULL)
+    {
+        // Java menu execution.
+        if (const jclass pj_MenuClass = PJ_Env->FindClass(STR_Class.c_str()))
+        {
+            NativeTraces::TraceValue("pj_MenuClass", "0x%08x", pj_MenuClass);
+            if (const jmethodID pj_OnErrorMethodID = PJ_Env->GetMethodID(pj_MenuClass, "__onError", "(II)V"))
+            {
+                NativeTraces::TraceValue("pj_OnErrorMethodID", "0x%08x", pj_OnErrorMethodID);
+                if (const jobject pj_Object = NativeObject::GetJavaObject(PJ_Env, (int) & CLI_Menu))
+                {
+                    if (NativeObject::CreateFromNative(PJ_Env, CLI_Location))
+                    {
+                        if (NativeObject::CreateFromNative(PJ_Env, CLI_ErrorMessage))
+                        {
+                            NativeTraces::TraceValue("pj_Object", "0x%08x", pj_Object);
+                            PJ_Env->CallVoidMethod(pj_Object, pj_OnErrorMethodID, (int) & CLI_Location, (int) & CLI_ErrorMessage);
+                            b_Res = true;
+
+                            NativeObject::DeleteFromNative(PJ_Env, CLI_Location);
+                        }
+                        NativeObject::DeleteFromNative(PJ_Env, CLI_ErrorMessage);
+                    }
+                }
+            }
+        }
+    }
+    NativeTraces::TraceReturn("__NativeMenu__OnError()", "%d", (int) b_Res);
     return b_Res;
 }
 

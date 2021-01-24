@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -89,7 +89,7 @@ const bool Param::SetValue(const char* const STR_Value) const
     if (m_strValue.Set(STR_Value))
     {
         return true;
-}
+    }
     else
     {
         GetTraces().Trace(INTERNAL_ERROR) << "Could not store original string parameter value." << endl;

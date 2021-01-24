@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -68,7 +68,7 @@ public class NoRes extends cli.Cli
                 }
             } catch (NoSuchElementException e1) {
             } catch (Exception e) {
-                e.printStackTrace();
+                getErrorStream().printStackTrace(e);
             }
 
             getOutputStream().put("NoRes execution error....").endl();
@@ -161,7 +161,7 @@ public class NoRes extends cli.Cli
             }
         } catch (NoSuchElementException e1) {
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorStream().printStackTrace(e);
         }
 
         getOutputStream().put("NoRes execution error....").endl();

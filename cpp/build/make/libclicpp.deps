@@ -58,8 +58,9 @@ $(INT_DIR)/config_menu.o: ../../../cpp/src/config_menu.cpp \
   ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_stl.h \
   ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/command_line.h \
   ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/src/config_menu.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/menu.h
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/lib_info.h \
+  ../../../cpp/src/config_menu.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/menu.h
 $(INT_DIR)/consistency.o: ../../../cpp/src/consistency.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/io_device.h \
   ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
@@ -245,9 +246,9 @@ $(INT_DIR)/shell.o: ../../../cpp/src/shell.cpp \
   ../../../cpp/include/cli/element.h ../../../cpp/include/cli/menu.h \
   ../../../cpp/include/cli/command_line.h ../../../cpp/include/cli/endl.h \
   ../../../cpp/include/cli/param.h ../../../cpp/include/cli/traces.h \
-  ../../../cpp/include/cli/assert.h ../../../cpp/src/consistency.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/src/constraints.h \
-  ../../../cpp/src/command_line_edition.h \
+  ../../../cpp/include/cli/assert.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/src/consistency.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/src/constraints.h ../../../cpp/src/command_line_edition.h \
   ../../../cpp/include/cli/object.h ../../../cpp/include/cli/tk.h \
   ../../../cpp/src/command_line_history.h
 $(INT_DIR)/single_command.o: ../../../cpp/src/single_command.cpp \

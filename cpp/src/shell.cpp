@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,6 +39,7 @@
 #include "cli/param.h"
 #include "cli/traces.h"
 #include "cli/assert.h"
+#include "cli/debug.h"
 #include "consistency.h"
 #include "constraints.h"
 #include "command_line_edition.h"
@@ -162,56 +163,68 @@ const OutputDevice& Shell::GetStream(const STREAM_TYPE E_StreamType) const
 
 const bool Shell::SetStream(const STREAM_TYPE E_StreamType, OutputDevice& CLI_Stream)
 {
+    // ALL_STREAMS management.
+    if (E_StreamType == ALL_STREAMS)
+    {
+        for (int i = 0; i < STREAM_TYPES_COUNT; i++)
+        {
+            if (! SetStream((STREAM_TYPE) i, CLI_Stream))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
     if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
     {
         CLI_ASSERT(false);
         return false;
     }
-    else
+    // End of ALL_STREAMS management.
+
+    // Free previous reference.
+    if (OutputDevice* const pcli_Stream = m_artStream[E_StreamType].pcliStream)
     {
-        // Free previous reference.
-        if (OutputDevice* const pcli_Stream = m_artStream[E_StreamType].pcliStream)
+        bool b_Res = true;
+
+        // Unreference the device right now.
+        m_artStream[E_StreamType].pcliStream = NULL;
+        if (IsRunning())
         {
-            bool b_Res = true;
-
-            // Unreference the device right now.
-            m_artStream[E_StreamType].pcliStream = NULL;
-            if (IsRunning())
+            if (! pcli_Stream->CloseDown(__CALL_INFO__))
             {
-                if (! pcli_Stream->CloseDown(__CALL_INFO__))
-                {
-                    PrintError(ResourceString(), pcli_Stream->GetLastError());
-                    b_Res = false;
-                }
+                PrintError(ResourceString(), pcli_Stream->GetLastError());
+                b_Res = false;
             }
-            pcli_Stream->FreeInstance(__CALL_INFO__);
+        }
+        pcli_Stream->FreeInstance(__CALL_INFO__);
 
-            if (! b_Res)
+        if (! b_Res)
+        {
+            // Abort on error.
+            return false;
+        }
+    }
+
+    // Store next reference.
+    {
+        CLI_Stream.UseInstance(__CALL_INFO__);
+        if (IsRunning())
+        {
+            if (! CLI_Stream.OpenUp(__CALL_INFO__))
             {
-                // Abort on error.
+                // Store nothing on error.
+                PrintError(ResourceString(), CLI_Stream.GetLastError());
+                CLI_Stream.FreeInstance(__CALL_INFO__);
                 return false;
             }
         }
-
-        // Store next reference.
-        {
-            CLI_Stream.UseInstance(__CALL_INFO__);
-            if (IsRunning())
-            {
-                if (! CLI_Stream.OpenUp(__CALL_INFO__))
-                {
-                    // Store nothing on error.
-                    PrintError(ResourceString(), CLI_Stream.GetLastError());
-                    CLI_Stream.FreeInstance(__CALL_INFO__);
-                    return false;
-                }
-            }
-            // Do not store the reference until opening is done.
-            m_artStream[E_StreamType].pcliStream = & CLI_Stream;
-        }
-
-        return true;
+        // Do not store the reference until opening is done.
+        m_artStream[E_StreamType].pcliStream = & CLI_Stream;
     }
+
+    return true;
 }
 
 const bool Shell::StreamEnabled(const STREAM_TYPE E_StreamType) const
@@ -229,16 +242,28 @@ const bool Shell::StreamEnabled(const STREAM_TYPE E_StreamType) const
 
 const bool Shell::EnableStream(const STREAM_TYPE E_StreamType, const bool B_Enable)
 {
+    // ALL_STREAMS management.
+    if (E_StreamType == ALL_STREAMS)
+    {
+        for (int i = 0; i < STREAM_TYPES_COUNT; i++)
+        {
+            if (! EnableStream((STREAM_TYPE) i, B_Enable))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
     if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
     {
         CLI_ASSERT(false);
         return false;
     }
-    else
-    {
-        m_artStream[E_StreamType].bEnable = B_Enable;
-        return true;
-    }
+    // End of ALL_STREAMS management.
+
+    m_artStream[E_StreamType].bEnable = B_Enable;
+    return true;
 }
 
 void Shell::SetWelcomeMessage(const ResourceString& CLI_WelcomeMessage)
@@ -635,6 +660,9 @@ void Shell::PromptMenu(void) const
 
 void Shell::PrintError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
 {
+    // First of all, call the CLI handler.
+    GetCli().OnError(CLI_Location, CLI_ErrorMessage);
+
     // Retrieve error formatting prefix and suffix.
     const tk::String str_LocationPrefix = m_cliErrorFormatting[0].GetString(GetLang());
     const tk::String str_ErrorPrefix = m_cliErrorFormatting[1].GetString(GetLang());
@@ -742,6 +770,7 @@ void Shell::OnKey(const KEY E_KeyCode)
     case KEY_LEFT:  OnKeyLeft();                            break;
     case KEY_RIGHT: OnKeyRight();                           break;
     case BACKSPACE: OnBackspace();                          break;
+    case DELETE:    OnSuppr();                              break;
     case ENTER:     OnExecute();                            break;
     case BREAK:
     case ESCAPE:    OnEscape();                             break;
@@ -877,6 +906,18 @@ void Shell::OnBackspace(void)
     if (! m_cliCmdLine.GetLeft().IsEmpty())
     {
         m_cliCmdLine.Delete(GetStream(ECHO_STREAM), -1);
+    }
+    else
+    {
+        Beep();
+    }
+}
+
+void Shell::OnSuppr(void)
+{
+    if (! m_cliCmdLine.GetRight().IsEmpty())
+    {
+        m_cliCmdLine.Delete(GetStream(ECHO_STREAM), 1);
     }
     else
     {

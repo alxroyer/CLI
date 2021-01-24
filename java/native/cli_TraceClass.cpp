@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -92,23 +92,25 @@ extern "C" JNIEXPORT jstring JNICALL Java_cli_TraceClass__1_1getClassName(
     return pj_ClassName;
 }
 
-extern "C" JNIEXPORT jstring JNICALL Java_cli_TraceClass__1_1getHelp(
+extern "C" JNIEXPORT jint JNICALL Java_cli_TraceClass__1_1getHelp(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeTraceClassRef, jint I_Language)
+        jint I_NativeTraceClassRef)
 {
-    NativeTraces::TraceMethod("TraceClass.__getHelp(I_NativeTraceClassRef, I_Language)");
+    NativeTraces::TraceMethod("TraceClass.__getHelp(I_NativeTraceClassRef, I_NativeHelpRef)");
     NativeTraces::TraceParam("I_NativeTraceClassRef", "%d", I_NativeTraceClassRef);
-    NativeTraces::TraceParam("I_Language", "%d", I_Language);
-    jstring pj_Help = NULL;
-    if ((I_Language >= 0) && (I_Language < cli::Help::LANG_COUNT))
+    const cli::Help* pcli_Help = NULL;
+    if (const cli::TraceClass* const pcli_TraceClass = (const cli::TraceClass*) I_NativeTraceClassRef)
     {
-        if (const cli::TraceClass* const pcli_TraceClass = (const cli::TraceClass*) I_NativeTraceClassRef)
+        if (PJ_Env != NULL)
         {
-            const std::string str_Help = (const char*) pcli_TraceClass->GetHelp().GetString((cli::Help::LANG) I_Language);
-            NativeTraces::TraceReturn("TraceClass.__getHelp()", "%s", str_Help.c_str());
-            pj_Help = PJ_Env->NewStringUTF(str_Help.c_str());
+            if ((pcli_Help = & pcli_TraceClass->GetHelp()))
+            {
+                NativeObject::CreateFromNative(PJ_Env, *pcli_Help);
+                NativeObject::Delegate(pcli_Help, pcli_TraceClass);
+            }
         }
     }
-    return pj_Help;
+    NativeTraces::TraceReturn("TraceClass.__getHelp()", "%d", (int) pcli_Help);
+    return (jint) pcli_Help;
 }
 

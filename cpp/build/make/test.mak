@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -29,16 +29,18 @@ CLI_MAIN_CPP = $(CPP_DIR)/tests/testsample.cpp
 CLI_XSLT_OPTS = --param STR_ClassPrefix "'Ccli'"
 INT_DIR = $(TARGET)$(CXX)/$(RDX)/__test
 OUT_DIR = $(TARGET)$(CXX)/$(RDX)/__test
-include check.mak
+include _check.mak
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(CPP_DIR)/build/make/test.help
+help: $(CPP_DIR)/build/make/test.help
 $(CPP_DIR)/build/make/test.help:
 	$(call PrintHelp, check, Check test output)
 	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
 
 .PHONY: $(CPP_DIR)/build/make/test.vars
+vars: $(CPP_DIR)/build/make/test.vars
 $(CPP_DIR)/build/make/test.vars:
 	$(call ShowVariables,CLI_XML_RES)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -48,9 +48,30 @@ public class NativeObject {
         NativeObject.remember(this);
     }
 
+    /** To be called by native created objects.
+        @param CLI_Object Object created. */
+    protected static final void createdFromNative(NativeObject CLI_Object) {
+        if (CLI_Object != null) {
+            // Object already remembered from the NativeObject constructor (above).
+            //  NativeObject.remember(CLI_Object);
+        }
+    }
+
     /** Destructor. */
     protected void finalize() throws Throwable {
         forget(this);
+    }
+
+    /** To be called by native-deleted objects.
+        @param CLI_Object Object deleted. */
+    protected static final void deletedFromNative(NativeObject CLI_Object) {
+        if (CLI_Object != null) {
+            Traces.traceValue("CLI_Object", CLI_Object.toString());
+            // Do not finalize native-deleted objects.
+            CLI_Object.dontFinalize();
+            // Also forget the native reference.
+            NativeObject.forget(CLI_Object);
+        }
     }
 
     /** Native reference accessor.

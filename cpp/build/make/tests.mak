@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,14 +22,14 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= tests
+.DEFAULT_GOAL = tests
 .PHONY: cpptests.default
-cpptests.default: tests ;
+cpptests.default: $(.DEFAULT_GOAL) ;
 
 
 # Variables
 CLI_DIR := ../../..
-include vars.mak
+include _vars.mak
 XML_FILES = $(patsubst %.check,%.xml,$(CHECK_FILES))
 TEST_FILES = $(patsubst %.xml,%.test,$(XML_FILES))
 CHECK_FILES = $(shell find $(SAMPLES_DIR) -name "*.check")
@@ -53,15 +53,17 @@ clean:
 deps: ;
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(CPP_DIR)/build/make/tests.help
+help: $(CPP_DIR)/build/make/tests.help
 $(CPP_DIR)/build/make/tests.help:
 	$(call PrintHelp, tests, Launch tests on each sample file)
 	$(call PrintHelp, dirs, Create intermediate directories)
 	$(call PrintHelp, clean, Clean intermediate files)
 
 .PHONY: $(CPP_DIR)/build/make/tests.vars
+vars: $(CPP_DIR)/build/make/tests.vars
 $(CPP_DIR)/build/make/tests.vars:
 	$(call ShowVariables,XML_FILES TEST_FILES CHECK_FILES)
 

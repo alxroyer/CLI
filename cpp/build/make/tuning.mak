@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -27,18 +27,15 @@ SRC_DIR = ../../tests/tuning
 CLI_XML_RES = $(SRC_DIR)/tuning.xml
 SRC_DIR = $(CPP_DIR)/tests/tuning
 INT_DIR = $(OUT_DIR)/__tuning
-include check.mak
+include _check.mak
 CPP_FILES += $(SRC_DIR)/gotuning.cpp
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(CPP_DIR)/build/make/tuning.help
+help: $(CPP_DIR)/build/make/tuning.help
 $(CPP_DIR)/build/make/tuning.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/tuning.vars
-$(CPP_DIR)/build/make/tuning.vars:
-	$(call ShowVariables,)
 
 # Dependencies
 $(INT_DIR)/gotuning.o: $(SRC_DIR)/gotuning.cpp

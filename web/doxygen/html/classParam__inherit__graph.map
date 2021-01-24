@@ -1,10 +1,11 @@
-<area shape="rect" id="node9" href="$classParamString.html" title="String parameter element class." alt="" coords="5,315,99,343">
-<area shape="rect" id="node13" href="$classParamT.html" title="Template parameter class." alt="" coords="123,315,219,343">
-<area shape="rect" id="node15" href="$classParamT.html" title="ParamT\&lt; double \&gt;" alt="" coords="243,315,371,343">
-<area shape="rect" id="node19" href="$classParamT.html" title="ParamT\&lt; int \&gt;" alt="" coords="395,315,499,343">
-<area shape="rect" id="node2" href="$classSyntaxNode.html" title="Syntax node elements." alt="" coords="193,161,284,189">
-<area shape="rect" id="node4" href="$classElement.html" title="Generic CLI element." alt="" coords="204,83,273,111">
-<area shape="rect" id="node6" href="$classObject.html" title="Generic object." alt="" coords="209,6,268,34">
-<area shape="rect" id="node11" href="$classParamHost.html" title="Host names, IP adresses parameter element class." alt="" coords="9,393,95,421">
-<area shape="rect" id="node17" href="$classParamFloat.html" title="Float parameter element class." alt="" coords="263,393,351,421">
-<area shape="rect" id="node21" href="$classParamInt.html" title="Integer parameter element class." alt="" coords="411,393,483,421">
+base referer
+rect $classParamString.html 7,306 103,333
+rect $classParamT.html 127,306 229,333
+rect $classParamT.html 253,306 386,333
+rect $classParamT.html 410,306 517,333
+rect $classSyntaxNode.html 202,157 295,184
+rect $classElement.html 214,82 283,109
+rect $classObject.html 218,8 279,34
+rect $classParamHost.html 11,381 99,408
+rect $classParamFloat.html 274,381 365,408
+rect $classParamInt.html 425,381 502,408

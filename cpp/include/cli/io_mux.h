@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -131,8 +131,7 @@ CLI_NS_BEGIN(cli)
         //! Closure and deletion (if required) of the given output stream.
         //! Checks this first device is not used somewhere else, either in other inputs or outputs.
         const bool ReleaseOutputDevice(
-            const STREAM_TYPE E_StreamType, //!< Output stream type.
-            const bool B_Delete             //!< Do device deletion if required.
+            const STREAM_TYPE E_StreamType  //!< Output stream type
             );
 
     private:

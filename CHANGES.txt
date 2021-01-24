@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -21,6 +21,23 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
+
+Version 2.4
+(Oct, 1st 2009)
+    Miscellaneous:
+        * Licensing: URL link addition in the license.
+        * Makefile improvements: .DEFAULT_GOAL improvement, include Makefiles prefixed by '_', help and vars dependencies revision
+        * C++/Java: 'show version', 'show author' and 'show license' commands addition in the 'cli-config' menu.
+        * C++/Java: ALL_STREAMS management in Shell and IOMux.
+        * C++/Java: OnError() handler addition.
+        * C++: various improvements.
+        * C++: stdout and stderr flushing addition for a better rendering.
+        * Java: implementation completion (ResourceString and Help revision, IODevice.getLocation(), Shell...)
+        * Java: OutputDevice.printStackStrace() method addition for a better output management
+        * Java: finalization & native creation improvements
+        * Java: cli.jar archive improvement
+        * Java: XSL minor comment improvements
+        * XSL improvements for other XSLT processor out of xsltproc
 
 Version 2.3
 (May, 18th 2009)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -44,15 +44,12 @@ public abstract class Element extends NativeObject
     /** Element help accessor.
         @return Element help. */
     public final Help getHelp() {
-        Help cli_Help = new Help();
-        if (cli_Help != null) {
-            for (int e_Lang=0; e_Lang<Help.LANG_COUNT; e_Lang++) {
-                cli_Help.addHelp(e_Lang, __getHelp(this.getNativeRef(), e_Lang));
-            }
-        }
+        Help cli_Help = (Help) NativeObject.getObject(__getHelp(this.getNativeRef()));
+        // This help instance will not be deleted by the native code.
+        NativeObject.forget(cli_Help);
         return cli_Help;
     }
-    private static final native String __getHelp(int I_NativeElementRef, int E_LangId);
+    private static final native int __getHelp(int I_NativeElementRef);
 
     /** Owner CLI accessor.
         @return Owner CLI. */

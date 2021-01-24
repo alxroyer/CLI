@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -306,6 +306,7 @@ OutputDevice& OutputDevice::GetStdOut(void)
     public:
         virtual void PutString(const char* const STR_Out) const {
             fprintf(stdout, "%s", STR_Out);
+            fflush(stdout);
         }
     };
 
@@ -327,6 +328,7 @@ OutputDevice& OutputDevice::GetStdErr(void)
     public:
         virtual void PutString(const char* const STR_Out) const {
             fprintf(stderr, "%s", STR_Out);
+            fflush(stderr);
         }
     };
 

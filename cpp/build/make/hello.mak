@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -26,17 +26,7 @@ CLI_DIR := ../../..
 CLI_XML_RES = $(SRC_DIR)/hello.xml
 SRC_DIR = $(CPP_DIR)/tests/hello
 CLI_MAIN_CPP = $(SRC_DIR)/gohello.cpp
-include mkres.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/hello.help
-$(CPP_DIR)/build/make/hello.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/hello.vars
-$(CPP_DIR)/build/make/hello.vars:
-	$(call ShowVariables,)
+include _mkres.mak
 
 # Dependencies
 $(CLI_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)

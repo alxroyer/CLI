@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,13 +22,13 @@
 
 
 # Default goal
-DEFAULT_GOAL = javadoc
+.DEFAULT_GOAL = javadoc
 .PHONY: javadoc.default
-javadoc.default: javadoc ;
+javadoc.default: $(.DEFAULT_GOAL) ;
 
 # Directories
 CLI_DIR ?= ../..
-include $(CLI_DIR)/build/make/vars.mak
+include $(CLI_DIR)/build/make/_vars.mak
 
 
 # Rules
@@ -45,12 +45,10 @@ clean:
 	rm -rf html
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(WEB_DIR)/javadoc/javadoc.vars
-$(WEB_DIR)/javadoc/javadoc.vars: ;
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(WEB_DIR)/javadoc/javadoc.help
+help: $(WEB_DIR)/javadoc/javadoc.help
 $(WEB_DIR)/javadoc/javadoc.help:
 	$(call PrintHelp, javadoc,   Generate javadoc documentation)
 	$(call PrintHelp, clean,     Clean up output documentation)

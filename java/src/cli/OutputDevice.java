@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -126,4 +126,13 @@ public class OutputDevice extends NativeObject
     private static final native int __getStdErr();
     private static OutputDevice m_cliStdErr = null;
 
+    /** Exception stack trace display.
+        @param J_Exception Exception which stack trace to display. */
+    public void printStackTrace(Exception J_Exception) {
+        J_Exception.printStackTrace(
+            new java.io.PrintStream(
+                new cli.OutputDevice.OutputStream(this)
+            )
+        );
+    }
 }

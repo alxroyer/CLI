@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -81,7 +81,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Help__1_1addHelp(
     NativeTraces::TraceMethod("Help.__addHelp(I_NativeHelpRef, E_Lang, PJ_Help)");
     NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
     NativeTraces::TraceParam("E_Lang", "%d", E_Lang);
-    bool b_Res = false;
+    jboolean b_Res = false;
     if (cli::Help* const pcli_Help = (cli::Help*) I_NativeHelpRef)
     {
         if (PJ_Env != NULL)

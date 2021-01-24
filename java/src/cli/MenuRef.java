@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,7 +41,9 @@ public class MenuRef extends Element {
     protected void finalize() throws Throwable {
         if (getbDoFinalize()) {
             __finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
         }
+        super.finalize();
     }
     private static final native void __finalize(int I_NativeMenuRefRef);
 

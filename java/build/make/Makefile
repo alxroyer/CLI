@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,27 +22,18 @@
 
 
 # Default goal
-DEFAULT_GOAL = default
+.DEFAULT_GOAL = default
 .PHONY: java.default
-java.default: default ;
+java.default: $(.DEFAULT_GOAL) ;
 
 # Includes
 CLI_DIR := ../../..
-include vars.mak
+include _vars.mak
 PROJECTS += libclijava.mak
 PROJECTS += jni.mak
 PROJECTS += native.mak
 PROJECTS += hello.mak
 PROJECTS += clisample.mak
 PROJECTS += tests.mak
-include $(CLI_DIR)/build/make/all.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(JAVA_DIR)/build/make/Makefile.help
-$(JAVA_DIR)/build/make/Makefile.help: ;
-
-.PHONY: $(JAVA_DIR)/build/make/Makefile.vars
-$(JAVA_DIR)/build/make/Makefile.vars:
-	$(call ShowVariables,)
+DEFAULT_HELP = Generate libraries and tests
+include $(CLI_DIR)/build/make/_all.mak

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -26,14 +26,4 @@ CLI_DIR := ../../..
 CLI_XML_RES = $(SAMPLES_DIR)/user-guide/empty.xml
 SRC_DIR = $(CPP_DIR)/tests/empty
 CLI_MAIN_CPP = $(SRC_DIR)/goempty.cpp
-include mkres.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/empty.help
-$(CPP_DIR)/build/make/empty.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/empty.vars
-$(CPP_DIR)/build/make/empty.vars:
-	$(call ShowVariables,)
+include _mkres.mak

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,15 +22,15 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= build
+.DEFAULT_GOAL = build
 .PHONY: native.default
-native.default: build ;
+native.default: $(.DEFAULT_GOAL) ;
 
 
 # Includes
 CLI_DIR := ../../..
-include vars.mak
-include $(CPP_DIR)/build/make/vars.mak
+include _vars.mak
+include $(CPP_DIR)/build/make/_vars.mak
 
 PROJECT = native
 PRODUCT_TYPE = DYN_LIB
@@ -55,26 +55,17 @@ PROJ_CPP_FLAGS = -mno-cygwin -DCLI_NO_REGEX -DCLI_WIN_NETWORK
 CPP_FLAGS = $(CPP_DEBUG_FLAG) $(PROJ_CPP_FLAGS)
 PROJ_LIBS = -L/cygdrive/c/cygwin/lib/gcc/i686-pc-mingw32/3.4.4 -mno-cygwin -lwsock32
 endif
-PROJ_INCLUDES = -isystem "$(JDK_DIR)/include"
+PROJ_INCLUDES += -isystem "$(JDK_DIR)/include"
 ifeq ($(TARGET),Cygwin)
 PROJ_INCLUDES += -isystem "$(JDK_DIR)/include/win32"
+deps: PROJ_INCLUDES += -isystem /usr/include
 endif
 ifeq ($(TARGET),Linux)
 PROJ_INCLUDES += -isystem "$(JDK_DIR)/include/linux"
 endif
 PROJ_INCLUDES += -I$(CPP_DIR)/include
 INCLUDES = $(PROJ_INCLUDES)
-include $(CPP_DIR)/build/make/build.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(JAVA_DIR)/build/make/native.help
-$(JAVA_DIR)/build/make/native.help: ;
-
-.PHONY: $(JAVA_DIR)/build/make/native.vars
-$(JAVA_DIR)/build/make/native.vars:
-	$(call ShowVariables,)
+include $(CPP_DIR)/build/make/_build.mak
 
 # Dependencies.
 include $(AUTO_DEPS_FILE)

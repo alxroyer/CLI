@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 #include "cli/endl.h"
 #include "cli/command_line.h"
 #include "cli/shell.h"
+#include "cli/lib_info.h"
 #include "config_menu.h"
 
 CLI_NS_USE(cli)
@@ -40,6 +41,7 @@ ConfigMenu::ConfigMenu(void)
   : Menu("cli-config", Help()
         .AddHelp(Help::LANG_EN, "CLI settings menu")
         .AddHelp(Help::LANG_FR, "Menu de configuration du CLI")),
+    m_pcliShow(NULL), m_pcliShowVersion(NULL), m_pcliShowAuthor(NULL), m_pcliShowLicense(NULL),
     m_pcliEcho(NULL), m_pcliEchoOn(NULL), m_pcliEchoOff(NULL),
     m_pcliBeep(NULL), m_pcliBeepOn(NULL), m_pcliBeepOff(NULL),
     m_pcliLang(NULL), m_pcliEnglishLang(NULL), m_pcliFrenchLang(NULL)
@@ -56,6 +58,25 @@ ConfigMenu::~ConfigMenu(void)
 void ConfigMenu::SetCli(Cli& CLI_Cli)
 {
     Menu::SetCli(CLI_Cli);
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Show CLI information")
+            .AddHelp(Help::LANG_FR, "Afficher les informations du CLI"));
+        m_pcliShow = dynamic_cast<Keyword*>(& AddElement(new Keyword("show", cli_Help)));
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "Show CLI library version")
+                .AddHelp(Help::LANG_FR, "Afficher la version de la librairie CLI"));
+            m_pcliShowVersion = dynamic_cast<Keyword*>(& m_pcliShow->AddElement(new Keyword("version", cli_Help)));
+            m_pcliShowVersion->AddElement(new Endl(cli_Help)); }
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "Show CLI library author")
+                .AddHelp(Help::LANG_FR, "Afficher l'auteur de la librairie CLI"));
+            m_pcliShowAuthor = dynamic_cast<Keyword*>(& m_pcliShow->AddElement(new Keyword("author", cli_Help)));
+            m_pcliShowAuthor->AddElement(new Endl(cli_Help)); }
+        {   Help cli_Help(Help()
+                .AddHelp(Help::LANG_EN, "Show CLI library license")
+                .AddHelp(Help::LANG_FR, "Afficher la licence de la librairie CLI"));
+            m_pcliShowLicense = dynamic_cast<Keyword*>(& m_pcliShow->AddElement(new Keyword("license", cli_Help)));
+            m_pcliShowLicense->AddElement(new Endl(cli_Help)); }}
     {   Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Modify echo behavior")
             .AddHelp(Help::LANG_FR, "Configuration de l'écho"));
@@ -121,6 +142,37 @@ const bool ConfigMenu::ExecuteReserved(const CommandLine& CLI_CmdLine) const
     CommandLineIterator it(CLI_CmdLine);
 
     if (! it.StepIt()) { return false; }
+    else if (it == GetShowNode())
+    {
+        if (! it.StepIt()) { return false; }
+        else if (it == GetShowVersionNode())
+        {
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
+            {
+                ShowVersion();
+                return true;
+            }
+        }
+        else if (it == GetShowAuthorNode())
+        {
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
+            {
+                ShowAuthor();
+                return true;
+            }
+        }
+        else if (it == GetShowLicenseNode())
+        {
+            if (! it.StepIt()) { return false; }
+            if (dynamic_cast<const Endl*>(*it))
+            {
+                ShowLicense();
+                return true;
+            }
+        }
+    }
     else if (it == GetEchoNode())
     {
         if (! it.StepIt()) { return false; }
@@ -218,6 +270,21 @@ const bool ConfigMenu::ExecuteReserved(const CommandLine& CLI_CmdLine) const
 const bool ConfigMenu::Execute(const CommandLine& CLI_CmdLine) const
 {
     return false;
+}
+
+void ConfigMenu::ShowVersion() const
+{
+    GetOutputStream() << "CLI version " << LIB_VERSION << endl;
+}
+
+void ConfigMenu::ShowAuthor() const
+{
+    GetOutputStream() << LIB_COPYRIGHT << endl;
+}
+
+void ConfigMenu::ShowLicense() const
+{
+    GetOutputStream() << LIB_LICENSE << endl;
 }
 
 void ConfigMenu::EchoOn(void) const
@@ -518,6 +585,26 @@ void ConfigMenu::CheckOutChar(void) const
     }
 }
 #endif
+
+const Keyword& ConfigMenu::GetShowNode(void) const
+{
+    return *m_pcliShow;
+}
+
+const Keyword& ConfigMenu::GetShowVersionNode(void) const
+{
+    return *m_pcliShowVersion;
+}
+
+const Keyword& ConfigMenu::GetShowAuthorNode(void) const
+{
+    return *m_pcliShowAuthor;
+}
+
+const Keyword& ConfigMenu::GetShowLicenseNode(void) const
+{
+    return *m_pcliShowLicense;
+}
 
 const Keyword& ConfigMenu::GetEchoNode(void) const
 {

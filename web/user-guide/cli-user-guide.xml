@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -64,10 +64,12 @@
 <artheader>
     <author><firstname>Royer</firstname><surname>Alexis</surname></author>
     <issuenum>2.1</issuenum>
-    <pubdate>May, 14th 2009</pubdate>
+    <pubdate>Oct, 1st 2009</pubdate>
     <title>CLI library user guide</title>
     <!--<titleabbrev></titleabbrev>-->
     <revhistory>
+        <revision>  <revnumber>2.4</revnumber><date>Oct, 1st 2009</date>
+                    <revremark>Few corrections.</revremark></revision>
         <revision>  <revnumber>2.3</revnumber><date>May, 14th 2009</date>
                     <revremark> "Thread-safe termination", "Mono-Thread execution", "Embedded integration and memory" and "Making compilers" sections addition.<sbr/>
                                 "Define your own input/output device" section improvement.<sbr/>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -27,7 +27,7 @@ package cli;
 
 /** Help class.
     Useful for all CLI element objects. */
-public final class Help extends NativeObject
+public final class Help extends ResourceString
 {
     /** Default constructor. */
     public Help() {
@@ -41,21 +41,41 @@ public final class Help extends NativeObject
     private static final native int __Help();
     private static final native int __Help(int I_NativeHelpRef);
 
+    /** Creation from native code.
+        Useful for help members of other classes.
+        @param I_NativeHelpRef Native instance reference. */
+    protected static void createFromNative(int I_NativeHelpRef) {
+        Traces.traceMethod("Help.createFromNative(I_NativeHelpRef)");
+        Traces.traceParam("I_NativeHelpRef", new Integer(I_NativeHelpRef).toString());
+
+        NativeObject.createdFromNative(new Help(I_NativeHelpRef));
+
+        Traces.traceReturn("Help.createFromNative()");
+    }
+    private Help(int I_NativeHelpRef) {
+        super(I_NativeHelpRef);
+    }
+
     /** Destructor. */
     protected void finalize() throws Throwable {
         if (getbDoFinalize()) {
-            __finalize(getNativeRef());
+            __finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
         }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeHelpRef);
 
-    /** English language constant. */
-    public static final int LANG_EN = 0;
-    /** French language constant. */
-    public static final int LANG_FR = 1;
-    /** Number of languages managed by the library. */
-    public static final int LANG_COUNT = 2;
+    /** Destruction from native code.
+        See createFromNative(). */
+    protected static void deleteFromNative(int I_NativeHelpRef) {
+        Traces.traceMethod("Help.deleteFromNative(I_NativeHelpRef)");
+        Traces.traceParam("I_NativeHelpRef", new Integer(I_NativeHelpRef).toString());
+
+        NativeObject.deletedFromNative(NativeObject.getObject(I_NativeHelpRef));
+
+        Traces.traceReturn("Help.deleteFromNative()");
+    }
 
     /** Help addition for a given language.
         @param E_Lang   Language identifier (LANG_EN, LANG_FR...)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,7 +39,8 @@ public class SingleCommand extends IODevice
     /** Destructor. */
     protected void finalize() throws Throwable {
         if (getbDoFinalize()) {
-            __finalize(getNativeRef());
+            __finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
         }
         super.finalize();
     }

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -21,6 +21,11 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+# Default goal
+.DEFAULT_GOAL = build
+.PHONY: cpptest.default
+cpptest.default: $(.DEFAULT_GOAL) ;
+
 # Includes
 CLI_DIR := ../../..
 PROJECT = cpptest
@@ -28,17 +33,7 @@ PROJECT_DEPS = libclicpp.mak
 SRC_DIR = $(CPP_DIR)/tests/cpp
 PROJ_INCLUDES = -I$(CPP_DIR)/include
 PROJ_LIBS = -L$(OUT_DIR) -lclicpp -lncurses
-include build.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/cpptest.help
-$(CPP_DIR)/build/make/cpptest.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/cpptest.vars
-$(CPP_DIR)/build/make/cpptest.vars:
-	$(call ShowVariables,)
+include _build.mak
 
 # Dependencies
 include $(AUTO_DEPS_FILE)

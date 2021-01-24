@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -26,14 +26,5 @@ CLI_DIR := ../../..
 SRC_DIR = $(CLI_DIR)/samples/clisample
 CLI_XML_RES = $(SRC_DIR)/clisample.xml
 CLI_MAIN_CPP = $(SRC_DIR)/clisample_main.cpp
-include mkres.mak
+include _mkres.mak
 
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/clisample.help
-$(CPP_DIR)/build/make/clisample.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/clisample.vars
-$(CPP_DIR)/build/make/clisample.vars:
-	$(call ShowVariables,)

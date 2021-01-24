@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -47,13 +47,9 @@ public abstract class Menu extends SyntaxNode {
 
     /** Destructor. */
     protected void finalize() throws Throwable {
-        // Caution!
-        // When the native C++ inherited cli::Menu object has already been destroyed in Cli.__finalize(),
-        // Do not call Menu.__finalize() here.
-        if (! (this instanceof Cli)) {
-            if (getbDoFinalize()) {
-                __finalize(this.getNativeRef());
-            }
+        if (getbDoFinalize()) {
+            __finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
         }
         super.finalize();
     }
@@ -86,11 +82,25 @@ public abstract class Menu extends SyntaxNode {
                 System.err.println("Could not find CommandLine reference " + new Integer(I_NativeCmdLineRef));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            getErrorStream().printStackTrace(e);
         }
 
         Traces.traceReturn("Menu.__execute()", new Boolean(b_Res).toString());
         return b_Res;
+    }
+
+    /** Handler called when an error occures.
+        This method may be overriden by final menu classes. */
+    public void onError(ResourceString location, ResourceString message) {
+    }
+    private final void __onError(int I_NativeLocationRef, int I_NativeErrorMessageRef) {
+        Traces.traceMethod("Menu.__onError()");
+        ResourceString cli_Location = (ResourceString) NativeObject.getObject(I_NativeLocationRef);
+        ResourceString cli_ErrorMessage = (ResourceString) NativeObject.getObject(I_NativeErrorMessageRef);
+        if ((cli_Location != null) && (cli_ErrorMessage != null)) {
+            onError(cli_Location, cli_ErrorMessage);
+        }
+        Traces.traceReturn("Menu.__onError()");
     }
 
     /** Handler called when the menu exits.

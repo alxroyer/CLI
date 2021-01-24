@@ -1,3 +1,4 @@
-<area shape="rect" id="node2" href="$classIODevice.html" title="Generic input/output device." alt="" coords="27,161,99,189">
-<area shape="rect" id="node4" href="$classOutputDevice.html" title="Generic output device." alt="" coords="13,83,112,111">
-<area shape="rect" id="node6" href="$classObject.html" title="Generic object." alt="" coords="33,6,92,34">
+base referer
+rect $classIODevice.html 29,157 106,184
+rect $classOutputDevice.html 16,82 120,109
+rect $classObject.html 37,8 98,34

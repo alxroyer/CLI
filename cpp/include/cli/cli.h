@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,11 +28,13 @@
 //! @brief Cli class definition.
 
 //! @mainpage
+//! @author Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
+//!
 //! The CLI library allows you to easily define Command Line Interfaces.
 //!
 //! Within a single XML file, you define the tree of menus, keywords and parameters, and match them directly to some target language code.
 //!
-//! This documentation gives information about the implementation of this library for C++.
+//! This documentation gives information about the implementation of this library in C++.
 //! Here is a short introduction to quickly get the essential of it:
 //!     - First of all, you might be interested in the Cli class, which defines a CLI structure.
 //!     - Then have a look at the Shell and CommandLine classes. These classes implement CLI executions.
@@ -137,6 +139,8 @@ CLI_NS_BEGIN(cli)
         virtual void SetCli(Cli& CLI_Cli);
         //! @brief Reserved commands execution.
         virtual const bool ExecuteReserved(const CommandLine& CLI_CommandLine) const;
+        //! @brief Handler on error.
+        virtual void OnError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const;
         //! @brief Handler on menu exit.
         virtual void OnExit(void) const;
 

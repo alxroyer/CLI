@@ -1,19 +1,20 @@
-<area shape="rect" id="node5" href="$classEndl.html" title="End of command line element." alt="" coords="128,161,176,189">
-<area shape="rect" id="node7" href="$classMenuRef.html" title="Menu reference element." alt="" coords="200,161,272,189">
-<area shape="rect" id="node9" href="$classSyntaxNode.html" title="Syntax node elements." alt="" coords="296,161,387,189">
-<area shape="rect" id="node39" href="$classSyntaxRef.html" title="Syntax tag reference element." alt="" coords="411,161,491,189">
-<area shape="rect" id="node2" href="$classObject.html" title="Generic object." alt="" coords="259,6,317,34">
-<area shape="rect" id="node11" href="$classKeyword.html" title="Keyword element class." alt="" coords="101,238,173,266">
-<area shape="rect" id="node13" href="$classMenu.html" title="Menu definition." alt="" coords="197,238,251,266">
-<area shape="rect" id="node21" href="$classParam.html" title="Base parameter class." alt="" coords="369,238,428,266">
-<area shape="rect" id="node37" href="$classSyntaxTag.html" title="Syntax tag element class." alt="" coords="452,238,535,266">
-<area shape="rect" id="node15" href="$classCli.html" title="CLI definition class." alt="" coords="5,315,43,343">
-<area shape="rect" id="node17" href="$classConfigMenu.html" title="CLI configuration menu definition." alt="" coords="67,315,155,343">
-<area shape="rect" id="node19" href="$classTracesMenu.html" title="Traces menu definition." alt="" coords="179,315,269,343">
-<area shape="rect" id="node23" href="$classParamString.html" title="String parameter element class." alt="" coords="293,315,387,343">
-<area shape="rect" id="node27" href="$classParamT.html" title="Template parameter class." alt="" coords="411,315,507,343">
-<area shape="rect" id="node29" href="$classParamT.html" title="ParamT\&lt; double \&gt;" alt="" coords="531,315,659,343">
-<area shape="rect" id="node33" href="$classParamT.html" title="ParamT\&lt; int \&gt;" alt="" coords="683,315,787,343">
-<area shape="rect" id="node25" href="$classParamHost.html" title="Host names, IP adresses parameter element class." alt="" coords="297,393,383,421">
-<area shape="rect" id="node31" href="$classParamFloat.html" title="Float parameter element class." alt="" coords="551,393,639,421">
-<area shape="rect" id="node35" href="$classParamInt.html" title="Integer parameter element class." alt="" coords="699,393,771,421">
+base referer
+rect $classEndl.html 138,157 186,184
+rect $classMenuRef.html 210,157 285,184
+rect $classSyntaxNode.html 309,157 402,184
+rect $classSyntaxRef.html 426,157 509,184
+rect $classObject.html 270,8 332,34
+rect $classKeyword.html 108,232 182,258
+rect $classMenu.html 206,232 262,258
+rect $classParam.html 385,232 446,258
+rect $classSyntaxTag.html 470,232 556,258
+rect $classCli.html 8,306 45,333
+rect $classConfigMenu.html 69,306 162,333
+rect $classTracesMenu.html 186,306 282,333
+rect $classParamString.html 306,306 402,333
+rect $classParamT.html 426,306 528,333
+rect $classParamT.html 552,306 685,333
+rect $classParamT.html 709,306 816,333
+rect $classParamHost.html 310,381 398,408
+rect $classParamFloat.html 573,381 664,408
+rect $classParamInt.html 724,381 801,408

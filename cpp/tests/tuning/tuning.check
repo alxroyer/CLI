@@ -76,6 +76,7 @@ Please enter a command line:  help
   lang            Language setting
   pwm             Print Working Menu
   quit            Quit
+  show            Show CLI information
 Please enter a command line:  exit
 Please enter a command line: cli-config on
 Please enter a command line: help
@@ -100,6 +101,7 @@ Please enter a command line:  help
   lang            Language setting
   pwm             Print Working Menu
   quit            Quit
+  show            Show CLI information
 Please enter a command line:  exit
 Please enter a command line: cli-config off
 Please enter a command line: help
@@ -141,6 +143,7 @@ Please enter a command line:  help
   lang            Language setting
   pwm             Print Working Menu
   quit            Quit
+  show            Show CLI information
 Please enter a command line:  exit
 Please enter a command line: 
 Please enter a command line: exit

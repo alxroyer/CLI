@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -85,7 +85,11 @@ CLI_NS_BEGIN(cli)
     //! @brief Call information filling.
     //!
     //! Use this constant when call information is needed.
-    #define __CALL_INFO__ cli::CallInfo(__FILE__, __LINE__, __FUNCTION__)
+    #define __CALL_INFO__ cli::CallInfo(__FILE__, __LINE__, __func__)
+        // This hack just to enable compilation with VC6.0
+        #if ((defined _MSC_VER) && (_MSC_VER < 1300))
+        #define __func__ ""
+        #endif
 
 CLI_NS_END(cli)
 

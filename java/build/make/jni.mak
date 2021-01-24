@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,13 +22,13 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= headers
+.DEFAULT_GOAL = headers
 .PHONY: jni.default
-jni.default: headers ;
+jni.default: $(.DEFAULT_GOAL) ;
 
 # Variables.
 CLI_DIR := ../../..
-include vars.mak
+include _vars.mak
 
 JAVA_FILES = $(wildcard $(JAVA_SRC_DIR)/cli/*.java)
 JAVA_CLASSES = $(patsubst $(JAVA_SRC_DIR)/cli/%.java,$(OUT_DIR)/cli/%.class,$(JAVA_FILES))
@@ -55,14 +55,16 @@ clean:
 	$(RM) $(CPP_HEADERS)
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/jni.help
+help: $(JAVA_DIR)/build/make/jni.help
 $(JAVA_DIR)/build/make/jni.help:
 	$(call PrintHelp, headers, Generate native header files)
 	$(call PrintHelp, clean, Clean output files)
 
 .PHONY: $(JAVA_DIR)/build/make/jni.vars
+vars: $(JAVA_DIR)/build/make/jni.vars
 $(JAVA_DIR)/build/make/jni.vars:
 	$(call ShowVariables,JAVA_FILES JAVA_CLASSES CPP_HEADERS)
 

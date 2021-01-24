@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,9 +22,9 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= run
+.DEFAULT_GOAL = run
 .PHONY: cmdlinetest.default
-cmdlinetest.default: run ;
+cmdlinetest.default: $(.DEFAULT_GOAL) ;
 
 # Includes
 CLI_DIR := ../../..
@@ -66,22 +66,12 @@ PROJ_CPP_FLAGS += -DCLI_NO_STL
 PROJ_CPP_FLAGS += -DCLI_MAX_CMD_LINE_LENGTH=256
 PROJ_CPP_FLAGS += -DCLI_MAX_CMD_LINE_WORD_COUNT=32
 PROJ_CPP_FLAGS += -DCLI_MAX_WORD_LENGTH=16
-include build.mak
+include _build.mak
 
 # Rules
 .PHONY: run
 run: build
 	$(PRODUCT)
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/cmdlinetest.help
-$(CPP_DIR)/build/make/cmdlinetest.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/cmdlinetest.vars
-$(CPP_DIR)/build/make/cmdlinetest.vars:
-	$(call ShowVariables,)
 
 # Dependencies
 include $(AUTO_DEPS_FILE)

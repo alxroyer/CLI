@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -42,13 +42,7 @@ public class ParamFloat extends Param {
         Traces.traceMethod("ParamFloat.createFromNative(I_NativeParamRef)");
         Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
 
-        Param cli_Param = new ParamFloat(I_NativeParamRef);
-        if (cli_Param != null) {
-            // Do not finalize native-created objects.
-            cli_Param.dontFinalize();
-            // Object already remembered from the NativeObject constructor...
-            //  NativeObject.remember(cli_Param);
-        }
+        NativeObject.createdFromNative(new ParamFloat(I_NativeParamRef));
 
         Traces.traceReturn("ParamFloat.createFromNative()");
     }
@@ -59,7 +53,8 @@ public class ParamFloat extends Param {
     /** Destructor. */
     protected void finalize() throws Throwable {
         if (getbDoFinalize()) {
-            __finalize(getNativeRef());
+            __finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
         }
         super.finalize();
     }
@@ -71,14 +66,7 @@ public class ParamFloat extends Param {
         Traces.traceMethod("ParamFloat.deleteFromNative(I_NativeCmdLineRef)");
         Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
 
-        // Forget the command line references.
-        NativeObject cli_Param = NativeObject.getObject(I_NativeParamRef);
-        if (cli_Param != null) {
-            Traces.traceValue("cli_Param", cli_Param.toString());
-            if (cli_Param instanceof ParamFloat) {
-                NativeObject.forget(cli_Param);
-            }
-        }
+        NativeObject.deletedFromNative(NativeObject.getObject(I_NativeParamRef));
 
         Traces.traceReturn("ParamFloat.deleteFromNative()");
     }

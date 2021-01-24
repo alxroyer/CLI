@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,15 +22,15 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= check
+.DEFAULT_GOAL = check
 .PHONY: javatest.default
-javatest.default: check ;
+javatest.default: $(.DEFAULT_GOAL) ;
 
 # Parameters
 CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 
 # Includes
-include vars.mak
+include _vars.mak
 
 # Variables
 CLI_XSL = $(JAVA_DIR)/xsl/javaclic.xsl
@@ -76,15 +76,17 @@ clean:
 	$(RM) $(CLI_JAVA) $(CLI_CLASS) $(CLI_TEST_SAMPLE_CLASS) $(CLI_LOG)
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/test.help
+help: $(JAVA_DIR)/build/make/test.help
 $(JAVA_DIR)/build/make/test.help:
 	$(call PrintHelp, check, Check test output)
 	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
 	$(call PrintHelp, clean, Clean intermediate and output files)
 
 .PHONY: $(JAVA_DIR)/build/make/test.vars
+vars: $(JAVA_DIR)/build/make/test.vars
 $(JAVA_DIR)/build/make/test.vars:
 	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_CLASS CLI_TEST_SAMPLE_JAVA CLI_TEST_SAMPLE_CLASS CLI_TEST CLI_LOG CLI_CHECK)
 

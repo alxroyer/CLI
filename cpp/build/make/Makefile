@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -23,27 +23,20 @@
 
 # Includes
 CLI_DIR := ../../..
+	# Base library
 PROJECTS += libclicpp.mak
-PROJECTS += tktest.mak
-PROJECTS += cpptest.mak
+	# Samples
 PROJECTS += empty.mak
-PROJECTS += tuning.mak
 PROJECTS += hello.mak
 PROJECTS += clisample.mak
 PROJECTS += telnet.mak
+	# Tests
+PROJECTS += tktest.mak
+PROJECTS += cpptest.mak
+PROJECTS += tuning.mak
 PROJECTS += cmdlinetest.mak
 PROJECTS += io_device.mak
 PROJECTS += mt_device.mak
 PROJECTS += tests.mak
-include $(CLI_DIR)/build/make/all.mak
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/Makefile.help
-$(CPP_DIR)/build/make/Makefile.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/Makefile.vars
-$(CPP_DIR)/build/make/Makefile.vars:
-	$(call ShowVariables,)
+include $(CLI_DIR)/build/make/_all.mak
 

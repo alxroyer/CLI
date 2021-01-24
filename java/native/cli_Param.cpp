@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,7 +41,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Param__1_1copyValue(
     NativeTraces::TraceParam("I_NativeDestParamRef", "%d", I_NativeDestParamRef);
     NativeTraces::TraceParam("I_NativeSrcParamRef", "%d", I_NativeSrcParamRef);
 
-    bool b_Res = false;
+    jboolean b_Res = false;
     if (const cli::Param* const pcli_DestParam = (const cli::Param*) I_NativeDestParamRef)
     {
         if (const cli::Param* const pcli_SrcParam = (const cli::Param*) I_NativeSrcParamRef)

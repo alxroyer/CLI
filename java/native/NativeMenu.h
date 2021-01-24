@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,6 +37,10 @@ const bool __NativeMenu__Execute(
     JNIEnv* const PJ_Env, const std::string& STR_Class,
     const cli::Menu& CLI_Menu, const cli::CommandLine& CLI_CmdLine);
 
+const bool __NativeMenu__OnError(
+    JNIEnv* const PJ_Env, const std::string& STR_Class,
+    const cli::Menu& CLI_Menu, const cli::ResourceString& CLI_Location, const cli::ResourceString& CLI_ErrorMessage);
+
 const bool __NativeMenu__OnExit(
     JNIEnv* const PJ_Env, const std::string& STR_Class,
     const cli::Menu& CLI_Menu);
@@ -61,6 +65,11 @@ public:
     virtual const bool Execute(const cli::CommandLine& CLI_CmdLine) const
     {
         return __NativeMenu__Execute(m_pjEnv, m_strClass, *this, CLI_CmdLine);
+    }
+
+    virtual void OnError(const cli::ResourceString& CLI_Location, const cli::ResourceString& CLI_ErrorMessage) const
+    {
+        __NativeMenu__OnError(m_pjEnv, m_strClass, *this, CLI_Location, CLI_ErrorMessage);
     }
 
     virtual void OnExit(void) const

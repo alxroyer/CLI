@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -147,13 +147,19 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Language setting.
-        void SetLang(const ResourceString::LANG E_Lang);
+        void SetLang(
+            const ResourceString::LANG E_Lang   //!< New value.
+            );
         //! @brief Language access.
+        //! @return The language currently set.
         const ResourceString::LANG GetLang(void) const;
 
         //! @brief Beep configuration setting.
-        void SetBeep(const bool B_Enable);
+        void SetBeep(
+            const bool B_Enable         //!< New value.
+            );
         //! @brief Beep configuration access.
+        //! @return The current beep configuration. true if enabled, false otherwise.
         const bool GetBeep(void) const;
 
     public:
@@ -163,13 +169,16 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Tells whether this shell is running or not.
+        //! @return The running status.
         const bool IsRunning(void) const;
 
     public:
         //! @brief Help margin accessor.
+        //! @return Number of spaces for the help margin.
         const unsigned int GetHelpMargin(void) const;
 
         //! @brief Help offset accessor.
+        //! @return Number of spaces for the help offset.
         const unsigned int GetHelpOffset(void) const;
 
     private:
@@ -248,6 +257,8 @@ CLI_NS_BEGIN(cli)
         void OnCleanScreen(void);
         //! @brief Called when a backspace comes up from the input device.
         void OnBackspace(void);
+        //! @brief Called when a suppr comes up from the input device.
+        void OnSuppr(void);
         //! @brief Called when an escape character comes up from the input device.
         void OnEscape(void);
         //! @brief Called when an exit character (CTRL+C) comes up from the input device.

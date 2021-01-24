@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,14 +22,14 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= tests
+.DEFAULT_GOAL = tests
 .PHONY: javatests.default
-javatests.default: tests ;
+javatests.default: $(.DEFAULT_GOAL) ;
 
 
 # Variables
 CLI_DIR := ../../..
-include vars.mak
+include _vars.mak
 
 JAVA_SAMPLE_FILES = $(shell find $(SAMPLES_DIR) -name "*.java")
 JAVA_SAMPLE_CLASSES = $(patsubst %.java,$(OUT_DIR)/cli/test/%.class,$(notdir $(JAVA_SAMPLE_FILES)))
@@ -71,13 +71,15 @@ clean:
 deps: ;
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(JAVA_DIR)/build/make/tests.help
+help: $(JAVA_DIR)/build/make/tests.help
 $(JAVA_DIR)/build/make/tests.help:
 	$(call PrintHelp, tests, Launch tests on each sample file)
 	$(call PrintHelp, clean, Clean intermediate files)
 
 .PHONY: $(JAVA_DIR)/build/make/tests.vars
+vars: $(JAVA_DIR)/build/make/tests.vars
 $(JAVA_DIR)/build/make/tests.vars:
 	$(call ShowVariables, JAVA_SAMPLE_FILES JAVA_SAMPLE_CLASSES XML_FILES TEST_FILES CHECK_FILES)

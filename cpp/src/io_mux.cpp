@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -262,8 +262,29 @@ const OutputDevice& IOMux::GetOutput(const STREAM_TYPE E_StreamType) const
 
 const bool IOMux::SetOutput(const STREAM_TYPE E_StreamType, OutputDevice* const PCLI_Stream)
 {
+    // ALL_STREAMS management.
+    if (E_StreamType == ALL_STREAMS)
+    {
+        for (int i = 0; i < STREAM_TYPES_COUNT; i++)
+        {
+            if (! SetOutput((STREAM_TYPE) i, PCLI_Stream))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
+    {
+        CLI_ASSERT(false);
+        return false;
+    }
+    // End of ALL_STREAMS management.
+
+
     // Free previous device.
-    if (! ReleaseOutputDevice(E_StreamType, true))
+    if (! ReleaseOutputDevice(E_StreamType))
     {
         // Note: m_cliLastError has been set within ReleaseOutputDevice()
         return false;
@@ -466,9 +487,29 @@ const bool IOMux::ReleaseFirstInputDevice(void)
     }
 }
 
-const bool IOMux::ReleaseOutputDevice(const STREAM_TYPE E_StreamType, const bool B_Delete)
+const bool IOMux::ReleaseOutputDevice(const STREAM_TYPE E_StreamType)
 {
     bool b_Res = true;
+
+    // ALL_STREAMS management.
+    if (E_StreamType == ALL_STREAMS)
+    {
+        for (int i = 0; i < STREAM_TYPES_COUNT; i++)
+        {
+            if (! ReleaseOutputDevice((STREAM_TYPE) i))
+            {
+                b_Res = false;
+            }
+        }
+
+        return b_Res;
+    }
+    if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
+    {
+        CLI_ASSERT(false);
+        return false;
+    }
+    // End of ALL_STREAMS management.
 
     if (m_arsOutputs[E_StreamType].pcliOutput != NULL)
     {

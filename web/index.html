@@ -1,7 +1,7 @@
-<html>
+<?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -24,42 +24,65 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-
+<html>
 <head>
     <title>CLI library - How to quickly develop a command line interface</title>
+    <style type="text/css">
+    <!--
+    body {
+        font-family: arial;
+        font-size: 100%;
+    }
+    a.menu {
+        font-size: 120%;
+        text-decoration: none;
+        color: gray;
+    }
+    a.menu:hover {
+        font-size: 150%;
+        font-weight: bold;
+        color: gray;
+    }
+    -->
+    </style>
 </head>
 <body>
-<p align="right"><font size="-2">Last updated on May, 18th 2009</font></p>
+<p align="right"><font size="-2">Last updated on Oct, 1st 2009</font></p>
     <center><font size="+3"><b>CLI</b></font></center>
 
 <table>
 <tr>
-<td valign="top">
-    <a href="#news">News</a><br/>
-    <a href="#presentation">Presentation</a><br/>
-    <a href="#howto">How does it work?</a><br/>
-    <a href="#use">Possible use</a><br/>
-    <a href="#license">License</a><br/>
-    <a href="#download">Download</a><br/>
-    <a href="#history">History</a><br/>
-    <a href="#evolutions">Evolutions</a><br/>
-    <a href="#contact">Contact</a>
+<td width="200" valign="top">
+    <a class="menu" href="#news">News</a><br/>
+    <a class="menu" href="#presentation">Presentation</a><br/>
+    <a class="menu" href="#howto">Howto</a><br/>
+    <a class="menu" href="#use">Main interests</a><br/>
+    <a class="menu" href="#license">License</a><br/>
+    <a class="menu" href="#download">Download</a><br/>
+    <a class="menu" href="#history">History</a><br/>
+    <a class="menu" href="#evolutions">Evolutions</a><br/>
+    <a class="menu" href="#contact">Contact</a>
 </td>
-
-<td/>
 
 <td valign="top">
 
 <a name="news"/>
     <h1>News</h1>
     <table>
-    <tr><td width="10%"/><td valign="top"><i>May, 18th 2009</i></td><td width="5%"/>
-                         <td valign="top">New version 2.3 release</td>
+    <tr><td width="10%"/><td valign="top" align="right"><i>Oct, 1st 2009</i></td><td width="5%"/>
+                         <td valign="top">New version 2.4 release<br/>
+                                >>>
+                                <span align="right"><a href="#history">[changes]</a></span>
+                                <span align="right"><a href="#download">[download]</a></span>
+                                &lt;&lt;&lt;</td>
         <td width="10%"/></tr>
-    <tr><td width="10%"/><td valign="top"><i>Sep, 21st 2008</i></td><td width="5%"/>
+    <tr><td width="10%"/><td valign="top" align="right"><i>May, 18th 2009</i></td><td width="5%"/>
+                         <td valign="top">Version 2.3 release</td>
+        <td width="10%"/></tr>
+    <tr><td width="10%"/><td valign="top" align="right"><i>Sep, 21st 2008</i></td><td width="5%"/>
                          <td valign="top">Version 2.2 release</td>
         <td width="10%"/></tr>
-    <tr><td width="10%"/><td valign="top"><i>Oct, 31st 2007</i></td><td width="5%"/>
+    <!--<tr><td width="10%"/><td valign="top"><i>Oct, 31st 2007</i></td><td width="5%"/>
                          <td valign="top">The CLI library is now available for C++ and Java</td>
         <td width="10%"/></tr>
     <tr><td width="10%"/><td valign="top"><i>Sept, 27th 2007</i></td><td width="5%"/>
@@ -70,11 +93,15 @@
         <td width="10%"/></tr>
     <tr><td width="10%"/><td valign="top"><i>Sept, 27th 2006</i></td><td width="5%"/>
                          <td valign="top">Linux and Windows support</td>
+        <td width="10%"/></tr>-->
+    <tr><td width="10%"/><td valign="top" align="right"><i>...</i></td><td width="5%"/>
+                         <td valign="top"></td>
         <td width="10%"/></tr>
-    <tr><td width="10%"/><td valign="top"><i>May, 17th 2006</i></td><td width="5%"/>
+    <tr><td width="10%"/><td valign="top" align="right"><i>May, 17th 2006</i></td><td width="5%"/>
                          <td valign="top">Very first beta release</td>
         <td width="10%"/></tr>
     </table>
+    <p align="right"><font size="-2">Anterior information is available in the <a href="#history">history section</a></font></p>
 
 <a name="presentation"/>
     <h1>Presentation</h1>
@@ -110,6 +137,7 @@
     <td bgcolor="#eeeeee" valign="top">
         <img src="hello.jpg"/>
     </td>
+    </tr>
     </table>
     </center>
     </p>
@@ -159,7 +187,7 @@
     </p>
 
 <a name="howto"/>
-    <h1>How does it work?</h1>
+    <h1>Howto</h1>
 
     <p>
     Considering you already have the user code to execute at end,
@@ -196,7 +224,7 @@
 
 
 <a name="use"/>
-    <h1>Possible use</h1>
+    <h1>Main interests</h1>
 
     <p>
     Here is a list of possible interests you could have in this projects:
@@ -274,13 +302,17 @@
     <table>
 
     <tr>
+    <td>Oct, 1st 2009</td>
+    <td><a href="cli-2.4.tgz">cli-2.4.tgz</a></td>
+    <td>Bug corrections  &amp; improvements (see <a href="#history">history</a>).</td>
+    </tr>
+
+    <tr>
     <td>May, 18th 2009</td>
     <td><a href="cli-2.3.tgz">cli-2.3.tgz</a></td>
     <td>Left and right arrows management.
         Clean screen management.
-        Thread-safe termination, and mono-thread execution.
-        XSL readability improvement.
-        Bug corrections.</td>
+        Plus other stuff (see <a href="#history">history</a>).</td>
     </tr>
 
     <tr>
@@ -339,6 +371,33 @@
     <th bgcolor="#eeeeee">date</th>
     <th bgcolor="#eeeeee">version</th>
     <th bgcolor="#eeeeee">Description</th>
+    </tr>
+
+    <tr>
+    <td valign="top" bgcolor="#ffffcc">Oct, 1st 2009</td>
+    <td valign="top" align="center" bgcolor="#ffffcc">2.4</td>
+    <td>
+        Miscellaneous:
+        <ul>
+        <li>Licensing: URL link addition in the license.</li>
+        <li>Makefile improvements: .DEFAULT_GOAL improvement, include Makefiles prefixed by '_', help and vars dependencies revision</li>
+        <li>C++/Java: 'show version', 'show author' and 'show license' commands addition in the 'cli-config' menu.</li>
+        <li>C++/Java: ALL_STREAMS management in Shell and IOMux.</li>
+        <li>C++/Java: OnError() handler addition.</li>
+        <li>C++: various improvements.</li>
+        <li>C++: stdout and stderr flushing addition for a better rendering.</li>
+        <li>Java: implementation completion (ResourceString and Help revision, IODevice.getLocation(), Shell...)</li>
+        <li>Java: OutputDevice.printStackStrace() method addition for a better output management</li>
+        <li>Java: finalization & native creation improvements</li>
+        <li>Java: cli.jar archive improvement</li>
+        <li>Java: XSL minor comment improvements</li>
+        <li>XSL improvements for other XSLT processor out of xsltproc</li>
+        </ul>
+        Bug corrections:
+        <ul>
+        <li>Bug(major)! DELETE key management missing in cli::Shell class</li>
+        </ul>
+    </td>
     </tr>
 
     <tr>
@@ -580,6 +639,8 @@
     <li><b>Other target languages:</b>
         Supported languages are C++ and Java at present.
         Next ones could be Perl or python...</li>
+    <li><b>XSD definition:</b>
+        Write the XSD definition of the XML resource files.</li>
     <li>...</li>
     </ul>
     </p>
@@ -607,7 +668,7 @@
             + '\'">'
             + 'email me</a>');
     //-->
-    </script><noscript><a href='http://w2.syronex.com/jmr/safemailto/#noscript'>email me (guarded by anti-spam solution)</a></noscript>.
+    </script><noscript><a href='http://w2.syronex.com/jmr/safemailto/#noscript'>email me</a></noscript>.
     </p>
 </td>
 </tr>

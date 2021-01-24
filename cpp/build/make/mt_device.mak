@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,36 +22,22 @@
 
 
 # Default goal
-DEFAULT_GOAL ?= run
+.DEFAULT_GOAL = run
 .PHONY: mt_device.default
-mt_device.default: run ;
+mt_device.default: $(.DEFAULT_GOAL) ;
 
 # Includes
 CLI_DIR := ../../..
 PROJECT = mt_device
-#PROJECT_DEPS = libclicpp.mak
-#SRC_DIR = $(CPP_DIR)/tests/mt_device
-#PROJ_INCLUDES = -I$(CPP_DIR)/include
-#PROJ_LIBS = -L$(OUT_DIR) -lclicpp -lncurses
 CLI_XML_RES = $(SAMPLES_DIR)/user-guide/empty.xml
 SRC_DIR = $(CPP_DIR)/tests/mt_device
 CLI_MAIN_CPP = $(SRC_DIR)/mt_test.cpp
-include mkres.mak
+include _mkres.mak
 
 # Rules
 .PHONY: run
 run: build
 	$(PRODUCT)
-
-# Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(CPP_DIR)/build/make/mt_device.help
-$(CPP_DIR)/build/make/mt_device.help: ;
-
-.PHONY: $(CPP_DIR)/build/make/mt_device.vars
-$(CPP_DIR)/build/make/mt_device.vars:
-	$(call ShowVariables,)
 
 # Dependencies
 $(CLI_OBJ): $(CLI_XML_CPP) $(wildcard $(CPP_DIR)/include/cli/*.h)

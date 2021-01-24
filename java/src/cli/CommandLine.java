@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2009, Alexis Royer
+    Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -44,14 +44,7 @@ public final class CommandLine extends NativeObject
         Traces.traceMethod("CommandLine.createFromNative(I_NativeCmdLineRef)");
         Traces.traceParam("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString());
 
-        // Just create a new object.
-        CommandLine cli_CmdLine = new CommandLine(I_NativeCmdLineRef);
-        if (cli_CmdLine != null) {
-            // Do not finalize native-created objects.
-            cli_CmdLine.dontFinalize();
-            // Object already remembered from the NativeObject constructor...
-            //  NativeObject.remember(cli_CmdLine);
-        }
+        NativeObject.createdFromNative(new CommandLine(I_NativeCmdLineRef));
 
         Traces.traceReturn("CommandLine.createFromNative()");
     }
@@ -77,26 +70,22 @@ public final class CommandLine extends NativeObject
     /** Destructor. */
     protected void finalize() throws Throwable {
         if (getbDoFinalize()) {
-            __finalize(getNativeRef());
+            __finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
         }
         super.finalize();
     }
     private static final native void __finalize(int I_NativeCmdLineRef);
 
     /** Let the native library notify java when command lines are not used anymore.
+        See createFromNative().
         @param I_NativeCmdLineRef   Native object reference. */
     private static final void deleteFromNative(int I_NativeCmdLineRef) {
         Traces.traceMethod("CommandLine.deleteFromNative(I_NativeCmdLineRef)");
         Traces.traceParam("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString());
 
         // Forget the command line references.
-        NativeObject cli_CmdLine = NativeObject.getObject(I_NativeCmdLineRef);
-        if (cli_CmdLine != null) {
-            Traces.traceValue("cli_CmdLine", cli_CmdLine.toString());
-            if (cli_CmdLine instanceof CommandLine) {
-                NativeObject.forget(cli_CmdLine);
-            }
-        }
+        NativeObject.deletedFromNative(NativeObject.getObject(I_NativeCmdLineRef));
 
         Traces.traceReturn("CommandLine.deleteFromNative()");
     }

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2009, Alexis Royer
+# Copyright (c) 2006-2009, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -22,13 +22,13 @@
 
 
 # Default goal
-DEFAULT_GOAL = html
+.DEFAULT_GOAL = html
 .PHONY: user-guide.default
-user-guide.default: html ;
+user-guide.default: $(.DEFAULT_GOAL) ;
 
 # Directories
 CLI_DIR ?= ../..
-include $(CLI_DIR)/build/make/vars.mak
+include $(CLI_DIR)/build/make/_vars.mak
 INT_DIR = ./samples
 
 # Source
@@ -83,15 +83,17 @@ else
 endif
 
 # Debug and help
-include $(CLI_DIR)/build/make/help.mak
-
-.PHONY: $(WEB_DIR)/user-guide/user-guide.vars
-$(WEB_DIR)/user-guide/user-guide.vars:
-	$(call ShowVariables,DB_USER_GUIDE HTML_USER_GUIDE CLI_SAMPLES DB_SAMPLES XSL_STYLESHEET CSS_FLAGS TOC_FLAGS AUTOLABEL_FLAGS XSLT_OPTIONS)
+include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(WEB_DIR)/user-guide/user-guide.help
+help: $(WEB_DIR)/user-guide/user-guide.help
 $(WEB_DIR)/user-guide/user-guide.help:
 	$(call PrintHelp, html,      Generate user-guide)
 	$(call PrintHelp, dirs,      Check user-guide output and intermediate directories)
 	$(call PrintHelp, clean,     Clean up output and intermediate files)
+
+.PHONY: $(WEB_DIR)/user-guide/user-guide.vars
+vars: $(WEB_DIR)/user-guide/user-guide.vars
+$(WEB_DIR)/user-guide/user-guide.vars:
+	$(call ShowVariables,DB_USER_GUIDE HTML_USER_GUIDE CLI_SAMPLES DB_SAMPLES XSL_STYLESHEET CSS_FLAGS TOC_FLAGS AUTOLABEL_FLAGS XSLT_OPTIONS)
 
