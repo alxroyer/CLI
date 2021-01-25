@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -23,20 +23,34 @@
 */
 
 
+#include <string.h> // strcmp
+
 #include "cli/pch.h"
 #include "cli/common.h"
 #include "cli/shell.h"
+#include "cli/console.h"
 #include "cli/file_device.h"
 
 
 int main(int I_Args, char** ARSTR_Args)
 {
-    // Check arguments.
-    if (I_Args != 3)
+    if (I_Args >= 2)
     {
-        cli::OutputDevice::GetStdOut() << "USAGE" << cli::endl;
-        cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << " <input file> <output file>" << cli::endl;
-        return -1;
+        if ((strcmp(ARSTR_Args[1], "-h") == 0)
+            || (strcmp(ARSTR_Args[1], "-?") == 0)
+            || (strcmp(ARSTR_Args[1], "-help") == 0)
+            || (strcmp(ARSTR_Args[1], "--help") == 0))
+        {
+            cli::OutputDevice::GetStdOut() << "USAGE" << cli::endl;
+            cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << cli::endl;
+            cli::OutputDevice::GetStdOut() << "       Interactive mode." << cli::endl;
+            cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << " <input file>" << cli::endl;
+            cli::OutputDevice::GetStdOut() << "       Output to standard output." << cli::endl;
+            cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << " <input file> <output file>" << cli::endl;
+            cli::OutputDevice::GetStdOut() << "       Output to given file." << cli::endl;
+
+            return -1;
+        }
     }
 
     // Look for a CLI to launch.
@@ -56,15 +70,26 @@ int main(int I_Args, char** ARSTR_Args)
     cli::Shell cli_Shell(*cli_List.GetHead());
 
     // Create devices.
-    cli::OutputFileDevice cli_Output(ARSTR_Args[2], false);
-    cli::InputFileDevice cli_Input(ARSTR_Args[1], cli_Output, false);
-    cli_Input.EnableSpecialCharacters(true);
+    cli::OutputDevice* const pcli_Out = (
+        (I_Args >= 3)
+        ? dynamic_cast<cli::OutputDevice*>(new cli::OutputFileDevice(ARSTR_Args[2], true))
+        : dynamic_cast<cli::OutputDevice*>(new cli::Console(true))
+    );
+    cli::IODevice* const pcli_In = (
+        (I_Args >= 2)
+        ? dynamic_cast<cli::IODevice*>(new cli::InputFileDevice(ARSTR_Args[1], *pcli_Out, true))
+        : dynamic_cast<cli::IODevice*>(pcli_Out)
+    );
+    if (cli::InputFileDevice* const pcli_InFile = dynamic_cast<cli::InputFileDevice*>(pcli_In))
+    {
+        pcli_InFile->EnableSpecialCharacters(true);
+    }
 
     // Redirect only echo, prompt, output and error streams.
     cli_Shell.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
 
     // Launch it.
-    cli_Shell.Run(cli_Input);
+    cli_Shell.Run(*pcli_In);
 
     // Successful return.
     return 0;

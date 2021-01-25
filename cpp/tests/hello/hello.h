@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,7 +26,7 @@
 #ifndef _CLI_GO_HELLO_H_
 #define _CLI_GO_HELLO_H_
 
-static void sayHello(void) {}
-static void sayBye(void) {}
+static void sayHello(const cli::OutputDevice& CLI_Out) { CLI_Out << "Hello!" << cli::endl; }
+static void sayBye(const cli::OutputDevice& CLI_Out) { CLI_Out << "Bye." << cli::endl; }
 
 #endif // _CLI_GO_HELLO_H_

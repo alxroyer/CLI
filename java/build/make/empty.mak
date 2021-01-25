@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -44,8 +44,8 @@ CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
 CLI_GO_JAVA = $(CLI_DIR)/java/src/cli/test/GoEmpty.java
 
 # Rules
-run:
-	cd $(OUT_DIR) && java cli.test.GoEmpty
+run: build
+	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.GoEmpty
 
 $(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
 	mkdir -p $(dir $(OUT_DIR))

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -84,6 +84,7 @@ CLI_NS_BEGIN(cli)
 
         //! @brief Returns the list of child elements coresponding to a keyword
         //!         or the beginning of a keyword.
+        //! @return false for internal error, true otherwise.
         virtual const bool FindElements(
             Element::List& CLI_ExactList,   //!< Exact matching keywords output list.
             Element::List& CLI_NearList,    //!< All matching keywords output list.

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,75 +31,111 @@
 #include "cli/object.h"
 #include "cli/io_device.h"
 
+
+//! @brief Generic native object.
 class NativeObject
 {
 public:
-    static const jobject GetJavaObject(JNIEnv* const PJ_Env, int I_NativeObjectRef);
+    //! Object reference type.
+    typedef int REF;
 
-public:
-    template <class T> static void Use(
-        const T* const PT_Object            //!< Object in use.
+    //! @brief Object to reference conversion.
+    //! @return Reference of the native object if found.
+    static const REF GetNativeRef(
+        const cli::Object& CLI_Object   //!< Native object.
+        );
+
+    //! @brief Reference to object conversion.
+    //! @return Pointer to the object referenced. NULL if an error occured.
+    static cli::Object* const GetNativeObject(
+        const REF I_NativeObjectRef     //!< Native object reference.
+        );
+
+    //! @brief Reference to object conversion (template version).
+    //! @return Pointer to the object referenced. NULL if an error occured.
+    template <class T> static T GetNativeObject(
+        const REF I_NativeObjectRef     //!< Native object reference.
         )
     {
-        if (cli::OutputDevice* const pcli_OutputDevice = dynamic_cast<cli::OutputDevice*>(
-                const_cast<T*>(PT_Object)))
+        return dynamic_cast<T>(GetNativeObject(I_NativeObjectRef));
+    }
+
+    //! @brief Retrieves the Java object reference from its native reference.
+    //! @return Java object if found.
+    static const jobject GetJavaObject(
+        const REF I_NativeObjectRef,    //!< Native object reference.
+        const bool B_Trace              //!< true if traces can be output, false otherwise.
+        );
+
+public:
+    //! @brief Declares the given object to be used from Java.
+    template <class T> static void Use(
+        const T& T_Object               //!< Object in use.
+        )
+    {
+        if (cli::OutputDevice* const pcli_OutputDevice = dynamic_cast<cli::OutputDevice*>(const_cast<T*>(& T_Object)))
         {
             pcli_OutputDevice->UseInstance(__CALL_INFO__);
         }
-        Use((int) PT_Object);
+        Use(GetNativeRef(T_Object));
     }
 
+    //! @brief Declares the given object to be not used anymore from Java.
     template <class T> static void Free(
-        const T* const PT_Object            //!< Object which reference is released.
+        const T& T_Object               //!< Object which reference is released.
         )
     {
-        const bool b_Delete = Free((int) PT_Object);
-        if (cli::OutputDevice* const pcli_OutputDevice = dynamic_cast<cli::OutputDevice*>(
-                const_cast<T*>(PT_Object)))
+        const bool b_Delete = Free(GetNativeRef(T_Object));
+        if (cli::OutputDevice* const pcli_OutputDevice = dynamic_cast<cli::OutputDevice*>(const_cast<T*>(& T_Object)))
         {
             pcli_OutputDevice->FreeInstance(__CALL_INFO__);
         }
-        else if ((b_Delete) && (PT_Object != NULL))
+        else if (b_Delete)
         {
-            delete PT_Object;
+            delete & T_Object;
         }
     }
 
+    //! @brief Declares a given object's destruction to be delegated to another one's destruction.
     template <class T1, class T2> static void Delegate(
-        const T1* const PT_What,            //!< Object which deletion is now delegeted.
-        const T2* const PT_Who              //!< Object the deletion of the previous object is delegated to.
+        const T1& T_What,               //!< Object which deletion is now delegated.
+        const T2& T_Who                 //!< Object the deletion of the previous object is delegated to.
         )
     {
-        Delegate((int) PT_What, (int) PT_Who);
+        Delegate(GetNativeRef(T_What), GetNativeRef(T_Who));
     }
 
 public:
+    //! @brief Tells Java a new object has been created from the native side.
     static const bool CreateFromNative(
-        JNIEnv* const PJ_Env,               //!< Java environment.
         const cli::Object& CLI_Object       //!< CLI element to create from native source.
         );
 
+    //! @brief Tells Java an object has been deleted from the native side.
     static const bool DeleteFromNative(
-        JNIEnv* const PJ_Env,               //!< Java environment.
         const cli::Object& CLI_Object       //!< CLI element to delete from native source.
         );
 
 private:
+    //! @brief Declares the given object to be used from Java.
     static void Use(
-        const int I_ObjectRef               //!< Object in use.
+        const REF I_ObjectRef               //!< Object in use.
         );
 
+    //! @brief Declares the given object to be not used anymore from Java.
     //! @return true if the object should be deleted.
     static const bool Free(
-        const int I_ObjectRef               //!< Object which reference is released.
+        const REF I_ObjectRef               //!< Object which reference is released.
         );
 
+    //! @brief Declares a given object's destruction to be delegated to another one's destruction.
     static void Delegate(
-        const int I_WhatRef,                //!< Object which deletion is now delegeted.
-        const int I_WhoRef                  //!< Object the deletion of the previous object is delegated to.
+        const REF I_WhatRef,                //!< Object which deletion is now delegeted.
+        const REF I_WhoRef                  //!< Object the deletion of the previous object is delegated to.
         );
 
-private:
+public:
+    //! @brief Retrieves the Java class name of a native object.
     static const std::string GetJavaClassName(
         const cli::Object& CLI_Object       //!< CLI element.
         );
@@ -113,7 +149,7 @@ private:
     } ObjectInfo;
 
     //! Objet map typedef.
-    typedef std::map<int, struct _ObjectInfo> ObjectMap;
+    typedef std::map<REF, struct _ObjectInfo> ObjectMap;
 
     //! Object map.
     static ObjectMap m_mapTokens;

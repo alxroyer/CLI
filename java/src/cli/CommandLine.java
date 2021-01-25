@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,12 +41,12 @@ public final class CommandLine extends NativeObject
     /** Create a new command line from native instance.
         @param I_NativeCmdLineRef   Native object reference. */
     private static final void createFromNative(int I_NativeCmdLineRef) {
-        Traces.traceMethod("CommandLine.createFromNative(I_NativeCmdLineRef)");
-        Traces.traceParam("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("CommandLine.createFromNative(I_NativeCmdLineRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString()));
 
         NativeObject.createdFromNative(new CommandLine(I_NativeCmdLineRef));
 
-        Traces.traceReturn("CommandLine.createFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("CommandLine.createFromNative()"));
     }
     /** Create a command line from its native reference.
         @param I_NativeCmdLineRef   Native object reference. */
@@ -61,7 +61,7 @@ public final class CommandLine extends NativeObject
             NativeObject cli_Object = NativeObject.getObject(__getElementAt(I_NativeCmdLineRef, i));
             if (cli_Object instanceof Element) {
                 Element cli_Element = (Element) cli_Object;
-                Traces.traceValue("cli_Element", cli_Element.getKeyword());
+                Traces.trace(NativeTraces.CLASS, NativeTraces.value("cli_Element", cli_Element.getKeyword()));
                 m_jElements.add(cli_Element);
             }
         }
@@ -81,13 +81,13 @@ public final class CommandLine extends NativeObject
         See createFromNative().
         @param I_NativeCmdLineRef   Native object reference. */
     private static final void deleteFromNative(int I_NativeCmdLineRef) {
-        Traces.traceMethod("CommandLine.deleteFromNative(I_NativeCmdLineRef)");
-        Traces.traceParam("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("CommandLine.deleteFromNative(I_NativeCmdLineRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString()));
 
         // Forget the command line references.
         NativeObject.deletedFromNative(NativeObject.getObject(I_NativeCmdLineRef));
 
-        Traces.traceReturn("CommandLine.deleteFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("CommandLine.deleteFromNative()"));
     }
 
     /** Retrieves an iterator over the elements of the command line.

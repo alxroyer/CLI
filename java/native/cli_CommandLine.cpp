@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,43 +30,51 @@
 #include "cli_CommandLine.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_CommandLine__1_1CommandLine(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
-    NativeTraces::TraceMethod("CommandLine.__CommandLine()");
-    cli::CommandLine* pcli_CmdLine = NULL;
-    if ((pcli_CmdLine = new cli::CommandLine()))
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("CommandLine.__CommandLine()") << cli::endl;
+    NativeObject::REF i_CmdLineRef = 0;
+    if (cli::CommandLine* const pcli_CmdLine = new cli::CommandLine())
     {
-        NativeObject::Use(pcli_CmdLine);
+        NativeObject::Use(*pcli_CmdLine);
+        i_CmdLineRef = NativeObject::GetNativeRef(*pcli_CmdLine);
     }
-    NativeTraces::TraceReturn("CommandLine.__CommandLine()", "%d", (int) pcli_CmdLine);
-    return (jint) pcli_CmdLine;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("CommandLine.__CommandLine()", i_CmdLineRef) << cli::endl;
+    return i_CmdLineRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_CommandLine__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeCmdLineRef)
 {
-    NativeTraces::TraceMethod("CommandLine.__finalize(I_NativeCmdLineRef)");
-    NativeTraces::TraceParam("I_NativeCmdLineRef", "%d", I_NativeCmdLineRef);
-    if (const cli::CommandLine* const pcli_CmdLine = (const cli::CommandLine*) I_NativeCmdLineRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("CommandLine.__finalize(I_NativeCmdLineRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeCmdLineRef", I_NativeCmdLineRef) << cli::endl;
+    if (const cli::CommandLine* const pcli_CmdLine = NativeObject::GetNativeObject<const cli::CommandLine*>(I_NativeCmdLineRef))
     {
-        NativeObject::Free(pcli_CmdLine);
+        NativeObject::Free(*pcli_CmdLine);
     }
-    NativeTraces::TraceReturn("CommandLine.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("CommandLine.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_CommandLine__1_1getElementCount(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeCmdLineRef)
 {
-    NativeTraces::TraceMethod("CommandLine.__getElementCount(I_NativeCmdLineRef)");
-    NativeTraces::TraceParam("I_NativeCmdLineRef", "%d", I_NativeCmdLineRef);
-    jint i_Count = 0;
-    if (const cli::CommandLine* const pcli_CmdLine = (const cli::CommandLine*) I_NativeCmdLineRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("CommandLine.__getElementCount(I_NativeCmdLineRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeCmdLineRef", I_NativeCmdLineRef) << cli::endl;
+    int i_Count = 0;
+    if (const cli::CommandLine* const pcli_CmdLine = NativeObject::GetNativeObject<const cli::CommandLine*>(I_NativeCmdLineRef))
     {
         for (   cli::CommandLineIterator it(*pcli_CmdLine);
                 it.StepIt(); )
@@ -74,7 +82,7 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_CommandLine__1_1getElementCount(
             i_Count ++;
         }
     }
-    NativeTraces::TraceReturn("CommandLine.__getElementCount()", "%d", i_Count);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("CommandLine.__getElementCount()", i_Count) << cli::endl;
     return i_Count;
 }
 
@@ -82,24 +90,29 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_CommandLine__1_1getElementAt(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeCmdLineRef, jint I_Position)
 {
-    NativeTraces::TraceMethod("CommandLine.__getElementAt(I_NativeCmdLineRef, I_Position)");
-    NativeTraces::TraceParam("I_NativeCmdLineRef", "%d", I_NativeCmdLineRef);
-    NativeTraces::TraceParam("I_Position", "%d", I_Position);
-    const cli::Element* pcli_Element = NULL;
-    if (const cli::CommandLine* const pcli_CmdLine = (const cli::CommandLine*) I_NativeCmdLineRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("CommandLine.__getElementAt(I_NativeCmdLineRef, I_Position)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeCmdLineRef", I_NativeCmdLineRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_Position", I_Position) << cli::endl;
+    NativeObject::REF i_ElementRef = 0;
+    if (const cli::CommandLine* const pcli_CmdLine = NativeObject::GetNativeObject<const cli::CommandLine*>(I_NativeCmdLineRef))
     {
         int i_Count = 0;
         for (   cli::CommandLineIterator it(*pcli_CmdLine);
-                it.StepIt() && (pcli_Element == NULL);
+                it.StepIt() && (i_ElementRef == 0);
                 )
         {
             if (i_Count >= I_Position)
             {
-                pcli_Element = *it;
+                if (const cli::Element* const pcli_Element = *it)
+                {
+                    i_ElementRef = NativeObject::GetNativeRef(*pcli_Element);
+                }
             }
             i_Count ++;
         }
     }
-    NativeTraces::TraceReturn("CommandLine.__getElementAt()", "%d", (jint) pcli_Element);
-    return (jint) pcli_Element;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("CommandLine.__getElementAt()", i_ElementRef) << cli::endl;
+    return i_ElementRef;
 }

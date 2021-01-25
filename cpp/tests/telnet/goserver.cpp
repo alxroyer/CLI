@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -23,30 +23,47 @@
 */
 
 
+#include <stdlib.h> // atoi
+
 #include "cli/pch.h"
 #include "cli/common.h"
 #include "cli/telnet.h"
+#include "empty.h"
+
+
+class TestServer : public cli::TelnetServer
+{
+public:
+    TestServer(const unsigned long UL_Port) : TelnetServer(2, UL_Port, cli::ResourceString::LANG_EN) {}
+protected:
+    virtual cli::Shell* const OnNewConnection(const cli::TelnetConnection& CLI_NewConnection)
+    {
+        if (const cli::Cli* const pcli_Cli = new EmptyCli())
+        {
+            if (cli::Shell* const pcli_Shell = new cli::Shell(*pcli_Cli))
+            {
+                pcli_Shell->SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
+                return pcli_Shell;
+            }
+        }
+        return NULL;
+    }
+    virtual void OnCloseConnection(cli::Shell* const PCLI_Shell, const cli::TelnetConnection& CLI_ConnectionClosed)
+    {
+        if (PCLI_Shell != NULL)
+        {
+            const cli::Cli* const pcli_Cli = & PCLI_Shell->GetCli();
+            delete PCLI_Shell;
+            if (pcli_Cli != NULL)
+            {
+                delete pcli_Cli;
+            }
+        }
+    }
+};
 
 int main(int I_ArgCount, char* ARSTR_Args[])
 {
-    static const cli::TraceClass CLI_TELNET_SERVER("CLI_TELNET_SERVER", cli::Help());
-    static const cli::TraceClass CLI_TELNET_OUT("CLI_TELNET_OUT", cli::Help());
-    static const cli::TraceClass CLI_TELNET_IN("CLI_TELNET_IN", cli::Help());
-    class _Trace { public:
-        _Trace() {
-            cli::GetTraces().SetStream(cli::OutputDevice::GetStdErr());
-            cli::GetTraces().Declare(CLI_TELNET_SERVER);
-            cli::GetTraces().SetFilter(CLI_TELNET_SERVER, true);
-            cli::GetTraces().Declare(CLI_TELNET_OUT);
-            cli::GetTraces().SetFilter(CLI_TELNET_OUT, false);
-            cli::GetTraces().Declare(CLI_TELNET_IN);
-            cli::GetTraces().SetFilter(CLI_TELNET_IN, false);
-        }
-        ~_Trace() {
-            cli::GetTraces().UnsetStream();
-        }
-    } guard;
-
     unsigned long ul_Port = 0;
     if ((I_ArgCount < 2) || (ARSTR_Args[0] == NULL))
     {
@@ -64,29 +81,7 @@ int main(int I_ArgCount, char* ARSTR_Args[])
         }
     }
 
-    cli::Cli::List cli_List(10);
-    const int i_Clis = cli::Cli::FindFromName(cli_List, ".*");
-    if (i_Clis == 0)
-    {
-        cli::OutputDevice::GetStdErr() << "Error: No CLI found." << cli::endl;
-        return -1;
-    }
-    else if (i_Clis > 1)
-    {
-        cli::OutputDevice::GetStdErr() << "Warning: Several CLIs found. Executing only the first one." << cli::endl;
-    }
-
-    if (const cli::Cli* const pcli_Cli = cli_List.GetHead())
-    {
-        cli::Shell cli_MyShell(*pcli_Cli);
-        cli_MyShell.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
-        cli::TelnetServer cli_Server(cli_MyShell, ul_Port);
-        cli_Server.StartServer();
-        return 0;
-    }
-    else
-    {
-        cli::OutputDevice::GetStdErr() << "Internal error." << cli::endl;
-        return -1;
-    }
+    TestServer cli_Server(ul_Port);
+    cli_Server.StartServer();
+    return 0;
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 #include "cli_SyntaxNode.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -38,19 +39,21 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_SyntaxNode__1_1addElement(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeSyntaxNodeRef, jint I_NativeElementRef)
 {
-    NativeTraces::TraceMethod("SyntaxNode.__addElement(I_NativeSyntaxNodeRef, I_NativeElementRef)");
-    NativeTraces::TraceParam("I_NativeSyntaxNodeRef", "%d", I_NativeSyntaxNodeRef);
-    NativeTraces::TraceParam("I_NativeElementRef", "%d", I_NativeElementRef);
-    jboolean b_Res = false;
-    if (cli::SyntaxNode* const pcli_SyntaxNode = (cli::SyntaxNode*) I_NativeSyntaxNodeRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SyntaxNode.__addElement(I_NativeSyntaxNodeRef, I_NativeElementRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeSyntaxNodeRef", I_NativeSyntaxNodeRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
+    bool b_Res = false;
+    if (cli::SyntaxNode* const pcli_SyntaxNode = NativeObject::GetNativeObject<cli::SyntaxNode*>(I_NativeSyntaxNodeRef))
     {
-        if (cli::Element* const pcli_Element = (cli::Element*) I_NativeElementRef)
+        if (cli::Element* const pcli_Element = NativeObject::GetNativeObject<cli::Element*>(I_NativeElementRef))
         {
             pcli_SyntaxNode->AddElement(pcli_Element);
-            NativeObject::Delegate(pcli_Element, pcli_SyntaxNode);
+            NativeObject::Delegate(*pcli_Element, *pcli_SyntaxNode);
             b_Res = true;
         }
     }
-    NativeTraces::TraceReturn("SyntaxNode.__addElement()", "%d", (int) b_Res);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("SyntaxNode.__addElement()", b_Res);
     return b_Res;
 }

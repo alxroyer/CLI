@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -77,16 +77,37 @@ cli::Menu& cli_MyMenuMenu = dynamic_cast<cli::Menu&>(cli_Endl3.SetMenu(new cli::
 
 int main(int I_ArgsCount, char* ARSTR_Args[])
 {
-    cli::Shell cli_Shell(cli_TestCli);
-    if (I_ArgsCount == 1)
+    if (I_ArgsCount <= 1)
     {
+        cli::Shell cli_Shell(cli_TestCli);
         cli::Console cli_Console(false);
         cli_Shell.Run(cli_Console);
     }
     else
     {
         cli::OutputDevice::GetStdOut() << "Running telnet server on port " << ARSTR_Args[1] << cli::endl;
-        cli::TelnetServer cli_Server(cli_Shell, atoi(ARSTR_Args[1]));
+        class MyTelnetServer : public cli::TelnetServer
+        {
+        private:
+            const cli::Cli& m_cliCli;
+        public:
+            MyTelnetServer(const cli::Cli& CLI_Cli, const unsigned long UL_TcpPort)
+              : TelnetServer(1, UL_TcpPort, cli::ResourceString::LANG_EN), m_cliCli(CLI_Cli) // because the CLI is allocated once only, allow only one client.
+            {
+            }
+            virtual cli::Shell* const OnNewConnection(const cli::TelnetConnection& CLI_NewConnection)
+            {
+                return new cli::Shell(m_cliCli);
+            }
+            virtual void OnCloseConnection(cli::Shell* const PCLI_Shell, const cli::TelnetConnection& CLI_ClosedConnection)
+            {
+                if (PCLI_Shell != NULL)
+                {
+                    delete PCLI_Shell;
+                }
+            }
+        };
+        MyTelnetServer cli_Server(cli_TestCli, atoi(ARSTR_Args[1]));
         cli_Server.StartServer();
     }
     return 0;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -77,30 +77,28 @@ int main(int I_Args, char* ARSTR_Args[])
     }
 
     // Enable traces.
-    cli::GetTraces().Trace(cli::TraceClass("CLI_IO_DEVICE_INSTANCES", cli::Help()));
-    cli::GetTraces().SetFilter(cli::TraceClass("CLI_IO_DEVICE_INSTANCES", cli::Help()), true);
-    cli::GetTraces().Trace(cli::TraceClass("CLI_IO_DEVICE_OPENING", cli::Help()));
-    cli::GetTraces().SetFilter(cli::TraceClass("CLI_IO_DEVICE_OPENING", cli::Help()), true);
-    cli::GetTraces().SetStream(*new cli::OutputFileDevice(ARSTR_Args[2], true));
-
-    // Input.
-    GetIOMux().AddInput(new cli::InputFileDevice(ARSTR_Args[1], cli::OutputDevice::GetStdOut(), true));
-
-    // Execute.
-    GetShell().Run(GetIOMux());
-
-    // Finish.
-    for (int i = 0; i < cli::STREAM_TYPES_COUNT; i++)
+    if (cli::OutputDevice* const pcli_TraceDevice = new cli::OutputFileDevice(ARSTR_Args[2], true))
     {
-        GetIOMux().SetOutput((cli::STREAM_TYPE) i, NULL);
+        cli::GetTraces().SetStream(*pcli_TraceDevice);
+        cli::GetTraces().Trace(cli::TraceClass("CLI_IO_DEVICE_INSTANCES", cli::Help()));
+        cli::GetTraces().SetFilter(cli::TraceClass("CLI_IO_DEVICE_INSTANCES", cli::Help()), true);
+        cli::GetTraces().Trace(cli::TraceClass("CLI_IO_DEVICE_OPENING", cli::Help()));
+        cli::GetTraces().SetFilter(cli::TraceClass("CLI_IO_DEVICE_OPENING", cli::Help()), true);
+
+        // Input.
+        GetIOMux().AddDevice(new cli::InputFileDevice(ARSTR_Args[1], cli::OutputDevice::GetStdOut(), true));
+
+        // Execute.
+        GetShell().Run(GetIOMux());
+
+        // Finish.
+        GetIOMux().ResetDeviceList();
+        cli::GetTraces().UnsetStream(*pcli_TraceDevice);
     }
-    GetIOMux().ResetInputList();
-    cli::GetTraces().UnsetStream();
     return 0;
 }
 
 const bool SetDevice(
-        const bool B_ShellTarget,
         cli::STREAM_TYPE E_Use,
         cli::OutputDevice* const PCLI_Device)
 {
@@ -113,29 +111,15 @@ const bool SetDevice(
         // First of all, lock the device instance.
         PCLI_Device->UseInstance(__CALL_INFO__);
 
-        if (E_Use < cli::STREAM_TYPES_COUNT)
+        if (E_Use < cli::STREAM_TYPES_COUNT) // STREAM_TYPES_COUNT means 'input'
         {
             // Output streams.
-            if (B_ShellTarget)
-            {
-                b_Res = GetShell().SetStream(E_Use, *PCLI_Device);
-            }
-            else
-            {
-                b_Res = GetIOMux().SetOutput(E_Use, PCLI_Device);
-            }
+            b_Res = GetShell().SetStream(E_Use, *PCLI_Device);
         }
         else if (cli::IODevice* const pcli_IODevice = dynamic_cast<cli::IODevice*>(PCLI_Device))
         {
             // Input streams.
-            if (B_ShellTarget)
-            {
-                GetShell().GetStream(cli::ERROR_STREAM) << "Cannot set input for shell" << cli::endl;
-            }
-            else
-            {
-                b_Res = GetIOMux().AddInput(pcli_IODevice);
-            }
+            b_Res = GetIOMux().AddDevice(pcli_IODevice);
         }
         else
         {

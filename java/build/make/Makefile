@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -32,8 +32,11 @@ include _vars.mak
 PROJECTS += libclijava.mak
 PROJECTS += jni.mak
 PROJECTS += native.mak
+PROJECTS += empty.mak
 PROJECTS += hello.mak
 PROJECTS += clisample.mak
+PROJECTS += nonblocking.mak
+PROJECTS += uitest.mak
 PROJECTS += tests.mak
 DEFAULT_HELP = Generate libraries and tests
 include $(CLI_DIR)/build/make/_all.mak

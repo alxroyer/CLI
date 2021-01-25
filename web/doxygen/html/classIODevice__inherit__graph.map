@@ -1,10 +1,9 @@
-<map id="G" name="G">
-<area shape="rect" id="node7" href="$classConsole.html" title="Console intput/output device class." alt="" coords="5,237,75,267"/>
-<area shape="rect" id="node9" href="$classInputFileDevice.html" title="Input file device class." alt="" coords="99,237,208,267"/>
-<area shape="rect" id="node11" href="$classIOMux.html" title="Input / output device multiplexer." alt="" coords="232,237,291,267"/>
-<area shape="rect" id="node13" href="$classMonoThreadDevice.html" title="Mono&#45;Thread input device." alt="" coords="315,237,445,267"/>
-<area shape="rect" id="node15" href="$classSingleCommand.html" title="Single command device." alt="" coords="469,237,587,267"/>
-<area shape="rect" id="node17" href="$classTelnetConnection.html" title="Telnet connection input/output device." alt="" coords="611,237,733,267"/>
-<area shape="rect" id="node2" href="$classOutputDevice.html" title="Generic output device." alt="" coords="271,83,369,112"/>
-<area shape="rect" id="node4" href="$classObject.html" title="Generic object." alt="" coords="291,5,349,35"/>
-</map>
+base referer
+rect $classConsole.html 7,231 77,258
+rect $classInputFileDevice.html 101,231 215,258
+rect $classIOMux.html 239,231 301,258
+rect $classNonBlockingIODevice.html 325,231 477,258
+rect $classSingleCommand.html 501,231 621,258
+rect $classOutputDevice.html 218,82 322,109
+rect $classObject.html 239,7 301,34
+rect $classTelnetConnection.html 337,306 465,333

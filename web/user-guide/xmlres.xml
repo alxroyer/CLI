@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,7 +25,7 @@
 -->
 
 
-<section id="xmlres"><title id="xmlres.title">The XML resource file</title>
+<section id="xmlres"><title id="xmlres.title">XML resource file</title>
 
     <blockquote>THAT's interesting!</blockquote>
 
@@ -58,21 +58,21 @@
         Keywords and carriage returns are the basics of a CLI.
         </para>
 
-        <example><title>Hello world!</title>
-        Consider the following command <command>say hello</command>.
-        It is actually a sequence of two keywords
-        <command>say</command> and <command>hello</command>,
-        terminated by a carriage return.
-        Here is an XML resource file <filename>hello.xml</filename>
-        implementing the command line:
-            &sample-hello;
-        If you want to add another command line <command>shout hello</command>,
-        here is how your <filename>hello.xml</filename> file should look like:
-            &sample-hello-shout;
-        Now if you want to add other command lines <command>say bye</command>
-        and <command>shout bye</command>,
-        have a look at the corresponding XML resource file:
-            &sample-hello-bye-shout;
+        <example id="eg.hello"><title id="eg.hello.title">Hello world!</title>
+            Consider the following command <command>say hello</command>.
+            It is actually a sequence of two keywords
+            <command>say</command> and <command>hello</command>,
+            terminated by a carriage return.
+            Here is an XML resource file <filename>hello.xml</filename>
+            implementing the command line:
+                &sample-hello;
+            If you want to add another command line <command>shout hello</command>,
+            here is how your <filename>hello.xml</filename> file should look like:
+                &sample-hello-shout;
+            Now if you want to add other command lines <command>say bye</command>
+            and <command>shout bye</command>,
+            have a look at the corresponding XML resource file:
+                &sample-hello-bye-shout;
         </example>
 
         <para>
@@ -82,10 +82,9 @@
         eventually what you define is a syntax tree.
         A first node corresponds to the keyword <command>say</command>,
         which has two children <command>hello</command> and <command>bye</command>.
-        If you're not convinced of that,
-        load the XML file of the last example into your favorite web browser,
+        For an illustration of that syntax tree,
+        load the XML file of the last example into your favorite web browser
         and play with toggles.
-        Tell me that's not a tree!
         </para>
 
         <blockquote>
@@ -117,9 +116,9 @@
         the corresponding language.
         </para>
 
-        <example><title>Put help everywhere.</title>
-        Here is how you could document a <filename>hello.xml</filename> file:
-            &sample-help;
+        <example id="eg.help"><title id="eg.help.title">Put help everywhere</title>
+            Here is how you could document a <filename>hello.xml</filename> file:
+                &sample-help;
         </example>
 
         <note>
@@ -142,11 +141,12 @@
         </para>
 
         <blockquote>
-        Good! Now, how do I execute stuff from the command lines.
+        Good! Now, how do I execute stuff from the command lines?
         </blockquote>
     </section>
 
-    <section><title><sgmltag class="element">cpp</sgmltag>, <sgmltag class="element">java</sgmltag>
+    <section id="xmlres.native">
+    <title id="xmlres.native.title"><sgmltag class="element">cpp</sgmltag>, <sgmltag class="element">java</sgmltag>
                 - Insert target language directly in the resource file</title>
 
         <para>
@@ -166,19 +166,19 @@
         when a command line has been successfully parsed.
         </para>
 
-        <example><title>Insert target language instructions.</title>
-        Let's say you have a C++ function <function>sayHello</function>,
-        or a Java class <classname>HelloApi</classname>,
-        and you would like those to be called when the user types <command>say hello</command>.
-        This is how you would do it:
-            &sample-cpp;
-        If you try to transform and compile the sample as is in C++, it should not work straight forward.
-        Since <function>helloWorld</function> is not declared, the output does not compile.
-        The trick is to use special sections as below:
-            &sample-cpp-full;
-        Have a C++ <function>sayHello</function> function declaration
-        in a <filename class="headerfile">hello_api.h</filename> file, and it should work.
-        Declare a <function>sayHello</function> in a <classname>HelloApi</classname> class, and it should work as well.
+        <example id="eg.code"><title id="eg.code.title">Insert target language instructions</title>
+            Let's say you have a C++ function <function>sayHello</function>,
+            or a Java class <classname>HelloApi</classname>,
+            and you would like those to be called when the user types <command>say hello</command>.
+            This is how you would do it:
+                &sample-cpp;
+            If you try to transform and compile the sample as is in C++, it should not work straight forward.
+            Since <function>helloWorld</function> is not declared, the output does not compile.
+            The trick is to use special sections as below:
+                &sample-cpp-full;
+            Have a C++ <function>sayHello</function> function declaration
+            in a <filename class="headerfile">hello_api.h</filename> file, and it should work.
+            Declare a <function>sayHello</function> in a <classname>HelloApi</classname> class, and it should work as well.
         </example>
 
         <para>
@@ -237,9 +237,9 @@
         Use <function>put</function> and <function>endl</function> methods in Java.
         </para>
 
-        <example><title>Output</title>
-        Here is an example of output for C++:
-            &sample-output;
+        <example id="eg.output"><title id="eg.output.title">Output</title>
+            Here is an example of output for C++:
+                &sample-output;
         </example>
 
         <tip>
@@ -261,7 +261,8 @@
 
     </section>
 
-    <section><title><sgmltag class="element">param</sgmltag>
+    <section id="xmlres.param">
+    <title id="xmlres.param.title"><sgmltag class="element">param</sgmltag>
                 - Let the user enter data</title>
 
         <para>
@@ -277,10 +278,10 @@
             </itemizedlist>
         </para>
 
-        <example><title>Parameters</title>
-        The following example illustrates how to use
-        <sgmltag class="element">param</sgmltag> elements:
-            &sample-param;
+        <example id="eg.param"><title id="eg.param.title">Parameters</title>
+            The following example illustrates how to use
+            <sgmltag class="element">param</sgmltag> elements:
+                &sample-param;
         </example>
 
         <para>
@@ -299,9 +300,16 @@
         </note>-->
 
         <blockquote>
-        Well, I can do lots of things now,
-        but a simple syntax tree is limitative syntaxically speaking,
-        don't you think?
+        How do I make the user enter data out of command lines?
+        </blockquote>
+
+        <para>
+        This is discussed apart from the <link linkend="xmlres" endterm="xmlres.title"/> section
+        in the <link linkend="ui" endterm="ui.title"/> section.
+        </para>
+
+        <blockquote>
+        Well, I can do lots of things now, but a simple syntax tree is limitative, don't you think?
         </blockquote>
 
         <para>
@@ -311,7 +319,8 @@
 
     </section>
 
-    <section id="xmlres.tag"><title id="xmlres.tag.title"><sgmltag class="element">tag</sgmltag>
+    <section id="xmlres.tag">
+    <title id="xmlres.tag.title"><sgmltag class="element">tag</sgmltag>
                 - How to make jumps in the syntax tree</title>
 
         <para>
@@ -339,9 +348,7 @@
         The following examples show you how to do such syntax patterns.
         </para>
 
-        <example><title>How to make
-                        <command>a*</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.a-star"><title id="eg.tag.a-star.title">Syntax tags - <command>a*</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -369,9 +376,7 @@
             </informaltable>
         </example>
 
-        <example><title>How to make
-                        <command>a+</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.a-plus"><title id="eg.tag.a-plus.title">Syntax tags - <command>a+</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -399,9 +404,7 @@
             </informaltable>
         </example>
 
-        <example><title>How to make
-                        <command>(ab)*</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.ab-star"><title id="eg.tag.ab-star.title">Syntax tags - <command>(ab)*</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -431,9 +434,7 @@
             </informaltable>
         </example>
 
-        <example><title>How to make
-                        <command>(ab)+</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.ab-plus"><title id="eg.tag.ab-plus.title">Syntax tags - <command>(ab)+</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -469,9 +470,7 @@
         before <command>a(b1|b2)c</command>.
         </para>
 
-        <example><title>How to make
-                        <command>a(b1|b2|)c</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.a-b1-b2-nil-c"><title id="eg.tag.a-b1-b2-nil-c.title">Syntax tags - <command>a(b1|b2|)c</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -513,9 +512,7 @@
         with a <sgmltag class="value">yes</sgmltag> value.
         </para>
 
-        <example><title>How to make
-                        <command>a(b1|b2)c</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.a-b1-b2-c"><title id="eg.tag.a-b1-b2-c.title">Syntax tags - <command>a(b1|b2)c</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -554,9 +551,7 @@
         Now let us combine <command>|</command> and <command>*</command> patterns.
         </para>
 
-        <example><title>How to make
-                        <command>(a|b)*</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.a-b-star"><title id="eg.tag.a-b-star.title">Syntax tags - <command>(a|b)*</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -590,9 +585,7 @@
             </informaltable>
         </example>
 
-        <example><title>How to make
-                        <command>(a|b)+</command> syntax patterns
-                        with <sgmltag class="element">tag</sgmltag> elements</title>
+        <example id="eg.tag.a-b-plus"><title id="eg.tag.a-b-plus.title">Syntax tags - <command>(a|b)+</command> patterns</title>
             <informaltable frame="none">
             <tgroup cols="2">
             <tbody>
@@ -627,7 +620,7 @@
         </example>
 
         <note>
-        This user-guide has formerly proposed other directions for <command>(a|b)+</command> and <command>(a|b)*</command> patterns.
+        This user guide has formerly proposed other directions for <command>(a|b)+</command> and <command>(a|b)*</command> patterns.
         Since version 2.5, you are now advised to proceed as described above,
         so that automatic documentation generation works better (see <link linkend="xmlres.cli2help" endterm="xmlres.cli2help.title"/>).
         </note>
@@ -636,21 +629,21 @@
         In lesser theoretical words, <sgmltag class="element">tag</sgmltag> elements allow you to define command lines with options.
         </para>
 
-        <example><title>An optional command line</title>
-        <para>
-        Consider the following object class:
-            <programlisting>&sample-circle-cpp;</programlisting>
-        or:
-            <programlisting>&sample-circle-java;</programlisting>
-        </para>
+        <example id="eg.tag.circle1"><title id="eg.tag.circle1.title">Syntax tags - An optional command line</title>
+            <para>
+            Consider the following object class:
+                <programlisting>&sample-circle-cpp;</programlisting>
+            or:
+                <programlisting>&sample-circle-java;</programlisting>
+            </para>
 
-        <para>
-        Thanks to a tag, you can define an optional command line filling an object of this class:
-            <informaltable frame="none">
-            <tgroup cols="2">
-            <tbody>
-            <row>
-            <entry valign="top">
+            <para>
+            Thanks to a tag, you can define an optional command line filling an object of this class:
+                <informaltable frame="none">
+                <tgroup cols="2">
+                <tbody>
+                <row>
+                <entry valign="top">
 <programlisting>
 
 
@@ -690,13 +683,13 @@
 
 
 </programlisting>
-            </entry>
-            <entry><!-- Spacing --></entry>
-            <entry valign="top">
-                    &sample-circle-pos-cli;
-            </entry>
-            <entry><!-- Spacing --></entry>
-            <entry valign="top">
+                </entry>
+                <entry><!-- Spacing --></entry>
+                <entry valign="top">
+                        &sample-circle-pos-cli;
+                </entry>
+                <entry><!-- Spacing --></entry>
+                <entry valign="top">
 <programlisting>
 
 
@@ -736,20 +729,20 @@
 
 
 </programlisting>
-            </entry>
-            </row>
-            </tbody>
-            </tgroup>
-            </informaltable>
-        <orderedlist>
-        <listitem>Declare an object with optional values.</listitem>
-        <listitem>Valid the object with its current values.</listitem>
-        <listitem>Set optional values.</listitem>
-        </orderedlist>
-        </para>
+                </entry>
+                </row>
+                </tbody>
+                </tgroup>
+                </informaltable>
+            <orderedlist>
+            <listitem>Declare an object with optional values.</listitem>
+            <listitem>Valid the object with its current values.</listitem>
+            <listitem>Set optional values.</listitem>
+            </orderedlist>
+            </para>
 
-        <para>
-        This example accepts the following command lines:
+            <para>
+            This example accepts the following command lines:
 <programlisting>
 add circle
 add circle x_position 1
@@ -758,18 +751,18 @@ add circle radius 2
 add circle x_position -1 y_position -1 radius 3
 ...
 </programlisting>
-        </para>
+            </para>
         </example>
 
 
-        <example><title>Another optional command line</title>
-        <para>
-        If you want parameters to be ordered, you could use the following pattern.
-            <informaltable frame="none">
-            <tgroup cols="2">
-            <tbody>
-            <row>
-            <entry valign="top">
+        <example id="eg.tag.circle2"><title id="eg.tag.circle2.title">Syntax tags - Another optional command line</title>
+            <para>
+            If you want parameters to be ordered, you could use the following pattern.
+                <informaltable frame="none">
+                <tgroup cols="2">
+                <tbody>
+                <row>
+                <entry valign="top">
 <programlisting>
 
 
@@ -808,13 +801,13 @@ add circle x_position -1 y_position -1 radius 3
 
 
 </programlisting>
-            </entry>
-            <entry><!-- Spacing --></entry>
-            <entry valign="top">
-                    &sample-circle-color-cli;
-            </entry>
-            <entry><!-- Spacing --></entry>
-            <entry valign="top">
+                </entry>
+                <entry><!-- Spacing --></entry>
+                <entry valign="top">
+                        &sample-circle-color-cli;
+                </entry>
+                <entry><!-- Spacing --></entry>
+                <entry valign="top">
 <programlisting>
 
 
@@ -853,27 +846,27 @@ add circle x_position -1 y_position -1 radius 3
 
 
 </programlisting>
-            </entry>
-            </row>
-            </tbody>
-            </tgroup>
-            </informaltable>
-        <orderedlist>
-        <listitem>Declare an object with optional values.</listitem>
-        <listitem>Set the color: either black, blue, red or green.</listitem>
-        <listitem>Draw the circle with its color.</listitem>
-        </orderedlist>
-        </para>
+                </entry>
+                </row>
+                </tbody>
+                </tgroup>
+                </informaltable>
+            <orderedlist>
+            <listitem>Declare an object with optional values.</listitem>
+            <listitem>Set the color: either black, blue, red or green.</listitem>
+            <listitem>Draw the circle with its color.</listitem>
+            </orderedlist>
+            </para>
 
-        <para>
-        This example accepts the following command lines:
+            <para>
+            This example accepts the following command lines:
 <programlisting>
 add circle black
 add circle blue
 add circle red
 add circle green
 </programlisting>
-        </para>
+            </para>
         </example>
 
         <note>
@@ -913,7 +906,8 @@ add circle green
 
     </section>
 
-    <section><title><sgmltag class="element">menu</sgmltag>
+    <section id="xmlres.menu">
+    <title id="xmlres.menu.title"><sgmltag class="element">menu</sgmltag>
                 - Classify user-defined command lines in menus</title>
 
         <para>
@@ -924,7 +918,7 @@ add circle green
 
         <para>
         A <sgmltag class="element">menu</sgmltag> element with a <sgmltag class="attribute">name</sgmltag> attribute defines a new menu.
-        Inside, you can declare new command lines as you would proceed in the <sgmltag class="element">cli</sgmltag> element.
+        Inside, you can declare new command lines, as you would proceed in the <sgmltag class="element">cli</sgmltag> element.
         This <sgmltag class="element">menu</sgmltag> element can be placed:
         <itemizedlist>
         <listitem>in a <sgmltag class="element">endl</sgmltag> element.
@@ -938,36 +932,36 @@ add circle green
 
         <para>
         It is now time to introduce the <command>pwm</command> command.
-        If you have tried any example of this user-guide, you may have noticed a basic command <command>pwm</command> meaning <acronym>Print Working Menu</acronym>.
+        If you have tried any example of this user guide, you may have noticed a basic command <command>pwm</command> meaning <acronym>Print Working Menu</acronym>.
         The same way <command>pwd</command> gives you the working directory in a UNIX shells,
         this command gives you the current working menu, and the current stack of menus.
         </para>
 
-        <example><title>Classify user-defined command lines in menus</title>
-        Consider a CLI controlling a configuration.
-        A common organization is to offer consultation commands in the main menu,
-        and to reserve modification commands in an edition mode:
-        <orderedlist>
-        <listitem>The <command>edit config</command> command leads to a <sgmltag class="attvalue">edit</sgmltag> sub-menu,
-            thanks to the <sgmltag class="element">menu</sgmltag> element directly contained in the <sgmltag class="element">endl</sgmltag> element.</listitem>
-        <listitem>The commands defined from the <sgmltag class="attvalue">edit</sgmltag> sub-menu are available
-            only once the <command>edit config</command> has been entered.</listitem>
-        <listitem>No need to define basic commands for menus.
-            The <command>pwm</command> behaves as usual.
-            The <command>exit</command> command allows the user to quit the current menu and come back to the parent one.
-            The <command>quit</command> command directly quits the CLI.</listitem>
-        </orderedlist>
-            <informaltable frame="none">
-            <tgroup cols="2">
-            <tbody>
-            <row>
-            <entry valign="top">
+        <example id="eg.menu"><title id="eg.menu.title">Classify user-defined command lines in menus</title>
+            Consider a CLI controlling a configuration.
+            A common organization is to offer consultation commands in the main menu,
+            and to reserve modification commands in an edition mode:
+            <orderedlist>
+            <listitem>The <command>edit config</command> command leads to a <sgmltag class="attvalue">edit</sgmltag> sub-menu,
+                thanks to the <sgmltag class="element">menu</sgmltag> element directly contained in the <sgmltag class="element">endl</sgmltag> element.</listitem>
+            <listitem>The commands defined from the <sgmltag class="attvalue">edit</sgmltag> sub-menu are available
+                only once the <command>edit config</command> has been entered.</listitem>
+            <listitem>No need to define basic commands for menus.
+                The <command>pwm</command> behaves as usual.
+                The <command>exit</command> command allows the user to quit the current menu and come back to the parent one.
+                The <command>quit</command> command directly quits the CLI.</listitem>
+            </orderedlist>
+                <informaltable frame="none">
+                <tgroup cols="2">
+                <tbody>
+                <row>
+                <entry valign="top">
 
-                &sample-menu-config;
+                    &sample-menu-config;
 
-            </entry>
-            <entry><!-- Spacing --></entry>
-            <entry valign="top">
+                </entry>
+                <entry><!-- Spacing --></entry>
+                <entry valign="top">
 <programlisting>
 
 
@@ -1005,11 +999,11 @@ add circle green
 
 
 </programlisting>
-            </entry>
-            </row>
-            </tbody>
-            </tgroup>
-            </informaltable>
+                </entry>
+                </row>
+                </tbody>
+                </tgroup>
+                </informaltable>
         </example>
 
         <note>
@@ -1031,7 +1025,7 @@ add circle green
         </para>
 
         <para>
-        <filename>cli.xsd</filename> is a Regular W3C Xml Schema 1.0 file.
+        <filename>cli.xsd</filename> is a regular W3C Xml Schema 1.0 file.
         Because of W3C limitations, some constraints are not checked with this Xml Schema:
         <itemizedlist>
         <listitem><sgmltag class="element">menu[@name]</sgmltag> / <sgmltag class="element">menu[@ref]</sgmltag>
@@ -1041,7 +1035,7 @@ add circle green
         However <filename>cli.xsd</filename> can be used in order to have a first level of syntax checking.
         </para>
 
-        <example><title>Xml Schema validation</title>
+        <example id="eg.xsd"><title id="eg.xsd.title">Xml Schema validation</title>
 <programlisting>$ xmllint --schema $CLI_DIR/schema/cli.xsd --noout my-cli.xml
 my-cli.xml validates</programlisting>
         </example>
@@ -1057,11 +1051,19 @@ my-cli.xml validates</programlisting>
         But once again, <filename>cli.rng</filename> can be used in order to have a first level of syntax checking.
         </para>
 
-        <example><title>Xml Schema validation</title>
+        <example id="eg.rng"><title id="eg.rng.title">Relax NG validation</title>
 <programlisting>$ xmllint --relaxng $CLI_DIR/cli.rng --noout --noout my-cli.xml
 my-cli.xml validates</programlisting>
         </example>
 
+        <blockquote>
+        Great!
+        Now I just have to document the CLI for my users.
+        </blockquote>
+
+        <para>
+        Automatic documentation generation may do part of the job for you then.
+        </para>
     </section>
 
     <section id="xmlres.cli2help">
@@ -1070,14 +1072,14 @@ my-cli.xml validates</programlisting>
         - Automatic documentation generation</title>
 
         <para>
-        The CLI toolkit is provided with a <filename>cli2help.xsl</filename> XSL stylesheet.
+        Since version 2.5, the CLI toolkit is provided with a <filename>cli2help.xsl</filename> XSL stylesheet.
         This stylesheet generates CLI documentation automatically.
         </para>
 
-        <example><title><filename>cli2help.xsl</filename> automatic documentation generation</title>
-        Based on the following sample <ulink url="misc/clisample.xml">clisample.xml</ulink> CLI XML resource file,
-        the XSL transformation below automatically generates the given documentation <ulink url="misc/clisample.html">clisample.html</ulink>.
-        <programlisting>$ xsltproc cli2helpxsl clisample.xml &gt; clisample.html</programlisting>
+        <example id="eg.cli2help"><title id="cli2help.title"><filename>cli2help.xsl</filename> automatic documentation generation</title>
+            Based on the following sample <ulink url="misc/clisample.xml">clisample.xml</ulink> CLI XML resource file,
+            the XSL transformation below automatically generates the given documentation <ulink url="misc/clisample.html">clisample.html</ulink>.
+            <programlisting>$ xsltproc cli2helpxsl clisample.xml &gt; clisample.html</programlisting>
         </example>
 
         <para>
@@ -1094,7 +1096,7 @@ my-cli.xml validates</programlisting>
             </listitem>
             </itemizedlist>
         </listitem>
-        <listitem>Commands are found back, are processed backwardly, from their <sgmltag class="element">endl</sgmltag> final elements.
+        <listitem>Commands are found back, being processed backwardly, from their <sgmltag class="element">endl</sgmltag> final elements.
             <itemizedlist>
             <listitem>Check the number of <sgmltag class="element">endl</sgmltag> elements you declare for a single human-understandable command.
                 Let's consider two command lines <command>say hello</command> and <command>say bye</command>,
@@ -1118,13 +1120,13 @@ my-cli.xml validates</programlisting>
     </section>
 
     <blockquote>
-    Yup!
-    I think I'll manage with it now.
+    Very good.
+    Now I'm getting back to making the user enter out of command lines.
+    You told me we would deal with it?
     </blockquote>
 
     <para>
-    So good luck.
-    Wish you lots of fun.
+    Here we go!
     </para>
 
 </section>

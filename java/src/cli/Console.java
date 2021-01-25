@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,7 +26,7 @@ package cli;
 
 
 /** Console input/output device. */
-public class Console extends IODevice
+public class Console extends IODevice.Native
 {
     /** Constructor. */
     public Console() {

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -35,8 +35,9 @@ PROJECTS += tktest.mak
 PROJECTS += cpptest.mak
 PROJECTS += tuning.mak
 PROJECTS += cmdlinetest.mak
+PROJECTS += uitest.mak
 PROJECTS += io_device.mak
-PROJECTS += mt_device.mak
+PROJECTS += non_blocking_device.mak
 PROJECTS += tests.mak
 include $(CLI_DIR)/build/make/_all.mak
 

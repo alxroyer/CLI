@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -86,6 +86,12 @@ CLI_NS_BEGIN(cli)
 
     // Traces / debug.
 
+    #ifndef CLI_MAX_TRACE_DEVICE_COUNT
+    static const int MAX_TRACE_DEVICE_COUNT = 128;
+    #else
+    static const int MAX_TRACE_DEVICE_COUNT = CLI_MAX_TRACE_DEVICE_COUNT;
+    #endif
+
     #ifndef CLI_MAX_TRACE_CLASS_COUNT
     static const int MAX_TRACE_CLASS_COUNT = 1024;
     #else
@@ -116,6 +122,12 @@ CLI_NS_BEGIN(cli)
     static const int MAX_IO_MUX_INPUTS = 100;
     #else
     static const int MAX_IO_MUX_INPUTS = CLI_MAX_IO_MUX_INPUTS;
+    #endif
+
+    #ifndef CLI_MAX_MT_CONTEXTS
+    static const int MAX_MT_CONTEXTS = 10;
+    #else
+    static const int MAX_MT_CONTEXTS = CLI_MAX_MT_CONTEXTS;
     #endif
 
 CLI_NS_END(cli)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -135,6 +135,14 @@ const bool CheckString(void)
     if (strcmp(tk_String.SubString(0, 0), "") != 0) {
         std::cerr << "tk::String: SubString(0, 0) failure." << std::endl;
         return false;
+    }
+
+    // Upper / Lower operations.
+    if (strcmp(tk_String.ToUpper(), "ABCDEFGHIJ") != 0) {
+        std::cerr << "tk::String: ToUpper() failure." << std::endl;
+    }
+    if (strcmp(tk_String.ToUpper().ToLower(), "abcdefghij") != 0) {
+        std::cerr << "tk::String: ToLower() failure." << std::endl;
     }
 
     // Equal operator.

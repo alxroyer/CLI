@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -27,7 +27,7 @@ package cli;
 
 /** Input/output device multiplexer.
     Manages a list of input devices, and output streams can be specialized. */
-public class IOMux extends IODevice
+public class IOMux extends IODevice.Native
 {
     /** Default constructor. */
     public IOMux() {
@@ -45,26 +45,42 @@ public class IOMux extends IODevice
     }
     private static final native void __finalize(int I_NativeIOMuxRef);
 
-    /** Input device addition.
-        @param CLI_Input Input device to add.
-        @return true if the input device has been correctly added, false otherwise. */
-    public boolean addInput(IODevice CLI_Input) {
-        return __addInput(this.getNativeRef(), CLI_Input.getNativeRef());
+    /** Device addition in the list.
+        @param CLI_Device Input / output device.
+        @return true if the device has been added, false otherwise. */
+    public boolean addDevice(IODevice.Interface CLI_Device) {
+        return __addDevice(this.getNativeRef(), CLI_Device.getNativeRef());
     }
-    private static final native boolean __addInput(int I_NativeIOMuxRef, int I_NativeInputRef);
+    private static final native boolean __addDevice(int I_NativeIOMuxRef, int I_NativeDeviceRef);
 
-    /** Output device setting.
-        @param E_StreamType Stream type selector. Must be one of
-                    cli.Shell.ALL_STREAMS,
-                    cli.Shell.WELCOME_STREAM,
-                    cli.Shell.PROMPT_STREAM,
-                    cli.Shell.ECHO_STREAM,
-                    cli.Shell.OUTPUT_STREAM or
-                    cli.Shell.ERROR_STREAM.
-        @param CLI_Stream Output device to be set.
-        @return true if the output device has been correctly set, false otherwise. */
-    public boolean setOutput(int E_StreamType, OutputDevice CLI_Stream) {
-        return __setOutput(this.getNativeRef(), E_StreamType, CLI_Stream.getNativeRef());
+    /** Current device accessor.
+        @return Current device. */
+    public IODevice.Interface getCurrentDevice() {
+        NativeObject cli_Device = NativeObject.getObject(__getCurrentDevice(this.getNativeRef()));
+        if (cli_Device instanceof IODevice.Interface) {
+            return (IODevice.Interface) cli_Device;
+        } else {
+            return null;
+        }
     }
-    private static final native boolean __setOutput(int I_NativeIOMuxRef, int E_StreamType, int I_NativeStreamRef);
+    private static final native int __getCurrentDevice(int I_NativeIOMuxRef);
+
+    /** Switch to next device.
+        @return Next device if success, null otherwise. */
+    public IODevice.Interface switchNextDevice() {
+        NativeObject cli_Device = NativeObject.getObject(__switchNextDevice(this.getNativeRef()));
+        if (cli_Device instanceof IODevice.Interface) {
+            return (IODevice.Interface) cli_Device;
+        } else {
+            return null;
+        }
+    }
+    private static final native int __switchNextDevice(int I_NativeIOMuxRef);
+
+    //! @brief Reset device list.
+    //! @return true for success, false otherwise.
+    boolean resetDeviceList() {
+        return __resetDeviceList(this.getNativeRef());
+    }
+    private static final native boolean __resetDeviceList(int I_NativeIOMuxRef);
 }

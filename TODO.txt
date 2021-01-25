@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -23,21 +23,19 @@
 -------------------------------------------------------------------------------
 
 
-General: Enable shell timeout management (induces timeout management with input devices).
-General: Text edition facilities (passwords, text fields, int fields, yes/no questions, choice questions...).
-General: Implement a MiniShell class (short screen management, 0-9, A-F, arrows, enter, escape).
-General: Analyze & integrate contributions.
-General: Other target languages.
+General: Enable shell timeout management (implies timeout management with input devices).
+General: Other target languages (Perl/bash/Python).
 
 Schema: Describe the schema with a DTD schema.
 
-XSL: Indicate date and time of generation
-XSL: Systematic XSL generation (have constant identifiers for constant inputs)
+XSL: Indicate date and time of generation.
+XSL: Systematic XSL generation (have constant identifiers for constant inputs).
 XSL: Add a tag/copy mechanism in order to reuse command patterns between menus.
 
-C++: Improve telnet implementation: make TelnetConnection inherit from MonoThreadDevice, use select() in TelnetServer, get rid of CLI_TELNET_MULTI_CLIENT, extend unit test
 C++: Manage the tag[@ref]/@max attribute with the CLI library.
 C++: Create a pool of memory, in order to better control memory purpose with embedded integrations.
-C++: Improve doxygen documentation: force every method to have its own section, even if it is only briefly documented (and check user-guide references)
+C++: CLI proxy utility.
+C++: "explicit" keyword usage for constructors
+C++: BOOST instead of OS specific APIs (threads, sockets...)? (to be tested)
 
-Doc: Deprecate the XSL static CLI creation.
+Doc: Improve doxygen documentation: force every method to have its own section, even if only briefly documented.

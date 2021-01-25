@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -32,7 +32,6 @@ CLI_DIR := ../../..
 include _vars.mak
 
 JAVA_SAMPLE_FILES = $(shell find $(CLI_DIR)/samples -name "*.java")
-JAVA_SAMPLE_CLASSES = $(patsubst %.java,$(OUT_DIR)/cli/test/%.class,$(notdir $(JAVA_SAMPLE_FILES)))
 
 XML_FILES = $(patsubst %.check,%.xml,$(CHECK_FILES))
 TEST_FILES = $(patsubst %.xml,%.test,$(XML_FILES))
@@ -46,11 +45,12 @@ tests:
 	@$(MAKE) --no-print-directory -f tests.mak java
 	$(call Map,DoTestDefault,$(XML_FILES))
 
-.PHONY: java
-java: $(JAVA_SAMPLE_CLASSES) ;
+SRC_DIR = $(JAVA_SRC_DIR)
+JAVA_FILES = $(patsubst %.java,$(SRC_DIR)/cli/test/%.java,$(notdir $(JAVA_SAMPLE_FILES)))
+include _build.mak
 
-$(OUT_DIR)/cli/test/%.class: $(JAVA_SRC_DIR)/cli/test/%.java
-	javac $(JAVAC_FLAGS) $<
+.PHONY: java
+java: $(JAVA_OBJS) ;
 
 $(JAVA_SRC_DIR)/cli/test/%.java: JAVA_SRC_FILE = $@
 $(JAVA_SRC_DIR)/cli/test/%.java: JAVA_SAMPLE_FILE = $(CLI_DIR)/samples/user-guide/$(notdir $@)
@@ -58,13 +58,9 @@ $(JAVA_SRC_DIR)/cli/test/%.java: $(CLI_DIR)/samples/user-guide/%.java
 	echo "package cli.test;" > $(JAVA_SRC_FILE)
 	cat $(JAVA_SAMPLE_FILE) >> $(JAVA_SRC_FILE)
 
-.PHONY: dirs
-dirs: ;
-
 DoTestClean = $(DoTestDefault) clean
-.PHONY: clean
-clean:
-	$(RM) $(JAVA_SAMPLE_CLASSES)
+.PHONY: javatests.clean
+javatests.clean:
 	$(call Map,DoTestClean,$(XML_FILES))
 
 .PHONY: deps
@@ -82,4 +78,7 @@ $(CLI_DIR)/java/build/make/tests.help:
 .PHONY: $(CLI_DIR)/java/build/make/tests.vars
 vars: $(CLI_DIR)/java/build/make/tests.vars
 $(CLI_DIR)/java/build/make/tests.vars:
-	$(call ShowVariables, JAVA_SAMPLE_FILES JAVA_SAMPLE_CLASSES XML_FILES TEST_FILES CHECK_FILES)
+	$(call ShowVariables, JAVA_SAMPLE_FILES XML_FILES TEST_FILES CHECK_FILES)
+
+# Dependencies
+clean: javatests.clean

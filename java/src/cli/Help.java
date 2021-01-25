@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -45,12 +45,12 @@ public final class Help extends ResourceString
         Useful for help members of other classes.
         @param I_NativeHelpRef Native instance reference. */
     protected static void createFromNative(int I_NativeHelpRef) {
-        Traces.traceMethod("Help.createFromNative(I_NativeHelpRef)");
-        Traces.traceParam("I_NativeHelpRef", new Integer(I_NativeHelpRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Help.createFromNative(I_NativeHelpRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeHelpRef", new Integer(I_NativeHelpRef).toString()));
 
         NativeObject.createdFromNative(new Help(I_NativeHelpRef));
 
-        Traces.traceReturn("Help.createFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("Help.createFromNative()"));
     }
     private Help(int I_NativeHelpRef) {
         super(I_NativeHelpRef);
@@ -69,12 +69,12 @@ public final class Help extends ResourceString
     /** Destruction from native code.
         See createFromNative(). */
     protected static void deleteFromNative(int I_NativeHelpRef) {
-        Traces.traceMethod("Help.deleteFromNative(I_NativeHelpRef)");
-        Traces.traceParam("I_NativeHelpRef", new Integer(I_NativeHelpRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Help.deleteFromNative(I_NativeHelpRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeHelpRef", new Integer(I_NativeHelpRef).toString()));
 
         NativeObject.deletedFromNative(NativeObject.getObject(I_NativeHelpRef));
 
-        Traces.traceReturn("Help.deleteFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("Help.deleteFromNative()"));
     }
 
     /** Help addition for a given language.

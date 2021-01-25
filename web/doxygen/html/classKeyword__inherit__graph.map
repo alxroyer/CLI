@@ -1,5 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classSyntaxNode.html" title="Syntax node elements." alt="" coords="5,160,99,189"/>
-<area shape="rect" id="node4" href="$classElement.html" title="Generic CLI element." alt="" coords="17,83,87,112"/>
-<area shape="rect" id="node6" href="$classObject.html" title="Generic object." alt="" coords="23,5,81,35"/>
-</map>
+base referer
+rect $classSyntaxNode.html 7,157 101,184
+rect $classElement.html 19,82 89,109
+rect $classObject.html 23,8 85,34

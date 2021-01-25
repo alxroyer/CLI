@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -74,16 +74,16 @@ public class Shell extends NativeObject {
 
     /** Input stream accessor.
         @return The input stream attached to the shell for its execution. */
-    public final IODevice getInput() {
-        return (IODevice) NativeObject.getObject(__getInput(this.getNativeRef()));
+    public final IODevice.Interface getInput() {
+        return (IODevice.Interface) NativeObject.getObject(__getInput(this.getNativeRef()));
     }
     private static final native int __getInput(int I_NativeShellRef);
 
     /** Output stream accessor.
         @param E_StreamType Output stream identifier.
         @return The required stream. null if an error occured. */
-    public final OutputDevice getStream(int E_StreamType) {
-        return (OutputDevice) NativeObject.getObject(__getStream(this.getNativeRef(), E_StreamType));
+    public final OutputDevice.Interface getStream(int E_StreamType) {
+        return (OutputDevice.Interface) NativeObject.getObject(__getStream(this.getNativeRef(), E_StreamType));
     }
     private static final native int __getStream(int I_NativeShellRef, int E_StreamType);
 
@@ -91,7 +91,7 @@ public class Shell extends NativeObject {
         @param E_StreamType Output stream identifier.
         @param CLI_Stream Stream reference.
         @return true: success, false: failure. */
-    public final boolean setStream(int E_StreamType, OutputDevice CLI_Stream) {
+    public final boolean setStream(int E_StreamType, OutputDevice.Interface CLI_Stream) {
         return __setStream(this.getNativeRef(), E_StreamType, CLI_Stream.getNativeRef());
     }
     private static final native boolean __setStream(int I_NativeShellRef, int E_StreamType, int I_NativeDeviceRef);
@@ -166,12 +166,17 @@ public class Shell extends NativeObject {
         Waits for characters from the input device, analyzes command lines, executes them...
         @param CLI_IODevice Basic input/output device to use for input, and all output streams if not already defined.
         @return true: success, false: failure. */
-    public final boolean run(IODevice CLI_IODevice) {
+    public final boolean run(IODevice.Interface CLI_IODevice) {
         try {
             return __run(this.getNativeRef(), CLI_IODevice.getNativeRef());
         } catch (Exception e) {
-            getStream(ERROR_STREAM).printStackTrace(e);
-            System.err.println(e.toString());
+            cli.OutputDevice.Interface cli_ErrorStream = getStream(ERROR_STREAM);
+            if (cli_ErrorStream == null) {
+                cli_ErrorStream = cli.OutputDevice.getStdErr();
+            }
+            if (cli_ErrorStream != null) {
+                cli_ErrorStream.printStackTrace(e);
+            }
             return false;
         }
     }
@@ -212,18 +217,18 @@ public class Shell extends NativeObject {
 
     /** Enter a menu.
         @param CLI_Menu Menu to enter. */
-    public final void enterMenu(Menu CLI_Menu) {
+    public final void enterMenu(Menu CLI_Menu, boolean B_PromptMenu) {
         if (CLI_Menu != null) {
-            __enterMenu(this.getNativeRef(), CLI_Menu.getNativeRef());
+            __enterMenu(this.getNativeRef(), CLI_Menu.getNativeRef(), B_PromptMenu);
         }
     }
-    private static final native void __enterMenu(int I_NativeShellRef, int I_NativeMenuRef);
+    private static final native void __enterMenu(int I_NativeShellRef, int I_NativeMenuRef, boolean B_PromptMenu);
 
     /** Exits the current menu. */
-    public final void exitMenu() {
-        __exitMenu(this.getNativeRef());
+    public final void exitMenu(boolean B_PromptMenu) {
+        __exitMenu(this.getNativeRef(), B_PromptMenu);
     }
-    private static final native void __exitMenu(int I_NativeShellRef);
+    private static final native void __exitMenu(int I_NativeShellRef, boolean B_PromptMenu);
 
     /** Terminates the shell.
         Caution! Not thread safe. Call quitThreadSafe() to do so. */
@@ -250,5 +255,11 @@ public class Shell extends NativeObject {
         __printWorkingMenu(this.getNativeRef());
     }
     private static final native void __printWorkingMenu(int I_NativeShellRef);
+
+    /** Cleans the screen. */
+    public final void cleanScreen(boolean B_PromptMenu) {
+        __cleanScreen(this.getNativeRef(), B_PromptMenu);
+    }
+    private static final native void __cleanScreen(int I_NativeShellRef, boolean B_PromptMenu);
 
 }

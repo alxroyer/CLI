@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -44,12 +44,12 @@ public class ResourceString extends NativeObject
         Useful for help members of other classes.
         @param I_NativeStringRef Native instance reference. */
     protected static void createFromNative(int I_NativeStringRef) {
-        Traces.traceMethod("ResourceString.createFromNative(I_NativeStringRef)");
-        Traces.traceParam("I_NativeStringRef", new Integer(I_NativeStringRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ResourceString.createFromNative(I_NativeStringRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeStringRef", new Integer(I_NativeStringRef).toString()));
 
         NativeObject.createdFromNative(new ResourceString(I_NativeStringRef));
 
-        Traces.traceReturn("ResourceString.createFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("ResourceString.createFromNative()"));
     }
     /** Constructor for createFromNative() or child classes only. */
     protected ResourceString(int I_NativeStringRef) {
@@ -69,12 +69,12 @@ public class ResourceString extends NativeObject
     /** Destruction from native code.
         See createFromNative(). */
     protected static void deleteFromNative(int I_NativeStringRef) {
-        Traces.traceMethod("ResourceString.deleteFromNative(I_NativeStringRef)");
-        Traces.traceParam("I_NativeStringRef", new Integer(I_NativeStringRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ResourceString.deleteFromNative(I_NativeStringRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeStringRef", new Integer(I_NativeStringRef).toString()));
 
         NativeObject.deletedFromNative(NativeObject.getObject(I_NativeStringRef));
 
-        Traces.traceReturn("ResourceString.deleteFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("ResourceString.deleteFromNative()"));
     }
 
     /** English language constant. */
@@ -88,11 +88,11 @@ public class ResourceString extends NativeObject
         @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
         @param J_String String of the given language.
         @return The resource string instance itself. */
-    public final ResourceString addString(int E_Lang, String J_String) {
-        __addString(this.getNativeRef(), E_Lang, J_String);
+    public final ResourceString setString(int E_Lang, String J_String) {
+        __setString(this.getNativeRef(), E_Lang, J_String);
         return this;
     }
-    private static final native boolean __addString(int I_NativeStringRef, int E_Lang, String J_String);
+    private static final native boolean __setString(int I_NativeStringRef, int E_Lang, String J_String);
 
     /** States whether the resource string object has a resource for the given language.
         @param E_Lang   Language identifier (LANG_EN, LANG_FR...)

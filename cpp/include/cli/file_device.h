@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -79,7 +79,8 @@ CLI_NS_BEGIN(cli)
         virtual const ResourceString GetLocation(void) const;
         virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
-        virtual const OutputDevice& GetActualDevice(void) const;
+        virtual void CleanScreen(void) const;
+        virtual const bool WouldOutput(const OutputDevice& CLI_Device) const;
 
     public:
         //! @brief File name accessor.

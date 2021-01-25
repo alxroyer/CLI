@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -52,7 +52,7 @@ PROJ_LIBS = -lncurses
 endif
 ifeq ($(TARGET),Cygwin)
 PROJ_CPP_FLAGS = -mno-cygwin -DCLI_NO_REGEX -DCLI_WIN_NETWORK
-CPP_FLAGS = $(CPP_DEBUG_FLAG) $(PROJ_CPP_FLAGS)
+CPP_FLAGS = $(CPP_DEBUG_FLAG) $(CPP_OS_FLAGS) $(PROJ_CPP_FLAGS)
 PROJ_LIBS = -L/cygdrive/c/cygwin/lib/gcc/i686-pc-mingw32/3.4.4 -mno-cygwin -lwsock32
 endif
 PROJ_INCLUDES += -isystem "$(JDK_DIR)/include"

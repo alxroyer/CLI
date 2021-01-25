@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,6 +30,7 @@
 #include "cli_ParamHost.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -37,45 +38,49 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ParamHost__1_1ParamHost(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("ParamHost.__ParamHost(I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    cli::ParamHost* pcli_Param = NULL;
-    if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ParamHost.__ParamHost(I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    NativeObject::REF i_ParamRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        if ((pcli_Param = new cli::ParamHost(*pcli_Help)))
+        if (cli::ParamHost* const pcli_Param = new cli::ParamHost(*pcli_Help))
         {
-            NativeObject::Use(pcli_Param);
+            NativeObject::Use(*pcli_Param);
+            i_ParamRef = NativeObject::GetNativeRef(*pcli_Param);
         }
     }
-    NativeTraces::TraceReturn("ParamHost.__ParamHost()", "%d", (int) pcli_Param);
-    return (jint) pcli_Param;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ParamHost.__ParamHost()", i_ParamRef) << cli::endl;
+    return i_ParamRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ParamHost__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeParamRef)
 {
-    NativeTraces::TraceMethod("ParamHost.__finalize(I_NativeParamRef)");
-    NativeTraces::TraceParam("I_NativeParamRef", "%d", I_NativeParamRef);
-    if (const cli::ParamHost* const pcli_Param = (const cli::ParamHost*) I_NativeParamRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ParamHost.__finalize(I_NativeParamRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParamRef", I_NativeParamRef) << cli::endl;
+    if (const cli::ParamHost* const pcli_Param = NativeObject::GetNativeObject<const cli::ParamHost*>(I_NativeParamRef))
     {
-        NativeObject::Free(pcli_Param);
+        NativeObject::Free(*pcli_Param);
     }
-    NativeTraces::TraceReturn("ParamHost.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("ParamHost.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_ParamHost__1_1getValue(JNIEnv* PJ_Env, jclass PJ_Class, jint I_NativeParamRef)
 {
-    NativeTraces::TraceMethod("ParamHost.__getValue(I_NativeParamRef)");
-    NativeTraces::TraceParam("I_NativeParamRef", "%d", I_NativeParamRef);
-    jstring pj_Value = NULL;
-    if (const cli::ParamHost* const pcli_Param = (const cli::ParamHost*) I_NativeParamRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ParamHost.__getValue(I_NativeParamRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParamRef", I_NativeParamRef) << cli::endl;
+    std::string str_Value;
+    if (const cli::ParamHost* const pcli_Param = NativeObject::GetNativeObject<const cli::ParamHost*>(I_NativeParamRef))
     {
-        if (PJ_Env != NULL)
-        {
-            NativeTraces::TraceReturn("ParamHost.__getValue()", "%s", std::string(*pcli_Param).c_str());
-            pj_Value = PJ_Env->NewStringUTF(std::string(*pcli_Param).c_str());
-        }
+        str_Value = *pcli_Param;
     }
-    return pj_Value;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndStr("ParamHost.__getValue()", str_Value.c_str()) << cli::endl;
+    return NativeExec::Native2Java(str_Value);
 }

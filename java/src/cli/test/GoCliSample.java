@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -32,7 +32,7 @@ public class GoCliSample {
         cli.Cli cli_Cli = new cli.test.clisample();
 
         // Create I/O devices.
-        cli.IODevice cli_Input = new cli.Console();
+        cli.IODevice.Interface cli_Input = new cli.Console();
 
         try {
             // Create a shell.

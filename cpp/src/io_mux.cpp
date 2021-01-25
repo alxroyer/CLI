@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,6 +25,8 @@
 
 #include "cli/pch.h"
 
+#include <string.h> // memset
+
 #include "cli/io_mux.h"
 #include "cli/shell.h"
 #include "cli/assert.h"
@@ -34,84 +36,54 @@
 CLI_NS_USE(cli)
 
 
+//! @brief Shell trace class singleton redirection.
+#define TRACE_IOMUX GetIOMuxTraceClass()
+//! @brief Shell trace class singleton.
+static const TraceClass& GetIOMuxTraceClass(void)
+{
+    static const TraceClass cli_IOMuxTraceClass("CLI_IOMUX", Help()
+        .AddHelp(Help::LANG_EN, "Input/output multiplexer traces")
+        .AddHelp(Help::LANG_FR, "Traces de multiplexage d'entrées/sorties"));
+    return cli_IOMuxTraceClass;
+}
+
+
 IOMux::IOMux(const bool B_AutoDelete)
   : IODevice("mux", B_AutoDelete),
-    m_qInputs(MAX_IO_MUX_INPUTS),
-    m_bIOLocked(false)
+    m_qDevices(MAX_IO_MUX_INPUTS)
 {
     EnsureCommonDevices();
     EnsureTraces();
 
-    memset(m_arsOutputs, '\0', sizeof(m_arsOutputs));
+    GetTraces().Trace(TRACE_IOMUX) << "New " << GetDebugName() << endl;
 }
 
 IOMux::~IOMux(void)
 {
-    for (int i = 0; i < STREAM_TYPES_COUNT; i++)
-    {
-        SetOutput((STREAM_TYPE) i, NULL);
-    }
-    ResetInputList();
+    GetTraces().Trace(TRACE_IOMUX) << "Deleting " << GetDebugName() << endl;
+
+    ResetDeviceList();
 }
 
 const bool IOMux::OpenDevice(void)
 {
-    bool b_Res = true;
-    IODevice* pcli_Input = NULL;
+    GetTraces().SafeTrace(TRACE_IOMUX, *this) << "Opening " << GetDebugName() << endl;
 
-    // Input.
-    if ((! CheckInput()) || (m_qInputs.IsEmpty()))
+    bool b_Res = true;
+
+    if (IODevice* const pcli_Input = CheckCurrentDevice())
     {
-        // Note: m_cliLastError has been set within CheckInput()
-        b_Res = false;
-    }
-    else
-    {
-        if ((pcli_Input = m_qInputs.GetHead()))
+        GetTraces().SafeTrace(TRACE_IOMUX, *this) << GetDebugName() << ": opening input " << pcli_Input->GetDebugName() << endl;
+        if (! pcli_Input->OpenUp(__CALL_INFO__))
         {
-            if (! pcli_Input->OpenUp(__CALL_INFO__))
-            {
-                m_cliLastError = pcli_Input->GetLastError();
-                b_Res = false;
-            }
-        }
-        else
-        {
-            m_cliLastError
-                .SetString(ResourceString::LANG_EN, "IOMux: Input list error")
-                .SetString(ResourceString::LANG_FR, "IOMux: Erreur sur la liste d'entrées");
+            m_cliLastError = pcli_Input->GetLastError();
             b_Res = false;
         }
     }
-
-    // Outputs.
-    for (int i = 0; i < STREAM_TYPES_COUNT; i++)
+    else
     {
-        // Select default output if none is set.
-        if (m_arsOutputs[i].pcliOutput == NULL)
-        {
-            if (pcli_Input != NULL)
-            {
-                m_arsOutputs[i].pcliOutput = pcli_Input;
-            }
-            else
-            {
-                m_arsOutputs[i].pcliOutput = & OutputDevice::GetNullDevice();
-            }
-            m_arsOutputs[i].pcliOutput->UseInstance(__CALL_INFO__);
-        }
-
-        // Open up the output device.
-        CLI_ASSERT(! m_arsOutputs[i].bDoOpenClose);
-        if (m_arsOutputs[i].pcliOutput != NULL)
-        {
-            if (! m_arsOutputs[i].pcliOutput->OpenUp(__CALL_INFO__))
-            {
-                m_cliLastError = m_arsOutputs[i].pcliOutput->GetLastError();
-                b_Res = false;
-            }
-        }
-        m_arsOutputs[i].bDoOpenClose = true;
+        // Note: m_cliLastError has been set within CheckCurrentDevice()
+        b_Res = false;
     }
 
     if (! b_Res)
@@ -123,31 +95,15 @@ const bool IOMux::OpenDevice(void)
 
 const bool IOMux::CloseDevice(void)
 {
+    GetTraces().SafeTrace(TRACE_IOMUX, *this) << "Closing " << GetDebugName() << endl;
+
     bool b_Res = true;
 
-    // Outputs.
-    for (int i = 0; i < STREAM_TYPES_COUNT; i++)
+    while (! m_qDevices.IsEmpty())
     {
-        if (m_arsOutputs[i].pcliOutput != NULL)
+        if (! ReleaseFirstDevice())
         {
-            if (m_arsOutputs[i].bDoOpenClose)
-            {
-                if (! m_arsOutputs[i].pcliOutput->CloseDown(__CALL_INFO__))
-                {
-                    m_cliLastError = m_arsOutputs[i].pcliOutput->GetLastError();
-                    b_Res = false;
-                }
-            }
-            m_arsOutputs[i].bDoOpenClose = false;
-        }
-    }
-
-    // Inputs.
-    while (! m_qInputs.IsEmpty())
-    {
-        if (! ReleaseFirstInputDevice())
-        {
-            // Note: m_cliLastError has been set within ReleaseFirstInputDevice()
+            // Note: m_cliLastError has been set within ReleaseFirstDevice()
             b_Res = false;
         }
     }
@@ -157,85 +113,89 @@ const bool IOMux::CloseDevice(void)
 
 void IOMux::PutString(const char* const STR_Out) const
 {
-    //! @warning This method should not be called. However, we redirect the call to the output stream.
-    if ((m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
-        // Protection against infinite loop.
-        && (! m_bIOLocked))
+    if (const OutputDevice* const pcli_Output = GetCurrentDevice())
     {
-        m_bIOLocked = true;
-        m_arsOutputs[OUTPUT_STREAM].pcliOutput->PutString(STR_Out);
-        m_bIOLocked = false;
+        if (! pcli_Output->WouldOutput(*this)) // Avoid infinite loops.
+        {
+            pcli_Output->PutString(STR_Out);
+        }
     }
 }
 
 void IOMux::Beep(void) const
 {
-    //! @warning This method should not be called. However, we redirect the call to the output stream.
-    if ((m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
-        // Protection against infinite loop.
-        && (! m_bIOLocked))
+    if (const OutputDevice* const pcli_Output = GetCurrentDevice())
     {
-        m_bIOLocked = true;
-        m_arsOutputs[OUTPUT_STREAM].pcliOutput->Beep();
-        m_bIOLocked = false;
+        if (! pcli_Output->WouldOutput(*this)) // Avoid infinite loops.
+        {
+            pcli_Output->Beep();
+        }
     }
 }
 
-const OutputDevice& IOMux::GetActualDevice(void) const
+void IOMux::CleanScreen(void) const
 {
-    if (m_arsOutputs[OUTPUT_STREAM].pcliOutput != NULL)
+    if (const OutputDevice* const pcli_Output = GetCurrentDevice())
     {
-        return m_arsOutputs[OUTPUT_STREAM].pcliOutput->GetActualDevice();
+        if (! pcli_Output->WouldOutput(*this)) // Avoid infinite loops.
+        {
+            pcli_Output->CleanScreen();
+        }
     }
-    else
+}
+
+const bool IOMux::WouldOutput(const OutputDevice& CLI_Device) const
+{
+    // Check self instance first.
+    if (IODevice::WouldOutput(CLI_Device))
     {
-        return OutputDevice::GetNullDevice().GetActualDevice();
+        return true;
     }
+
+    // Then check output stream.
+    if (const OutputDevice* const pcli_Output = GetCurrentDevice())
+    {
+        if (pcli_Output->WouldOutput(CLI_Device))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 const KEY IOMux::GetKey(void) const
 {
-    if (CheckInput() && (! m_qInputs.IsEmpty()))
+    for (   const IODevice* pcli_Input = CheckCurrentDevice();
+            pcli_Input != NULL;
+            pcli_Input = const_cast<IOMux*>(this)->SwitchNextDevice())
     {
-        if (IODevice* const pcli_Input = m_qInputs.GetHead())
+        KEY e_Key = NULL_KEY;
+        if (! pcli_Input->WouldInput(*this)) // Protection against infinite loop.
         {
-            // Protection against infinite loop.
-            if (! m_bIOLocked)
-            {
-                m_bIOLocked = true;
-                KEY e_Key = pcli_Input->GetKey();
-                m_bIOLocked = false;
-
-                if (e_Key != NULL_KEY)
-                {
-                    return e_Key;
-                }
-                else if (const_cast<IOMux*>(this)->NextInput())
-                {
-                    return GetKey();
-                }
-            }
+            e_Key = pcli_Input->GetKey();
         }
-    }
-    else
-    {
-        // Note: m_cliLastError has been set within CheckInput()
-        if (m_cliLastError.IsEmpty())
+
+        if (e_Key != NULL_KEY)
         {
-            m_cliLastError
-                .SetString(ResourceString::LANG_EN, "IOMux: No input device")
-                .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique d'entrée");
+            return e_Key;
         }
     }
 
+    if (m_cliLastError.IsEmpty())
+    {
+        m_cliLastError
+            .SetString(ResourceString::LANG_EN, "IOMux: No valid input device")
+            .SetString(ResourceString::LANG_FR, "IOMux: Entrée de caractère invalide");
+    }
     return cli::NULL_KEY;
 }
 
 const ResourceString IOMux::GetLocation(void) const
 {
-    if (! m_qInputs.IsEmpty())
+    if (const IODevice* const pcli_Input = GetCurrentDevice())
     {
-        if (IODevice* const pcli_Input = m_qInputs.GetHead())
+        if (! pcli_Input->WouldInput(*this)) // Avoid infinite loops.
         {
             return pcli_Input->GetLocation();
         }
@@ -244,166 +204,118 @@ const ResourceString IOMux::GetLocation(void) const
     return ResourceString();
 }
 
-const OutputDevice& IOMux::GetOutput(const STREAM_TYPE E_StreamType) const
+const bool IOMux::WouldInput(const IODevice& CLI_Device) const
 {
-    if ((E_StreamType >= 0) && (E_StreamType < STREAM_TYPES_COUNT)
-        && (m_arsOutputs[E_StreamType].pcliOutput != NULL))
+    // Check self instance first.
+    if (IODevice::WouldInput(CLI_Device))
     {
-        return *m_arsOutputs[E_StreamType].pcliOutput;
-    }
-    else
-    {
-        m_cliLastError
-            .SetString(ResourceString::LANG_EN, "IOMux: No output device")
-            .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique de sortie");
-        return OutputDevice::GetNullDevice();
-    }
-}
-
-const bool IOMux::SetOutput(const STREAM_TYPE E_StreamType, OutputDevice* const PCLI_Stream)
-{
-    // ALL_STREAMS management.
-    if (E_StreamType == ALL_STREAMS)
-    {
-        for (int i = 0; i < STREAM_TYPES_COUNT; i++)
-        {
-            if (! SetOutput((STREAM_TYPE) i, PCLI_Stream))
-            {
-                return false;
-            }
-        }
-
         return true;
     }
-    if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
-    {
-        CLI_ASSERT(false);
-        return false;
-    }
-    // End of ALL_STREAMS management.
 
-
-    // Free previous device.
-    if (! ReleaseOutputDevice(E_StreamType))
+    // Then check current input stream.
+    if (const IODevice* const pcli_Input = GetCurrentDevice())
     {
-        // Note: m_cliLastError has been set within ReleaseOutputDevice()
-        return false;
-    }
-
-    // Store next device reference.
-    m_arsOutputs[E_StreamType].pcliOutput = PCLI_Stream;
-    // Lock the device instance.
-    if (PCLI_Stream != NULL)
-    {
-        PCLI_Stream->UseInstance(__CALL_INFO__);
-    }
-
-    // Possibly open the device.
-    if ((GetOpenUsers() > 0)
-        && (m_arsOutputs[E_StreamType].pcliOutput != NULL)
-        && (m_arsOutputs[E_StreamType].bDoOpenClose))
-        //  // Protection against misfunctionning.
-        //  && (m_arpcliOutputs[E_StreamType] != this))
-    {
-        if (! m_arsOutputs[E_StreamType].pcliOutput->OpenUp(__CALL_INFO__))
+        if (pcli_Input->WouldInput(CLI_Device))
         {
-            m_cliLastError = m_arsOutputs[E_StreamType].pcliOutput->GetLastError();
-            return false;
+            return true;
         }
     }
+    // Other input streams do not need to be checked yet.:
+    // only GetKey() does switch to next input device automatically, and GetKey() does check WouldInput() before calling GetKey() on the next device.
 
-    return true;
+    return false;
 }
 
-const IODevice* const IOMux::GetInput(void) const
+const bool IOMux::AddDevice(IODevice* const PCLI_Device)
 {
-    if (! m_qInputs.IsEmpty())
+    if (PCLI_Device != NULL)
     {
-        return m_qInputs.GetHead();
-    }
+        GetTraces().SafeTrace(TRACE_IOMUX, *this) << GetDebugName() << ": adding " << PCLI_Device->GetDebugName() << endl;
 
-    return NULL;
-}
-
-const bool IOMux::AddInput(IODevice* const PCLI_Input)
-{
-    if (PCLI_Input != NULL)
-    {
-        if (m_qInputs.AddTail(PCLI_Input))
+        if (m_qDevices.AddTail(PCLI_Device))
         {
-            PCLI_Input->UseInstance(__CALL_INFO__);
+            PCLI_Device->UseInstance(__CALL_INFO__);
             return true;
         }
         else
         {
             m_cliLastError
-                .SetString(ResourceString::LANG_EN, "IOMux: Cannot add the input device to the input list")
-                .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée à la liste");
+                .SetString(ResourceString::LANG_EN, "IOMux: Cannot add device to the device list")
+                .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée / sortie à la liste");
         }
     }
     else
     {
         m_cliLastError
             .SetString(ResourceString::LANG_EN, "IOMux: Cannot add a NULL input device")
-            .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée invalide");
+            .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée / sortie invalide");
     }
 
     return false;
 }
 
-const bool IOMux::NextInput(void)
+const IODevice* const IOMux::GetCurrentDevice(void) const
+{
+    if (! m_qDevices.IsEmpty())
+    {
+        return m_qDevices.GetHead();
+    }
+
+    return NULL;
+}
+
+const IODevice* const IOMux::SwitchNextDevice(void)
 {
     // Terminate head device.
-    if (! m_qInputs.IsEmpty())
+    if (! m_qDevices.IsEmpty())
     {
-        if (! ReleaseFirstInputDevice())
+        if (! ReleaseFirstDevice())
         {
             // Note: m_cliLastError has been set within ReleaseFirstInputDevice()
-            return false;
+            return NULL;
         }
     }
 
     // Prepare next device.
-    if (CheckInput() && (! m_qInputs.IsEmpty()))
+    if (IODevice* const pcli_CurrentDevice = CheckCurrentDevice())
     {
-        if (IODevice* const pcli_Input = m_qInputs.GetHead())
+        GetTraces().SafeTrace(TRACE_IOMUX, *this) << GetDebugName() << ": moving to next input " << pcli_CurrentDevice->GetDebugName() << endl;
+        if (GetOpenUsers() > 0)
         {
-            if (GetOpenUsers() > 0)
+            if (! pcli_CurrentDevice->OpenUp(__CALL_INFO__))
             {
-                if (! pcli_Input->OpenUp(__CALL_INFO__))
-                {
-                    // Open failure.
-                    m_cliLastError = pcli_Input->GetLastError();
-                    return false;
-                }
+                // Open failure.
+                m_cliLastError = pcli_CurrentDevice->GetLastError();
+                return NULL;
             }
-
-            // Successful return.
-            return true;
         }
+
+        // Successful return.
+        return pcli_CurrentDevice;
     }
     else
     {
+        GetTraces().SafeTrace(TRACE_IOMUX, *this) << GetDebugName() << ": no more input" << endl;
         // Note: m_cliLastError has been set within CheckInput()
         if (m_cliLastError.IsEmpty())
         {
             m_cliLastError
-                .SetString(ResourceString::LANG_EN, "IOMux: No input device")
-                .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique d'entrée");
+                .SetString(ResourceString::LANG_EN, "IOMux: No input / output device")
+                .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique d'entrée / sortie");
         }
     }
 
     // Default return indicates a failure.
-    return false;
+    return NULL;
 }
 
-const bool IOMux::ResetInputList(void)
+const bool IOMux::ResetDeviceList(void)
 {
     bool b_Res = true;
 
-    while (! m_qInputs.IsEmpty())
+    while (! m_qDevices.IsEmpty())
     {
-        if (! ReleaseFirstInputDevice())
+        if (! ReleaseFirstDevice())
         {
             // Note: m_cliLastError has been set within ReleaseFirstInputDevice()
             b_Res = false;
@@ -413,67 +325,82 @@ const bool IOMux::ResetInputList(void)
     return b_Res;
 }
 
-IODevice* const IOMux::CreateInputDevice(void)
+IODevice* const IOMux::CreateDevice(void)
 {
     return NULL;
 }
 
-const bool IOMux::CheckInput(void) const
+IODevice* const IOMux::CheckCurrentDevice(void) const
 {
-    if (m_qInputs.IsEmpty())
+    // m_qDevices is not empty => return the first valid device.
+    while (! m_qDevices.IsEmpty())
     {
-        // Input needed.
-        if (IODevice* const pcli_Input = const_cast<IOMux*>(this)->CreateInputDevice())
+        if (IODevice* const pcli_CurrentDevice = m_qDevices.GetHead())
         {
-            if (! const_cast<IOMux*>(this)->AddInput(pcli_Input))
-            {
-                // Note: m_cliLastError has been set within AddInput().
-                return false;
-            }
-            if (GetOpenUsers() > 0)
-            {
-                // Input should be opened.
-                if (! pcli_Input->OpenUp(__CALL_INFO__))
-                {
-                    // Open failure.
-                    m_cliLastError = pcli_Input->GetLastError();
-                    return false;
-                }
-            }
+            return pcli_CurrentDevice;
         }
-        else if (m_qInputs.IsEmpty())
+        else
         {
-            // No more input.
-            m_cliLastError
-                .SetString(ResourceString::LANG_EN, "IOMux: No more input")
-                .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée");
-            return false;
+            m_qDevices.RemoveHead();
         }
     }
 
-    // Successful return.
-    return true;
+    // Input needed.
+    if (IODevice* const pcli_NewDevice = const_cast<IOMux*>(this)->CreateDevice())
+    {
+        if (! const_cast<IOMux*>(this)->AddDevice(pcli_NewDevice))
+        {
+            // Note: m_cliLastError has been set within AddInput().
+            return NULL;
+        }
+
+        if (GetOpenUsers() > 0)
+        {
+            // Input should be opened.
+            if (! pcli_NewDevice->OpenUp(__CALL_INFO__))
+            {
+                // Open failure.
+                m_cliLastError = pcli_NewDevice->GetLastError();
+                return NULL;
+            }
+        }
+    }
+
+    if (! m_qDevices.IsEmpty())
+    {
+        if (IODevice* const pcli_CurrentDevice = m_qDevices.GetHead())
+        {
+            // Successful return.
+            return pcli_CurrentDevice;
+        }
+    }
+
+    // No more input.
+    m_cliLastError
+        .SetString(ResourceString::LANG_EN, "IOMux: No more input")
+        .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée");
+    return NULL;
 }
 
-const bool IOMux::ReleaseFirstInputDevice(void)
+const bool IOMux::ReleaseFirstDevice(void)
 {
-    if (! m_qInputs.IsEmpty())
+    if (! m_qDevices.IsEmpty())
     {
         bool b_Res = true;
 
-        if (IODevice* const pcli_Input = m_qInputs.RemoveHead())
+        if (IODevice* const pcli_FirstDevice = m_qDevices.RemoveHead())
         {
             if (GetOpenUsers() > 0)
             {
                 // Close the device if needed.
-                if (! pcli_Input->CloseDown(__CALL_INFO__))
+                if (! pcli_FirstDevice->CloseDown(__CALL_INFO__))
                 {
-                    m_cliLastError = pcli_Input->GetLastError();
+                    m_cliLastError = pcli_FirstDevice->GetLastError();
                     b_Res = false;
                 }
             }
             // Free the device instance.
-            pcli_Input->FreeInstance(__CALL_INFO__);
+            pcli_FirstDevice->FreeInstance(__CALL_INFO__);
         }
 
         return b_Res;
@@ -481,53 +408,8 @@ const bool IOMux::ReleaseFirstInputDevice(void)
     else
     {
         m_cliLastError
-            .SetString(ResourceString::LANG_EN, "IOMux: No more input")
-            .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée");
+            .SetString(ResourceString::LANG_EN, "IOMux: No more input / output")
+            .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée / sortie");
         return false;
     }
-}
-
-const bool IOMux::ReleaseOutputDevice(const STREAM_TYPE E_StreamType)
-{
-    bool b_Res = true;
-
-    // ALL_STREAMS management.
-    if (E_StreamType == ALL_STREAMS)
-    {
-        for (int i = 0; i < STREAM_TYPES_COUNT; i++)
-        {
-            if (! ReleaseOutputDevice((STREAM_TYPE) i))
-            {
-                b_Res = false;
-            }
-        }
-
-        return b_Res;
-    }
-    if ((E_StreamType < 0) || (E_StreamType >= STREAM_TYPES_COUNT))
-    {
-        CLI_ASSERT(false);
-        return false;
-    }
-    // End of ALL_STREAMS management.
-
-    if (m_arsOutputs[E_StreamType].pcliOutput != NULL)
-    {
-        if ((GetOpenUsers() > 0) && (m_arsOutputs[E_StreamType].bDoOpenClose))
-        {
-            // Close the device if needed.
-            if (! m_arsOutputs[E_StreamType].pcliOutput->CloseDown(__CALL_INFO__))
-            {
-                m_cliLastError = m_arsOutputs[E_StreamType].pcliOutput->GetLastError();
-                b_Res = false;
-            }
-        }
-        // Release the device instance.
-        m_arsOutputs[E_StreamType].pcliOutput->FreeInstance(__CALL_INFO__);
-
-        // Remove reference.
-        m_arsOutputs[E_StreamType].pcliOutput = NULL;
-    }
-
-    return b_Res;
 }

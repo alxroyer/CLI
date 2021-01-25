@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,6 +36,7 @@
 <xsl:variable name="STR_Endl"><xsl:text>
 </xsl:text></xsl:variable>
 
+
 <xsl:template match="/">
     <db:programlisting>
     <xsl:text>&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</xsl:text><xsl:value-of select="$STR_Endl"/>
@@ -49,7 +50,7 @@
     <xsl:text>&lt;endl</xsl:text><xsl:apply-templates select="@*"/><xsl:text>&gt;</xsl:text>
     <!-- Display native code -->
     <xsl:if test="cli:cpp or cli:java or cli:menu"><xsl:value-of select="$STR_Endl"/></xsl:if>
-    <xsl:for-each select="cli:cpp|cli:java"><xsl:apply-templates select="."/></xsl:for-each>
+    <xsl:for-each select="cli:cpp|cli:java|comment()"><xsl:apply-templates select="."/></xsl:for-each>
     <!-- Display menus and menu references -->
     <xsl:if test="(cli:cpp or cli:java) and cli:menu"><xsl:value-of select="$STR_Endl"/></xsl:if>
     <xsl:for-each select="cli:menu"><xsl:apply-templates select="."/></xsl:for-each>
@@ -130,6 +131,17 @@
         <xsl:value-of select="local-name(.)"/>
         <xsl:text>&gt;</xsl:text>
         <xsl:value-of select="$STR_Endl"/>
+</xsl:template>
+
+<xsl:template match="comment()">
+    <!-- Do not output copyright comments. -->
+    <xsl:if test="not(contains(.,'Copyright'))">
+        <xsl:call-template name="T_Indent"/>
+            <xsl:text>&lt;!--</xsl:text>
+            <xsl:value-of select="."/>
+            <xsl:text>--&gt;</xsl:text>
+            <xsl:value-of select="$STR_Endl"/>
+    </xsl:if>
 </xsl:template>
 
 <xsl:template match="@*">

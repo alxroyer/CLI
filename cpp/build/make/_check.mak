@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -33,9 +33,9 @@ endif
 cppcheck.default: $(.DEFAULT_GOAL) ;
 
 # Variables
-CLI_TEST = $(patsubst %.xml,%.test,$(CLI_XML_RES))
-CLI_LOG = $(patsubst %.xml,$(INT_DIR)/%.log,$(notdir $(CLI_XML_RES)))
-CLI_CHECK = $(patsubst %.xml,%.check,$(CLI_XML_RES))
+CLI_TEST ?= $(patsubst %.xml,%.test,$(CLI_XML_RES))
+CLI_LOG ?= $(patsubst %.xml,$(INT_DIR)/%.log,$(notdir $(CLI_XML_RES)))
+CLI_CHECK ?= $(patsubst %.xml,%.check,$(CLI_XML_RES))
 
 # Includes
 PROJ_CLEAN += $(CLI_LOG)

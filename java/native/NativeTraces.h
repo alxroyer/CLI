@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,102 +28,121 @@
 #include "cli/traces.h"
 #include "cli/io_device.h"
 
-#include "jni.h"
+
+//! @brief JNI trace class singleton redirection.
+#define TRACE_JNI NativeTraces::GetTraceClass()
 
 
+//! @brief Tool class for native traces.
 class NativeTraces
 {
 public:
-    static void TraceMethod(const char* const STR_Method)
-    {
-        //  if (GetbTraceOn())
-        //  {
-        //      printf(">> %s\n", STR_Method);
-        //  }
-        GetTraceDevice() << ">> " << STR_Method << cli::endl;
-    }
-
-    template <class T> static void TraceParam(
-            const char* const STR_ParamName,
-            const char* const STR_Format,
-            const T T_Value)
-    {
-        //  if (GetbTraceOn())
-        //  {
-        //      printf("\t%s = ", );
-        //      printf(STR_Format, );
-        //      printf("\n");
-        //  }
-        GetTraceDevice() << "\t" << STR_ParamName << " = " << T_Value << cli::endl;
-    }
-
-    template <class T> static void TraceValue(
-            const char* const STR_ValueName,
-            const char* const STR_Format,
-            const T T_Value)
-    {
-        //  if (GetbTraceOn())
-        //  {
-        //      printf("\t\t-> %s = ", STR_ValueName);
-        //      printf(STR_Format, T_Value);
-        //      printf("\n");
-        //  }
-        GetTraceDevice() << "\t" << "-> " << STR_ValueName << " = " << T_Value << cli::endl;
-    }
-
-    static void TraceReturn(const char* const STR_Method)
-    {
-        //  if (GetbTraceOn())
-        //  {
-        //      printf("<< %s\n", STR_Method);
-        //  }
-        GetTraceDevice() << "<< " << STR_Method << cli::endl;
-    }
-
-    template <class T> static void TraceReturn(
-            const char* const STR_Method,
-            const char* const STR_Format,
-            const T T_Value)
-    {
-        //  if (GetbTraceOn())
-        //  {
-        //      printf("<< %s : ", STR_Method);
-        //      printf(STR_Format, T_Value);
-        //      printf("\n");
-        //  }
-        GetTraceDevice() << "<< " << STR_Method << " : " << T_Value << cli::endl;
-    }
-
-    static void TraceInstance(
-            const int I_NativeObjectRef,
-            const int I_Tokens,
-            const bool B_AutoDelete)
-    {
-        //  if (GetbTraceOn())
-        //  {
-        //      printf("[object %d] tokens = %d, auto-delete: %s",
-        //          I_NativeObjectRef, I_Tokens, B_AutoDelete ? "yes" : "no");
-        //      if ((I_Tokens <= 0) && (B_AutoDelete))
-        //      {
-        //          printf(" -> deletion");
-        //      }
-        //      printf("\n");
-        //  }
-        const cli::OutputDevice& cli_Trace = GetTraceDevice();
-        cli_Trace << "[object " << I_NativeObjectRef << "] ";
-        cli_Trace << "tokens = " << I_Tokens << ", ";
-        cli_Trace << "auto-delete: " << (B_AutoDelete ? "yes" : "no");
-        if ((I_Tokens <= 0) && (B_AutoDelete))
-        {
-            cli_Trace << " -> deletion";
-        }
-        cli_Trace << cli::endl;
-    }
+    //! @brief Native trace class singleton.
+    //! @return The native trace class.
+    static const cli::TraceClass& GetTraceClass(void);
 
 public:
-    static const cli::TraceClass& GetTraceClass(void);
+    //! @brief Traces the beginning of a native method.
+    static const cli::tk::String Begin(
+        const char* const STR_Method            //!< Method name.
+        );
+
+    //! @brief Traces a parameter of type string.
+    static const cli::tk::String ParamStr(
+            const char* const STR_ParamName,    //!< Parameter name.
+            const char* const STR_Value         //!< Parameter value.
+            );
+    //! @brief Traces a parameter of type pointer of a native method.
+    static const cli::tk::String ParamPtr(
+            const char* const STR_ParamName,    //!< Parameter name.
+            void* const PV_Value                //!< Parameter value.
+            );
+    //! @brief Traces a parameter of type integer of a native method.
+    static const cli::tk::String ParamInt(
+            const char* const STR_ParamName,    //!< Parameter name.
+            const int I_Value                   //!< Parameter value.
+            );
+    //! @brief Traces a parameter of type boolean of a native method.
+    static const cli::tk::String ParamBool(
+            const char* const STR_ParamName,    //!< Parameter name.
+            const bool B_Value                  //!< Parameter value.
+            );
+    //! @brief Traces a parameter of type float of a native method.
+    static const cli::tk::String ParamFloat(
+            const char* const STR_ParamName,    //!< Parameter name.
+            const double D_Value                //!< Parameter value.
+            );
+
+    //! @brief Traces a value of a native variable of type string.
+    static const cli::tk::String ValueStr(
+            const char* const STR_ValueName,    //!< Variable name.
+            const char* const STR_Value         //!< Variable value.
+            );
+    //! @brief Traces a value of a native variable of type pointer.
+    static const cli::tk::String ValuePtr(
+            const char* const STR_ValueName,    //!< Variable name.
+            void* const PV_Value                //!< Variable value.
+            );
+    //! @brief Traces a value of a native variable of type integer.
+    static const cli::tk::String ValueInt(
+            const char* const STR_ValueName,    //!< Variable name.
+            const int I_Value                   //!< Variable value.
+            );
+    //! @brief Traces a value of a native variable of type boolean.
+    static const cli::tk::String ValueBool(
+            const char* const STR_ValueName,    //!< Variable name.
+            const bool B_Value                  //!< Variable value.
+            );
+    //! @brief Traces a value of a native variable of type float.
+    static const cli::tk::String ValueFloat(
+            const char* const STR_ValueName,    //!< Variable name.
+            const double D_Value                //!< Variable value.
+            );
+
+    //! @brief Traces the end of a void native method.
+    static const cli::tk::String EndVoid(
+            const char* const STR_Method        //!< Method name.
+            );
+    //! @brief Traces the end of a non-void native method returning a string.
+    static const cli::tk::String EndStr(
+            const char* const STR_Method,       //!< Method name.
+            const char* const STR_Value         //!< Return value.
+            );
+    //! @brief Traces the end of a non-void native method returning a pointer.
+    static const cli::tk::String EndPtr(
+            const char* const STR_Method,       //!< Method name.
+            void* const PV_Value                //!< Return value.
+            );
+    //! @brief Traces the end of a non-void native method returning an int.
+    static const cli::tk::String EndInt(
+            const char* const STR_Method,       //!< Method name.
+            const int I_Value                   //!< Return value.
+            );
+    //! @brief Traces the end of a non-void native method returning a boolean.
+    static const cli::tk::String EndBool(
+            const char* const STR_Method,       //!< Method name.
+            const bool B_Value                  //!< Return value.
+            );
+    //! @brief Traces the end of a non-void native method returning a float.
+    static const cli::tk::String EndFloat(
+            const char* const STR_Method,       //!< Method name.
+            const double D_Value                //!< Return value.
+            );
+
+    //! @brief Traces the status of a native object.
+    static const cli::tk::String Instance(
+            const int I_NativeObjectRef,        //!< Native object reference.
+            const int I_Tokens,                 //!< Number of tokens in use.
+            const bool B_AutoDelete             //!< Auto-delete flag.
+            );
+
 private:
-    static const cli::OutputDevice& GetTraceDevice(void);
+    //! @brief CLI_JNI traces indentation computation.
+    //! @return CLI_JNI indentation.
+    static const cli::tk::String GetIndent(void);
+
+    //! Number of JNI functions traced in the stack.
+    static int m_iJniStackSize;
 };
 
 #endif // _CLI_NATIVE_TRACES_H_

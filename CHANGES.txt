@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -21,6 +21,44 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
+
+Version 2.7
+(Dec, 9th 2011)
+    Major modifications:
+        * Contributions:
+            - Oleg Smolsky: memory leaks + compilation warnings
+            - Lakshman Naganoor and Venkatrangan G.: ui::More and ui::Less addition
+            - Peter Geremia: 64 bit architecture port
+            - Wilson Yu: Xalan and Saxon stylesheet transformation bug
+            - Anoop R.: Output interleavings (see http://alexis.royer.free.fr/CLI/user-guide/cli-user-guide.html#faq.Q600)
+        * Text edition facilities:
+            - Passwords
+            - Text fields
+            - Integer fields
+            - Yes/no questions
+            - Choice questions
+        * 'mono-thread' feature renamed into 'non-blocking'
+        * Telnet improvements:
+            - Use of select() in TelnetServer + TelnetConnection derived from NonBlockingIODevice
+            - Full multi-client management
+            - StopServer() addition
+        * Java Input/output devices refactoring: both Java and native devices implementations, outputDevice constants addition (NULL_KEY, ...), safeness checkings
+        * IOMux changed into a sequence of devices (multiple outputs removal)
+        * 'cls' command addition
+    Miscellaneous:
+        * Input/output devices infinite loops protection improvements with deprecation of GetActualDevice() and addition of WouldOutput()/WouldInput() methods.
+        * Traces device management consistency improvements
+        * Java implementation completion: StringDevice, TelnetServer and TelnetConnection implementation
+        * Shell API modifications (advanced user, see user-guide), fixes for NonBlockingIODevice input devices
+        * WinConsole improvements: clean screen and cursor visibility
+        * tk::String::ToUpper(), ToLower() methods addition
+        * OutputDevice::operator<<(double) smart display
+        * Java native sources improvements:
+            - NativeExec addition for better thread-safe behaviours
+            - NativeObject::GetJavaClassName() completion
+            - better ports on 64 bit architectures (to be tested)
+        * XSL: Version of CLI library addition in XSL outputs
+        * Web page / User guide improvements: FAQ addition, title numbers, dynamic menus, dynamic dialogs
 
 Version 2.6
 (Dec, 15th 2010)
@@ -79,7 +117,7 @@ Version 2.3
 
 Version 2.2
 (Sep, 21st 2008)
-    Miscellanous:
+    Miscellaneous:
         * Makefile improvements.
         * Special character addition.
         * Addition of error prefixing.
@@ -94,7 +132,7 @@ Verison 2.1
     Major modifications:
         * Java support: lots of improvements still remaining, but it works so far
         * French language support
-    Miscellanous:
+    Miscellaneous:
         * C++:
               o Makefile architecture improvements: help.mak, mkres.mak, check.mak... makefiles creation
               o Addition of cli::Object generic object
@@ -111,7 +149,7 @@ Version 2.0
 (Sept, 27th 2007)
     Major modifications:
         * License modification: The former LGPL license has been abandoned for a BSD-like license. This is the decision of the author (myself) in order to have fewer constraints on using and modifying the library in any kind of softwares (even commercial ones), which is what I wanted initially.
-    Miscellanous:
+    Miscellaneous:
         * Useless constructor removal in cli/include/param.h
 
 Version 1.0
@@ -122,7 +160,7 @@ Version 1.0
               o instance and opening locking / auto-deletion
               o new devices: cli::FileDevice, cli::SingleCommand, cli::IOMux
         * Revision of cpp section naming in XSL.
-    Miscellanous:
+    Miscellaneous:
         * include/cli directory creation and file names modification.
         * Makefiles improvements:
               o build/make directory creation
@@ -145,7 +183,7 @@ Version 1.0.beta1
         * Stream branching modification.
         * Welcome and prompt messages modification.
         * Echo and beep on/off live configuration.
-    Miscellanous:
+    Miscellaneous:
         * Launch method modification.
         * CLI retrieval based on regular expressions.
         * Automatic test tools.

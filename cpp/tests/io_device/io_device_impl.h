@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,8 +41,6 @@ cli::IOMux& GetIOMux(void);
 
 //! @brief Device setting method.
 const bool SetDevice(
-    const bool B_ShellTarget,               //!< true if the target of the device is the shell,
-                                            //!< false if it is the multiplexer above.
     cli::STREAM_TYPE E_Use,                 //!< Indicates what the device should be used for.
                                             //!< STREAM_TYPES_COUNT means input here.
     cli::OutputDevice* const PCLI_Device    //!< Device set.

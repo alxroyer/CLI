@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,7 +31,7 @@
 #define _CLI_SHELL_H_
 
 #include "cli/namespace.h"
-#include "cli/object.h"
+#include "cli/non_blocking_io_device.h"
 #include "cli/help.h"
 #include "cli/io_device.h"
 #include "cli/tk.h"
@@ -45,7 +45,6 @@ CLI_NS_BEGIN(cli)
     class Element;
     class OutputDevice;
     class IODevice;
-    class MonoThreadDevice;
     class CmdLineEdition;
     class CmdLineHistory;
 
@@ -65,7 +64,7 @@ CLI_NS_BEGIN(cli)
 
 
     //! @brief Shell management.
-    class Shell : public Object
+    class Shell : public NonBlockingKeyReceiver
     {
     private:
         //! @brief No default constructor.
@@ -196,20 +195,27 @@ CLI_NS_BEGIN(cli)
         //! @brief Current menu retrieval.
         //! @return Reference of the current menu. NULL when I_MenuIndex is out of bounds.
         const Menu* const GetCurrentMenu(
-            const int I_MenuIndex   //!< Index of the menu in the stack.
-                                    //!< 0: root menu (bottom of the stack).
-                                    //!< 1: menu stacked over the root menu.
-                                    //!< 2: menu stacked over again...
-                                    //!< -1: current menu (top of the stack)
+            const int I_MenuIndex       //!< Index of the menu in the stack.
+                                        //!< 0: root menu (bottom of the stack).
+                                        //!< 1: menu stacked over the root menu.
+                                        //!< 2: menu stacked over again...
+                                        //!< -1: current menu (top of the stack)
             ) const;
 
         //! @brief Enters a menu.
         void EnterMenu(
-            const Menu& CLI_Menu    //!< Menu to enter.
+            const Menu& CLI_Menu,       //!< Menu to enter.
+            const bool B_PromptMenu     //!< true if the menu should be (re)prompted.
+                                        //!< Basically false when executed within the context of a command processing,
+                                        //!< true when executed from other contexts.
             );
 
         //! @brief Exits the current menu.
-        void ExitMenu(void);
+        void ExitMenu(
+            const bool B_PromptMenu     //!< true if the menu should be (re)prompted.
+                                        //!< Basically false when executed within the context of a command processing,
+                                        //!< true when executed from other contexts.
+            );
 
         //! @brief Terminates the shell.
         //! @warning Not thread safe. Call QuitThreadSafe() to do so.
@@ -225,18 +231,30 @@ CLI_NS_BEGIN(cli)
         //! @brief Prints the working menu.
         void PrintWorkingMenu(void);
 
+        //! @brief Clean screen shortcut.
+        void CleanScreen(
+            const bool B_PromptMenu     //!< true if the menu should be (re)prompted.
+                                        //!< Basically false when executed within the context of a command processing,
+                                        //!< true when executed from other contexts.
+            );
+
+        //! @brief Sends a beep signal.
+        void Beep(void);
+
     private:
         //! @brief Beginning of execution.
         const bool StartExecution(
             IODevice& CLI_IODevice              //!< Input/output device to run onto.
             );
-        //! @brief Main loop executed when the input device is not a mono-thread device.
+        //! @brief Main loop executed when the input device is not a non-blocking device.
         void MainLoop(void);
-        //! @brief Hook called by mono-thread devices on character input.
-        void OnMonoThreadKey(
-            MonoThreadDevice& CLI_Source,       //!< Input mono-thread device.
+    public:
+        //! @brief Hook called by non-blocking devices on character input.
+        virtual void OnNonBlockingKey(
+            NonBlockingIODevice& CLI_Source,    //!< Input non-blocking device.
             const KEY E_KeyCode                 //!< Input key.
             );
+    private:
         //! @brief Shell termination.
         const bool FinishExecution(void);
 
@@ -253,8 +271,6 @@ CLI_NS_BEGIN(cli)
         void OnKeyLeft(void);
         //! @brief Called when using the right arrow.
         void OnKeyRight(void);
-        //! @brief Clean screen routine.
-        void OnCleanScreen(void);
         //! @brief Called when a backspace comes up from the input device.
         void OnBackspace(void);
         //! @brief Called when a suppr comes up from the input device.
@@ -262,31 +278,34 @@ CLI_NS_BEGIN(cli)
         //! @brief Called when an escape character comes up from the input device.
         void OnEscape(void);
         //! @brief Called when an exit character (CTRL+C) comes up from the input device.
-        void OnExit(const bool B_Edition);
+        void OnExit(
+            const bool B_PromptMenu     //!< true if the menu should be (re)prompted.
+                                        //!< Basically false when executed within the context of a command processing,
+                                        //!< true when executed from other contexts.
+            );
         //! @brief Called when an help character ('?' or TAB) comes up from the input device.
         //!
         //! This method manages both help and completion.
         void OnHelp(
-            const bool B_Edition,   //!< true when this method is called in the context
-                                    //!< of the command line edition.
-            const bool B_HelpOnly   //!< true means no completion.
+            const bool B_PromptMenu,    //!< true if the menu should be (re)prompted.
+                                        //!< Basically false when executed within the context of a command processing,
+                                        //!< true when executed from other contexts.
+            const bool B_Completion     //!< true it completion should be performed.
             );
         //! @brief Called when an execute character (ENTER) comes up from the input device.
         void OnExecute(void);
         //! @brief Moves in history.
         void OnHistory(
-            const int I_Navigation          //!< Number of steps in history navigation.
-                                            //!< Positive values mean navigating to older command lines.
-                                            //!< Negative values mean navigating to newer command lines.
+            const int I_Navigation      //!< Number of steps in history navigation.
+                                        //!< Positive values mean navigating to older command lines.
+                                        //!< Negative values mean navigating to newer command lines.
             );
 
     private:
         //! @brief Prints an help line for a given element.
         void PrintHelp(
-            const Element& CLI_Element      //!< Element to print the help for.
+            const Element& CLI_Element  //!< Element to print the help for.
             );
-        //! @brief Sends a beep signal.
-        void Beep(void);
 
     private:
         //! CLI reference.
@@ -319,12 +338,6 @@ CLI_NS_BEGIN(cli)
             THREAD_SAFE_NONE,   //!< No current thread safe command.
             THREAD_SAFE_QUIT    //!< Have the shell quit as soon as possible.
         } m_eThreadSafeCmd;
-        //! Final traces restoration.
-        bool m_bRestoreTracesOnFinish;
-
-    private:
-        // In order to allow access to private method OnMonoThreadKey().
-        friend class MonoThreadDevice;
     };
 
 CLI_NS_END(cli)

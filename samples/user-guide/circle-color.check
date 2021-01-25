@@ -1,6 +1,7 @@
 Circle>
   add             
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'Circle'
   help            Get help
   pwm             Print Working Menu

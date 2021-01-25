@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 #include "cli_TraceClass.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -38,79 +39,80 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_TraceClass__1_1TraceClass(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jstring PJ_TraceClassName, jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("TraceClass.__TraceClass(PJ_TraceClassName, I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    cli::TraceClass* pcli_TraceClass = NULL;
-    if (const char* const str_TraceClassName = PJ_Env->GetStringUTFChars(PJ_TraceClassName, 0))
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TraceClass.__TraceClass(PJ_TraceClassName, I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_TraceClassName", NativeExec::Java2Native(PJ_TraceClassName).c_str()) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    NativeObject::REF i_TraceClassRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        NativeTraces::TraceParam("PJ_TraceClassName", "%s", str_TraceClassName);
-        if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
+        if (cli::TraceClass* const pcli_TraceClass = new cli::TraceClass(NativeExec::Java2Native(PJ_TraceClassName).c_str(), *pcli_Help))
         {
-            if ((pcli_TraceClass = new cli::TraceClass(str_TraceClassName, *pcli_Help)))
-            {
-                NativeObject::Use(pcli_TraceClass);
-            }
+            NativeObject::Use(*pcli_TraceClass);
+            i_TraceClassRef = NativeObject::GetNativeRef(*pcli_TraceClass);
         }
-        else
-        {
-            if ((pcli_TraceClass = new cli::TraceClass(str_TraceClassName, cli::Help())))
-            {
-                NativeObject::Use(pcli_TraceClass);
-            }
-        }
-        PJ_Env->ReleaseStringUTFChars(PJ_TraceClassName, str_TraceClassName);
     }
-    NativeTraces::TraceReturn("TraceClass.__TraceClass()", "%d", (int) pcli_TraceClass);
-    return (jint) pcli_TraceClass;
+    else
+    {
+        if (cli::TraceClass* const pcli_TraceClass = new cli::TraceClass(NativeExec::Java2Native(PJ_TraceClassName).c_str(), cli::Help()))
+        {
+            NativeObject::Use(*pcli_TraceClass);
+            i_TraceClassRef = NativeObject::GetNativeRef(*pcli_TraceClass);
+        }
+    }
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("TraceClass.__TraceClass()", i_TraceClassRef) << cli::endl;
+    return i_TraceClassRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_TraceClass__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeTraceClassRef)
 {
-    NativeTraces::TraceMethod("TraceClass.__finalize(I_NativeTraceClassRef)");
-    NativeTraces::TraceParam("I_NativeTraceClassRef", "%d", I_NativeTraceClassRef);
-    if (const cli::TraceClass* const pcli_TraceClass = (const cli::TraceClass*) I_NativeTraceClassRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TraceClass.__finalize(I_NativeTraceClassRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeTraceClassRef", I_NativeTraceClassRef) << cli::endl;
+    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I_NativeTraceClassRef))
     {
-        NativeObject::Free(pcli_TraceClass);
+        NativeObject::Free(*pcli_TraceClass);
     }
-    NativeTraces::TraceReturn("TraceClass.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("TraceClass.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_TraceClass__1_1getClassName(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeTraceClassRef)
 {
-    NativeTraces::TraceMethod("TraceClass.__getClassName(I_NativeTraceClassRef)");
-    NativeTraces::TraceParam("I_NativeTraceClassRef", "%d", I_NativeTraceClassRef);
-    jstring pj_ClassName = NULL;
-    if (const cli::TraceClass* const pcli_TraceClass = (const cli::TraceClass*) I_NativeTraceClassRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TraceClass.__getClassName(I_NativeTraceClassRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeTraceClassRef", I_NativeTraceClassRef) << cli::endl;
+    std::string str_ClassName;
+    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I_NativeTraceClassRef))
     {
-        NativeTraces::TraceReturn("TraceClass.__getClassName()", "%s", (const char*) pcli_TraceClass->GetName());
-        pj_ClassName = PJ_Env->NewStringUTF(pcli_TraceClass->GetName());
+        str_ClassName = (const char*) pcli_TraceClass->GetName();
     }
-    return pj_ClassName;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndStr("TraceClass.__getClassName()", str_ClassName.c_str()) << cli::endl;
+    return NativeExec::Native2Java(str_ClassName);
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_TraceClass__1_1getHelp(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeTraceClassRef)
 {
-    NativeTraces::TraceMethod("TraceClass.__getHelp(I_NativeTraceClassRef, I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeTraceClassRef", "%d", I_NativeTraceClassRef);
-    const cli::Help* pcli_Help = NULL;
-    if (const cli::TraceClass* const pcli_TraceClass = (const cli::TraceClass*) I_NativeTraceClassRef)
-    {
-        if (PJ_Env != NULL)
-        {
-            if ((pcli_Help = & pcli_TraceClass->GetHelp()))
-            {
-                NativeObject::CreateFromNative(PJ_Env, *pcli_Help);
-                NativeObject::Delegate(pcli_Help, pcli_TraceClass);
-            }
-        }
-    }
-    NativeTraces::TraceReturn("TraceClass.__getHelp()", "%d", (int) pcli_Help);
-    return (jint) pcli_Help;
-}
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TraceClass.__getHelp(I_NativeTraceClassRef, I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeTraceClassRef", I_NativeTraceClassRef) << cli::endl;
+    NativeObject::REF i_HelpRef = 0;
+    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I_NativeTraceClassRef))
+    {
+        const cli::Help& cli_Help = pcli_TraceClass->GetHelp();
+        NativeObject::CreateFromNative(cli_Help);
+        NativeObject::Delegate(cli_Help, *pcli_TraceClass);
+        i_HelpRef = NativeObject::GetNativeRef(cli_Help);
+    }
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("TraceClass.__getHelp()", i_HelpRef) << cli::endl;
+    return i_HelpRef;
+}

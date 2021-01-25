@@ -1,3 +1,2 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classObject.html" title="Generic object." alt="" coords="33,5,92,35"/>
-</map>
+base referer
+rect $classObject.html 35,7 97,34

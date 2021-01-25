@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,11 +37,16 @@ import java.util.Hashtable;
     even though they would normally be destroyed by the garbage collector on Java side.
     However, since the object is still useful on native side, it should be remembered.
     A 'forget' service is also provided to balance the 'remember' service. */
-public class NativeObject {
+public abstract class NativeObject {
+
+    static {
+        // Ensure 'cli' library initializations.
+        Cli.load();
+    }
 
     /** Constructor.
         @param I_NativeRef Native instance referenced corresponding to this Java instance. */
-    NativeObject(int I_NativeRef) {
+    protected NativeObject(int I_NativeRef) {
         m_iNativeRef = I_NativeRef;
         m_bDoFinalize = true;
         m_bForgotten = false;
@@ -66,7 +71,7 @@ public class NativeObject {
         @param CLI_Object Object deleted. */
     protected static final void deletedFromNative(NativeObject CLI_Object) {
         if (CLI_Object != null) {
-            Traces.traceValue("CLI_Object", CLI_Object.toString());
+            Traces.trace(NativeTraces.CLASS, NativeTraces.value("CLI_Object", CLI_Object.toString()));
             // Do not finalize native-deleted objects.
             CLI_Object.dontFinalize();
             // Also forget the native reference.

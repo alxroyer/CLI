@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -68,86 +68,59 @@ CLI_NS_BEGIN(cli)
         //! @brief No assignment operator.
         IOMux& operator=(const IOMux&);
 
+    // Outputdevice and IODevice interfaces.
     protected:
         virtual const bool OpenDevice(void);
         virtual const bool CloseDevice(void);
     public:
         virtual void PutString(const char* const STR_Out) const;
         virtual void Beep(void) const;
-        virtual const OutputDevice& GetActualDevice(void) const;
+        virtual void CleanScreen(void) const;
+        virtual const bool WouldOutput(const OutputDevice& CLI_Device) const;
         virtual const KEY GetKey(void) const;
         virtual const ResourceString GetLocation(void) const;
+        virtual const bool WouldInput(const IODevice& CLI_Device) const;
 
     public:
-        //! @brief Output stream accessor.
-        const OutputDevice& GetOutput(
-            const STREAM_TYPE E_StreamType          //!< Output stream identifier.
-            ) const;
-
-        //! @brief Output stream setting.
-        const bool SetOutput(
-            const STREAM_TYPE E_StreamType,         //!< Output stream identifier.
-            OutputDevice* const PCLI_Stream         //!< Device reference.
+        //! @brief Device addition in the list.
+        //! @return true if the device has been added, false otherwise.
+        const bool AddDevice(
+            IODevice* const PCLI_Device          //!< Input / output device.
             );
 
-        //! @brief Current input device accessor.
-        const IODevice* const GetInput(void) const;
+        //! @brief Current device accessor.
+        //! @return Current device.
+        const IODevice* const GetCurrentDevice(void) const;
 
-        //! @brief Input device addition in the list.
-        //! @return true: The device has been added.
-        //! @return false: The device has not been added.
-        const bool AddInput(
-            IODevice* const PCLI_Input          //!< Input device.
-            );
+        //! @brief Switch to next device.
+        //! @return Next device if success, NULL otherwise.
+        const IODevice* const SwitchNextDevice(void);
 
-        //! @brief Switch to next input device.
-        const bool NextInput(void);
-
-        //! @brief Reset input device list.
-        const bool ResetInputList(void);
+        //! @brief Reset device list.
+        //! @return true for success, false otherwise.
+        const bool ResetDeviceList(void);
 
     protected:
-        //! @brief Method called when an input device is needed.
+        //! @brief Method called when an input / output device is needed.
         //! @return New input device.
         //! @return NULL means no more input
         //!         unless new input devices have been pushed through AddInput().
-        virtual IODevice* const CreateInputDevice(void);
+        virtual IODevice* const CreateDevice(void);
 
     private:
-        //! @brief Check input list is not empty.
+        //! @brief Check a current device is ready to be used.
+        //! @return Current input device.
         //!
-        //! Calls CreateInputDevice() when the list is empty.
-        //! Tries to open the device when m_bOpened equals true.
-        const bool CheckInput(void) const;
+        //! Calls CreateDevice() when the list is empty.
+        IODevice* const CheckCurrentDevice(void) const;
 
-        //! @brief Releases first input device.
-        //!
-        //! Closure and deletion (if required) of first input device.
-        //! Checks this first device is not used somewhere else, either in other inputs or outputs.
-        const bool ReleaseFirstInputDevice(void);
-
-        //! @brief Releases output device.
-        //!
-        //! Closure and deletion (if required) of the given output stream.
-        //! Checks this first device is not used somewhere else, either in other inputs or outputs.
-        const bool ReleaseOutputDevice(
-            const STREAM_TYPE E_StreamType  //!< Output stream type
-            );
+        //! @brief Releases first device.
+        //! @return true for success, false otherwise.
+        const bool ReleaseFirstDevice(void);
 
     private:
-        //! Output streams.
-        struct Output_t
-        {
-            OutputDevice* pcliOutput;
-            bool bDoOpenClose;
-        };
-        struct Output_t m_arsOutputs[STREAM_TYPES_COUNT];
-
-        //! Input device list.
-        tk::Queue<IODevice*> m_qInputs;
-
-        //! Protection against infinite loop on output device.
-        mutable bool m_bIOLocked;
+        //! Input / output device list.
+        mutable tk::Queue<IODevice*> m_qDevices;
     };
 
 CLI_NS_END(cli)

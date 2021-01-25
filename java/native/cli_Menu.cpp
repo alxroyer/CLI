@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 
 #include "NativeMenu.h"
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -38,35 +39,35 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Menu__1_1Menu(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jstring PJ_Name, jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("Menu.__Menu(PJ_Name, I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    cli::Menu* pcli_Menu = NULL;
-    if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Menu.__Menu(PJ_Name, I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_Name", NativeExec::Java2Native(PJ_Name).c_str()) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    NativeObject::REF i_MenuRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        if (const char* const str_Name = PJ_Env->GetStringUTFChars(PJ_Name, 0))
+        if (cli::Menu* const pcli_Menu = new NativeMenu<cli::Menu>(NativeExec::Java2Native(PJ_Name).c_str(), *pcli_Help))
         {
-            NativeTraces::TraceParam("PJ_Name", "%s", str_Name);
-            if ((pcli_Menu = new NativeMenu<cli::Menu>(PJ_Env, "cli/Menu", str_Name, *pcli_Help)))
-            {
-                NativeObject::Use(pcli_Menu);
-            }
-            PJ_Env->ReleaseStringUTFChars(PJ_Name, str_Name);
+            NativeObject::Use(*pcli_Menu);
+            i_MenuRef = NativeObject::GetNativeRef(*pcli_Menu);
         }
     }
-    NativeTraces::TraceReturn("Menu.__Menu()", "%d", (int) pcli_Menu);
-    return (jint) pcli_Menu;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Menu.__Menu()", i_MenuRef) << cli::endl;
+    return i_MenuRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Menu__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeMenuRef)
 {
-    NativeTraces::TraceMethod("Menu.__finalize(PJ_Name, I_NativeMenuRef)");
-    NativeTraces::TraceParam("I_NativeMenuRef", "%d", I_NativeMenuRef);
-    if (const cli::Menu* const pcli_Menu = (const cli::Menu*) I_NativeMenuRef)
-    {
-        NativeObject::Free(pcli_Menu);
-    }
-    NativeTraces::TraceReturn("Menu.__finalize()");
-}
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Menu.__finalize(PJ_Name, I_NativeMenuRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeMenuRef", I_NativeMenuRef) << cli::endl;
+    if (const cli::Menu* const pcli_Menu = NativeObject::GetNativeObject<const cli::Menu*>(I_NativeMenuRef))
+    {
+        NativeObject::Free(*pcli_Menu);
+    }
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Menu.__finalize()") << cli::endl;
+}

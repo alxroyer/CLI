@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,6 +25,8 @@
 
 #include "cli/pch.h"
 
+#include <stdlib.h> // atoi
+#include <string.h> // strlen
 #ifndef CLI_WIN_NETWORK
     #include <errno.h> // errno
     #define socket_errno errno
@@ -55,13 +57,13 @@ int main(int I_ArgCount, char* ARSTR_Args[])
     class _Trace { public:
         _Trace() {
             cli::GetTraces().SetStream(cli::OutputDevice::GetStdErr());
-            cli::GetTraces().Declare(CLI_TELNET_CLIENT);
-            cli::GetTraces().SetFilter(CLI_TELNET_CLIENT, true);
-            cli::GetTraces().Declare(CLI_TELNET_IN);
-            cli::GetTraces().SetFilter(CLI_TELNET_IN, false);
+            //  cli::GetTraces().Declare(CLI_TELNET_CLIENT);
+            //  cli::GetTraces().SetFilter(CLI_TELNET_CLIENT, true);
+            //  cli::GetTraces().Declare(CLI_TELNET_IN);
+            //  cli::GetTraces().SetFilter(CLI_TELNET_IN, false);
         }
         ~_Trace() {
-            cli::GetTraces().UnsetStream();
+            cli::GetTraces().UnsetStream(cli::OutputDevice::GetStdErr());
         }
     } guard;
 
@@ -135,10 +137,7 @@ int main(int I_ArgCount, char* ARSTR_Args[])
     }
     cli::GetTraces().Trace(CLI_TELNET_CLIENT) << "connect() successful" << cli::endl;
 
-    class _Cli : public cli::Cli { public: _Cli() : Cli("", cli::Help()) { } };
-    _Cli cli_Cli;
-    cli::Shell cli_Shell(cli_Cli);
-    cli::TelnetConnection cli_TelnetConnection(cli_Shell, i_ClientSocket, false);
+    cli::TelnetConnection cli_TelnetConnection(NULL, i_ClientSocket, cli::ResourceString::LANG_EN, false);
     if (cli_TelnetConnection.OpenUp(__CALL_INFO__))
     {
         cli::InputFileDevice cli_TestFile(str_TestFile, cli::OutputDevice::GetStdOut(), false);

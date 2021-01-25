@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,7 +28,8 @@
 //! @brief CLI library default pre-compiled header.
 //!
 //! Does nothing by default.
-//! You can either modify this file or use another one of the same name instead.
+//! For configuration management purposes, you'd better copy this file instead of modifying it "in place".
+//! Adjust your include path to make your own 'cli/pch.h' being included before this one.
 
 #ifndef _CLI_PCH_H_
 #define _CLI_PCH_H_

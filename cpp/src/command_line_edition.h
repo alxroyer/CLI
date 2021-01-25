@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -75,6 +75,10 @@ CLI_NS_BEGIN(cli)
         void SetInsertMode(
             const bool B_InsertMode //!< Insert Mode.
             );
+
+        //! @brief Insert mode retrieval.
+        //! @return Current insert mode.
+        const bool GetInsertMode(void) const;
 
     public:
         //! @brief Character addition.

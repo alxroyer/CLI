@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,6 +30,7 @@
 #include "cli_ParamFloat.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -37,42 +38,49 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ParamFloat__1_1ParamFloat(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("ParamFloat.__ParamFloat(I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    cli::ParamFloat* pcli_Param = NULL;
-    if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ParamFloat.__ParamFloat(I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    NativeObject::REF i_ParamRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        if ((pcli_Param = new cli::ParamFloat(*pcli_Help)))
+        if (cli::ParamFloat* const pcli_Param = new cli::ParamFloat(*pcli_Help))
         {
-            NativeObject::Use(pcli_Param);
+            NativeObject::Use(*pcli_Param);
+            i_ParamRef = NativeObject::GetNativeRef(*pcli_Param);
         }
     }
-    NativeTraces::TraceReturn("ParamFloat.__ParamFloat()", "%d", (int) pcli_Param);
-    return (jint) pcli_Param;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ParamFloat.__ParamFloat()", i_ParamRef) << cli::endl;
+    return i_ParamRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ParamFloat__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeParamRef)
 {
-    NativeTraces::TraceMethod("ParamFloat.__finalize(I_NativeParamRef)");
-    NativeTraces::TraceParam("I_NativeParamRef", "%d", I_NativeParamRef);
-    if (const cli::ParamFloat* const pcli_Param = (const cli::ParamFloat*) I_NativeParamRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ParamFloat.__finalize(I_NativeParamRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParamRef", I_NativeParamRef) << cli::endl;
+    if (const cli::ParamFloat* const pcli_Param = NativeObject::GetNativeObject<const cli::ParamFloat*>(I_NativeParamRef))
     {
-        NativeObject::Free(pcli_Param);
+        NativeObject::Free(*pcli_Param);
     }
-    NativeTraces::TraceReturn("ParamFloat.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("ParamFloat.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jdouble JNICALL Java_cli_ParamFloat__1_1getValue(JNIEnv* PJ_Env, jclass PJ_Class, jint I_NativeParamRef)
 {
-    NativeTraces::TraceMethod("ParamFloat.__getValue(I_NativeParamRef)");
-    NativeTraces::TraceParam("I_NativeParamRef", "%d", I_NativeParamRef);
-    jdouble d_Value = 0;
-    if (const cli::ParamFloat* const pcli_Param = (const cli::ParamFloat*) I_NativeParamRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ParamFloat.__getValue(I_NativeParamRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParamRef", I_NativeParamRef) << cli::endl;
+    double d_Value = 0;
+    if (const cli::ParamFloat* const pcli_Param = NativeObject::GetNativeObject<const cli::ParamFloat*>(I_NativeParamRef))
     {
         d_Value = (double) (*pcli_Param);
     }
-    NativeTraces::TraceReturn("ParamFloat.__getValue()", "%f", d_Value);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndFloat("ParamFloat.__getValue()", d_Value) << cli::endl;
     return d_Value;
 }

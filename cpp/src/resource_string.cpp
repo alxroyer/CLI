@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -62,6 +62,13 @@ ResourceString& ResourceString::operator=(const ResourceString& CLI_String)
             SetString(e_Lang, "");
         }
     }
+    return *this;
+}
+
+// [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
+ResourceString& ResourceString::Reset(void)
+{
+    m_mapStrings.Reset();
     return *this;
 }
 

@@ -31,8 +31,18 @@ $(INT_DIR)/io_device.o: ../../../cpp/src/io_device.cpp \
   ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/menu.h \
   ../../../cpp/include/cli/syntax_node.h \
   ../../../cpp/include/cli/element.h ../../../cpp/include/cli/help.h \
-  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/assert.h \
-  ../../../cpp/src/constraints.h ../../../cpp/include/cli/namespace.h
+  ../../../cpp/include/cli/string_device.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/include/cli/assert.h ../../../cpp/src/constraints.h \
+  ../../../cpp/include/cli/namespace.h
+$(INT_DIR)/string_device.o: ../../../cpp/src/string_device.cpp \
+  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/string_device.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/tk_inner.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/resource_string.h \
+  ../../../cpp/src/constraints.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/help.h
 $(INT_DIR)/help.o: ../../../cpp/src/help.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/help.h \
   ../../../cpp/include/cli/namespace.h \

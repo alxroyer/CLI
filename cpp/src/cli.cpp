@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -96,6 +96,11 @@ Cli::~Cli(void)
 {
     GetTraces().Trace(TRACE_CLI) << "Deletion of CLI '" << GetName() << "'." << cli::endl;
 
+    // Retrieve inner information before further deletions.
+    // !!!  This method call is a little bit touchy since it is operated while the object is partially destructed at this point.
+    //      However, IsConfigMenuEnabled() calls SyntaxNode features which part of this object has not been deleted yet.
+    const bool b_ConfigMenuEnabled = IsConfigMenuEnabled();
+
     // Remove this CLI from the global CLI list.
     for (   Cli::List::Iterator it = GetCliRegistry().GetIterator();
             GetCliRegistry().IsValid(it);
@@ -115,6 +120,13 @@ Cli::~Cli(void)
         {
             delete pcli_Menu;
         }
+    }
+
+    if (! b_ConfigMenuEnabled)
+    {
+        // When the config menu is disabled, m_pcliConfigMenuNode is not registered in SyntaxNode elements,
+        // thus it not freed by the SyntaxNode destructor.
+        delete m_pcliConfigMenuNode; // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
     }
 }
 
@@ -233,6 +245,25 @@ const Keyword& Cli::GetConfigMenuNode(void) const
 {
     CLI_ASSERT(m_pcliConfigMenuNode != NULL);
     return *m_pcliConfigMenuNode;
+}
+
+const bool Cli::IsConfigMenuEnabled(void) const
+{
+    CLI_ASSERT(m_pcliConfigMenuNode != NULL);
+
+    Element::List cli_ExactList(10), cli_NearList(10);
+    if (FindElements(cli_ExactList, cli_NearList, m_pcliConfigMenuNode->GetKeyword()))
+    {
+        if (cli_ExactList.GetCount() == 1)
+        {
+            if (cli_ExactList.GetHead() == m_pcliConfigMenuNode)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 const bool Cli::EnableConfigMenu(const bool B_Enable)

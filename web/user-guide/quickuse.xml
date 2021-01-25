@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -47,35 +47,35 @@
         It is nothing but a simple XSL transformation.
         </para>
 
-        <example><title>Transformation of an XML resource file</title>
-        <para>
-        Try it out!
-        Here is a sample CLI resource file:
-            &sample-empty;
-        Copy the stuff into a new file <filename>empty.xml</filename>.
-        </para>
+        <example id="eg.transformation"><title id="eg.transformation.title">Transformation of an XML resource file</title>
+            <para>
+            Try it out!
+            Here is a sample CLI resource file:
+                &sample-empty;
+            Copy the stuff into a new file <filename>empty.xml</filename>.
+            </para>
 
-        <para>
-        Let's say we want to have C++.
-        Using <filename>cppclic.xsl</filename>, launch the XSL transformation
-        thanks to a command line XSLT processor.
-        I usually use <command>saxon</command>:
-            <programlisting>saxon empty.xml cppclic.xsl &gt; empty.cpp</programlisting>
-        or <command>xsltproc</command>:
-            <programlisting>xsltproc cppclic.xsl empty.xml &gt; empty.cpp</programlisting>
-        That's all folks!
-        Have a look at the <ulink url="misc/empty.cpp">generated C++ file</ulink> if you want.
-        </para>
+            <para>
+            Let's say we want to have C++.
+            Using <filename>cppclic.xsl</filename>, launch the XSL transformation
+            thanks to a command line XSLT processor.
+            I usually use <!--<command>saxon</command>:
+                <programlisting>saxon empty.xml cppclic.xsl &gt; empty.cpp</programlisting>
+            or--> <command>xsltproc</command>:
+                <programlisting>xsltproc cppclic.xsl empty.xml &gt; empty.cpp</programlisting>
+            That's all folks!
+            Have a look at the <ulink url="misc/empty.cpp">generated C++ file</ulink> if you want.
+            </para>
 
-        <para>
-        And it works with java also!
-            <programlisting>xsltproc --stringparam STR_CliClassName "Empty" javaclic.xsl empty.xml &gt; Empty.java</programlisting>
-        Have a look at the <ulink url="misc/Empty.java">generated Java file</ulink>.
-        </para>
+            <para>
+            And it works with java also!
+                <programlisting>xsltproc --stringparam STR_CliClassName "Empty" javaclic.xsl empty.xml &gt; Empty.java</programlisting>
+            Have a look at the <ulink url="misc/Empty.java">generated Java file</ulink>.
+            </para>
 
-        <para>
-        You're now ready to compile.
-        </para>
+            <para>
+            You're now ready to compile.
+            </para>
         </example>
 
         <para>
@@ -85,7 +85,8 @@
             <listitem>
                 <itemizedlist>
                 <listitem><varname>B_CliStaticCreation</varname>:
-                            CLI static creation. Default is 1 (true) for compatibility reasons.
+                            CLI static creation. Default is 0 (false) since version 2.7.
+                            When set to 1, a static instance of the CLI you defined is automatically defined in the source code generated.
                             When set to 0, the CLI instance is not created by the XSL transformation,
                             so that you can do the dynamic instantiation at the appropriate time
                             (inherited from Java experience).</listitem>
@@ -96,7 +97,7 @@
                 <listitem><varname>STR_Indent</varname>:
                             Basic indentation. Default is four spaces.</listitem>
                 <listitem><varname>STR_UserIndent</varname>:
-                            User code indentation. makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
+                            User code indentation. Makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
                 <listitem><varname>STR_CliClassName</varname>:
                             CLI class name. Default is a derivate from the CLI name.</listitem>
                 </itemizedlist>
@@ -114,7 +115,7 @@
                 <listitem><varname>STR_Indent</varname>:
                             Basic indentation. Default is four spaces.</listitem>
                 <listitem><varname>STR_UserIndent</varname>:
-                            User code indentation. makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
+                            User code indentation. Makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
                 <listitem><varname>STR_CliClassName</varname>:
                             CLI class name. Default is a derivate from the CLI name.
                             It is highly recommended you override this parameter for integration considerations.</listitem>
@@ -126,7 +127,7 @@
 
         <note>
             <para>
-            If you have a look at the output source code, the complexity of this generated code may shock you.
+            If you have a look at the output source code, the complexity of this generated code may disturb you.
             As a matter of fact, since it is some managed code, you are not supposed to get into it,
             and even less supposed to modify it.
             But, you may however also figure out that it is nevertheless quite well presented:
@@ -145,7 +146,7 @@
 
         <para>
         Now that you have your target language file,
-        you want to have a CLI program running don't you ?
+        you want to have a CLI program running don't you?
         </para>
 
         <section id="integ.cpp"><title id="integ.cpp.title">C++ integration</title>
@@ -171,65 +172,56 @@
             Though, you need to give a <classname>cli::Cli</classname> reference at the beginning.
             Different strategies at this point:
             <itemizedlist>
-            <listitem>the <sgmltag class="attribute">cpp</sgmltag> attribute
+            <listitem>CLI instantiation from the user code
+                      (preferred method);</listitem>
+            <listitem>Static CLI instantiation and retrieval through <function>cli::Cli::FindFromName</function> and a regular expression
+                      (deprecated but maintained);</listitem>
+            <listitem>Static CLI creation and use of the <sgmltag class="attribute">cpp</sgmltag> attribute
                       of the <sgmltag class="element">cli</sgmltag> element
-                      in the XML resource file;</listitem>
-            <listitem>CLI retrieval through <function>cli::Cli::FindFromName</function>
-                      and a regular expression.</listitem>
-            <listitem>Non-static but explicit creation of the object in user code.</listitem>
+                      in the XML resource file
+                      (definitely deprecated, this method has been undocumented);</listitem>
             </itemizedlist>
             </para>
 
-            <example><title>Empty example with C++ integration
-                            using the <sgmltag class="attribute">cpp</sgmltag> attribute</title>
-            <para>
-            Here is now the <filename>empty.xml</filename> file with C++ integration:
-                &sample-empty-cpp;
-            </para>
-
-            <para>
-            The <sgmltag class="attribute">cpp</sgmltag> attribute
-            defines a C++ global <classname>cli::Cli</classname> pointer name,
-            that will be defined and set in the output of the XSL transformation.
-            This way, you can refer to the <classname>cli::Cli</classname> object
-            from the outside of this output.
-            </para>
-
-            <para>
-            Here is a <filename>goempty.cpp</filename> file doing so:
+            <example id="eg.cpp.init1"><title id="eg.cpp.init1.title">C++ integration - instantiation from user code</title>
+                <para>
+                Use <filename>cppclic.xsl</filename> parameters to give an explicit name to CLI class generated:
+                    <programlisting>xsltproc --param STR_CliClassName "'EmptyCli'" cppclic.xsl empty.xml &gt; empty_cli.h</programlisting>
+                Create a <filename>goempty.cpp</filename> file that simply includes <filename>empty_cli.h</filename> and make the instantiation at the appropriate time:
 <programlisting>
 #include "cli/common.h"
-#include "cli/console.h"
-extern cli::Cli* PCLI_MyCli;
+#include "empty_cli.h"
+
 int main(void) {
-    cli::Shell cli_Shell(*PCLI_MyCli);
-    cli::Console cli_Console;
+    EmptyCli cli_EmptyCli;
+    cli::Shell cli_Shell(cli_EmptyCli);
+    cli::Console cli_Console(false)
     cli_Shell.Run(cli_Console);
 }
 </programlisting>
-            </para>
+                </para>
 
-            <para>
-            Compile (with <command>g++</command> for instance):
+                <para>
+                Compile (with <command>g++</command> for instance):
 <programlisting>
-g++ -Icli/cpp/include -c empty.cpp
 g++ -Icli/cpp/include -c goempty.cpp
 g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a
 </programlisting>
-            And run:
-                <programlisting>./empty</programlisting>
-            Great for an empty stuff, ain't it?
-            </para>
+                And run:
+                    <programlisting>./empty</programlisting>
+                Great for an empty stuff, ain't it?
+                </para>
             </example>
 
-            <example><title>Empty example with C++ integration
-                            using <function>cli::Cli::FindFromName</function></title>
-            <para>
-            This version of the <filename>goempty.cpp</filename> file works too:
+            <example id="eg.cpp.init2"><title id="eg.cpp.init2.title">C++ integration - static instantiation + <function>cli::Cli::FindFromName</function></title>
+                <para>
+                Use <filename>cppclic.xsl</filename> parameters to activate static CLI creation:
+                    <programlisting>xsltproc --param B_CliStaticCreation 1 cppclic.xsl empty.xml &gt; empty_cli.cpp</programlisting>
+                Then the file <filename>goempty.cpp</filename> below looks for CLI instances that had been created thanks to a regular expression on their names:
 <programlisting>
 #include "cli/common.h"
 int main(void) {
-    cli::CliList cli_List;
+    cli::CliList cli_List(10);
     const int i_Clis = cli::Cli::FindFromName(cli_List, ".*");
     if (i_Clis == 0)
     {
@@ -240,31 +232,53 @@ int main(void) {
     {
         fprintf(stderr, "Warning: Several CLIs found. Executing only the first one.\n");
     }
-    cli::Shell cli_MyShell(*cli_List[0]);
-    cli_MyShell.Run(cli::Console());
+    cli::Shell cli_Shell(*cli_List.GetHead());
+    cli::Console cli_Console(false)
+    cli_Shell.Run(cli_Console);
 }
 </programlisting>
-            </para>
+                </para>
+
+                <para>
+                Once again, compile:
+<programlisting>
+g++ -Icli/cpp/include -c empty.cpp
+g++ -Icli/cpp/include -c goempty.cpp
+g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a
+</programlisting>
+                And run:
+                    <programlisting>./empty</programlisting>
+                </para>
             </example>
 
-            <example><title>Empty example with C++ integration
-                            using an explicit creation</title>
-            <para>
-            Let's use <filename>cppclic.xsl</filename> parameters:
-                <programlisting>xsltproc --param B_CliStaticCreation 0 --param STR_CliClassName "'EmptyCli'" cppclic.xsl empty.xml &gt; empty_cli.h</programlisting>
-            The source <filename>goempty.cpp</filename> then simply includes <filename>empty_cli.h</filename>:
+            <!--<example id="eg.cpp.init0"><title id="eg.cpp.init0.title">C++ integration - static instantiation + <sgmltag class="attribute">cpp</sgmltag> attribute</title>
+                <para>
+                Here is now the <filename>empty.xml</filename> file with C++ integration:
+                    &sample-empty-cpp;
+                </para>
+
+                <para>
+                The <sgmltag class="attribute">cpp</sgmltag> attribute
+                defines a C++ global <classname>cli::Cli</classname> pointer name,
+                that will be defined and set in the output of the XSL transformation.
+                This way, you can refer to the <classname>cli::Cli</classname> object
+                from the outside of this output.
+                </para>
+
+                <para>
+                Here is a <filename>goempty.cpp</filename> file doing so:
 <programlisting>
 #include "cli/common.h"
-#include "empty_cli.h"
-
+#include "cli/console.h"
+extern cli::Cli* PCLI_MyCli;
 int main(void) {
-    EmptyCli cli_EmptyCli;
-    cli::Shell cli_MyShell(cli_EmptyCli);
-    cli_MyShell.Run(cli::Console());
+    cli::Shell cli_Shell(*PCLI_MyCli);
+    cli::Console cli_Console(false);
+    cli_Shell.Run(cli_Console);
 }
 </programlisting>
-            </para>
-            </example>
+                </para>
+            </example>-->
 
         </section>
 
@@ -277,12 +291,12 @@ int main(void) {
             That's what is presented in the example below.
             </para>
 
-            <example><title>Empty example with Java integration</title>
-            <para>
-            Considering you have generated an <filename>Empty.java</filename> file
-            as described in <link linkend="xslt">XSLT transformation section</link>,
-            you may just compile this file with <command>javac</command>,
-            and another one loading the <classname>Empty</classname> class:
+            <example id="eg.java.init"><title id="eg.java.init.title">Java integration</title>
+                <para>
+                Considering you have generated an <filename>Empty.java</filename> file
+                as described in <link linkend="xslt">XSLT transformation section</link>,
+                you may just compile this file with <command>javac</command>,
+                and another one loading the <classname>Empty</classname> class:
 <programlisting>
 class GoEmpty {
     public static void main(String ARJ_Args[]) {
@@ -304,7 +318,7 @@ class GoEmpty {
     }
 }
 </programlisting>
-            </para>
+                </para>
             </example>
 
         </section>

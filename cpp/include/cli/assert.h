@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -44,7 +44,7 @@
 
     #else
 
-        #define CLI_ASSERT(a)
+        #define CLI_ASSERT(a) do { } while(0)
 
     #endif
 #endif

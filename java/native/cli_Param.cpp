@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,6 +30,7 @@
 #include "cli_Param.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -37,21 +38,23 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Param__1_1copyValue(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeDestParamRef, jint I_NativeSrcParamRef)
 {
-    NativeTraces::TraceMethod("Param.copyValue(I_NativeDestParamRef, I_NativeSrcParamRef)");
-    NativeTraces::TraceParam("I_NativeDestParamRef", "%d", I_NativeDestParamRef);
-    NativeTraces::TraceParam("I_NativeSrcParamRef", "%d", I_NativeSrcParamRef);
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    jboolean b_Res = false;
-    if (const cli::Param* const pcli_DestParam = (const cli::Param*) I_NativeDestParamRef)
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Param.copyValue(I_NativeDestParamRef, I_NativeSrcParamRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeDestParamRef", I_NativeDestParamRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeSrcParamRef", I_NativeSrcParamRef) << cli::endl;
+
+    bool b_Res = false;
+    if (const cli::Param* const pcli_DestParam = NativeObject::GetNativeObject<const cli::Param*>(I_NativeDestParamRef))
     {
-        if (const cli::Param* const pcli_SrcParam = (const cli::Param*) I_NativeSrcParamRef)
+        if (const cli::Param* const pcli_SrcParam = NativeObject::GetNativeObject<const cli::Param*>(I_NativeSrcParamRef))
         {
             pcli_DestParam->CopyValue(*pcli_SrcParam);
             b_Res = true;
         }
     }
 
-    NativeTraces::TraceReturn("Param.copyValue()", "%d", (int) b_Res);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Param.copyValue()", b_Res) << cli::endl;
     return b_Res;
 }
 
@@ -59,15 +62,20 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Param__1_1getCloned(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeParamRef)
 {
-    NativeTraces::TraceMethod("Param.getCloned(I_NativeParamRef)");
-    NativeTraces::TraceParam("I_NativeParamRef", "%d", I_NativeParamRef);
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    const cli::Param* pcli_Cloned = NULL;
-    if (const cli::Param* const pcli_Param = (const cli::Param*) I_NativeParamRef)
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Param.getCloned(I_NativeParamRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParamRef", I_NativeParamRef) << cli::endl;
+
+    NativeObject::REF i_ClonedRef = 0;
+    if (const cli::Param* const pcli_Param = NativeObject::GetNativeObject<const cli::Param*>(I_NativeParamRef))
     {
-        pcli_Cloned = pcli_Param->GetCloned();
+        if (const cli::Param* const pcli_Cloned = pcli_Param->GetCloned())
+        {
+            i_ClonedRef = NativeObject::GetNativeRef(*pcli_Cloned);
+        }
     }
 
-    NativeTraces::TraceReturn("Param.getCloned()", "%d", (int) pcli_Cloned);
-    return (int) pcli_Cloned;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Param.getCloned()", i_ClonedRef) << cli::endl;
+    return i_ClonedRef;
 }

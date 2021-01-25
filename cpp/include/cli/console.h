@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -75,6 +75,8 @@ CLI_NS_BEGIN(cli)
         virtual void Beep(void) const;
         //! @brief Clean screen handler.
         virtual void CleanScreen(void) const;
+        //! @brief Screen info handler.
+        virtual const ScreenInfo GetScreenInfo(void) const;
 
     private:
         //! Internal data.

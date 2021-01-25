@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,31 +30,43 @@
 #include "cli_Console.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_Console__1_1Console(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
-    NativeTraces::TraceMethod("Console.__Console()");
-    cli::Console* pcli_Console = NULL;
-    if ((pcli_Console = new cli::Console(true)))
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Console.__Console()") << cli::endl;
+    NativeObject::REF i_ConsoleRef = 0;
+    if (cli::Console* const pcli_Console = new cli::Console(true))
     {
-        NativeObject::Use(pcli_Console);
+        NativeObject::Use(*pcli_Console);
+        i_ConsoleRef = NativeObject::GetNativeRef(*pcli_Console);
     }
-    NativeTraces::TraceReturn("Console.__Console()", "%d", (int) pcli_Console);
-    return (jint) pcli_Console;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Console.__Console()", i_ConsoleRef) << cli::endl;
+    return i_ConsoleRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Console__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeConsoleRef)
 {
-    NativeTraces::TraceMethod("Console.__finalize(I_NativeConsoleRef)");
-    NativeTraces::TraceParam("I_NativeConsoleRef", "%d", I_NativeConsoleRef);
-    if (const cli::Console* const pcli_Console = (const cli::Console*) I_NativeConsoleRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    if (const cli::Console* const pcli_Console = NativeObject::GetNativeObject<const cli::Console*>(I_NativeConsoleRef))
     {
-        NativeObject::Free(pcli_Console);
+        // If b_SafeTrace is true, it means the current trace stream is not pcli_IODevice nor it would output pcli_IODevice.
+        // Whether pcli_IODevice is about to be destroyed, if b_SafeTrace is true, there is no problem for tracing even after possible destruction.
+        const bool b_SafeTrace = cli::GetTraces().IsSafe(*pcli_Console);
+
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Console.__finalize(I_NativeConsoleRef)") << cli::endl;
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeConsoleRef", I_NativeConsoleRef) << cli::endl;
+
+        NativeObject::Free(*pcli_Console); // <- possible destruction.
+
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Console.__finalize()") << cli::endl;
     }
-    NativeTraces::TraceReturn("Console.__finalize()");
 }

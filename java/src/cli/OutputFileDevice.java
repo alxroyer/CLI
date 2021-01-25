@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,7 +26,7 @@ package cli;
 
 
 /** Output file device. */
-public class OutputFileDevice extends OutputDevice {
+public class OutputFileDevice extends OutputDevice.Native {
 
     /** Constructor.
         @param STR_OutputFileName Output file name. */

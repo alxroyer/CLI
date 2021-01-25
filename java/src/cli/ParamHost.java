@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -40,12 +40,12 @@ public class ParamHost extends Param {
         Useful for cloned parameters created for a specific host value given in a command line.
         @param I_NativeParamRef Native instance reference. */
     protected static void createFromNative(int I_NativeParamRef) {
-        Traces.traceMethod("ParamHost.createFromNative(I_NativeParamRef)");
-        Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamHost.createFromNative(I_NativeParamRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeParamRef", new Integer(I_NativeParamRef).toString()));
 
         NativeObject.createdFromNative(new ParamHost(I_NativeParamRef));
 
-        Traces.traceReturn("ParamHost.createFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("ParamHost.createFromNative()"));
     }
     private ParamHost(int I_NativeParamRef) {
         super(I_NativeParamRef);
@@ -64,12 +64,12 @@ public class ParamHost extends Param {
     /** Destruction from native code.
         See createFromNative(). */
     protected static void deleteFromNative(int I_NativeParamRef) {
-        Traces.traceMethod("ParamHost.deleteFromNative(I_NativeParamRef)");
-        Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamHost.deleteFromNative(I_NativeParamRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeParamRef", new Integer(I_NativeParamRef).toString()));
 
         NativeObject.deletedFromNative(NativeObject.getObject(I_NativeParamRef));
 
-        Traces.traceReturn("ParamHost.deleteFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("ParamHost.deleteFromNative()"));
     }
 
     /** Host value accessor.

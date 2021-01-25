@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -115,7 +115,7 @@ Traces& Traces::GetInstance(void)
 Traces::Traces(void)
   : m_mapClasses(MAX_TRACE_CLASS_COUNT),
     m_bTraceAll(false),
-    m_pcliStream(NULL)
+    m_qStreams(MAX_TRACE_DEVICE_COUNT)
 {
     EnsureCommonDevices();
 
@@ -129,56 +129,25 @@ Traces::Traces(void)
 Traces::~Traces(void)
 {
     // If the assertion below occures, you might call UnsetStream() before program termination.
-    CLI_ASSERT(m_pcliStream == NULL);
+    CLI_ASSERT(m_qStreams.IsEmpty());
 }
 
 const OutputDevice& Traces::GetStream(void) const
 {
-    if (m_pcliStream != NULL)
+    if (! m_qStreams.IsEmpty())
     {
-        return *m_pcliStream;
-    }
-    else
-    {
-        // Default to stderr.
-        OutputDevice::GetStdErr() << "Traces::GetStream(): Default to stderr" << endl;
-        return OutputDevice::GetStdErr();
-    }
-}
-
-const bool Traces::UnsetStream(void)
-{
-    if (cli::OutputDevice* const pcli_Stream = m_pcliStream)
-    {
-        bool b_Res = true;
-
-        // Unreference the device right now.
-        m_pcliStream = NULL;
-        if (! pcli_Stream->CloseDown(__CALL_INFO__))
+        if (const OutputDevice* const pcli_Stream = m_qStreams.GetTail())
         {
-            OutputDevice::GetStdErr() << pcli_Stream->GetLastError().GetString(ResourceString::LANG_DEFAULT) << endl;
-            b_Res = false;
-        }
-        pcli_Stream->FreeInstance(__CALL_INFO__);
-
-        if (! b_Res)
-        {
-            // Abort on error
-            return false;
+            return *pcli_Stream;
         }
     }
 
-    return true;
+    // Default to stderr.
+    return OutputDevice::GetStdErr();
 }
 
 const bool Traces::SetStream(OutputDevice& CLI_Stream)
 {
-    // Free previous reference.
-    if (! UnsetStream())
-    {
-        return false;
-    }
-
     // Store next reference.
     {
         CLI_Stream.UseInstance(__CALL_INFO__);
@@ -191,15 +160,49 @@ const bool Traces::SetStream(OutputDevice& CLI_Stream)
             return false;
         }
         // Do not store the reference until opening is done.
-        m_pcliStream = & CLI_Stream;
+        m_qStreams.AddHead(& CLI_Stream);
     }
 
     return true;
 }
 
-const bool Traces::IsStreamSet(void) const
+const bool Traces::UnsetStream(OutputDevice& CLI_Stream)
 {
-    return (m_pcliStream != NULL);
+    for (   tk::Queue<OutputDevice*>::Iterator it = m_qStreams.GetIterator();
+            m_qStreams.IsValid(it);
+            m_qStreams.MoveNext(it))
+    {
+        if (OutputDevice* const pcli_Stream = m_qStreams.GetAt(it))
+        {
+            if (pcli_Stream == & CLI_Stream)
+            {
+                bool b_Res = true;
+
+                // Unreference the device right now.
+                m_qStreams.Remove(it);
+                if (! pcli_Stream->CloseDown(__CALL_INFO__))
+                {
+                    OutputDevice::GetStdErr() << pcli_Stream->GetLastError().GetString(ResourceString::LANG_DEFAULT) << endl;
+                    b_Res = false;
+                }
+                pcli_Stream->FreeInstance(__CALL_INFO__);
+
+                if (! b_Res)
+                {
+                    // Abort on error
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+const bool Traces::IsSafe(const cli::OutputDevice& CLI_AvoidTraces) const
+{
+    return (! GetStream().WouldOutput(CLI_AvoidTraces));
 }
 
 const bool Traces::Declare(const TraceClass& CLI_Class)
@@ -333,6 +336,18 @@ const OutputDevice& Traces::Trace(const TraceClass& CLI_Class)
     if (IsTraceOn(CLI_Class))
     {
         return BeginTrace(CLI_Class);
+    }
+    else
+    {
+        return OutputDevice::GetNullDevice();
+    }
+}
+
+const OutputDevice& Traces::SafeTrace(const TraceClass& CLI_Class, const OutputDevice& CLI_AvoidStream)
+{
+    if (! GetStream().WouldOutput(CLI_AvoidStream))
+    {
+        return Trace(CLI_Class);
     }
     else
     {

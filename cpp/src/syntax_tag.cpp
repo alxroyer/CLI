@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -88,7 +88,7 @@ const tk::String SyntaxRef::GetKeyword(void) const
     if (! str_Keyword.Set(str_Buffer))
     {
         GetTraces().Trace(INTERNAL_ERROR) << "SyntaxRef::GetKeyword() could not constructor the SyntaxRef keyword" << endl;
-}
+    }
     if (m_pcliTag != NULL)
     {
         if ((! str_Keyword.Append(" -> "))

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,6 +30,7 @@
 #include "cli_Keyword.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -37,37 +38,35 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Keyword__1_1Keyword(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jstring PJ_Keyword, jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("Keyword.__Keyword(PJ_Keyword, I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    cli::Keyword* pcli_Keyword = NULL;
-    if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Keyword.__Keyword(PJ_Keyword, I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_Keyword", NativeExec::Java2Native(PJ_Keyword).c_str()) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    NativeObject::REF i_KeywordRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        if (PJ_Env != NULL)
+        if (cli::Keyword* const pcli_Keyword = new cli::Keyword(NativeExec::Java2Native(PJ_Keyword).c_str(), *pcli_Help))
         {
-            if (const char* const str_Keyword = PJ_Env->GetStringUTFChars(PJ_Keyword, 0))
-            {
-                NativeTraces::TraceParam("PJ_Keyword", "%s", str_Keyword);
-                if ((pcli_Keyword = new cli::Keyword(str_Keyword, *pcli_Help)))
-                {
-                    NativeObject::Use(pcli_Keyword);
-                }
-                PJ_Env->ReleaseStringUTFChars(PJ_Keyword, str_Keyword);
-            }
+            NativeObject::Use(*pcli_Keyword);
+            i_KeywordRef = NativeObject::GetNativeRef(*pcli_Keyword);
         }
     }
-    NativeTraces::TraceReturn("Keyword.__Keyword()", "%d", (int) pcli_Keyword);
-    return (jint) pcli_Keyword;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Keyword.__Keyword()", i_KeywordRef) << cli::endl;
+    return i_KeywordRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Keyword__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeKeywordRef)
 {
-    NativeTraces::TraceMethod("Keyword.__finalize(PJ_Keyword, I_NativeKeywordRef)");
-    NativeTraces::TraceParam("I_NativeKeywordRef", "%d", I_NativeKeywordRef);
-    if (const cli::Keyword* const pcli_Keyword = (const cli::Keyword* const) I_NativeKeywordRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Keyword.__finalize(I_NativeKeywordRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeKeywordRef", I_NativeKeywordRef) << cli::endl;
+    if (const cli::Keyword* const pcli_Keyword = NativeObject::GetNativeObject<const cli::Keyword*>(I_NativeKeywordRef))
     {
-        NativeObject::Free(pcli_Keyword);
+        NativeObject::Free(*pcli_Keyword);
     }
-    NativeTraces::TraceReturn("Keyword.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Keyword.__finalize()") << cli::endl;
 }

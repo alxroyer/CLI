@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -105,15 +105,29 @@ const KEY SingleCommand::GetKey(void) const
 
 void SingleCommand::PutString(const char* const STR_Out) const
 {
-    m_cliOutput.PutString(STR_Out);
+    if (! m_cliOutput.WouldOutput(*this)) // Avoid infinite loops.
+    {
+        m_cliOutput.PutString(STR_Out);
+    }
 }
 
 void SingleCommand::Beep(void) const
 {
-    m_cliOutput.Beep();
+    if (! m_cliOutput.WouldOutput(*this)) // Avoid infinite loops.
+    {
+        m_cliOutput.Beep();
+    }
 }
 
-const OutputDevice& SingleCommand::GetActualDevice(void) const
+void SingleCommand::CleanScreen(void) const
 {
-    return m_cliOutput.GetActualDevice();
+    if (! m_cliOutput.WouldOutput(*this)) // Avoid infinite loops.
+    {
+        m_cliOutput.CleanScreen();
+    }
+}
+
+const bool SingleCommand::WouldOutput(const OutputDevice& CLI_Device) const
+{
+    return (IODevice::WouldOutput(CLI_Device) || m_cliOutput.WouldOutput(CLI_Device));
 }

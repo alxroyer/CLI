@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -129,23 +129,29 @@ CLI_NS_BEGIN(cli)
         //! @brief Stream access.
         const OutputDevice& GetStream(void) const;
 
-        //! @brief Stream positionning.
-        //! @warning For consistency reasons, if you use this method,
-        //!          you should better call UnsetStream() before program termination.
+        //! @brief Stream positionning (if not already set).
+        //! @return true: success, false: failure.
+        //! @warning For consistency reasons, if you use this method, you should better call UnsetStream() before program termination.
+        //!
+        //! When SetStream() has not been called previously, then it takes CLI_Stream in account immediately for tracing.
+        //! Otherwise it stacks the stream (for consistency concerns) and waits for the previous ones to be released possibly.
         const bool SetStream(
             OutputDevice& CLI_Stream                //!< Stream reference.
             );
 
         //! @brief Stream dereferencing.
+        //! @return true: success, false: failure.
         //!
         //! This method should be called if you have previously called SetStream().
-        //! You may also call UnsetStream() even if SetStream() has been been previously called.
-        const bool UnsetStream(void);
+        const bool UnsetStream(
+            OutputDevice& CLI_Stream                //!< Stream reference.
+            );
 
-        //! @brief Determines whether the trace stream has already been set.
-        //! @return true: The stream has already been set.
-        //! @return false: No stream has been set yet.
-        const bool IsStreamSet(void) const;
+        //! @brief Stack overflow protection.
+        //! @return true if traces are safe for this output device, false if no trace should be set.
+        const bool IsSafe(
+            const OutputDevice& CLI_AvoidTraces     //!< Device which output is about to be traced.
+            ) const;
 
     public:
         //! @brief Trace class declaration.
@@ -184,10 +190,18 @@ CLI_NS_BEGIN(cli)
             ) const;
 
         //! @brief Trace routine.
-        //! @return Trace output stream prepared to receive the trace
+        //! @return Trace output stream prepared to receive the trace.
         //! @note If enabled, the trace is directed to the output stream of the shell corresponding to context element.
         const OutputDevice& Trace(
             const TraceClass& CLI_Class     //!< Trace class.
+            );
+
+        //! @brief Safe trace routine.
+        //! @return Trace output stream prepared to receive the trace.
+        //! @note Prevents output from infinite loops.
+        const OutputDevice& SafeTrace(
+            const TraceClass& CLI_Class,        //!< Trace class.
+            const OutputDevice& CLI_AvoidStream //!< Avoid stream from being sent characters.
             );
 
     private:
@@ -231,8 +245,8 @@ CLI_NS_BEGIN(cli)
         //! Trace all flag.
         bool m_bTraceAll;
 
-        //! Traces output stream.
-        OutputDevice* m_pcliStream;
+        //! Traces output streams LIFO. Pushed from head.
+        tk::Queue<OutputDevice*> m_qStreams;
     };
 
     //! @brief Singleton.

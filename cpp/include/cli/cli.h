@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,7 +28,7 @@
 //! @brief Cli class definition.
 
 //! @mainpage
-//! @author Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+//! @author Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 //!
 //! The CLI toolkit allows you to easily define Command Line Interfaces.
 //!
@@ -44,17 +44,21 @@
 //!         - TCP:                          TelnetServer and TelnetConnection
 //!         - files:                        InputFileDevice and OutputFileDevice
 //!         - strings:                      SingleCommand and StringDevice
-//!     - Eventually get back to the Menu class and find out how user code is executed through the handlers.
+//!     - Get back to the Menu class and find out how user code is executed through the handlers.
 //!       It is also interesting at this point to have a look at the XSL transformation.
+//!     - Eventually figure out how UI classes provide text/numbers... edition facilities.
 //!
 //! Advanced users:
 //!     - Interested in the traces management system? Have a look at Traces.
-//!     - Want to define a specific input/output device? Inherit from IODevice.
+//!     - Want to use pre-compiled headers? See pch.h.
+//!     - Want to define a specific input/output device? Inherit from OutputDevice or IODevice.
 //!     - Need to multiplex input and output devices? Maybe IOMux can help you.
 //!     - Any question about thread-safe CLI termination? Please check the Shell::QuitThreadSafe method.
-//!     - Mono-thread concerns? Try to implement MonoThreadDevice
+//!     - Non-blocking call concerns? Try to implement NonBlockingIODevice
 //!     - Trying to integrate in an embedded context? The cli::CLI_NO_STL compiler directive is there for you.
 //!       Also have a look at the various preprocessing constants described in preprocessing.h.
+//!
+//! Much more info available in the user-guide.
 
 #ifndef _CLI_CLI_H_
 #define _CLI_CLI_H_
@@ -162,6 +166,10 @@ CLI_NS_BEGIN(cli)
         //! @brief Configuration menu node access (read-only).
         const Keyword& GetConfigMenuNode(void) const;
     public:
+        //! @brief Determines whether the configuration menu is currently enabled.
+        //! @return true when the configuration menu is curently enabled, false otherwise.
+        const bool IsConfigMenuEnabled(void) const;
+
         //! @brief Configuration menu enabling.
         //! @return false if the operation failed.
         const bool EnableConfigMenu(

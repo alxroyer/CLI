@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -29,7 +29,7 @@ javadoc.default: $(.DEFAULT_GOAL) ;
 # Variables
 CLI_DIR := ../../..
 include $(CLI_DIR)/build/make/_vars.mak
-JAVA_FILES = $(wildcard $(CLI_DIR)/java/src/cli/*.java)
+JAVA_FILES = $(wildcard $(CLI_DIR)/java/src/cli/*.java) $(wildcard $(CLI_DIR)/java/src/cli/ui/*.java)
 OUT_DIR = $(CLI_DIR)/web/javadoc/html
 
 # Rules

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -34,7 +34,6 @@
 
     <cpp>OutputDevice* pcli_Device = NULL;</cpp>
     <cpp>STREAM_TYPE e_Use = OUTPUT_STREAM;</cpp>
-    <cpp>bool b_ShellTarget = false;</cpp>
 
     <keyword string="set"><help lang="en">Set device command</help>
 
@@ -112,26 +111,11 @@
                 </keyword>
             </keyword>
         </tag>
-        <tag id="post-use" hidden="yes"><tag ref="target"/></tag>
-
-        <!-- Attachement. -->
-        <tag id="target" hidden="yes">
-            <keyword string="to"><help lang="en">Define target</help>
-                <keyword string="shell"><help lang="en">Target is shell</help>
-                    <cpp>b_ShellTarget = true;</cpp>
-                    <tag ref="post-target"/>
-                </keyword>
-                <keyword string="io_mux"><help lang="en">Target is this program input / output multiplexer device</help>
-                    <cpp>b_ShellTarget = false;</cpp>
-                    <tag ref="post-target"/>
-                </keyword>
-            </keyword>
-        </tag>
-        <tag id="post-target" hidden="yes"><tag ref="execute"/></tag>
+        <tag id="post-use" hidden="yes"><tag ref="execute"/></tag>
 
         <!-- Execution. -->
         <tag id="execute" hidden="yes">
-            <endl><cpp>SetDevice(b_ShellTarget, e_Use, pcli_Device);</cpp></endl>
+            <endl><cpp>SetDevice(e_Use, pcli_Device);</cpp></endl>
         </tag>
     </keyword>
 

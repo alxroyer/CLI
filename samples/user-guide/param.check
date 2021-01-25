@@ -15,7 +15,7 @@ Params>enter string "hello"\
 Params>enter int 0
 0
 Params>enter float .5
-0.500000
+0.5
 Params>enter host localhost
 localhost
 Params>exit

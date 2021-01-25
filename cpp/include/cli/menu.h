@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -93,16 +93,6 @@ CLI_NS_BEGIN(cli)
         virtual const tk::String OnPrompt(void) const;
 
     private:
-        //! @brief Help node access (read-only).
-        const Keyword& GetHelpNode(void) const;
-        //! @brief Exit node access (read-only).
-        const Keyword& GetExitNode(void) const;
-        //! @brief Quit node access (read-only).
-        const Keyword& GetQuitNode(void) const;
-        //! @brief Print working menu node access (read-only).
-        const Keyword& GetPwmNode(void) const;
-
-    private:
         //! Help node.
         Keyword* m_pcliHelp;
         //! Exit node.
@@ -111,6 +101,8 @@ CLI_NS_BEGIN(cli)
         Keyword* m_pcliQuit;
         //! Print working menu node.
         Keyword* m_pcliPwm;
+        //! Clean screen node.
+        Keyword* m_pcliCls;
     };
 
 

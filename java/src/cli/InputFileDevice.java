@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,12 +26,12 @@ package cli;
 
 
 /** Input file device. */
-public class InputFileDevice extends IODevice
+public class InputFileDevice extends IODevice.Native
 {
     /** Constructor.
         @param STR_FileName Input file name.
         @param CLI_Out Output device. */
-    public InputFileDevice(String STR_FileName, OutputDevice CLI_Out) {
+    public InputFileDevice(String STR_FileName, OutputDevice.Interface CLI_Out) {
         super(__InputFileDevice(STR_FileName, CLI_Out.getNativeRef()));
     }
     private static final native int __InputFileDevice(String STR_FileName, int I_NativeOutputDeviceRef);

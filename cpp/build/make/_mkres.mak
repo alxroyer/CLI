@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -26,12 +26,12 @@ __CPP_MKRES__ = 1
 # Parameters
 CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 CLI_XML_CPP ?= $(patsubst %.xml,$(INT_DIR)/%.cpp,$(notdir $(CLI_XML_RES)))
-CLI_XML_OBJ = $(patsubst %.cpp,%.o,$(CLI_XML_CPP))
+CLI_XML_OBJ ?= $(patsubst %.cpp,%.o,$(CLI_XML_CPP))
 CLI_MAIN_CPP ?= $(CLI_DIR)/cpp/tests/testsample.cpp
 CLI_MAIN_OBJ ?= $(patsubst %.cpp,$(INT_DIR)/%.o,$(notdir $(CLI_MAIN_CPP)))
 CLI_BINARY ?= $(OUT_DIR)/$(BIN_PREFIX)$(PROJECT)$(BIN_SUFFIX)
 CLI_XSL ?= $(CLI_DIR)/cpp/xsl/cppclic.xsl
-CLI_XSLT_OPTS ?=
+CLI_XSLT_OPTS += --param B_CliStaticCreation 1
 
 # Includes
 PROJECT ?= $(patsubst %.xml,%,$(notdir $(CLI_XML_RES)))
@@ -40,7 +40,7 @@ PRODUCT ?= $(CLI_BINARY)
 CPP_FILES ?= $(CLI_XML_CPP) $(CLI_MAIN_CPP)
 AUTO_DEPS ?= no
 PROJ_INCLUDES ?= -I$(CLI_DIR)/cpp/include -I$(dir $(CLI_XML_RES))
-PROJ_LIBS ?= -L$(dir $(CPP_LIB)) -lclicpp -lncurses
+PROJ_LIBS ?= -L$(dir $(CLI_CPP_LIB)) -lclicpp -lncurses
 PROJ_CLEAN += $(CLI_XML_CPP)
 include $(CLI_DIR)/cpp/build/make/_build.mak
 
@@ -49,7 +49,8 @@ $(CLI_XML_CPP): $(CLI_XML_RES) $(CLI_XSL)
 	@mkdir -p $(dir $(CLI_XML_CPP))
 	xsltproc $(CLI_XSLT_OPTS) $(CLI_XSL) $(CLI_XML_RES) > $(CLI_XML_CPP)
 
-$(CPP_LIB):
+.PHONY: $(CLI_CPP_LIB)
+$(CLI_CPP_LIB):
 	$(call MkDispatch, $(CLI_DIR)/cpp/build/make/libclicpp.mak)
 
 $(CLI_XML_OBJ): CPP_FLAGS += -Wno-unused-label
@@ -65,7 +66,7 @@ $(CLI_DIR)/cpp/build/make/_mkres.vars:
 # Dependencies
 $(CLI_XML_OBJ): $(CLI_XML_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
 $(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
-$(PRODUCT): $(CPP_LIB)
+$(PRODUCT): $(CLI_CPP_LIB)
 
 
 endif

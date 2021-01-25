@@ -79,8 +79,10 @@ $(INT_DIR)/io_device.o: ../../../cpp/src/io_device.cpp \
   ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/menu.h \
   ../../../cpp/include/cli/syntax_node.h \
   ../../../cpp/include/cli/element.h ../../../cpp/include/cli/help.h \
-  ../../../cpp/include/cli/traces.h ../../../cpp/include/cli/assert.h \
-  ../../../cpp/src/constraints.h ../../../cpp/include/cli/namespace.h
+  ../../../cpp/include/cli/string_device.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/include/cli/assert.h ../../../cpp/src/constraints.h \
+  ../../../cpp/include/cli/namespace.h
 $(INT_DIR)/object.o: ../../../cpp/src/object.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/object.h \
   ../../../cpp/include/cli/namespace.h
@@ -167,19 +169,21 @@ $(INT_DIR)/element.o: ../../../cpp/src/element.cpp \
   ../../../cpp/include/cli/help.h \
   ../../../cpp/include/cli/resource_string.h \
   ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_inner.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/element.h \
-  ../../../cpp/include/cli/assert.h ../../../cpp/src/constraints.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/traces.h
+  ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/element.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/constraints.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/traces.h
 $(INT_DIR)/shell.o: ../../../cpp/src/shell.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/shell.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/help.h \
+  ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/object.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
+  ../../../cpp/include/cli/tk_inner.h \
   ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_inner.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/io_mux.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/mt_device.h \
+  ../../../cpp/include/cli/help.h ../../../cpp/include/cli/io_device.h \
   ../../../cpp/include/cli/cli.h ../../../cpp/include/cli/menu.h \
   ../../../cpp/include/cli/syntax_node.h \
   ../../../cpp/include/cli/element.h ../../../cpp/include/cli/menu.h \
@@ -198,6 +202,7 @@ $(INT_DIR)/cli.o: ../../../cpp/src/cli.cpp ../../../cpp/include/cli/pch.h \
   ../../../cpp/include/cli/resource_string.h \
   ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_inner.h \
   ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
   ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
   ../../../cpp/include/cli/keyword.h ../../../cpp/include/cli/endl.h \
   ../../../cpp/include/cli/command_line.h \
@@ -214,8 +219,10 @@ $(INT_DIR)/menu.o: ../../../cpp/src/menu.cpp \
   ../../../cpp/include/cli/resource_string.h \
   ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_inner.h \
   ../../../cpp/include/cli/keyword.h ../../../cpp/include/cli/endl.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/io_device.h \
+  ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/io_device.h \
   ../../../cpp/include/cli/command_line.h ../../../cpp/include/cli/help.h
 $(INT_DIR)/config_menu.o: ../../../cpp/src/config_menu.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/keyword.h \
@@ -226,10 +233,11 @@ $(INT_DIR)/config_menu.o: ../../../cpp/src/config_menu.cpp \
   ../../../cpp/include/cli/resource_string.h \
   ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_inner.h \
   ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/command_line.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/lib_info.h \
-  ../../../cpp/src/config_menu.h ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/include/cli/menu.h
+  ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/lib_info.h ../../../cpp/src/config_menu.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/menu.h
 $(INT_DIR)/traces_menu.o: ../../../cpp/src/traces_menu.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/keyword.h \
   ../../../cpp/include/cli/namespace.h \
@@ -241,11 +249,13 @@ $(INT_DIR)/traces_menu.o: ../../../cpp/src/traces_menu.cpp \
   ../../../cpp/include/cli/param_string.h \
   ../../../cpp/include/cli/param.h ../../../cpp/include/cli/syntax_tag.h \
   ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/command_line.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/assert.h ../../../cpp/src/traces_menu.h \
-  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/menu.h \
-  ../../../cpp/include/cli/traces.h ../../../cpp/src/consistency.h
+  ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/traces_menu.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/traces.h \
+  ../../../cpp/src/consistency.h
 $(INT_DIR)/keyword.o: ../../../cpp/src/keyword.cpp \
   ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/keyword.h \
   ../../../cpp/include/cli/namespace.h \
@@ -269,16 +279,22 @@ $(INT_DIR)/io_mux.o: ../../../cpp/src/io_mux.cpp \
   ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
   ../../../cpp/include/cli/tk_inner.h \
   ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/help.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/assert.h \
-  ../../../cpp/src/consistency.h ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/src/constraints.h ../../../cpp/include/cli/traces.h
-$(INT_DIR)/mt_device.o: ../../../cpp/src/mt_device.cpp \
-  ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/mt_device.h \
-  ../../../cpp/include/cli/namespace.h \
-  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/object.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/tk.h \
-  ../../../cpp/include/cli/tk_inner.h \
+  ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/help.h ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/assert.h ../../../cpp/src/consistency.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/src/constraints.h \
+  ../../../cpp/include/cli/traces.h
+$(INT_DIR)/non_blocking_io_device.o:  \
+ ../../../cpp/src/non_blocking_io_device.cpp \
+  ../../../cpp/include/cli/pch.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/namespace.h ../../../cpp/include/cli/object.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/tk_inner.h \
   ../../../cpp/include/cli/resource_string.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/help.h \
-  ../../../cpp/include/cli/assert.h
+  ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/help.h ../../../cpp/include/cli/assert.h \
+  ../../../cpp/src/constraints.h ../../../cpp/include/cli/namespace.h \
+  ../../../cpp/include/cli/traces.h

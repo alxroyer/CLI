@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -73,25 +73,25 @@ public abstract class Menu extends SyntaxNode {
                 false otherwise. */
     public abstract boolean execute(CommandLine CLI_CmdLine);
     private final boolean __execute(int I_NativeCmdLineRef) {
-        Traces.traceMethod("Menu.__execute(I_NativeCmdLineRef)");
-        Traces.traceParam("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Menu.__execute(I_NativeCmdLineRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString()));
 
         boolean b_Res = false;
         try {
             NativeObject cli_CommandLine = NativeObject.getObject(I_NativeCmdLineRef);
             if (cli_CommandLine != null) {
-                Traces.traceValue("cli_CommandLine", cli_CommandLine.toString());
+                Traces.trace(NativeTraces.CLASS, NativeTraces.value("cli_CommandLine", cli_CommandLine.toString()));
                 if (cli_CommandLine instanceof CommandLine) {
                     b_Res = execute((CommandLine) cli_CommandLine);
                 }
             } else {
-                System.err.println("Could not find CommandLine reference " + new Integer(I_NativeCmdLineRef));
+                getErrorStream().put("Could not find CommandLine reference " + new Integer(I_NativeCmdLineRef)).endl();
             }
         } catch (Exception e) {
             getErrorStream().printStackTrace(e);
         }
 
-        Traces.traceReturn("Menu.__execute()", new Boolean(b_Res).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("Menu.__execute()", new Boolean(b_Res).toString()));
         return b_Res;
     }
 
@@ -100,9 +100,9 @@ public abstract class Menu extends SyntaxNode {
     public void onExit() {
     }
     private final void __onExit() {
-        Traces.traceMethod("Menu.__onExit()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Menu.__onExit()"));
         onExit();
-        Traces.traceReturn("Menu.__onExit()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("Menu.__onExit()"));
     }
 
     /** Handler called when then menu displays its prompt.
@@ -111,9 +111,9 @@ public abstract class Menu extends SyntaxNode {
         return "";
     }
     private final String __onPrompt() {
-        Traces.traceMethod("Menu.__onPrompt()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Menu.__onPrompt()"));
         String j_Prompt = onPrompt();
-        Traces.traceReturn("Menu.__onPrompt()", j_Prompt);
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("Menu.__onPrompt()", j_Prompt));
         return j_Prompt;
     }
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -109,6 +109,13 @@ public abstract class Cli extends Menu
     }
     private static final native int __getMenu(int I_NativeCliRef, String J_MenuName);
 
+    /** Determines whether the configuration menu is currently enabled.
+        @return true when the configuration menu is curently enabled, false otherwise. */
+    public boolean isConfigMenuEnabled() {
+        return __isConfigMenuEnabled(this.getNativeRef());
+    }
+    private static final native boolean __isConfigMenuEnabled(int I_NativeCliRef);
+
     /** Configuration menu enabling.
         @param B_Enable Enable or disable the configuration menu. */
     public final void enableConfigMenu(boolean B_Enable) {
@@ -123,14 +130,14 @@ public abstract class Cli extends Menu
         return true;
     }
     private final boolean __onError(int I_NativeLocationRef, int I_NativeErrorMessageRef) {
-        Traces.traceMethod("Menu.__onError()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Menu.__onError()"));
         boolean b_Res = true;
         ResourceString cli_Location = (ResourceString) NativeObject.getObject(I_NativeLocationRef);
         ResourceString cli_ErrorMessage = (ResourceString) NativeObject.getObject(I_NativeErrorMessageRef);
         if ((cli_Location != null) && (cli_ErrorMessage != null)) {
             b_Res = onError(cli_Location, cli_ErrorMessage);
         }
-        Traces.traceReturn("Menu.__onError()", new Boolean(b_Res).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("Menu.__onError()", new Boolean(b_Res).toString()));
         return b_Res;
     }
 }

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -60,7 +60,7 @@ CPP_FILES += $(CLI_DIR)/cpp/src/traces_menu.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/keyword.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/endl.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/io_mux.cpp
-CPP_FILES += $(CLI_DIR)/cpp/src/mt_device.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/non_blocking_io_device.cpp
 
 PROJ_CPP_FLAGS += -DCLI_NO_STL
 PROJ_CPP_FLAGS += -DCLI_MAX_CMD_LINE_LENGTH=256
@@ -72,6 +72,14 @@ include _build.mak
 .PHONY: run
 run: build
 	$(PRODUCT)
+
+# Debug and help
+include $(CLI_DIR)/build/make/_help.mak
+
+.PHONY: $(CLI_DIR)/cpp/build/make/cmdlinetest.help
+help: $(CLI_DIR)/cpp/build/make/cmdlinetest.help
+$(CLI_DIR)/cpp/build/make/cmdlinetest.help:
+	$(call PrintHelp, run, Run unit-test)
 
 # Dependencies
 include $(AUTO_DEPS_FILE)

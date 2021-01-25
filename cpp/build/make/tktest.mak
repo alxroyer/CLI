@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -36,6 +36,7 @@ CPP_FILES += $(CLI_DIR)/cpp/src/object.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/tk.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/traces.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/io_device.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/string_device.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/help.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/resource_string.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/debug.cpp
@@ -47,6 +48,14 @@ include _build.mak
 .PHONY: run
 run: build
 	$(PRODUCT)
+
+# Debug and help
+include $(CLI_DIR)/build/make/_help.mak
+
+.PHONY: $(CLI_DIR)/cpp/build/make/tktest.help
+help: $(CLI_DIR)/cpp/build/make/tktest.help
+$(CLI_DIR)/cpp/build/make/tktest.help:
+	$(call PrintHelp, run, Run unit-test)
 
 # Dependencies
 include $(AUTO_DEPS_FILE)

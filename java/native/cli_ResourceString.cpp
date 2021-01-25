@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,72 +30,76 @@
 #include "cli_ResourceString.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ResourceString__1_1ResourceString__(JNIEnv* PJ_Env, jclass PJ_Class)
 {
-    NativeTraces::TraceMethod("ResourceString.__ResourceString()");
-    cli::ResourceString* pcli_String = NULL;
-    if ((pcli_String = new cli::ResourceString()))
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ResourceString.__ResourceString()") << cli::endl;
+    NativeObject::REF i_StringRef = 0;
+    if (cli::ResourceString* const pcli_String = new cli::ResourceString())
     {
-        NativeObject::Use(pcli_String);
+        NativeObject::Use(*pcli_String);
+        i_StringRef = NativeObject::GetNativeRef(*pcli_String);
     }
-    NativeTraces::TraceReturn("ResourceString.__ResourceString()", "%d", (int) pcli_String);
-    return (jint) pcli_String;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ResourceString.__ResourceString()", i_StringRef) << cli::endl;
+    return i_StringRef;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ResourceString__1_1ResourceString__I(JNIEnv* PJ_Env, jclass PJ_Class, jint I_NativeStringRef)
 {
-    NativeTraces::TraceMethod("ResourceString.__ResourceString(I_NativeStringRef)");
-    NativeTraces::TraceParam("I_NativeStringRef", "%d", I_NativeStringRef);
-    cli::ResourceString* pcli_String = NULL;
-    if (const cli::ResourceString* const pcli_Src = (const cli::ResourceString*) I_NativeStringRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ResourceString.__ResourceString(I_NativeStringRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeStringRef", I_NativeStringRef) << cli::endl;
+    NativeObject::REF i_StringRef = 0;
+    if (const cli::ResourceString* const pcli_Src = NativeObject::GetNativeObject<const cli::ResourceString*>(I_NativeStringRef))
     {
-        if ((pcli_String = new cli::ResourceString(*pcli_Src)))
+        if (cli::ResourceString* const pcli_String = new cli::ResourceString(*pcli_Src))
         {
-            NativeObject::Use(pcli_String);
+            NativeObject::Use(*pcli_String);
+            i_StringRef = NativeObject::GetNativeRef(*pcli_String);
         }
     }
-    NativeTraces::TraceReturn("ResourceString.__ResourceString()", "%d", (int) pcli_String);
-    return (jint) pcli_String;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ResourceString.__ResourceString()", i_StringRef) << cli::endl;
+    return i_StringRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ResourceString__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeStringRef)
 {
-    NativeTraces::TraceMethod("ResourceString.__finalize(I_NativeStringRef)");
-    NativeTraces::TraceParam("I_NativeStringRef", "%d", I_NativeStringRef);
-    if (const cli::ResourceString* const pcli_String = (const cli::ResourceString*) I_NativeStringRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ResourceString.__finalize(I_NativeStringRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeStringRef", I_NativeStringRef) << cli::endl;
+    if (const cli::ResourceString* const pcli_String = NativeObject::GetNativeObject<const cli::ResourceString*>(I_NativeStringRef))
     {
-        NativeObject::Free(pcli_String);
+        NativeObject::Free(*pcli_String);
     }
-    NativeTraces::TraceReturn("ResourceString.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("ResourceString.__finalize()") << cli::endl;
 }
 
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_ResourceString__1_1addString(
+extern "C" JNIEXPORT jboolean JNICALL Java_cli_ResourceString__1_1setString(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeStringRef, jint E_Lang, jstring PJ_ResourceString)
 {
-    NativeTraces::TraceMethod("ResourceString.__addString(I_NativeStringRef, E_Lang, PJ_ResourceString)");
-    NativeTraces::TraceParam("I_NativeStringRef", "%d", I_NativeStringRef);
-    NativeTraces::TraceParam("E_Lang", "%d", E_Lang);
-    jboolean b_Res = false;
-    if (cli::ResourceString* const pcli_String = (cli::ResourceString*) I_NativeStringRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ResourceString.__addString(I_NativeStringRef, E_Lang, PJ_ResourceString)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeStringRef", I_NativeStringRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_ResourceString", NativeExec::Java2Native(PJ_ResourceString).c_str()) << cli::endl;
+    bool b_Res = false;
+    if (cli::ResourceString* const pcli_String = NativeObject::GetNativeObject<cli::ResourceString*>(I_NativeStringRef))
     {
-        if (PJ_Env != NULL)
-        {
-            if (const char* const str_String = PJ_Env->GetStringUTFChars(PJ_ResourceString, 0))
-            {
-                NativeTraces::TraceParam("PJ_ResourceString", "%s", str_String);
-                pcli_String->SetString((cli::ResourceString::LANG) E_Lang, str_String);
-                b_Res = true;
-                PJ_Env->ReleaseStringUTFChars(PJ_ResourceString, str_String);
-            }
-        }
+        pcli_String->SetString((cli::ResourceString::LANG) E_Lang, NativeExec::Java2Native(PJ_ResourceString).c_str());
+        b_Res = true;
     }
-    NativeTraces::TraceReturn("ResourceString.__addString()", "%d", (int) b_Res);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("ResourceString.__addString()", b_Res) << cli::endl;
     return b_Res;
 }
 
@@ -103,13 +107,15 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_ResourceString__1_1hasString(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeStringRef, jint E_Lang)
 {
-    NativeTraces::TraceMethod("ResourceString.__hasString()");
-    jboolean b_Res = false;
-    if (const cli::ResourceString* const pcli_String = (cli::ResourceString*) I_NativeStringRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ResourceString.__hasString()") << cli::endl;
+    bool b_Res = false;
+    if (const cli::ResourceString* const pcli_String = NativeObject::GetNativeObject<cli::ResourceString*>(I_NativeStringRef))
     {
         b_Res = pcli_String->HasString((cli::ResourceString::LANG) E_Lang);
     }
-    NativeTraces::TraceReturn("ResourceString.__hasString()", "%d", (int) b_Res);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("ResourceString.__hasString()", b_Res) << cli::endl;
     return b_Res;
 }
 
@@ -117,18 +123,16 @@ extern "C" JNIEXPORT jstring JNICALL Java_cli_ResourceString__1_1getString(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeStringRef, jint E_Lang)
 {
-    NativeTraces::TraceMethod("ResourceString.__getString()");
-    NativeTraces::TraceParam("I_NativeStringRef", "%d", I_NativeStringRef);
-    NativeTraces::TraceParam("E_Lang", "%d", E_Lang);
-    jstring j_ResourceString = NULL;
-    if (const cli::ResourceString* const pcli_String = (cli::ResourceString*) I_NativeStringRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ResourceString.__getString()") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeStringRef", I_NativeStringRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
+    std::string str_ResourceString;
+    if (const cli::ResourceString* const pcli_String = NativeObject::GetNativeObject<cli::ResourceString*>(I_NativeStringRef))
     {
-        if (PJ_Env != NULL)
-        {
-            const std::string str_String = (const char*) pcli_String->GetString((cli::ResourceString::LANG) E_Lang);
-            NativeTraces::TraceReturn("ResourceString.__getString()", "%s", str_String.c_str());
-            j_ResourceString = PJ_Env->NewStringUTF(str_String.c_str());
-        }
+        str_ResourceString = (const char*) pcli_String->GetString((cli::ResourceString::LANG) E_Lang);
     }
-    return j_ResourceString;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndStr("ResourceString.__getString()", str_ResourceString.c_str()) << cli::endl;
+    return NativeExec::Native2Java(str_ResourceString);
 }

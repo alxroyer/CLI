@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,8 +30,6 @@
 
 #include "cli/shell.h"
 #include "cli/io_device.h"
-#include "cli/io_mux.h"
-#include "cli/mt_device.h"
 #include "cli/cli.h"
 #include "cli/menu.h"
 #include "cli/command_line.h"
@@ -71,8 +69,7 @@ Shell::Shell(const Cli& CLI_Cli)
     m_qMenus(MAX_MENU_PER_CLI),
     m_cliCmdLine(* new CmdLineEdition()),
     m_cliHistory(* new CmdLineHistory(HISTORY_STACK_SIZE)),
-    m_eThreadSafeCmd(THREAD_SAFE_NONE),
-    m_bRestoreTracesOnFinish(false)
+    m_eThreadSafeCmd(THREAD_SAFE_NONE)
 {
     EnsureCommonDevices();
     EnsureTraces();
@@ -136,26 +133,16 @@ const IODevice& Shell::GetInput(void) const
 
 const OutputDevice& Shell::GetStream(const STREAM_TYPE E_StreamType) const
 {
+    CLI_ASSERT((E_StreamType >= 0) && (E_StreamType < STREAM_TYPES_COUNT));
     if ((E_StreamType >= 0) && (E_StreamType < STREAM_TYPES_COUNT))
     {
         if (m_artStream[E_StreamType].bEnable)
         {
-            // This is a hack to have IOMux multiplexing output correctly.
-            const OutputDevice* pcli_Stream = m_artStream[E_StreamType].pcliStream;
-            while (const IOMux* const pcli_IOMux = dynamic_cast<const IOMux*>(pcli_Stream))
+            if (m_artStream[E_StreamType].pcliStream != NULL)
             {
-                pcli_Stream = & pcli_IOMux->GetOutput(E_StreamType);
-            }
-
-            if (pcli_Stream != NULL)
-            {
-                return *pcli_Stream;
+                return *m_artStream[E_StreamType].pcliStream;
             }
         }
-    }
-    else
-    {
-        CLI_ASSERT(false);
     }
 
     // Default to null device.
@@ -306,10 +293,10 @@ void Shell::Run(IODevice& CLI_IODevice)
 {
     if (StartExecution(CLI_IODevice))
     {
-        if (MonoThreadDevice* const pcli_MTDevice = dynamic_cast<MonoThreadDevice*>(m_pcliInput))
+        if (NonBlockingIODevice* const pcli_NonBlockingIODevice = dynamic_cast<NonBlockingIODevice*>(m_pcliInput))
         {
             // Simply attach the shell and wait for characters to be input.
-            pcli_MTDevice->AttachShell(*this);
+            pcli_NonBlockingIODevice->AttachKeyReceiver(*this);
         }
         else
         {
@@ -329,14 +316,6 @@ const bool Shell::StartExecution(IODevice& CLI_IODevice)
     // Open devices.
     if (OpenDevices(CLI_IODevice))
     {
-        // Trace device management.
-        m_bRestoreTracesOnFinish = false;
-        if (! GetTraces().IsStreamSet())
-        {
-            GetTraces().SetStream(CLI_IODevice);
-            m_bRestoreTracesOnFinish = true;
-        }
-
         // Check the CLI is the first menu.
         if ((m_pcliCli != NULL) && (m_qMenus.GetHead() == m_pcliCli))
         {
@@ -380,14 +359,14 @@ void Shell::MainLoop(void)
     }
 }
 
-void Shell::OnMonoThreadKey(MonoThreadDevice& CLI_Source, const KEY E_KeyCode)
+void Shell::OnNonBlockingKey(NonBlockingIODevice& CLI_Source, const KEY E_KeyCode)
 {
     bool b_QuitShell = true;
 
     if ((! m_qMenus.IsEmpty())                      // Menu stack control.
                                                     // If there are menus in the menu stack,
                                                     // it means we are still waiting for command lines.
-        && (m_eThreadSafeCmd != THREAD_SAFE_QUIT)   // Thread safe processing (should be useless in mono-thread).
+        && (m_eThreadSafeCmd != THREAD_SAFE_QUIT)   // Thread safe processing (should be useless in non-blocking execution mode).
         && (E_KeyCode != NULL_KEY)                  // End of input.
         && (& CLI_Source == m_pcliInput))           // Input source control.
     {
@@ -407,10 +386,8 @@ void Shell::OnMonoThreadKey(MonoThreadDevice& CLI_Source, const KEY E_KeyCode)
     if (m_qMenus.IsEmpty()                          // Menu stack control.
                                                     // If there are no menus left in the menu stack,
                                                     // it means the thing is done.
-        || (m_eThreadSafeCmd == THREAD_SAFE_QUIT))  // Thread safe processing (should be useless in mono-thread).
+        || (m_eThreadSafeCmd == THREAD_SAFE_QUIT))  // Thread safe processing (should be useless in non-blocking execution mode).
     {
-        // Detach the shell of the mono-thread device.
-        CLI_Source.DetachShell(*this);
         // Finish execution.
         FinishExecution();
     }
@@ -420,6 +397,12 @@ const bool Shell::FinishExecution(void)
 {
     bool b_Res = true;
 
+    if (NonBlockingIODevice* const pcli_NonBlockingInput = dynamic_cast<NonBlockingIODevice*>(m_pcliInput))
+    {
+        // Detach the shell of the non-blocking device.
+        pcli_NonBlockingInput->DetachKeyReceiver(*this);
+    }
+
     // Leave the shell.
     PromptByeMessage();
 
@@ -428,15 +411,6 @@ const bool Shell::FinishExecution(void)
     {
         GetTraces().Trace(INTERNAL_ERROR) << "Could not restore a valid status on shell exit." << endl;
         b_Res = false;
-    }
-
-    // Trace device management.
-    if (m_bRestoreTracesOnFinish)
-    {
-        if (! GetTraces().UnsetStream())
-        {
-            b_Res = false;
-        }
     }
 
     // Close devices.
@@ -466,7 +440,7 @@ const unsigned int Shell::GetHelpOffset(void) const
 
 const bool Shell::OpenDevices(IODevice& CLI_IODevice)
 {
-    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' opening devices." << endl;
+    GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetName() << "' opening devices." << endl;
 
     bool b_Res = true;
 
@@ -524,6 +498,12 @@ const bool Shell::OpenDevices(IODevice& CLI_IODevice)
         }
     }
 
+    // Trace device management.
+    if (! GetTraces().SetStream(const_cast<OutputDevice&>(GetStream(ERROR_STREAM))))
+    {
+        b_Res = false;
+    }
+
     return b_Res;
 }
 
@@ -532,6 +512,12 @@ const bool Shell::CloseDevices(void)
     GetTraces().Trace(TRACE_SHELL) << "Shell for CLI '" << GetCli().GetKeyword() << "' closing devices." << endl;
 
     bool b_Res = true;
+
+    // Trace device management.
+    if (! GetTraces().UnsetStream(const_cast<OutputDevice&>(GetStream(ERROR_STREAM))))
+    {
+        b_Res = false;
+    }
 
     // Close down devices.
     {
@@ -570,11 +556,7 @@ const bool Shell::CloseDevices(void)
         {
             if (m_artStream[i].pcliStream == m_pcliInput)
             {
-                if (! m_artStream[i].pcliStream->FreeInstance(__CALL_INFO__))
-                {
-                    PrintError(ResourceString(), m_artStream[i].pcliStream->GetLastError());
-                    b_Res = false;
-                }
+                m_artStream[i].pcliStream->FreeInstance(__CALL_INFO__);
                 m_artStream[i].pcliStream = NULL;
             }
         }
@@ -582,11 +564,7 @@ const bool Shell::CloseDevices(void)
         // Input.
         if (m_pcliInput != NULL)
         {
-            if (! m_pcliInput->FreeInstance(__CALL_INFO__))
-            {
-                PrintError(ResourceString(), m_pcliInput->GetLastError());
-                b_Res = false;
-            }
+            m_pcliInput->FreeInstance(__CALL_INFO__);
             m_pcliInput = NULL;
         }
     }
@@ -696,11 +674,11 @@ const Menu* const Shell::GetCurrentMenu(const int I_MenuIndex) const
     }
 }
 
-void Shell::ExitMenu(void)
+void Shell::ExitMenu(const bool B_PromptMenu)
 {
     const tk::String tk_Left = m_cliCmdLine.GetLeft(), tk_Right = m_cliCmdLine.GetRight();
     m_cliCmdLine.Reset();
-    OnExit(false);
+    OnExit(B_PromptMenu);
     m_cliCmdLine.Set(tk_Left, tk_Right);
 }
 
@@ -709,7 +687,12 @@ void Shell::Quit(void)
     // Remove all menus of the menu stack to let the shell quit.
     while (! m_qMenus.IsEmpty())
     {
-        ExitMenu();
+        ExitMenu(false);
+    }
+
+    if (dynamic_cast<NonBlockingIODevice*>(m_pcliInput))
+    {
+        FinishExecution();
     }
 }
 
@@ -724,7 +707,10 @@ void Shell::DisplayHelp(void)
     {
         const tk::String tk_Left = m_cliCmdLine.GetLeft(), tk_Right = m_cliCmdLine.GetRight();
         m_cliCmdLine.Reset();
-        OnHelp(false, true);
+        OnHelp(
+            false,  // Execution within the context of a command line processing. OnExecute() does already prompt the menu.
+            false   // Just help, no completion
+        );
         m_cliCmdLine.Set(tk_Left, tk_Right);
     }
 }
@@ -756,8 +742,31 @@ void Shell::PrintWorkingMenu(void)
     GetStream(OUTPUT_STREAM) << endl;
 }
 
-void Shell::EnterMenu(const Menu& CLI_Menu)
+void Shell::CleanScreen(const bool B_PromptMenu)
 {
+    m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
+    m_cliCmdLine.Reset();
+    GetStream(OUTPUT_STREAM).CleanScreen();
+    if (B_PromptMenu)
+    {
+        PromptMenu();
+    }
+}
+
+void Shell::Beep(void)
+{
+    if (m_bBeep)
+    {
+        GetStream(ERROR_STREAM).Beep();
+    }
+}
+
+void Shell::EnterMenu(const Menu& CLI_Menu, const bool B_PromptMenu)
+{
+    if (B_PromptMenu)
+    {
+        m_cliCmdLine.NextLine(GetStream(ECHO_STREAM)); // Same call as OnExit().
+    }
     if (! m_qMenus.AddTail(& CLI_Menu))
     {
         ResourceString cli_Error = ResourceString()
@@ -768,7 +777,10 @@ void Shell::EnterMenu(const Menu& CLI_Menu)
             cli_Error
         );
     }
-    //  PromptMenu();
+    if (B_PromptMenu)
+    {
+        PromptMenu();
+    }
 }
 
 void Shell::OnKey(const KEY E_KeyCode)
@@ -801,14 +813,14 @@ void Shell::OnKey(const KEY E_KeyCode)
     case BREAK:
     case ESCAPE:    OnEscape();                             break;
     case LOGOUT:    OnExit(true);                           break;
-    case TAB:       OnHelp(true, false);                    break;
+    case TAB:       OnHelp(true, true);                     break;
     case QUESTION:
         if (m_cliCmdLine.GetLine().GetChar(m_cliCmdLine.GetLine().GetLength() - 1) == '\\')
             OnPrintableChar(E_KeyCode);
         else
-            OnHelp(true, true);
+            OnHelp(true, false);
         break;
-    case CLS:       OnCleanScreen();                        break;
+    case CLS:       CleanScreen(true);                      break;
 
     case KEY_a: case KEY_aacute: case KEY_agrave: case KEY_auml: case KEY_acirc:
     case KEY_b: case KEY_c: case KEY_ccedil: case KEY_d:
@@ -916,17 +928,6 @@ void Shell::OnKeyRight(void)
     }
 }
 
-void Shell::OnCleanScreen(void)
-{
-    m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
-    m_cliCmdLine.Reset();
-    GetStream(OUTPUT_STREAM).CleanScreen();
-    if (! m_qMenus.IsEmpty())
-    {
-        PromptMenu();
-    }
-}
-
 void Shell::OnBackspace(void)
 {
     if (! m_cliCmdLine.GetLeft().IsEmpty())
@@ -955,16 +956,13 @@ void Shell::OnEscape(void)
 {
     m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
     m_cliCmdLine.Reset();
-    if (! m_qMenus.IsEmpty())
-    {
-        PromptMenu();
-    }
+    PromptMenu();
 }
 
-void Shell::OnExit(const bool B_Edition)
+void Shell::OnExit(const bool B_PromptMenu)
 {
     // Reset the current line if needed.
-    if (B_Edition)
+    if (B_PromptMenu)
     {
         m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
     }
@@ -975,13 +973,13 @@ void Shell::OnExit(const bool B_Edition)
     {
         pcli_Menu->OnExit();
     }
-    if (B_Edition)
+    if (B_PromptMenu)
     {
         PromptMenu();
     }
 }
 
-void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
+void Shell::OnHelp(const bool B_PromptMenu, const bool B_Completion)
 {
     if (! m_qMenus.IsEmpty())
     {
@@ -1002,7 +1000,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
             // Determine whether help should be printed, and completion activated.
             bool b_PrintHelpList = false;
 
-            if (B_HelpOnly)
+            if (! B_Completion)
             {
                 // Just print help.
                 b_PrintHelpList = true;
@@ -1086,7 +1084,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
                 };
                 cli_Elements.Sort(_::cmp);
 
-                if (B_Edition)
+                if (B_PromptMenu)
                 {
                     m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
                 }
@@ -1100,13 +1098,13 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
                     PrintHelp(*cli_Elements.GetAt(it));
                 }
 
-                if (B_Edition)
+                if (B_PromptMenu)
                 {
                     PromptMenu();
                 }
             }
             // Completion so far.
-            else if ((! B_HelpOnly) && (! str_CompletionSoFar.IsEmpty()))
+            else if (B_Completion && (! str_CompletionSoFar.IsEmpty()))
             {
                 m_cliCmdLine.Delete(GetStream(ECHO_STREAM), - cli_CommandLine.GetNumBackspacesForCompletion());
                 m_cliCmdLine.Put(GetStream(ECHO_STREAM), str_CompletionSoFar);
@@ -1114,7 +1112,7 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
         }
         else
         {
-            if (B_Edition)
+            if (B_PromptMenu)
             {
                 m_cliCmdLine.NextLine(GetStream(ECHO_STREAM));
             }
@@ -1122,13 +1120,12 @@ void Shell::OnHelp(const bool B_Edition, const bool B_HelpOnly)
                 (m_pcliInput != NULL) ? m_pcliInput->GetLocation() : ResourceString(),
                 cli_CommandLine.GetLastError()
             );
-            if (B_Edition)
+            if (B_PromptMenu)
             {
                 PromptMenu();
             }
         }
     }
-
 }
 
 void Shell::OnExecute(void)
@@ -1168,7 +1165,7 @@ void Shell::OnExecute(void)
                     {
                         if (pcli_Endl->GetMenuRef() != NULL)
                         {
-                            EnterMenu(pcli_Endl->GetMenuRef()->GetMenu());
+                            EnterMenu(pcli_Endl->GetMenuRef()->GetMenu(), false);
                         }
                     }
                 }
@@ -1249,13 +1246,5 @@ void Shell::PrintHelp(const Element& CLI_Element)
     }
     GetStream(OUTPUT_STREAM) << str_Help;
     GetStream(OUTPUT_STREAM) << endl;
-}
-
-void Shell::Beep(void)
-{
-    if (m_bBeep)
-    {
-        GetStream(ERROR_STREAM).Beep();
-    }
 }
 

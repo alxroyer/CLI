@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -63,6 +63,11 @@ void StringDevice::PutString(const char* const STR_Out) const
 void StringDevice::Beep(void) const
 {
     // Nothing to do.
+}
+
+void StringDevice::CleanScreen(void) const
+{
+    m_tkString.Reset();
 }
 
 const tk::String& StringDevice::GetString(void) const

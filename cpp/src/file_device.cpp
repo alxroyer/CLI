@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -231,17 +231,31 @@ const ResourceString InputFileDevice::GetLocation(void) const
 
 void InputFileDevice::PutString(const char* const STR_Out) const
 {
-    m_cliOutput.PutString(STR_Out);
+    if (! m_cliOutput.WouldOutput(*this)) // Avoid infinite loops.
+    {
+        m_cliOutput.PutString(STR_Out);
+    }
 }
 
 void InputFileDevice::Beep(void) const
 {
-    m_cliOutput.Beep();
+    if (! m_cliOutput.WouldOutput(*this)) // Avoid infinite loops.
+    {
+        m_cliOutput.Beep();
+    }
 }
 
-const OutputDevice& InputFileDevice::GetActualDevice(void) const
+void InputFileDevice::CleanScreen(void) const
 {
-    return m_cliOutput.GetActualDevice();
+    if (! m_cliOutput.WouldOutput(*this)) // Avoid infinite loops.
+    {
+        m_cliOutput.CleanScreen();
+    }
+}
+
+const bool InputFileDevice::WouldOutput(const OutputDevice& CLI_Device) const
+{
+    return (IODevice::WouldOutput(CLI_Device) || m_cliOutput.WouldOutput(CLI_Device));
 }
 
 const tk::String InputFileDevice::GetFileName(void) const

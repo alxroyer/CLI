@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,8 +25,7 @@
 -->
 
 
-<section xmlns="http://docbook.org/docbook-ng">
-<title>Introduction</title>
+<section id="intro"><title id="intro.title">Introduction</title>
 
     <para>
     CLI is a library and a set of tools
@@ -37,16 +36,16 @@
         <listitem>Transforming it using the tools of the library;</listitem>
         <listitem>Plugging it into an existing program.</listitem>
         </orderedlist>
-    These points are discussed in the <link linkend="howto">first section</link>.
+    These points are discussed in the <link linkend="howto" endterm="howto.title"/> section.
     </para>
 
     <para>
-    <link linkend="xmlres">Second section</link> is a reference manual for XML resource files syntax.
+    The <link linkend="xmlres" endterm="xmlres.title"/> section is a reference manual for XML resource files syntax,
+    and the <link linkend="ui" endterm="ui.title"/> section describes additional classes that help interacting with the user.
     </para>
 
     <para>
-    <link linkend="more">Last section</link> gives advanced information
-    for users having specific needs.
+    Eventually the <link linkend="adv" endterm="adv.title"/> section gives advanced information for users having specific needs.
     </para>
 
 </section>

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,6 +25,7 @@
 #include "cli/pch.h"
 
 #include <stdlib.h>
+#include <string.h> // strcmp
 
 #include "cli/common.h"
 #include "cli/shell.h"
@@ -81,27 +82,48 @@ int main(int I_Args, char** ARSTR_Args)
         cli::OutputDevice::GetStdErr() << "Several CLI found" << cli::endl;
     }
 
-    // Create a shell.
-    cli::Shell cli_Shell(*cli_List.GetHead());
-
-    // Disable following lines if you wish to disable streams.
-    // You can also redirect to something else.
-    //  cli_Shell.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
-    //  cli_Shell.SetStream(cli::PROMPT_STREAM, cli::OutputDevice::GetNullDevice());
-    //  cli_Shell.SetStream(cli::ECHO_STREAM, cli::OutputDevice::GetNullDevice());
-    //  cli_Shell.SetStream(cli::OUTPUT_STREAM, cli::OutputDevice::GetNullDevice());
-    //  cli_Shell.SetStream(cli::ERROR_STREAM, cli::OutputDevice::GetNullDevice());
-
     // Launch it.
     if (ul_TcpPort != 0)
     {
         // Run as a telnet server.
-        cli::TelnetServer cli_TelnetServer(cli_Shell, ul_TcpPort);
+        class MyTelnetServer : public cli::TelnetServer
+        {
+        private:
+            const cli::Cli& m_cliCli;
+        public:
+            MyTelnetServer(const cli::Cli& CLI_Cli, const unsigned long UL_TcpPort)
+              : TelnetServer(1, UL_TcpPort, cli::ResourceString::LANG_EN), m_cliCli(CLI_Cli) // because the CLI is allocated once only, allow only one client.
+            {
+            }
+            virtual cli::Shell* const OnNewConnection(const cli::TelnetConnection& CLI_NewConnection)
+            {
+                return new cli::Shell(m_cliCli);
+            }
+            virtual void OnCloseConnection(cli::Shell* const PCLI_Shell, const cli::TelnetConnection& CLI_ClosedConnection)
+            {
+                if (PCLI_Shell != NULL)
+                {
+                    delete PCLI_Shell;
+                }
+            }
+        };
+        MyTelnetServer cli_TelnetServer(*cli_List.GetHead(), ul_TcpPort);
         cli::OutputDevice::GetStdOut() << "Starting server on port " << ul_TcpPort << cli::endl;
         cli_TelnetServer.StartServer();
     }
     else
     {
+        // Create a shell.
+        cli::Shell cli_Shell(*cli_List.GetHead());
+
+        // Enable following lines if you wish to disable streams.
+        // You can also redirect to something else.
+        //  cli_Shell.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
+        //  cli_Shell.SetStream(cli::PROMPT_STREAM, cli::OutputDevice::GetNullDevice());
+        //  cli_Shell.SetStream(cli::ECHO_STREAM, cli::OutputDevice::GetNullDevice());
+        //  cli_Shell.SetStream(cli::OUTPUT_STREAM, cli::OutputDevice::GetNullDevice());
+        //  cli_Shell.SetStream(cli::ERROR_STREAM, cli::OutputDevice::GetNullDevice());
+
         // Run in a console.
         cli::Console cli_Console(false);
         cli_Shell.Run(cli_Console);

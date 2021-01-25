@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,10 +29,10 @@
 
  <keyword string="say"><help lang="en">Tell Something.</help>
   <keyword string="hello"><help lang="en">Just say hello.</help>
-   <endl><cpp><out/> &lt;&lt; "Hello!" &lt;&lt; cli::endl;</cpp></endl>
+   <endl><cpp>sayHello(<out/>);</cpp></endl>
   </keyword>
   <keyword string="bye"><help lang="en">Say goodbye.</help>
-   <endl><cpp><out/> &lt;&lt; "Bye." &lt;&lt; cli::endl;</cpp></endl>
+   <endl><cpp>sayBye(<out/>);</cpp></endl>
   </keyword>
  </keyword>
 </cli>

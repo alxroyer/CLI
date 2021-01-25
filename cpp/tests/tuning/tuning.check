@@ -49,6 +49,7 @@ Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language
@@ -60,6 +61,7 @@ Please enter a command line: help
 Please enter a command line: cli-config
 Please enter a command line:  help
   beep            Modify beep behavior
+  cls             Clean screen
   echo            Modify echo behavior
   exit            Exit menu 'cli-config'
   help            Get help
@@ -73,6 +75,7 @@ Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language
@@ -84,6 +87,7 @@ Please enter a command line: help
 Please enter a command line: cli-config
 Please enter a command line:  help
   beep            Modify beep behavior
+  cls             Clean screen
   echo            Modify echo behavior
   exit            Exit menu 'cli-config'
   help            Get help
@@ -96,6 +100,7 @@ Please enter a command line: cli-config off
 Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
+  cls             Clean screen
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language
@@ -113,6 +118,7 @@ Please enter a command line: help
   beep            Beep enabling
   bye             Bye message modification
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'tuning'
   help            Get help
   language        Select language
@@ -124,6 +130,7 @@ Please enter a command line: help
 Please enter a command line: cli-config
 Please enter a command line:  help
   beep            Modify beep behavior
+  cls             Clean screen
   echo            Modify echo behavior
   exit            Exit menu 'cli-config'
   help            Get help

@@ -1,7 +1,7 @@
 sample-cli>print author
 Alexis Royer
 sample-cli>print float 3.14
-3.140000
+3.14
 sample-cli>print int 123
 123
 sample-cli>print word Hello

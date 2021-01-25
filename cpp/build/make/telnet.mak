@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -50,9 +50,15 @@ TELNET_CHECK = $(INT_DIR)/empty.check
 endif
 ifeq ($(TELNET_GOAL),server)
 PROJECT = telnet-server
-CLI_XML_RES = $(CLI_DIR)/samples/user-guide/empty.xml
-CLI_MAIN_CPP = $(SRC_DIR)/goserver.cpp
-include _mkres.mak
+PROJECT_DEPS = libclicpp.mak
+CLI_XML = $(CLI_DIR)/samples/user-guide/empty.xml
+CLI_H = $(INT_DIR)/empty.h
+CPP_FILES = $(SRC_DIR)/goserver.cpp
+AUTO_DEPS = no
+PROJ_INCLUDES = -I$(CLI_DIR)/cpp/include -I$(INT_DIR)
+PROJ_LIBS = -L$(dir $(CLI_CPP_LIB)) -lclicpp -lncurses
+include _build.mak
+CPP_FLAGS += -Wno-unused-label
 endif
 ifeq ($(TELNET_GOAL),client)
 PROJECT = telnet-client
@@ -60,7 +66,7 @@ PROJECT_DEPS = libclicpp.mak
 CPP_FILES = $(SRC_DIR)/goclient.cpp
 AUTO_DEPS = no
 PROJ_INCLUDES = -I$(CLI_DIR)/cpp/include
-PROJ_LIBS = -L$(dir $(CPP_LIB)) -lclicpp -lncurses
+PROJ_LIBS = -L$(dir $(CLI_CPP_LIB)) -lclicpp -lncurses
 include _build.mak
 endif
 
@@ -104,10 +110,15 @@ clean:
 	$(MAKE) -C $(CLI_DIR)/cpp/build/make -f telnet.mak TELNET_GOAL=server clean
 	$(MAKE) -C $(CLI_DIR)/cpp/build/make -f telnet.mak TELNET_GOAL=client clean
 endif
+
 ifeq ($(TELNET_GOAL),server)
 .PHONY: server
 server: build ;
+
+$(CLI_H): $(CLI_XML)
+	xsltproc --stringparam STR_CliClassName "EmptyCli" ../../xsl/cppclic.xsl $< > $@
 endif
+
 ifeq ($(TELNET_GOAL),client)
 .PHONY: client
 client: build ;
@@ -132,7 +143,11 @@ $(CLI_DIR)/cpp/build/make/telnet.vars:
 endif
 
 # Dependencies
+ifeq ($(TELNET_GOAL),server)
+$(INT_DIR)/goserver.o: $(SRC_DIR)/goserver.cpp $(CLI_H) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
+$(PRODUCT): $(CLI_CPP_LIB)
+endif
 ifeq ($(TELNET_GOAL),client)
 $(INT_DIR)/goclient.o: $(SRC_DIR)/goclient.cpp $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
-$(PRODUCT): $(CPP_LIB)
+$(PRODUCT): $(CLI_CPP_LIB)
 endif

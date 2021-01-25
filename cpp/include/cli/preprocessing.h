@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -61,12 +61,6 @@
     //!
     //! Defining this constant will disable regular expressions.
     #define CLI_NO_REGEX                    <set to disable regular expressions>
-
-    //! @brief Telnet multi client enabling.
-    //!
-    //! Define this constant if you wish to activate Telnet multiple client management.
-    //! Single client management otherwise.
-    #define CLI_TELNET_MULTI_CLIENT         <set to enable telnet multiple client>
 
     //! @brief Size of telnet input buffer.
     //! @note Useless when STL toolkit implementation is used.

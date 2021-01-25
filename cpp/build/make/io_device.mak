@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -29,8 +29,6 @@ CLI_MAIN_CPP = $(SRC_DIR)/io_device_impl.cpp
 include _check.mak
 
 # Rules
-check: more-clean-up
-
 .PHONY: more-clean-up
 more-clean-up:
 	cat $(CLI_LOG) \
@@ -38,3 +36,6 @@ more-clean-up:
 	| sed -e "s/ at .*:.*$$//g" \
 	> $(CLI_LOG).tmp
 	mv $(CLI_LOG).tmp $(CLI_LOG)
+
+# Dependencies
+check: more-clean-up

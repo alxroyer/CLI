@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -23,6 +23,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+
 CLI_LOG="$1"
 
 # Get the test result
@@ -39,15 +40,15 @@ done
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/\^M//g")
 
 # Special characters
-CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/M-g/ç/g")
-CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/M-i/é/g")
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/M-g/\xe7/g") # ccedil
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/M-i/\xe9/g") # eacute
 
 # Remove traces menu (debug mode)
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "traces          Traces menu")
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "traces          Menu de configuration de traces")
 # Remove check menu (debug mode)
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "check           Check CLI stuff")
-CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "check           Vérifications du CLI")
+CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | grep -v "check           V.rifications du CLI") # grep does not work with accented characters in UTF8 environments
 
 # Check line endings
 CLI_LOG_DATA=$(echo "$CLI_LOG_DATA" | sed -e "s/\r\n/\n/g")

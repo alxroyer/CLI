@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -30,9 +30,9 @@ jni.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 include _vars.mak
 
-JAVA_FILES = $(wildcard $(JAVA_SRC_DIR)/cli/*.java)
+JAVA_FILES = $(wildcard $(JAVA_SRC_DIR)/cli/*.java) $(wildcard $(JAVA_SRC_DIR)/cli/ui/*.java)
 JAVA_CLASSES = $(patsubst $(JAVA_SRC_DIR)/cli/%.java,$(OUT_DIR)/cli/%.class,$(JAVA_FILES))
-CPP_HEADERS = $(patsubst $(OUT_DIR)/cli/%.class,$(NATIVE_DIR)/cli_%.h,$(JAVA_CLASSES))
+CPP_HEADERS = $(patsubst %,$(NATIVE_DIR)/%.h,$(subst /,_,$(patsubst $(OUT_DIR)/%.class,%,$(JAVA_CLASSES))))
 CPP_HEADERS += $(CLI_DIR)/java/native/cli_OutputDevice_OutputStream.h
 
 
@@ -44,8 +44,11 @@ headers: libclijava $(CPP_HEADERS) ;
 libclijava:
 	$(call MkCall,libclijava.mak,)
 
+$(NATIVE_DIR)/cli_ui_%.h: $(JAVA_SRC_DIR)/cli/ui/%.java
+	javah -classpath $(OUT_DIR) -d $(NATIVE_DIR) $(patsubst $(JAVA_SRC_DIR)/cli/ui/%.java,cli.ui.%,$<) && touch $(patsubst %.h,%*.h,$@)
+
 $(NATIVE_DIR)/cli_%.h: $(JAVA_SRC_DIR)/cli/%.java
-	javah -classpath $(OUT_DIR) -d $(NATIVE_DIR) $(patsubst $(JAVA_SRC_DIR)/cli/%.java,cli.%,$<) && touch $@
+	javah -classpath $(OUT_DIR) -d $(NATIVE_DIR) $(patsubst $(JAVA_SRC_DIR)/cli/%.java,cli.%,$<) && touch $(patsubst %.h,%*.h,$@)
 
 .PHONY: deps
 deps: ;

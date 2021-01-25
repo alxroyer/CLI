@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -37,40 +37,66 @@ SAMPLES_DIR = $(DB_DIR)/samples
 DB_USER_GUIDE = $(DB_DIR)/cli-user-guide.xml
 HTML_USER_GUIDE = $(patsubst %.xml, %.html, $(DB_USER_GUIDE))
 CLI_SAMPLES = $(wildcard $(CLI_DIR)/samples/user-guide/*.xml)
-DB_SAMPLES = $(patsubst %.xml,$(SAMPLES_DIR)/%.db,$(notdir $(CLI_SAMPLES))) $(SAMPLES_DIR)/circle-cpp.db $(SAMPLES_DIR)/circle-java.db
+DB_SAMPLES = $(patsubst %.xml,$(SAMPLES_DIR)/%.db,$(notdir $(CLI_SAMPLES)))
+DB_SAMPLES += $(SAMPLES_DIR)/circle-cpp.db $(SAMPLES_DIR)/circle-java.db
+DB_SAMPLES += $(SAMPLES_DIR)/ui-text-cpp.db $(SAMPLES_DIR)/ui-text-java.db
 MISC_FILES = $(MISC_DIR)/clisample.xml $(MISC_DIR)/clisample.html $(MISC_DIR)/empty.cpp $(MISC_DIR)/Empty.java
 
 # Transformation
 XSL_STYLESHEET = $(DOCBOOK_XSL_HTML)
 
 # Configuration
-CSS_FLAGS = --param html.stylesheet "'stylesheet.css'"
-TOC_FLAGS =
+#CSS_FLAGS = --param html.stylesheet "'cli-user-guide.css'"
+#JAVASCRIPT_FLAGS =
 #TOC_FLAGS = --param generate.toc "'article toc,title,figure'"
-AUTOLABEL_FLAGS = --param section.autolabel 1
+TOC_FLAGS = --param generate.toc "''"
+AUTOLABEL_FLAGS = --param section.autolabel 1 --param htmlhelp.autolabel 1
 
-XSLT_OPTIONS = $(CSS_FLAGS) $(TOC_FLAGS) $(AUTOLABEL_FLAGS)
+XSLT_OPTIONS = $(CSS_FLAGS) $(JAVASCRIPT_FLAGS) $(TOC_FLAGS) $(AUTOLABEL_FLAGS)
 
 # Rules
 .PHONY: html
 html: dirs $(HTML_USER_GUIDE) ;
 
-$(HTML_USER_GUIDE): $(wildcard $(DB_DIR)/*.xml $(DB_DIR)/*.css) $(DB_SAMPLES) $(MISC_FILES)
+# => Main files
+$(HTML_USER_GUIDE): $(wildcard $(DB_DIR)/*.xml $(DB_DIR)/*.css) $(DB_SAMPLES) $(MISC_FILES) user-guide.mak
 ifneq ($(XSL_STYLESHEET),)
-	xsltproc $(XSLT_OPTIONS) "$(XSL_STYLESHEET)" "$(DB_USER_GUIDE)" > $@.tmp && mv $@.tmp $@
+	xsltproc $(XSLT_OPTIONS) "$(XSL_STYLESHEET)" "$(DB_USER_GUIDE)" > $@.tmp \
+	&& cp -f $@.tmp $@ \
+	&& head -n 1 $@.tmp \
+		| sed -e "s/<body/<body onload=\"onLoad();\" onscroll=\"onScroll();\" /" \
+		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/jquery-1.6.4.js\"><\/script><\/head>/" \
+		| sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"..\/jquery-ui-1.8.16.custom\/css\/smoothness\/jquery-ui-1.8.16.custom.css\"><\/head>/" \
+		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/jquery-ui-1.8.16.custom\/js\/jquery-ui-1.8.16.custom.min.js\"><\/script><\/head>/" \
+		| sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"..\/blackbirdjs-1.0\/blackbird-lite.css\"><\/head>/" \
+		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/blackbirdjs-1.0\/blackbird.js\"><\/script><\/head>/" \
+		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/xml-node.js\"><\/script><\/head>/" \
+		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/dynamic-menu.js\"><\/script><\/head>/" \
+		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/dynamic-dialog.js\"><\/script><\/head>/" \
+		| sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"cli-user-guide.css\"><\/head>/" \
+		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"cli-user-guide.js\"><\/script><\/head>/" \
+		> $@ \
+	&& tail -n +2 $@.tmp >> $@ \
+	&& rm $@.tmp
 else
 $(warning Please set DOCBOOK_XSL_HTML to a valid UNIX path to have the docbook user-guide being generated)
 endif
 
-.PHONY: dirs
-dirs: ;
-
+# => Sample files
+DoSrc2Db = cat $(1) | sed -e "s/&/\&amp;/g" | sed -e "s/</\&lt;/g" | sed -e "s/>/\&gt;/g" > $@
 $(SAMPLES_DIR)/circle-cpp.db: $(CLI_DIR)/samples/user-guide/circle.h
-	cat $< | sed -e "s/&/&amp;/g" > $@
+	$(call DoSrc2Db,$<,$@)
 
 $(SAMPLES_DIR)/circle-java.db: $(CLI_DIR)/samples/user-guide/Circle.java
-	cat $< | sed -e "s/&/&amp;/g" > $@
+	$(call DoSrc2Db,$<,$@)
 
+$(SAMPLES_DIR)/ui-text-cpp.db: $(CLI_DIR)/samples/user-guide/ui_sample_text.h
+	$(call DoSrc2Db,$<,$@)
+
+$(SAMPLES_DIR)/ui-text-java.db: $(CLI_DIR)/samples/user-guide/UISampleText.java
+	$(call DoSrc2Db,$<,$@)
+
+# => Misc files
 $(SAMPLES_DIR)/%.db: $(CLI_DIR)/samples/user-guide/%.xml $(SAMPLES_DIR)/cli2db.xsl
 	xsltproc $(SAMPLES_DIR)/cli2db.xsl $< > $@
 
@@ -86,6 +112,10 @@ $(MISC_DIR)/clisample.xml: $(CLI_DIR)/samples/clisample/clisample.xml
 $(MISC_DIR)/clisample.html: $(MISC_DIR)/clisample.xml $(CLI_DIR)/xsl/cli2help.xsl
 	xsltproc $(CLI_DIR)/xsl/cli2help.xsl $< > $@
 
+.PHONY: dirs
+dirs: ;
+
+.PHONY: deps
 deps: ;
 
 .PHONY: clean
@@ -112,4 +142,4 @@ $(CLI_DIR)/web/user-guide/user-guide.vars:
 		DB_DIR MISC_DIR SAMPLES_DIR \
 		DB_USER_GUIDE HTML_USER_GUIDE CLI_SAMPLES DB_SAMPLES MISC_FILES \
 		XSL_STYLESHEET \
-		CSS_FLAGS TOC_FLAGS AUTOLABEL_FLAGS XSLT_OPTIONS)
+		CSS_FLAGS JAVASCRIPT_FLAGS TOC_FLAGS AUTOLABEL_FLAGS XSLT_OPTIONS)

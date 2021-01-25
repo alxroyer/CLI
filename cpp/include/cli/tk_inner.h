@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,6 +30,7 @@
 #ifndef _CLI_TK_INNER_H_
 #define _CLI_TK_INNER_H_
 
+#include <ctype.h> // toupper, tolower
 #include <string.h>
 #include <stdio.h>
 
@@ -224,6 +225,53 @@ CLI_NS_BEGIN(cli)
                 return str_SubString;
             }
 
+            //! @brief Upper string transformation.
+            //! @return Upper string computed.
+            const String ToUpper(void) const
+            {
+                tk::String str_Upper(*this);
+
+                const unsigned int ui_StrLen = GetLength() + 1;
+                if (char* const pc_Upper = new char[ui_StrLen])
+                {
+                    memset(pc_Upper, '\0', ui_StrLen);
+                    if (const char* const pc_String = (const char*) *this) {
+                        for (unsigned int ui=0; ui<ui_StrLen; ui++)
+                        {
+                            pc_Upper[ui] = toupper(pc_String[ui]);
+                        }
+                    }
+                    str_Upper.Set(pc_Upper);
+                    delete [] pc_Upper;
+                }
+
+                return str_Upper;
+            }
+
+            //! @brief Lower string transformation.
+            //! @return Lower string computed.
+            const String ToLower(void) const
+            {
+                tk::String str_Lower(*this);
+
+                const unsigned int ui_StrLen = GetLength() + 1;
+                if (char* const pc_Lower = new char[ui_StrLen])
+                {
+                    memset(pc_Lower, '\0', ui_StrLen);
+                    if (const char* const pc_String = (const char*) *this)
+                    {
+                        for (unsigned int ui=0; ui<ui_StrLen; ui++)
+                        {
+                            pc_Lower[ui] = tolower(pc_String[ui]);
+                        }
+                    }
+                    str_Lower.Set(pc_Lower);
+                    delete [] pc_Lower;
+                }
+
+                return str_Lower;
+            }
+
         public:
             //! @brief String resetting.
             const bool Reset(void)
@@ -364,15 +412,27 @@ CLI_NS_BEGIN(cli)
 
         public:
             //! @brief Determines whether the queue is empty.
+            //! @return true when the queue is empty, false otherwise.
             const bool IsEmpty(void) const
             {
                 return (m_uiCount == 0);
             }
 
             //! @brief Item count.
+            //! @return Number of items in the queue.
             const unsigned int GetCount(void) const
             {
                 return m_uiCount;
+            }
+
+        public:
+            //! @brief Resets the queue.
+            //! @return true when success, false otherwise.
+            const bool Reset(void)
+            {
+                // Just set the element count to 0.
+                m_uiCount = 0;
+                return true;
             }
 
         public:
@@ -381,51 +441,68 @@ CLI_NS_BEGIN(cli)
             {
             private:
                 //! @brief Default constructor.
-                Iterator(void) : m_uiIndex(0) {}
+                Iterator(void) : m_iIndex(0) {}
 
             public:
                 //! @brief Copy constructor.
-                Iterator(const Iterator& CLI_Iterator) : m_uiIndex(CLI_Iterator.m_uiIndex) {}
+                Iterator(const Iterator& CLI_Iterator) : m_iIndex(CLI_Iterator.m_iIndex) {}
 
             private:
                 //! Internal data.
-                unsigned int m_uiIndex;
+                int m_iIndex;
 
-                friend class Queue;
+                friend class Queue<T>; // Addition of <T> for VC6 compliance.
             };
 
             //! @brief Iterator retrieval.
+            //! @return Iterator instance.
             Iterator GetIterator(void) const
             {
                 return Iterator();
             }
 
             //! @brief Checks the element at the given position is valid.
+            //! @return true if the iterator is at a valid place, false otherwise.
             const bool IsValid(const Iterator& it) const
             {
-                return (it.m_uiIndex < m_uiCount);
+                return (
+                    (it.m_iIndex >= 0)
+                    && ((unsigned int) it.m_iIndex < m_uiCount)
+                    && ((unsigned int) it.m_iIndex < m_uiMaxCount)
+                );
             }
 
-            //! @brief Iterates the iterator.
+            //! @brief Iterates backward the iterator.
+            //! @return true if the iterator has moved to a valid place, false otherwise.
+            const bool MovePrevious(Iterator& it) const
+            {
+                it.m_iIndex --;
+                return IsValid(it);
+            }
+
+            //! @brief Iterates forward the iterator.
+            //! @return true if the iterator has moved to a valid place, false otherwise.
             const bool MoveNext(Iterator& it) const
             {
-                it.m_uiIndex ++;
+                it.m_iIndex ++;
                 return IsValid(it);
             }
 
             //! @brief Read-only item retrieval.
+            //! @return Read-only item retrieved.
             const T& GetAt(const Iterator& it) const
             {
                 const T* pt_Element = NULL;
                 if ((m_arptQueue != NULL)
-                    && (it.m_uiIndex < m_uiCount) && (it.m_uiIndex < m_uiMaxCount))
+                    && IsValid(it))
                 {
-                    pt_Element = m_arptQueue[it.m_uiIndex];
+                    pt_Element = m_arptQueue[it.m_iIndex];
                 }
                 return *pt_Element;
             }
 
             //! @brief Modifiable item retrieval.
+            //! @return Modifiable item retrieved.
             T& GetAt(const Iterator& it)
             {
                 return const_cast<T&>(
@@ -441,20 +518,20 @@ CLI_NS_BEGIN(cli)
                 const T* pt_Element = NULL;
                 if (m_arptQueue != NULL)
                 {
-                    if ((it.m_uiIndex < m_uiCount) && (it.m_uiIndex < m_uiMaxCount))
+                    if (IsValid(it))
                     {
-                        pt_Element = m_arptQueue[it.m_uiIndex];
+                        pt_Element = m_arptQueue[it.m_iIndex];
                     }
                 }
                 if (pt_Element != NULL)
                 {
                     // Switch elements after on the left.
-                    for (   unsigned int ui_Index = it.m_uiIndex;
-                            (ui_Index < m_uiCount - 1) && (ui_Index < m_uiMaxCount - 1);
-                            ui_Index ++)
+                    for (   int i_Index = it.m_iIndex;
+                            (i_Index >= 0) && ((unsigned int) i_Index < m_uiCount - 1) && ((unsigned int) i_Index < m_uiMaxCount - 1);
+                            i_Index ++)
                     {
-                        m_arptQueue[ui_Index] = m_arptQueue[ui_Index + 1];
-                        m_arptQueue[ui_Index + 1] = NULL;
+                        m_arptQueue[i_Index] = m_arptQueue[i_Index + 1];
+                        m_arptQueue[i_Index + 1] = NULL;
                     }
 
                     // Decrement element count.
@@ -464,13 +541,14 @@ CLI_NS_BEGIN(cli)
                 T t_Element(*pt_Element);
                 if (pt_Element != NULL)
                 {
-                    delete pt_Element;
+                    delete (T*) pt_Element; // Addition of explicit cast for VC6 compliance.
                 }
                 return t_Element;
             }
 
         public:
             //! @brief Add a new element at the head of the queue.
+            //! @return true if the element has been added, false otherwise.
             const bool AddHead(
                     const T& T_Element          //!< New element.
                     )
@@ -490,6 +568,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Add a new element at the tail of the queue.
+            //! @return true if the element has been added, false otherwise.
             const bool AddTail(
                     const T& T_Element          //!< New element.
                     )
@@ -505,61 +584,68 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief First item accessor of the read-only queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Read-only head element.
             const T& GetHead(void) const
             {
-                const T* pt_Element = NULL;
-                if ((m_arptQueue != NULL) && (m_uiCount > 0) && (m_uiMaxCount > 0))
-                {
-                    pt_Element = m_arptQueue[0];
-                }
-                return *pt_Element;
+                Iterator it;
+                it.m_iIndex = 0;
+                return GetAt(it);
             }
 
             //! @brief First item accessor of the modifiable queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Modifiable head element.
             T& GetHead(void)
             {
-                return const_cast<T&>(
-                    const_cast<const Queue<T>*>(this)->GetHead()
-                );
+                Iterator it;
+                it.m_iIndex = 0;
+                return GetAt(it);
             }
 
             //! @brief Last item accessor of the read-only queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Read-only tail element.
             const T& GetTail(void) const
             {
-                const T* pt_Element = NULL;
-                if ((m_arptQueue != NULL) && (m_uiCount > 0) && (m_uiCount <= m_uiMaxCount))
-                {
-                    pt_Element = m_arptQueue[m_uiCount - 1];
-                }
-                return *pt_Element;
+                Iterator it;
+                it.m_iIndex = m_uiCount - 1;
+                return GetAt(it);
             }
 
             //! @brief Last item accessor of the modifiable queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Modifiable tail element.
             T& GetTail(void)
             {
-                return const_cast<T&>(
-                    const_cast<const Queue<T>*>(this)->GetTail()
-                );
+                Iterator it;
+                it.m_iIndex = m_uiCount - 1;
+                return GetAt(it);
             }
 
             //! @brief Add a new element at the head of the queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Element removed.
             const T RemoveHead(void)
             {
                 Iterator it;
-                it.m_uiIndex = 0;
+                it.m_iIndex = 0;
                 return Remove(it);
             }
 
             //! @brief Add a new element at the tail of the queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Element removed.
             const T RemoveTail(void)
             {
                 Iterator it;
-                it.m_uiIndex = m_uiCount - 1;
+                it.m_iIndex = m_uiCount - 1;
                 return Remove(it);
             }
 
         public:
             //! @brief Sort the list according to the given comparison function.
+            //! @return true when success, false otherwise.
             const bool Sort(
                     const int (*cmp)(const T&, const T&)    //!< Comparison function.
                                                                 //!< Return positive value when then second argument should follow first one.
@@ -683,6 +769,29 @@ CLI_NS_BEGIN(cli)
             Map& operator=(const Map&);
 
         public:
+            //! @brief Determines whether the map is empty.
+            //! @return true when the map is empty, false otherwise.
+            const bool IsEmpty(void) const
+            {
+                return m_qPairs.IsEmpty();
+            }
+
+            //! @brief Item count.
+            //! @return The number of items in the map.
+            const unsigned int GetCount(void) const
+            {
+                return m_qPairs.GetCount();
+            }
+
+        public:
+            //! @brief Resets the map.
+            //! @return true when success, false otherwise.
+            const bool Reset(void)
+            {
+                return m_qPairs.Reset();
+            }
+
+        public:
             //! @brief Set a new item.
             //! @return true if the element has been set.
             //! @return false if the element has not been set.
@@ -703,8 +812,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Unset an item.
-            //! @return true if the element has been unset correctly, or if the element was not set.
-            //! @return false if an error occured.
+            //! @return true if the element has been unset correctly, or if the element was not set, false otherwise.
             const bool Unset(const K& K_Key)
             {
                 for (   Iterator it = m_qPairs.GetIterator();
@@ -722,6 +830,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Checks whether an element is set for this key.
+            //! @return true if the key is set, false otherwise.
             const bool IsSet(const K& K_Key) const
             {
                 for (   Iterator it = m_qPairs.GetIterator();
@@ -760,36 +869,42 @@ CLI_NS_BEGIN(cli)
             typedef typename Queue<Pair>::Iterator Iterator;
 
             //! @brief Iterator retrieval.
+            //! @return Iterator instance.
             Iterator GetIterator(void) const
             {
                 return m_qPairs.GetIterator();
             }
 
             //! @brief Checks the element at the given position is valid.
+            //! @return true when the iterator is at a valid place, false otherwise.
             const bool IsValid(const Iterator& it) const
             {
                 return m_qPairs.IsValid(it);
             }
 
             //! @brief Iterates the iterator.
+            //! @return true if the iterator has moved to a valid place, false otherwise.
             const bool MoveNext(Iterator& it) const
             {
                 return m_qPairs.MoveNext(it);
             }
 
             //! @brief Key retrieval.
+            //! @return Key of the element pointed by the iterator.
             const K& GetKey(const Iterator& it) const
             {
                 return m_qPairs.GetAt(it).m_kKey;
             }
 
             //! @brief Read-only item retrieval.
+            //! @return Read-only value of the element pointed by the iterator.
             const T& GetAt(const Iterator& it) const
             {
                 return m_qPairs.GetAt(it).m_tValue;
             }
 
             //! @brief Modifiable item retrieval.
+            //! @return Modifiable value of the element pointed by the iterator.
             T& GetAt(const Iterator& it)
             {
                 return m_qPairs.GetAt(it).m_tValue;
@@ -801,18 +916,6 @@ CLI_NS_BEGIN(cli)
             const T Remove(Iterator& it)
             {
                 return m_qPairs.Remove(it).m_tValue;
-            }
-
-            //! @brief Determines whether the map is empty.
-            const bool IsEmpty(void) const
-            {
-                return m_qPairs.IsEmpty();
-            }
-
-            //! @brief Item count.
-            const unsigned int GetCount(void) const
-            {
-                return m_qPairs.GetCount();
             }
 
         private:

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,42 +30,49 @@
 #include "cli_SingleCommand.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
-
 
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_SingleCommand__1_1SingleCommand(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jstring PJ_CommandLine, jint I_NativeOutputDeviceRef)
 {
-    NativeTraces::TraceMethod("SingleCommand.__SingleCommand(PJ_CommandLine, I_NativeOutputDeviceRef)");
-    NativeTraces::TraceParam("I_NativeOutputDeviceRef", "%d", I_NativeOutputDeviceRef);
-    cli::SingleCommand* pcli_Device = NULL;
-    if (const char* const str_CommandLine = PJ_Env->GetStringUTFChars(PJ_CommandLine, 0))
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SingleCommand.__SingleCommand(PJ_CommandLine, I_NativeOutputDeviceRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_CommandLine", NativeExec::Java2Native(PJ_CommandLine).c_str()) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+    NativeObject::REF i_DeviceRef = 0;
+    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeOutputDeviceRef))
     {
-        NativeTraces::TraceParam("PJ_CommandLine", "%s", str_CommandLine);
-        if (cli::OutputDevice* const pcli_OutputDevice = (cli::OutputDevice*) I_NativeOutputDeviceRef)
+        if (cli::SingleCommand* const pcli_Device = new cli::SingleCommand(NativeExec::Java2Native(PJ_CommandLine).c_str(), *pcli_OutputDevice, true))
         {
-            if ((pcli_Device = new cli::SingleCommand(str_CommandLine, *pcli_OutputDevice, true)))
-            {
-                NativeObject::Use(pcli_Device);
-            }
+            NativeObject::Use(*pcli_Device);
+            i_DeviceRef = NativeObject::GetNativeRef(*pcli_Device);
         }
-        PJ_Env->ReleaseStringUTFChars(PJ_CommandLine, str_CommandLine);
     }
-    NativeTraces::TraceReturn("SingleCommand.__SingleCommand()", "%d", (int) pcli_Device);
-    return (jint) pcli_Device;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("SingleCommand.__SingleCommand()", i_DeviceRef) << cli::endl;
+    return i_DeviceRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_SingleCommand__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeDeviceRef)
 {
-    NativeTraces::TraceMethod("SingleCommand.__finalize(I_NativeDeviceRef)");
-    NativeTraces::TraceParam("I_NativeDeviceRef", "%d", I_NativeDeviceRef);
-    if (const cli::SingleCommand* const pcli_Device = (const cli::SingleCommand*) I_NativeDeviceRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    if (const cli::SingleCommand* const pcli_Device = NativeObject::GetNativeObject<const cli::SingleCommand*>(I_NativeDeviceRef))
     {
-        NativeObject::Free(pcli_Device);
+        // If b_SafeTrace is true, it means the current trace stream is not pcli_IODevice nor it would output pcli_IODevice.
+        // Whether pcli_IODevice is about to be destroyed, if b_SafeTrace is true, there is no problem for tracing even after possible destruction.
+        const bool b_SafeTrace = cli::GetTraces().IsSafe(*pcli_Device);
+
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SingleCommand.__finalize(I_NativeDeviceRef)") << cli::endl;
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
+
+        NativeObject::Free(*pcli_Device); // <- possible destruction.
+
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("SingleCommand.__finalize()") << cli::endl;
     }
-    NativeTraces::TraceReturn("SingleCommand.__finalize()");
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,9 +26,11 @@
 #include "cli/pch.h"
 
 #include <stdio.h>
+#include <math.h>
 
 #include "cli/io_device.h"
 #include "cli/cli.h"
+#include "cli/string_device.h"
 #include "cli/traces.h"
 #include "cli/assert.h"
 #include "constraints.h"
@@ -67,7 +69,7 @@ static const TraceClass& GetIODeviceOpeningTraceClass(void)
 OutputDevice::OutputDevice(
         const char* const STR_DbgName,
         const bool B_AutoDelete)
-  : m_strDbgName(MAX_DEVICE_NAME_LENGTH, STR_DbgName),
+  : m_strDebugName(MAX_DEVICE_NAME_LENGTH, STR_DbgName),
     m_iInstanceLock(B_AutoDelete ? 0 : 1), m_iOpenLock(0),
     m_cliLastError()
 {
@@ -78,10 +80,17 @@ OutputDevice::~OutputDevice(void)
 {
 }
 
+const tk::String OutputDevice::GetDebugName(void) const
+{
+    StringDevice cli_DebugName(MAX_DEVICE_NAME_LENGTH, false);
+    cli_DebugName << m_strDebugName << "/" << (void*) this;
+    return cli_DebugName.GetString();
+}
+
 const int OutputDevice::UseInstance(const CallInfo& CLI_CallInfo)
 {
-    GetTraces().Trace(TRACE_IO_DEVICE_INSTANCES)
-        << "One more user for instance " << m_strDbgName << "/" << this << ", "
+    GetTraces().SafeTrace(TRACE_IO_DEVICE_INSTANCES, *this)
+        << "One more user for instance " << GetDebugName() << ", "
         << "user count: " << m_iInstanceLock << " -> " << m_iInstanceLock + 1 << ", "
         << "from " << CLI_CallInfo.GetFunction() << " "
         << "at " << CLI_CallInfo.GetFile() << ":" << CLI_CallInfo.GetLine() << endl;
@@ -91,15 +100,15 @@ const int OutputDevice::UseInstance(const CallInfo& CLI_CallInfo)
 
 const int OutputDevice::FreeInstance(const CallInfo& CLI_CallInfo)
 {
-    GetTraces().Trace(TRACE_IO_DEVICE_INSTANCES)
-        << "One less user for instance " << m_strDbgName << "/" << this << ", "
+    GetTraces().SafeTrace(TRACE_IO_DEVICE_INSTANCES, *this)
+        << "One less user for instance " << GetDebugName() << ", "
         << "user count: " << m_iInstanceLock << " -> " << m_iInstanceLock - 1 << ", "
         << "from " << CLI_CallInfo.GetFunction() << " "
         << "at " << CLI_CallInfo.GetFile() << ":" << CLI_CallInfo.GetLine() << endl;
     if (m_iInstanceLock == 1)
     {
-        GetTraces().Trace(TRACE_IO_DEVICE_INSTANCES)
-            << "Deleting the device " << m_strDbgName << "/" << this << endl;
+        GetTraces().SafeTrace(TRACE_IO_DEVICE_INSTANCES, *this)
+            << "Deleting the device " << GetDebugName() << endl;
         delete this;
         return 0;
     }
@@ -118,8 +127,8 @@ const int OutputDevice::GetInstanceUsers(void) const
 
 const bool OutputDevice::OpenUp(const CallInfo& CLI_CallInfo)
 {
-    GetTraces().Trace(TRACE_IO_DEVICE_OPENING)
-        << "One more user for instance " << m_strDbgName << "/" << this << ", "
+    GetTraces().SafeTrace(TRACE_IO_DEVICE_OPENING, *this)
+        << "One more user for instance " << GetDebugName() << ", "
         << "user count: " << m_iOpenLock << " -> " << m_iOpenLock + 1 << ", "
         << "from " << CLI_CallInfo.GetFunction() << " "
         << "at " << CLI_CallInfo.GetFile() << ":" << CLI_CallInfo.GetLine() << endl;
@@ -128,8 +137,8 @@ const bool OutputDevice::OpenUp(const CallInfo& CLI_CallInfo)
 
     if (m_iOpenLock == 1)
     {
-        GetTraces().Trace(TRACE_IO_DEVICE_OPENING)
-            << "Opening the device " << m_strDbgName << "/" << this << endl;
+        GetTraces().SafeTrace(TRACE_IO_DEVICE_OPENING, *this)
+            << "Opening the device " << GetDebugName() << endl;
         if (! OpenDevice())
         {
             return false;
@@ -145,16 +154,16 @@ const bool OutputDevice::CloseDown(const CallInfo& CLI_CallInfo)
 
     if (m_iOpenLock > 0)
     {
-        GetTraces().Trace(TRACE_IO_DEVICE_OPENING)
-            << "One less user for instance " << m_strDbgName << "/" << this << ", "
+        GetTraces().SafeTrace(TRACE_IO_DEVICE_OPENING, *this)
+            << "One less user for instance " << GetDebugName() << ", "
             << "user count: " << m_iOpenLock << " -> " << m_iOpenLock - 1 << ", "
             << "from " << CLI_CallInfo.GetFunction() << " "
             << "at " << CLI_CallInfo.GetFile() << ":" << CLI_CallInfo.GetLine() << endl;
 
         if (m_iOpenLock == 1)
         {
-            GetTraces().Trace(TRACE_IO_DEVICE_OPENING)
-                << "Closing the device " << m_strDbgName << "/" << this << endl;
+            GetTraces().SafeTrace(TRACE_IO_DEVICE_OPENING, *this)
+                << "Closing the device " << GetDebugName() << endl;
             b_Res = CloseDevice();
         }
 
@@ -162,8 +171,8 @@ const bool OutputDevice::CloseDown(const CallInfo& CLI_CallInfo)
     }
     else
     {
-        GetTraces().Trace(TRACE_IO_DEVICE_OPENING)
-            << "No more closing down for instance " << m_strDbgName << "/" << this << ", "
+        GetTraces().SafeTrace(TRACE_IO_DEVICE_OPENING, *this)
+            << "No more closing down for instance " << GetDebugName() << ", "
             << "user count = " << m_iOpenLock << ", "
             << "from " << CLI_CallInfo.GetFunction() << " "
             << "at " << CLI_CallInfo.GetFile() << ":" << CLI_CallInfo.GetLine() << endl;
@@ -176,6 +185,15 @@ const int OutputDevice::GetOpenUsers(void) const
 {
     return m_iOpenLock;
 }
+
+// [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
+#ifndef CLI_NO_STL
+const OutputDevice& OutputDevice::operator <<(const std::string& STR_Out) const
+{
+    PutString(STR_Out.c_str());
+    return *this;
+}
+#endif
 
 const OutputDevice& OutputDevice::operator <<(const tk::String& STR_Out) const
 {
@@ -247,9 +265,35 @@ const OutputDevice& OutputDevice::operator <<(const float F_Out) const
 
 const OutputDevice& OutputDevice::operator <<(const double D_Out) const
 {
+    // First of all, find out the appropriate format.
+    char str_Format[128];
+    if ((D_Out != 0.0) && (-1e-6 <= D_Out) && (D_Out <= 1e-6))
+    {
+        snprintf(str_Format, sizeof(str_Format), "%s", "%f");
+    }
+    else
+    {
+        int i_Decimal, i_Out;
+        for (   i_Decimal = 6, i_Out = (int) floor(D_Out * 1e6 + 0.5); // floor(D+1/2) should be equivalent to round(D)
+                i_Decimal > 1;
+                i_Decimal --, i_Out /= 10)
+        {
+            if ((i_Out % 10) != 0)
+            {
+                break;
+            }
+        }
+        snprintf(str_Format, sizeof(str_Format), "%s.%d%s", "%", i_Decimal, "f");
+    }
+
+    // Format the float number with the computed format.
     char str_Out[128];
-    snprintf(str_Out, sizeof(str_Out), "%f", D_Out);
+    snprintf(str_Out, sizeof(str_Out), str_Format, D_Out);
+
+    // Output the computed string.
     PutString(str_Out);
+
+    // Return the instance itself.
     return *this;
 }
 
@@ -264,6 +308,7 @@ const OutputDevice& OutputDevice::operator <<(void* const PV_Out) const
 
 const OutputDevice& OutputDevice::operator <<(const IOEndl& CLI_IOEndl) const
 {
+    tk::UnusedParameter(CLI_IOEndl); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
     PutString("\n");
     return *this;
 }
@@ -285,7 +330,7 @@ OutputDevice& OutputDevice::GetNullDevice(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const char* const STR_Out) const {}
+        virtual void PutString(const char* const STR_Out) const { cli::tk::UnusedParameter(STR_Out); } // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
     };
 
     static NullDevice cli_Null;
@@ -349,9 +394,18 @@ void OutputDevice::CleanScreen(void) const
     }
 }
 
-const OutputDevice& OutputDevice::GetActualDevice(void) const
+const OutputDevice::ScreenInfo OutputDevice::GetScreenInfo(void) const
 {
-    return *this;
+    return ScreenInfo(
+        ScreenInfo::UNKNOWN, ScreenInfo::UNKNOWN, // Width and height
+        false,  // True Cls
+        false   // Line wrapping
+    );
+}
+
+const bool OutputDevice::WouldOutput(const OutputDevice& CLI_Device) const
+{
+    return (& CLI_Device == this);
 }
 
 
@@ -378,7 +432,7 @@ IODevice& IODevice::GetNullDevice(void)
         virtual const bool OpenDevice(void) { return true; }
         virtual const bool CloseDevice(void) { return true; }
     public:
-        virtual void PutString(const char* const STR_Out) const {}
+        virtual void PutString(const char* const STR_Out) const { cli::tk::UnusedParameter(STR_Out); } // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
         virtual const KEY GetKey(void) const { return NULL_KEY; }
     };
 
@@ -431,6 +485,7 @@ const KEY IODevice::GetKey(const int I_Char) const
 
     case ' ':   return SPACE;
     case '\t':  return TAB;
+    case '\b':  return BACKSPACE;
 
     case '0':   return KEY_0;
     case '1':   return KEY_1;
@@ -567,4 +622,9 @@ const KEY IODevice::GetKey(const int I_Char) const
 const ResourceString IODevice::GetLocation(void) const
 {
     return ResourceString();
+}
+
+const bool IODevice::WouldInput(const IODevice& CLI_Device) const
+{
+    return (& CLI_Device == this);
 }

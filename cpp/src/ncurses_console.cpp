@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,6 +25,8 @@
 
 #include "cli/pch.h"
 
+#include <string.h> // strlen
+
 #include "cli/console.h"
 #include "cli/traces.h"
 
@@ -35,28 +37,62 @@ CLI_NS_USE(cli)
 
 
 //! @brief Original ncurses escape delay.
-static const int i_OriginalDelay = ESCDELAY;
-//! @brief Ncurses device count.
-static int i_NcursesDeviceCount = 0;
+static const int ORIGINAL_DELAY = ESCDELAY;
 
-
-//! @brief ncurses console trace class singleton redirection.
-#define CLI_NCURSES_CONSOLE GetNcursesConsoleTraceClass()
-//! @brief ncurses console trace class singleton.
-static const TraceClass& GetNcursesConsoleTraceClass(void)
+//! @brief ncurses specific behaviours.
+class NCursesConsole
 {
-    static const TraceClass cli_NcursesConsoleTraceClass("CLI_NCURSES_CONSOLE", Help()
-        .AddHelp(Help::LANG_EN, "CLI ncurses console traces")
-        .AddHelp(Help::LANG_FR, "Traces de la console ncurses du CLI"));
-    return cli_NcursesConsoleTraceClass;
-}
+private:
+    //! @brief No default constructor.
+    NCursesConsole(void);
+    //! @brief No copy constructor.
+    NCursesConsole(const NCursesConsole&);
+
+public:
+    //! @brief Constructor.
+    NCursesConsole(WINDOW* const P_Window)
+      : m_pWindow(P_Window), m_uiLineCount(0)
+    {
+    }
+
+    //! @brief Destructor.
+    virtual ~NCursesConsole(void)
+    {
+    }
+
+// Public members.
+public:
+    static int m_iDeviceCount;      //!< ncurses device count.
+    WINDOW* const m_pWindow;         //!< ncurses window reference.
+    unsigned int m_uiLineCount;     //!< Number of lines printed out since the last CLS operation.
+
+public:
+    //! @brief ncurses console trace class singleton redirection.
+    #define CLI_NCURSES_CONSOLE NCursesConsole::GetTraceClass()
+    //! @brief ncurses console trace class singleton.
+    static const TraceClass& GetTraceClass(void)
+    {
+        static const TraceClass cli_TraceClass("CLI_NCURSES_CONSOLE", Help()
+            .AddHelp(Help::LANG_EN, "CLI ncurses console traces")
+            .AddHelp(Help::LANG_FR, "Traces de la console ncurses du CLI"));
+        return cli_TraceClass;
+    }
+
+private:
+    //! @brief No assignment operation.
+    NCursesConsole& operator=(const NCursesConsole&);
+};
+
+int NCursesConsole::m_iDeviceCount = 0;
+
+
+// Regular Console interface implementation.
 
 Console::Console(const bool B_AutoDelete)
   : IODevice("ncurses-console", B_AutoDelete),
     m_pData(NULL)
 {
-    // Does nothing but registers the appropriate trace classes.
-    GetTraces().Trace(CLI_NCURSES_CONSOLE);
+    GetTraces().Declare(CLI_NCURSES_CONSOLE);
 }
 
 Console::~Console(void)
@@ -79,9 +115,9 @@ const bool Console::OpenDevice(void)
         keypad(p_Window, TRUE); // Enable arrow keys.
         ESCDELAY = 0; // Change the escape delay to none instead of 1000 ms by default.
 
-        m_pData = p_Window;
+        m_pData = new NCursesConsole(p_Window);
 
-        i_NcursesDeviceCount ++;
+        NCursesConsole::m_iDeviceCount ++;
     }
 
     if (m_pData == NULL)
@@ -99,18 +135,19 @@ const bool Console::OpenDevice(void)
 
 const bool Console::CloseDevice(void)
 {
-    if (m_pData != NULL)
+    if (NCursesConsole* const pcli_Data = (NCursesConsole*) m_pData)
     {
-        m_pData = NULL;
-
-        i_NcursesDeviceCount --;
-        if (i_NcursesDeviceCount <= 0)
+        NCursesConsole::m_iDeviceCount --;
+        if (NCursesConsole::m_iDeviceCount <= 0)
         {
             // Restore original escape delay.
-            ESCDELAY = i_OriginalDelay;
+            ESCDELAY = ORIGINAL_DELAY;
         }
 
         endwin();
+
+        delete pcli_Data;
+        m_pData = NULL;
     }
 
     return true;
@@ -133,16 +170,16 @@ const KEY Console::GetKey(void) const
     while (1)
     {
         const int i_Char = getch();
-        GetTraces().Trace(CLI_NCURSES_CONSOLE) << "i_Char = " << i_Char << endl;
+        GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "i_Char = " << i_Char << endl;
         switch (i_Char)
         {
         // Breakers.
         case 27:
-            do {
-                nodelay((WINDOW*) m_pData, TRUE);
+            if (NCursesConsole* const pcli_Data = (NCursesConsole*) m_pData) {
+                nodelay(pcli_Data->m_pWindow, TRUE);
                 const int i_Char2 = getch();
-                nodelay((WINDOW*) m_pData, FALSE);
-                GetTraces().Trace(CLI_NCURSES_CONSOLE) << "i_Char2 = " << i_Char2 << endl;
+                nodelay(pcli_Data->m_pWindow, FALSE);
+                GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "i_Char2 = " << i_Char2 << endl;
                 switch (i_Char2)
                 {
                 // Escape character.
@@ -159,7 +196,7 @@ const KEY Console::GetKey(void) const
                     // Unknown ALT sequence.
                     break;
                 }
-            } while(0);
+            }
             break;
 
         // Deletions.
@@ -234,14 +271,14 @@ const KEY Console::GetKey(void) const
         case 276:           return F12;
 
         default:
-            {
+            do {
                 // Call the base implementation.
                 const KEY e_Char = IODevice::GetKey(i_Char);
                 if (e_Char != NULL_KEY)
                 {
                     return e_Char;
                 }
-            }
+            } while(0);
         }
     }
 }
@@ -250,17 +287,33 @@ void Console::PutString(const char* const STR_Out) const
 {
     char str_Char[2] = { '\0', '\0' };
 
-    if (STR_Out != NULL)
+    for (const char* pc_Out = STR_Out; (pc_Out != NULL) && (*pc_Out != '\0'); pc_Out++)
     {
-        const unsigned int ui_Len = strlen(STR_Out);
-        for (unsigned int ui=0; ui<ui_Len; ui++)
+        str_Char[0] = *pc_Out;
+        // Possible translation of certain character here...
+        // ...
+
+        // Output characters.
+        addstr(str_Char);
+
+        // ncurses seems to have refresh troubles with 'more' page displays.
+        // However, it works good with 'less' page displays.
+        // Over one page, refreshing every new line is a workaround that fixes that misfunctionning.
+        if (*pc_Out == '\n')
         {
-            str_Char[0] = STR_Out[ui];
-            // Possible translation of certain character here...
-            addstr(str_Char);
+            if (NCursesConsole* const pcli_Data = (NCursesConsole*) m_pData)
+            {
+                pcli_Data->m_uiLineCount ++;
+                if ((int) pcli_Data->m_uiLineCount >= LINES)
+                {
+                    refresh();
+                }
+            }
         }
-        refresh();
     }
+
+    // Eventually referesh the screen.
+    refresh();
 }
 
 void Console::Beep(void) const
@@ -271,4 +324,18 @@ void Console::Beep(void) const
 void Console::CleanScreen(void) const
 {
     erase();
+    if (NCursesConsole* const pcli_Data = (NCursesConsole*) m_pData)
+    {
+        pcli_Data->m_uiLineCount = 0;
+    }
+    refresh();
+}
+
+const OutputDevice::ScreenInfo Console::GetScreenInfo(void) const
+{
+    return ScreenInfo(
+        COLS, LINES,
+        true,   // True Cls
+        true    // Line wrapping
+    );
 }

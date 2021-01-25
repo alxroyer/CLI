@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,14 +39,14 @@
         <param id="name" type="string">
             <endl>
                 <cpp>if (const cli::Menu* const pcli_Menu = GetCli().GetMenu(<value-of param="name"/>)) {</cpp>
-                <cpp>    GetShell().EnterMenu(*pcli_Menu);</cpp>
+                <cpp>    GetShell().EnterMenu(*pcli_Menu, false);</cpp>
                 <cpp>} else {</cpp>
                 <cpp>    <err/> &lt;&lt; "No such menu '" &lt;&lt; <value-of param="name"/> &lt;&lt; "'" &lt;&lt; cli::endl;</cpp>
                 <cpp>}</cpp>
 
                 <java>cli.Menu cli_Menu = getCli().getMenu(<value-of param="name"/>);</java>
                 <java>if (cli_Menu != null) {</java>
-                <java>    getShell().enterMenu(cli_Menu);</java>
+                <java>    getShell().enterMenu(cli_Menu, false);</java>
                 <java>} else {</java>
                 <java>    <err/>.put("No such menu '" + <value-of param="name"/> + "'").endl();</java>
                 <java>}</java>

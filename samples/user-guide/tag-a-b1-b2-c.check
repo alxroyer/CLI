@@ -1,6 +1,7 @@
 a(b1|b2)c>
   a               
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'a(b1|b2)c'
   help            Get help
   pwm             Print Working Menu
@@ -16,6 +17,7 @@ a(b1|b2)c>a b1 c
 a(b1|b2)c>
   a               
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'a(b1|b2)c'
   help            Get help
   pwm             Print Working Menu
@@ -31,6 +33,7 @@ a(b1|b2)c>a b2 c
 a(b1|b2)c>
   a               
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'a(b1|b2)c'
   help            Get help
   pwm             Print Working Menu

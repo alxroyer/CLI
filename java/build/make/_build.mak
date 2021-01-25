@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -43,10 +43,11 @@ SRC_DIR ?= .
 JAVA_FILES ?= $(wildcard $(SRC_DIR)/*.java)
 JAVA_OBJS ?= $(patsubst $(SRC_DIR)/%.java,$(OUT_DIR)/%.class,$(JAVA_FILES))
 ifndef JAVAC_OPTS
-JAVAC_OPTS ?= -Xlint:deprecation
+JAVAC_OPTS ?= -Xlint:deprecation -encoding ISO-8859-1
 ifdef _DEBUG
 	JAVAC_OPTS += -g
 endif
+JAVAC_OPTS += -d $(OUT_DIR)
 endif
 JAR_OBJ ?= build.java
 JAR_OPTS ?=
@@ -75,14 +76,16 @@ build.depends:
 
 .PHONY: build.java
 build.java: $(JAVA_FILES)
-	javac $(JAVAC_OPTS) -d $(OUT_DIR) -classpath $(OUT_DIR) $(JAVA_FILES)
+	javac $(JAVAC_OPTS) $(JAVA_PATH) $(JAVA_FILES)
 
 ifneq ($(JAR_OBJ),build.java)
 $(JAR_OBJ): $(JAVA_FILES)
-	javac $(JAVAC_OPTS) -d $(OUT_DIR) -classpath $(OUT_DIR) $(JAVA_FILES)
+	javac $(JAVAC_OPTS) $(JAVA_PATH) $(JAVA_FILES)
 	cd $(OUT_DIR) && jar $(JAR_OPTS) -cf $(notdir $(JAR_OBJ)) $(patsubst $(OUT_DIR)/%,%,$(JAR_SRC_FILES))
 endif
 
+$(OUT_DIR)/%.class: $(SRC_DIR)/%.java
+	javac $(JAVAC_OPTS) $(JAVA_PATH) $<
 
 # Cleanup
 .PHONY: clean

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -46,13 +46,13 @@ public class TestSample {
         }
 
         // Create I/O devices.
-        cli.IODevice cli_Input = null;
+        cli.IODevice.Interface cli_Input = null;
         try {
             // Check an input file name is given.
             String str_InputFileName = ARJ_Args[1];
 
             // Create a corresponding output device.
-            cli.OutputDevice cli_Output = null;
+            cli.OutputDevice.Interface cli_Output = null;
             try {
                 // Check an output file name is given.
                 String str_OutputFileName = ARJ_Args[2];

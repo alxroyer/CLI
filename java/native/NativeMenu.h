@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -33,70 +33,74 @@
 #include "cli/command_line.h"
 
 
+//! @brief NativeMenu::Execute method implementation.
+//!
+//! Makes the connection with the Java side.
 const bool __NativeMenu__Execute(
-    JNIEnv* const PJ_Env, const std::string& STR_Class,
     const cli::Menu& CLI_Menu, const cli::CommandLine& CLI_CmdLine);
 
+//! @brief NativeMenu::OnError method implementation.
+//!
+//! Makes the connection with the Java side.
 const bool __NativeMenu__OnError(
-    JNIEnv* const PJ_Env, const std::string& STR_Class,
     const cli::Menu& CLI_Menu, const cli::ResourceString& CLI_Location, const cli::ResourceString& CLI_ErrorMessage);
 
+//! @brief NativeMenu::OnExit method implementation.
+//!
+//! Makes the connection with the Java side.
 const bool __NativeMenu__OnExit(
-    JNIEnv* const PJ_Env, const std::string& STR_Class,
     const cli::Menu& CLI_Menu);
 
+//! @brief NativeMenu::OnPrompt method implementation.
+//!
+//! Makes the connection with the Java side.
 const std::string __NativeMenu__OnPrompt(
-    JNIEnv* const PJ_Env, const std::string& STR_Class,
     const cli::Menu& CLI_Menu);
 
 
-//! @brief Template class implementing native C++ objects matched cli.Cli with and cli.Menu derived class.
+//! @brief Template class implementing native C++ objects matching with cli.Cli and cli.Menu derived class.
 template <
     class TMenu //!< Either cli::Cli or cli::Menu.
 > class NativeMenu : public TMenu
 {
 public:
+    //! @brief Constructor.
     NativeMenu(
-            JNIEnv* const PJ_Env,           //!< Parameter directly given by JNI.
-            const char* const STR_Class,    //!< Parameter directly given by JNI.
             const char* const STR_Name,     //!< Name of the menu (regular cli::Cli or cli::Menu constructor parameter).
             const cli::Help& CLI_Help       //!< Help of the menu (regular cli::Cli or cli::Menu constructor parameter).
             )
-      : TMenu(STR_Name, CLI_Help),
-        m_pjEnv(PJ_Env), m_strClass(STR_Class)
+      : TMenu(STR_Name, CLI_Help)
     {
     }
 
+    //! @brief Destructor.
     virtual ~NativeMenu(void)
     {
     }
 
+// cli::Menu & cli::Cli interfaces implementation.
 public:
     virtual const bool Execute(const cli::CommandLine& CLI_CmdLine) const
     {
-        return __NativeMenu__Execute(m_pjEnv, m_strClass, *this, CLI_CmdLine);
+        return __NativeMenu__Execute(*this, CLI_CmdLine);
     }
 
     //! @warning This handler is available for cli::Cli derived classes only. This handler shall not be called for regular menus.
     virtual const bool OnError(const cli::ResourceString& CLI_Location, const cli::ResourceString& CLI_ErrorMessage) const
     {
-        return __NativeMenu__OnError(m_pjEnv, m_strClass, *this, CLI_Location, CLI_ErrorMessage);
+        return __NativeMenu__OnError(*this, CLI_Location, CLI_ErrorMessage);
     }
 
     virtual void OnExit(void) const
     {
-        __NativeMenu__OnExit(m_pjEnv, m_strClass, *this);
+        __NativeMenu__OnExit(*this);
     }
 
     virtual const cli::tk::String OnPrompt(void) const
     {
-        const std::string std_Prompt = __NativeMenu__OnPrompt(m_pjEnv, m_strClass, *this);
+        const std::string std_Prompt = __NativeMenu__OnPrompt(*this);
         return cli::tk::String(std_Prompt.size(), std_Prompt.c_str());
     }
-
-private:
-    JNIEnv* const m_pjEnv;
-    const std::string m_strClass;
 };
 
 #endif // _CLI_NATIVE_MENU_H_

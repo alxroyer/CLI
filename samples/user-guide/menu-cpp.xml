@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,10 +29,10 @@
     <keyword string="menu">
         <param id="menu-id" type="int">
             <endl>
-                <cpp>if (<value-of param="menu-id"/> &gt;= 0) { GetShell().EnterMenu(* GetCli().GetMenu("sub-menu")); }</cpp>
+                <cpp>if (<value-of param="menu-id"/> &gt;= 0) { GetShell().EnterMenu(* GetCli().GetMenu("sub-menu"), false); }</cpp>
                 <cpp>else { <err/> &lt;&lt; "Invalid menu identifier " &lt;&lt; <value-of param="menu-id"/> &lt;&lt; cli::endl; }</cpp>
 
-                <java>if (<value-of param="menu-id"/> &gt;= 0) { getShell().enterMenu(getCli().getMenu("sub-menu")); }</java>
+                <java>if (<value-of param="menu-id"/> &gt;= 0) { getShell().enterMenu(getCli().getMenu("sub-menu"), false); }</java>
                 <java>else { <err/>.put("Invalid menu identifier " + <value-of param="menu-id"/>).endl(); }</java>
             </endl>
         </param>

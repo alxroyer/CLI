@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -67,15 +67,15 @@ public abstract class Element extends NativeObject
 
     /** Current output stream accessor.
         @return Current output stream. */
-    public final OutputDevice getOutputStream() {
-        return (OutputDevice) NativeObject.getObject(__getOutputStream(this.getNativeRef()));
+    public final OutputDevice.Interface getOutputStream() {
+        return (OutputDevice.Interface) NativeObject.getObject(__getOutputStream(this.getNativeRef()));
     }
     private static final native int __getOutputStream(int I_NativeElementRef);
 
     /** Current error stream accessor.
         @return Current error stream. */
-    public final OutputDevice getErrorStream() {
-        return (OutputDevice) NativeObject.getObject(__getErrorStream(this.getNativeRef()));
+    public final OutputDevice.Interface getErrorStream() {
+        return (OutputDevice.Interface) NativeObject.getObject(__getErrorStream(this.getNativeRef()));
     }
     private static final native int __getErrorStream(int I_NativeElementRef);
 }

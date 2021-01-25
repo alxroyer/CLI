@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -69,6 +69,8 @@ CLI_NS_BEGIN(cli)
         virtual void PutString(const char* const STR_Out) const;
         //! @brief OutputDevice handler implementation.
         virtual void Beep(void) const;
+        //! @brief OutputDevice handler implementation.
+        virtual void CleanScreen(void) const;
 
     public:
         //! @brief String accessor.

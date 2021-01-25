@@ -2,6 +2,7 @@
   a               
   b               
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu '(a|b)+'
   help            Get help
   pwm             Print Working Menu

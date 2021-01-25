@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,6 +30,7 @@
 #include "cli_SyntaxRef.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -37,30 +38,34 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_SyntaxRef__1_1SyntaxRef(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeTagRef)
 {
-    NativeTraces::TraceMethod("SyntaxRef.__SyntaxRef(I_NativeTagRef)");
-    NativeTraces::TraceParam("I_NativeTagRef", "%d", I_NativeTagRef);
-    cli::SyntaxRef* pcli_SyntaxRef = NULL;
-    if (const cli::SyntaxTag* const pcli_SyntaxTag = (const cli::SyntaxTag*) I_NativeTagRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SyntaxRef.__SyntaxRef(I_NativeTagRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeTagRef", I_NativeTagRef) << cli::endl;
+    NativeObject::REF i_SyntaxRefRef = 0;
+    if (const cli::SyntaxTag* const pcli_SyntaxTag = NativeObject::GetNativeObject<const cli::SyntaxTag*>(I_NativeTagRef))
     {
-        if ((pcli_SyntaxRef = new cli::SyntaxRef(*pcli_SyntaxTag)))
+        if (cli::SyntaxRef* const pcli_SyntaxRef = new cli::SyntaxRef(*pcli_SyntaxTag))
         {
-            NativeObject::Use(pcli_SyntaxRef);
+            NativeObject::Use(*pcli_SyntaxRef);
+            i_SyntaxRefRef = NativeObject::GetNativeRef(*pcli_SyntaxRef);
         }
     }
-    NativeTraces::TraceReturn("SyntaxRef.__SyntaxRef()", "%d", (int) pcli_SyntaxRef);
-    return (jint) pcli_SyntaxRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("SyntaxRef.__SyntaxRef()", i_SyntaxRefRef) << cli::endl;
+    return i_SyntaxRefRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_SyntaxRef__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeTagRefRef)
 {
-    NativeTraces::TraceMethod("SyntaxRef.__finalize(I_NativeTagRefRef)");
-    NativeTraces::TraceParam("I_NativeTagRefRef", "%d", I_NativeTagRefRef);
-    if (const cli::SyntaxRef* const pcli_SyntaxRef = (const cli::SyntaxRef*) I_NativeTagRefRef)
-    {
-        NativeObject::Free(pcli_SyntaxRef);
-    }
-    NativeTraces::TraceReturn("SyntaxRef.__finalize()");
-}
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SyntaxRef.__finalize(I_NativeTagRefRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeTagRefRef", I_NativeTagRefRef) << cli::endl;
+    if (const cli::SyntaxRef* const pcli_SyntaxRef = NativeObject::GetNativeObject<const cli::SyntaxRef*>(I_NativeTagRefRef))
+    {
+        NativeObject::Free(*pcli_SyntaxRef);
+    }
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("SyntaxRef.__finalize()") << cli::endl;
+}

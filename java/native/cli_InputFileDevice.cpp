@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,6 +30,7 @@
 #include "cli_InputFileDevice.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -37,48 +38,59 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_InputFileDevice__1_1InputFileDevice(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jstring PJ_InputFileName, jint I_NativeOutputDeviceRef)
 {
-    NativeTraces::TraceMethod("InputFileDevice.__InputFileDevice(PJ_InputFileName, I_NativeOutputDeviceRef)");
-    NativeTraces::TraceParam("I_NativeOutputDeviceRef", "%d", I_NativeOutputDeviceRef);
-    cli::InputFileDevice* pcli_FileDevice = NULL;
-    if (const char* const str_InputFileName = PJ_Env->GetStringUTFChars(PJ_InputFileName, 0))
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("InputFileDevice.__InputFileDevice(PJ_InputFileName, I_NativeOutputDeviceRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_InputFileName", NativeExec::Java2Native(PJ_InputFileName).c_str()) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+    NativeObject::REF i_FileDeviceRef = 0;
+    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeOutputDeviceRef))
     {
-        NativeTraces::TraceParam("PJ_InputFileName", "%s", str_InputFileName);
-        if (cli::OutputDevice* const pcli_OutputDevice = (cli::OutputDevice*) I_NativeOutputDeviceRef)
+        if (cli::InputFileDevice* const pcli_FileDevice = new cli::InputFileDevice(NativeExec::Java2Native(PJ_InputFileName).c_str(), *pcli_OutputDevice, true))
         {
-            if ((pcli_FileDevice = new cli::InputFileDevice(str_InputFileName, *pcli_OutputDevice, true)))
-            {
-                NativeObject::Use(pcli_FileDevice);
-            }
+            NativeObject::Use(*pcli_FileDevice);
+            i_FileDeviceRef = NativeObject::GetNativeRef(*pcli_FileDevice);
         }
-        PJ_Env->ReleaseStringUTFChars(PJ_InputFileName, str_InputFileName);
     }
-    NativeTraces::TraceReturn("InputFileDevice.__InputFileDevice()", "%d", (int) pcli_FileDevice);
-    return (jint) pcli_FileDevice;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("InputFileDevice.__InputFileDevice()", i_FileDeviceRef) << cli::endl;
+    return i_FileDeviceRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_InputFileDevice__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeFileDeviceRef)
 {
-    NativeTraces::TraceMethod("InputFileDevice.__finalize(I_NativeFileDeviceRef)");
-    NativeTraces::TraceParam("I_NativeFileDeviceRef", "%d", I_NativeFileDeviceRef);
-    if (const cli::InputFileDevice* const pcli_FileDevice = (const cli::InputFileDevice*) I_NativeFileDeviceRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    if (const cli::InputFileDevice* const pcli_FileDevice = NativeObject::GetNativeObject<const cli::InputFileDevice*>(I_NativeFileDeviceRef))
     {
-        NativeObject::Free(pcli_FileDevice);
+        // If b_SafeTrace is true, it means the current trace stream is not pcli_IODevice nor it would output pcli_IODevice.
+        // Whether pcli_IODevice is about to be destroyed, if b_SafeTrace is true, there is no problem for tracing even after possible destruction.
+        const bool b_SafeTrace = cli::GetTraces().IsSafe(*pcli_FileDevice);
+
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("InputFileDevice.__finalize(I_NativeFileDeviceRef)") << cli::endl;
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeFileDeviceRef", I_NativeFileDeviceRef) << cli::endl;
+
+        NativeObject::Free(*pcli_FileDevice); // <- possible destruction.
+
+        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("InputFileDevice.__finalize()") << cli::endl;
     }
-    NativeTraces::TraceReturn("InputFileDevice.__finalize()");
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_InputFileDevice__1_1enableSpecialCharacters(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeFileDeviceRef, jboolean B_EnableSpecialCharacters)
 {
-    NativeTraces::TraceMethod("InputFileDevice.__enableSpecialCharacters(I_NativeFileDeviceRef, B_EnableSpecialCharacters)");
-    NativeTraces::TraceParam("I_NativeFileDeviceRef", "%d", I_NativeFileDeviceRef);
-    NativeTraces::TraceParam("B_EnableSpecialCharacters", "%d", B_EnableSpecialCharacters);
-    if (cli::InputFileDevice* const pcli_FileDevice = (cli::InputFileDevice*) I_NativeFileDeviceRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    if (cli::InputFileDevice* const pcli_FileDevice = NativeObject::GetNativeObject<cli::InputFileDevice*>(I_NativeFileDeviceRef))
     {
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_FileDevice) << NativeTraces::Begin("InputFileDevice.__enableSpecialCharacters(I_NativeFileDeviceRef, B_EnableSpecialCharacters)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_FileDevice) << NativeTraces::ParamInt("I_NativeFileDeviceRef", I_NativeFileDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_FileDevice) << NativeTraces::ParamBool("B_EnableSpecialCharacters", B_EnableSpecialCharacters) << cli::endl;
+
         pcli_FileDevice->EnableSpecialCharacters(B_EnableSpecialCharacters);
+
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_FileDevice) << NativeTraces::EndVoid("InputFileDevice.__enableSpecialCharacters()") << cli::endl;
     }
-    NativeTraces::TraceReturn("InputFileDevice.__enableSpecialCharacters()");
 }

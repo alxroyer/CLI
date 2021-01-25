@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -40,30 +40,30 @@
 
 // Forward declarations.
     // CommandLine
-const bool TestCmdLineAnalysis(void);
+static const bool TestCmdLineAnalysis(void);
     // CmdLineEdition
-const bool CheckAnalysis(
+static const bool CheckAnalysis(
     const char* const STR_FileName, const unsigned int UI_Line,
     const char* const STR_CmdLine, const bool B_Res,
     const char* const STR_Error);
-const bool TestCmdLineEdition(void);
-const bool CheckEdition(
+static const bool TestCmdLineEdition(void);
+static const bool CheckEdition(
     const char* const STR_FileName, const unsigned int UI_Line,
     const cli::CmdLineEdition& CLI_CmdLine, const char* const STR_Left, const char* const STR_Right,
     cli::StringDevice& CLI_Out, const char* const STR_Out);
-const bool CheckEditionWords(
+static const bool CheckEditionWords(
     const char* const STR_FileName, const unsigned int UI_Line,
     const cli::CmdLineEdition& CLI_CmdLine, const char* const STR_Left, const char* const STR_Right);
     // CmdLineHistory
-const bool TestCmdLineHistory(void);
-const bool CheckHistory(
+static const bool TestCmdLineHistory(void);
+static const bool CheckHistory(
     const char* const STR_FileName, const unsigned int UI_Line,
     const cli::CmdLineHistory& CLI_History, const unsigned int UI_Count, ...);
-const bool CheckNavigation(
+static const bool CheckNavigation(
     const char* const STR_FileName, const unsigned int UI_Line,
     cli::CmdLineHistory& CLI_History, const int I_Navigation,
     const bool B_Res, const cli::CmdLineEdition& CLI_Line);
-void CmdLineError(
+static void CmdLineError(
     const char* const STR_FileName, const unsigned int UI_Line);
 
 
@@ -88,7 +88,7 @@ int main(void)
 }
 
 //! @brief CommandLine unit test.
-const bool TestCmdLineAnalysis(void)
+static const bool TestCmdLineAnalysis(void)
 {
     // Regular behaviour
     if (! CheckAnalysis(__FILE__, __LINE__, "a", false, "Syntax error next to 'a'"))
@@ -111,7 +111,7 @@ const bool TestCmdLineAnalysis(void)
     return true;
 }
 
-const bool CheckAnalysis(
+static const bool CheckAnalysis(
     const char* const STR_FileName, const unsigned int UI_Line,
     const char* const STR_CmdLine, const bool B_Res,
     const char* const STR_Error)
@@ -151,7 +151,7 @@ const bool CheckAnalysis(
 }
 
 //! @brief CmdLineEdition unit test.
-const bool TestCmdLineEdition(void)
+static const bool TestCmdLineEdition(void)
 {
     cli::CmdLineEdition cli_CmdLine;
     cli::StringDevice cli_Out(256, false);
@@ -270,7 +270,7 @@ const bool TestCmdLineEdition(void)
     return true;
 }
 
-const bool CheckEdition(
+static const bool CheckEdition(
     const char* const STR_FileName, const unsigned int UI_Line,
     const cli::CmdLineEdition& CLI_CmdLine, const char* const STR_Left, const char* const STR_Right,
     cli::StringDevice& CLI_Out, const char* const STR_Out)
@@ -309,7 +309,7 @@ const bool CheckEdition(
     return b_Res;
 }
 
-const bool CheckEditionWords(
+static const bool CheckEditionWords(
     const char* const STR_FileName, const unsigned int UI_Line,
     const cli::CmdLineEdition& CLI_CmdLine, const char* const STR_Left, const char* const STR_Right)
 {
@@ -332,7 +332,7 @@ const bool CheckEditionWords(
 }
 
 //! @brief CmdLineHistory unit test.
-const bool TestCmdLineHistory(void)
+static const bool TestCmdLineHistory(void)
 {
     // Create the history line object.
     cli::CmdLineHistory cli_History(5);
@@ -414,7 +414,7 @@ const bool TestCmdLineHistory(void)
     return true;
 }
 
-const bool CheckHistory(
+static const bool CheckHistory(
     const char* const STR_FileName, const unsigned int UI_Line,
     const cli::CmdLineHistory& CLI_History, const unsigned int UI_Count, ...)
 {
@@ -454,7 +454,7 @@ const bool CheckHistory(
     return true;
 }
 
-const bool CheckNavigation(
+static const bool CheckNavigation(
     const char* const STR_FileName, const unsigned int UI_Line,
     cli::CmdLineHistory& CLI_History, const int I_Navigation,
     const bool B_Res, const cli::CmdLineEdition& CLI_Line)
@@ -505,7 +505,7 @@ const bool CheckNavigation(
     return true;
 }
 
-void CmdLineError(
+static void CmdLineError(
     const char* const STR_FileName, const unsigned int UI_Line)
 {
     std::cerr << STR_FileName << ":" << UI_Line << ": test failed" << std::endl;

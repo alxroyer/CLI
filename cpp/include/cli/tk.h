@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,8 +30,29 @@
 #ifndef _CLI_TK_H_
 #define _CLI_TK_H_
 
+#include <stdlib.h>
 
 #include "cli/namespace.h"
+
+
+CLI_NS_BEGIN(cli)
+
+    CLI_NS_BEGIN(tk)
+
+        //! @brief Dummy function that aims to avoid warnings for unused parameters.
+        //!
+        //! Does strictly nothing, but avoids warnings for unused parameters.
+        template <class T> void UnusedParameter(
+            const T& T_UnusedParam     //!< Unused parameter to avoid warnings for.
+            )
+        {
+            volatile const T* pt_Foo = NULL;
+            pt_Foo = & T_UnusedParam;
+        }
+
+    CLI_NS_END(tk)
+
+CLI_NS_END(cli)
 
 
 #ifndef CLI_NO_STL

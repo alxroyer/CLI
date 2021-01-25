@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 #include "cli_Endl.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
@@ -38,49 +39,56 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Endl__1_1Endl(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("Endl.__Endl(I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    cli::Endl* pcli_Endl = NULL;
-    if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Endl.__Endl(I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    NativeObject::REF i_EndlRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        if ((pcli_Endl = new cli::Endl(*pcli_Help)))
+        if (cli::Endl* const pcli_Endl = new cli::Endl(*pcli_Help))
         {
-            NativeObject::Use(pcli_Endl);
+            NativeObject::Use(*pcli_Endl);
+            i_EndlRef = NativeObject::GetNativeRef(*pcli_Endl);
         }
     }
-    NativeTraces::TraceReturn("Endl.__Endl()", "%d", (int) pcli_Endl);
-    return (jint) pcli_Endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Endl.__Endl()", i_EndlRef) << cli::endl;
+    return i_EndlRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Endl__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeEndlRef)
 {
-    NativeTraces::TraceMethod("Endl.__finalize(I_NativeEndlRef)");
-    NativeTraces::TraceParam("I_NativeEndlRef", "%d", I_NativeEndlRef);
-    if (const cli::Endl* const pcli_Endl = (const cli::Endl* const) I_NativeEndlRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Endl.__finalize(I_NativeEndlRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeEndlRef", I_NativeEndlRef) << cli::endl;
+    if (const cli::Endl* const pcli_Endl = NativeObject::GetNativeObject<const cli::Endl*>(I_NativeEndlRef))
     {
-        NativeObject::Free(pcli_Endl);
+        NativeObject::Free(*pcli_Endl);
     }
-    NativeTraces::TraceReturn("Endl.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Endl.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_Endl__1_1setMenuRef(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeEndlRef, jint I_NativeMenuRefRef)
 {
-    NativeTraces::TraceMethod("Endl.__setMenuRef(I_NativeEndlRef, I_NativeMenuRef)");
-    NativeTraces::TraceParam("I_NativeEndlRef", "%d", I_NativeEndlRef);
-    NativeTraces::TraceParam("I_NativeMenuRefRef", "%d", I_NativeMenuRefRef);
-    jboolean b_Res = false;
-    if (cli::Endl* const pcli_Endl = (cli::Endl*) I_NativeEndlRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Endl.__setMenuRef(I_NativeEndlRef, I_NativeMenuRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeEndlRef", I_NativeEndlRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeMenuRefRef", I_NativeMenuRefRef) << cli::endl;
+    bool b_Res = false;
+    if (cli::Endl* const pcli_Endl = NativeObject::GetNativeObject<cli::Endl*>(I_NativeEndlRef))
     {
-        if (cli::MenuRef* const pcli_MenuRef = (cli::MenuRef*) I_NativeMenuRefRef)
+        if (cli::MenuRef* const pcli_MenuRef = NativeObject::GetNativeObject<cli::MenuRef*>(I_NativeMenuRefRef))
         {
             pcli_Endl->SetMenuRef(pcli_MenuRef);
+            b_Res = true;
         }
     }
-    NativeTraces::TraceReturn("Endl::__setMenuRef()", "%d", (int) b_Res);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Endl::__setMenuRef()", b_Res) << cli::endl;
     return b_Res;
 }
-

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -32,7 +32,7 @@ include _vars.mak
 PRODUCT = hello
 SRC_DIR = $(CLI_DIR)/java/src/cli/test
 JAVA_FILES = $(CLI_GO_JAVA) $(CLI_JAVA)
-PROJECT_DEPS = native.mak
+PROJECT_DEPS = libclijava.mak jni.mak native.mak
 include _build.mak
 PROJ_CLEAN += $(CLI_JAVA)
 
@@ -44,8 +44,8 @@ CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
 CLI_GO_JAVA = $(CLI_DIR)/java/src/cli/test/GoHello.java
 
 # Rules
-run:
-	cd $(OUT_DIR) && java cli.test.GoHello
+run: build
+	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.GoHello
 
 $(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
 	mkdir -p $(dir $(OUT_DIR))

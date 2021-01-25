@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -40,7 +40,7 @@ CLI_NS_USE(cli)
 
 Menu::Menu(const char* const STR_Name, const Help& CLI_Help)
   : SyntaxNode(STR_Name, CLI_Help),
-    m_pcliHelp(NULL), m_pcliExit(NULL), m_pcliQuit(NULL), m_pcliPwm(NULL)
+    m_pcliHelp(NULL), m_pcliExit(NULL), m_pcliQuit(NULL), m_pcliPwm(NULL), m_pcliCls(NULL)
 {
 }
 
@@ -51,26 +51,6 @@ Menu::~Menu(void)
 const tk::String Menu::GetName(void) const
 {
     return GetKeyword();
-}
-
-const Keyword& Menu::GetHelpNode(void) const
-{
-    return *m_pcliHelp;
-}
-
-const Keyword& Menu::GetExitNode(void) const
-{
-    return *m_pcliExit;
-}
-
-const Keyword& Menu::GetQuitNode(void) const
-{
-    return *m_pcliQuit;
-}
-
-const Keyword& Menu::GetPwmNode(void) const
-{
-    return *m_pcliPwm;
 }
 
 void Menu::SetCli(Cli& CLI_Cli)
@@ -96,6 +76,11 @@ void Menu::SetCli(Cli& CLI_Cli)
             .AddHelp(Help::LANG_FR, "Affichage du menu courant"));
         m_pcliPwm = dynamic_cast<Keyword*>(& AddElement(new Keyword("pwm", cli_Help)));
         m_pcliPwm->AddElement(new Endl(cli_Help)); }
+    {   Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Clean screen")
+            .AddHelp(Help::LANG_FR, "Nettoyage de l'écran"));
+        m_pcliCls = dynamic_cast<Keyword*>(& AddElement(new Keyword("cls", cli_Help)));
+        m_pcliCls->AddElement(new Endl(cli_Help)); }
 }
 
 const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
@@ -103,7 +88,7 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     CommandLineIterator it(CLI_CommandLine);
 
     if (! it.StepIt()) { return false; }
-    else if (it == GetHelpNode())
+    else if (it == *m_pcliHelp)
     {
         if (! it.StepIt()) { return false; }
         if (dynamic_cast<const Endl*>(*it))
@@ -112,16 +97,16 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
             return true;
         }
     }
-    else if (it == GetExitNode())
+    else if (it == *m_pcliExit)
     {
         if (! it.StepIt()) { return false; }
         if (dynamic_cast<const Endl*>(*it))
         {
-            GetShell().ExitMenu();
+            GetShell().ExitMenu(false);
             return true;
         }
     }
-    else if (it == GetQuitNode())
+    else if (it == *m_pcliQuit)
     {
         if (! it.StepIt()) { return false; }
         if (dynamic_cast<const Endl*>(*it))
@@ -130,12 +115,21 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
             return true;
         }
     }
-    else if (it == GetPwmNode())
+    else if (it == *m_pcliPwm)
     {
         if (! it.StepIt()) { return false; }
         if (dynamic_cast<const Endl*>(*it))
         {
             GetShell().PrintWorkingMenu();
+            return true;
+        }
+    }
+    else if (it == *m_pcliCls)
+    {
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
+        {
+            GetShell().CleanScreen(false);
             return true;
         }
     }

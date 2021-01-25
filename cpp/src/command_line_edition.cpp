@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -78,6 +78,11 @@ void CmdLineEdition::SetInsertMode(const bool B_InsertMode)
     m_bInsertMode = B_InsertMode;
 }
 
+const bool CmdLineEdition::GetInsertMode(void) const
+{
+    return m_bInsertMode;
+}
+
 void CmdLineEdition::Put(const OutputDevice& CLI_OutputDevice, const char C_Char)
 {
     // First of all, append the left part of the command line.
@@ -148,7 +153,7 @@ void CmdLineEdition::Delete(const OutputDevice& CLI_OutputDevice, const int I_Co
         for (unsigned int ui_Back = m_tkRight.GetLength() + ui_CharCount; ui_Back > 0; ui_Back --)
             CLI_OutputDevice << "\b";
     }
-    else
+    else if (I_Count < 0)
     {
         // Delete backward.
 

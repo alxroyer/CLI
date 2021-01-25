@@ -9,6 +9,7 @@ $(INT_DIR)/cli_test.o: ../../../cpp/tests/cpp/cli_test.cpp \
   ../../../cpp/include/cli/menu.h ../../../cpp/include/cli/keyword.h \
   ../../../cpp/include/cli/param_int.h ../../../cpp/include/cli/param.h \
   ../../../cpp/include/cli/endl.h ../../../cpp/include/cli/syntax_tag.h \
-  ../../../cpp/include/cli/shell.h ../../../cpp/include/cli/io_device.h \
-  ../../../cpp/include/cli/debug.h ../../../cpp/include/cli/console.h \
-  ../../../cpp/include/cli/telnet.h
+  ../../../cpp/include/cli/shell.h \
+  ../../../cpp/include/cli/non_blocking_io_device.h \
+  ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+  ../../../cpp/include/cli/console.h ../../../cpp/include/cli/telnet.h

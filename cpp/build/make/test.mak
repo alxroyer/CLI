@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -34,12 +34,6 @@ include _check.mak
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
-
-.PHONY: $(CLI_DIR)/cpp/build/make/test.help
-help: $(CLI_DIR)/cpp/build/make/test.help
-$(CLI_DIR)/cpp/build/make/test.help:
-	$(call PrintHelp, check, Check test output)
-	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
 
 .PHONY: $(CLI_DIR)/cpp/build/make/test.vars
 vars: $(CLI_DIR)/cpp/build/make/test.vars

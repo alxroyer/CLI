@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,72 +30,76 @@
 #include "cli_Help.h"
 
 #include "NativeObject.h"
+#include "NativeExec.h"
 #include "NativeTraces.h"
 
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_Help__1_1Help__(JNIEnv* PJ_Env, jclass PJ_Class)
 {
-    NativeTraces::TraceMethod("Help.__Help()");
-    cli::Help* pcli_Help = NULL;
-    if ((pcli_Help = new cli::Help()))
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Help.__Help()") << cli::endl;
+    NativeObject::REF i_HelpRef = 0;
+    if (cli::Help* const pcli_Help = new cli::Help())
     {
-        NativeObject::Use(pcli_Help);
+        NativeObject::Use(*pcli_Help);
+        i_HelpRef = NativeObject::GetNativeRef(*pcli_Help);
     }
-    NativeTraces::TraceReturn("Help.__Help()", "%d", (int) pcli_Help);
-    return (jint) pcli_Help;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Help.__Help()", i_HelpRef) << cli::endl;
+    return i_HelpRef;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_Help__1_1Help__I(JNIEnv* PJ_Env, jclass PJ_Class, jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("Help.__Help(I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    cli::Help* pcli_Help = NULL;
-    if (const cli::Help* const pcli_Src = (const cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Help.__Help(I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    NativeObject::REF i_HelpRef = 0;
+    if (const cli::Help* const pcli_Src = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        if ((pcli_Help = new cli::Help(*pcli_Src)))
+        if (cli::Help* const pcli_Help = new cli::Help(*pcli_Src))
         {
-            NativeObject::Use(pcli_Help);
+            NativeObject::Use(*pcli_Help);
+            i_HelpRef = NativeObject::GetNativeRef(*pcli_Help);
         }
     }
-    NativeTraces::TraceReturn("Help.__Help()", "%d", (int) pcli_Help);
-    return (jint) pcli_Help;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Help.__Help()", i_HelpRef) << cli::endl;
+    return i_HelpRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Help__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeHelpRef)
 {
-    NativeTraces::TraceMethod("Help.__finalize(I_NativeHelpRef)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    if (const cli::Help* const pcli_Help = (const cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Help.__finalize(I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        NativeObject::Free(pcli_Help);
+        NativeObject::Free(*pcli_Help);
     }
-    NativeTraces::TraceReturn("Help.__finalize()");
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Help.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_Help__1_1addHelp(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeHelpRef, jint E_Lang, jstring PJ_Help)
 {
-    NativeTraces::TraceMethod("Help.__addHelp(I_NativeHelpRef, E_Lang, PJ_Help)");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    NativeTraces::TraceParam("E_Lang", "%d", E_Lang);
-    jboolean b_Res = false;
-    if (cli::Help* const pcli_Help = (cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Help.__addHelp(I_NativeHelpRef, E_Lang, PJ_Help)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_Help", NativeExec::Java2Native(PJ_Help).c_str()) << cli::endl;
+    bool b_Res = false;
+    if (cli::Help* const pcli_Help = NativeObject::GetNativeObject<cli::Help*>(I_NativeHelpRef))
     {
-        if (PJ_Env != NULL)
-        {
-            if (const char* const str_Help = PJ_Env->GetStringUTFChars(PJ_Help, 0))
-            {
-                NativeTraces::TraceParam("PJ_Help", "%s", str_Help);
-                pcli_Help->AddHelp((cli::Help::LANG) E_Lang, str_Help);
-                b_Res = true;
-                PJ_Env->ReleaseStringUTFChars(PJ_Help, str_Help);
-            }
-        }
+        pcli_Help->AddHelp((cli::Help::LANG) E_Lang, NativeExec::Java2Native(PJ_Help).c_str());
+        b_Res = true;
     }
-    NativeTraces::TraceReturn("Help.__addHelp()", "%d", (int) b_Res);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Help.__addHelp()", b_Res) << cli::endl;
     return b_Res;
 }
 
@@ -103,13 +107,15 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Help__1_1hasHelp(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeHelpRef, jint E_Lang)
 {
-    NativeTraces::TraceMethod("Help.__hasHelp()");
-    jboolean b_Res = false;
-    if (const cli::Help* const pcli_Help = (cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Help.__hasHelp()") << cli::endl;
+    bool b_Res = false;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
         b_Res = pcli_Help->HasString((cli::Help::LANG) E_Lang);
     }
-    NativeTraces::TraceReturn("Help.__hasHelp()", "%d", (int) b_Res);
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Help.__hasHelp()", b_Res) << cli::endl;
     return b_Res;
 }
 
@@ -117,18 +123,16 @@ extern "C" JNIEXPORT jstring JNICALL Java_cli_Help__1_1getHelp(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeHelpRef, jint E_Lang)
 {
-    NativeTraces::TraceMethod("Help.__getHelp()");
-    NativeTraces::TraceParam("I_NativeHelpRef", "%d", I_NativeHelpRef);
-    NativeTraces::TraceParam("E_Lang", "%d", E_Lang);
-    jstring j_Help = NULL;
-    if (const cli::Help* const pcli_Help = (cli::Help*) I_NativeHelpRef)
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Help.__getHelp()") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
+    std::string str_Help;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
     {
-        if (PJ_Env != NULL)
-        {
-            const std::string str_Help = (const char*) pcli_Help->GetString((cli::Help::LANG) E_Lang);
-            NativeTraces::TraceReturn("Help.__getHelp()", "%s", str_Help.c_str());
-            j_Help = PJ_Env->NewStringUTF(str_Help.c_str());
-        }
+        str_Help = (const char*) pcli_Help->GetString((cli::Help::LANG) E_Lang);
     }
-    return j_Help;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndStr("Help.__getHelp()", str_Help.c_str()) << cli::endl;
+    return NativeExec::Native2Java(str_Help);
 }

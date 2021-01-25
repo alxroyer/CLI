@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,6 +29,9 @@
 
 #ifndef _CLI_TK_STL_H_
 #define _CLI_TK_STL_H_
+
+#include <ctype.h> // toupper, tolower
+#include <string.h> // memset
 
 #include <string>
 #include <deque>
@@ -111,6 +114,7 @@ CLI_NS_BEGIN(cli)
                     const unsigned int UI_MaxLen    //!< Maximum string length.
                     )
             {
+                UnusedParameter(UI_MaxLen); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
             }
 
             //! @brief Initial value constructor.
@@ -122,6 +126,7 @@ CLI_NS_BEGIN(cli)
                     )
               : m_stlString(STR_String)
             {
+                UnusedParameter(UI_MaxLen); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
             }
 
             //! @brief Copy constructor.
@@ -168,6 +173,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Sub-string computation.
+            //! @return Computed sub-string.
             const tk::String SubString(
                     const unsigned int UI_FirstCharacter,   //!< First character position.
                     const int I_SubStringLength             //!< Sub-string length.
@@ -190,8 +196,56 @@ CLI_NS_BEGIN(cli)
                 return str_SubString;
             }
 
+            //! @brief Upper string transformation.
+            //! @return Upper string computed.
+            const String ToUpper(void) const
+            {
+                tk::String str_Upper(0);
+
+                const unsigned int ui_StrLen = GetLength() + 1;
+                if (char* const pc_Upper = new char[ui_StrLen])
+                {
+                    memset(pc_Upper, '\0', ui_StrLen);
+                    if (const char* const pc_String = (const char*) *this) {
+                        for (unsigned int ui=0; ui<ui_StrLen; ui++)
+                        {
+                            pc_Upper[ui] = toupper(pc_String[ui]);
+                        }
+                    }
+                    str_Upper.Append(pc_Upper);
+                    delete [] pc_Upper;
+                }
+
+                return str_Upper;
+            }
+
+            //! @brief Lower string transformation.
+            //! @return Lower string computed.
+            const String ToLower(void) const
+            {
+                tk::String str_Lower(0);
+
+                const unsigned int ui_StrLen = GetLength() + 1;
+                if (char* const pc_Lower = new char[ui_StrLen])
+                {
+                    memset(pc_Lower, '\0', ui_StrLen);
+                    if (const char* const pc_String = (const char*) *this)
+                    {
+                        for (unsigned int ui=0; ui<ui_StrLen; ui++)
+                        {
+                            pc_Lower[ui] = tolower(pc_String[ui]);
+                        }
+                    }
+                    str_Lower.Append(pc_Lower);
+                    delete [] pc_Lower;
+                }
+
+                return str_Lower;
+            }
+
         public:
             //! @brief String resetting.
+            //! @return true when success, false otherwise.
             const bool Reset(void)
             {
                 m_stlString.erase();
@@ -199,21 +253,30 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief String setting.
-            const bool Set(const char* const STR_String)
+            //! @return true when success, false otherwise.
+            const bool Set(
+                    const char* const STR_String    //!< String to set.
+                    )
             {
                 m_stlString = STR_String;
                 return true;
             }
 
             //! @brief String appending.
-            const bool Append(const char* const STR_String)
+            //! @return true when success, false otherwise.
+            const bool Append(
+                    const char* const STR_String    //!< String to append.
+                    )
             {
                 m_stlString += STR_String;
                 return true;
             }
 
             //! @brief String appending.
-            const bool Append(const char C_Character)
+            //! @return true when success, false otherwise.
+            const bool Append(
+                    const char C_Character          //!< Character to append.
+                    )
             {
                 m_stlString += C_Character;
                 return true;
@@ -223,7 +286,7 @@ CLI_NS_BEGIN(cli)
             //! @return The string just assigned itself.
             //! @warning Prefer Set() method since this method does not indicate failures.
             tk::String& operator=(
-                    const tk::String& STR_String        //!< Source string used for assignment.
+                    const tk::String& STR_String    //!< Source string used for assignment.
                     )
             {
                 m_stlString = STR_String.m_stlString;
@@ -249,6 +312,7 @@ CLI_NS_BEGIN(cli)
                     const unsigned int UI_MaxCount  //!< Maximum item count.
                     )
             {
+                UnusedParameter(UI_MaxCount); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
             }
 
             //! @brief Copy constructor.
@@ -270,15 +334,27 @@ CLI_NS_BEGIN(cli)
 
         public:
             //! @brief Determines whether the queue is empty.
+            //! @return true when the queue is empty, false otherwise.
             const bool IsEmpty(void) const
             {
                 return m_stlQueue.empty();
             }
 
             //! @brief Item count.
+            //! @return Number of items in the queue.
             const unsigned int GetCount(void) const
             {
                 return (unsigned int) m_stlQueue.size();
+            }
+
+        public:
+            //! @brief Resets the queue.
+            //! @return true when success, false otherwise.
+            //! @author [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
+            const bool Reset(void)
+            {
+                m_stlQueue.clear();
+                return true;
             }
 
         public:
@@ -300,32 +376,62 @@ CLI_NS_BEGIN(cli)
             };
 
             //! @brief Iterator retrieval.
+            //! @return Iterator instance.
             Iterator GetIterator(void) const
             {
                 return const_cast<std::deque<T>&>(m_stlQueue).begin();
             }
 
             //! @brief Checks the element at the given position is valid.
-            const bool IsValid(const Iterator& it) const
+            //! @return true if the iterator is at a valid place, false otherwise.
+            const bool IsValid(
+                    const Iterator& it      //!< Iterator to check.
+                    ) const
             {
                 return (it != m_stlQueue.end());
             }
 
-            //! @brief Iterates the iterator.
-            const bool MoveNext(Iterator& it) const
+            //! @brief Iterates backward the iterator.
+            //! @return true if the iterator has moved to a valid place, false otherwise.
+            const bool MovePrevious(
+                    Iterator& it            //!< Iterator to move backward.
+                    ) const
+            {
+                if (it != m_stlQueue.begin())
+                {
+                    it --;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            //! @brief Iterates forward the iterator.
+            //! @return true if the iterator has moved to a valid place, false otherwise.
+            const bool MoveNext(
+                    Iterator& it            //!< Iterator to move forward.
+                    ) const
             {
                 it ++;
                 return IsValid(it);
             }
 
             //! @brief Read-only item retrieval.
-            const T& GetAt(const Iterator& it) const
+            //! @return Read-only item retrieved.
+            const T& GetAt(
+                    const Iterator& it      //!< Current iterator.
+                    ) const
             {
                 return *it;
             }
 
             //! @brief Modifiable item retrieval.
-            T& GetAt(const Iterator& it)
+            //! @return Modifiable item retrieved.
+            T& GetAt(
+                    const Iterator& it      //!< Current iterator.
+                    )
             {
                 return *it;
             }
@@ -333,15 +439,18 @@ CLI_NS_BEGIN(cli)
             //! @brief Item removal.
             //! @param it Position. Set to next item.
             //! @return The removed element.
-            const T Remove(Iterator& it)
+            const T Remove(
+                    Iterator& it            //!< Current iterator.
+                    )
             {
                 const T t_Element = *it;
-                m_stlQueue.erase(it);
+                it = m_stlQueue.erase(it);
                 return t_Element;
             }
 
         public:
             //! @brief Add a new element at the head of the queue.
+            //! @return true if the element has been added, false otherwise.
             const bool AddHead(
                     const T& T_Element          //!< New element.
                     )
@@ -351,6 +460,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Add a new element at the tail of the queue.
+            //! @return true if the element has been added, false otherwise.
             const bool AddTail(
                     const T& T_Element          //!< New element.
                     )
@@ -360,12 +470,16 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief First item accessor of the read-only queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Read-only head element.
             const T& GetHead(void) const
             {
                 return m_stlQueue.front();
             }
 
             //! @brief First item accessor of the modifiable queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Modifiable head element.
             T& GetHead(void)
             {
                 return const_cast<T&>(
@@ -374,12 +488,16 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Last item accessor of the read-only queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Read-only tail element.
             const T& GetTail(void) const
             {
                 return m_stlQueue.back();
             }
 
             //! @brief Last item accessor of the modifiable queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Modifiable tail element.
             T& GetTail(void)
             {
                 return const_cast<T&>(
@@ -388,6 +506,8 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Add a new element at the head of the queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Element removed.
             const T RemoveHead(void)
             {
                 const T t_Element = m_stlQueue.front();
@@ -396,6 +516,8 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Add a new element at the tail of the queue.
+            //! @warning Do not call on an empty queue.
+            //! @return Element removed.
             const T RemoveTail(void)
             {
                 const T t_Element = m_stlQueue.back();
@@ -405,6 +527,7 @@ CLI_NS_BEGIN(cli)
 
         public:
             //! @brief Sort the list according to the given comparison function.
+            //! @return true when success, false otherwise.
             const bool Sort(
                     const int (*cmp)(const T&, const T&)    //!< Comparison function.
                                                                 //!< Return positive value when then second argument should follow first one.
@@ -507,9 +630,33 @@ CLI_NS_BEGIN(cli)
             Map& operator=(const Map&);
 
         public:
+            //! @brief Determines whether the map is empty.
+            //! @return true when the map is empty, false otherwise.
+            const bool IsEmpty(void) const
+            {
+                return m_stlMap.empty();
+            }
+
+            //! @brief Item count.
+            //! @return The number of items in the map.
+            const unsigned int GetCount(void) const
+            {
+                return (unsigned int) m_stlMap.size(); // cast to avoid warnings
+            }
+
+        public:
+            //! @brief Resets the map.
+            //! @return true when success, false otherwise.
+            //! @author [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
+            const bool Reset(void)
+            {
+                m_stlMap.clear();
+                return true;
+            }
+
+        public:
             //! @brief Set a new item.
-            //! @return true if the element has been set.
-            //! @return false if the element has not been set.
+            //! @return true if the element has been set, false otherwise.
             const bool SetAt(
                     const K& K_Key,     //!< Key of the element set.
                     const T& T_Value    //!< Value of the element set.
@@ -524,8 +671,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Unset an item.
-            //! @return true if the element has been unset correctly, or if the element was not set.
-            //! @return false if an error occured.
+            //! @return true if the element has been unset correctly, or if the element was not set, false otherwise.
             const bool Unset(
                     const K& K_Key      //!< Key of the element unset.
                     )
@@ -535,7 +681,10 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Checks whether an element is set for this key.
-            const bool IsSet(const K& K_Key) const
+            //! @return true if the key is set, false otherwise.
+            const bool IsSet(
+                    const K& K_Key      //!< Key to check.
+                    ) const
             {
                 return (m_stlMap.count(K_Key) ? true : false);
             }
@@ -590,6 +739,7 @@ CLI_NS_BEGIN(cli)
 
 
             //! @brief Iterator retrieval.
+            //! @return Iterator instance.
             Iterator GetIterator(void) const
             {
                 Iterator it;
@@ -598,32 +748,47 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Checks the element at the given position is valid.
-            const bool IsValid(const Iterator& it) const
+            //! @return true when the iterator is at a valid place, false otherwise.
+            const bool IsValid(
+                    const Iterator& it      //!< Iterator to check.
+                    ) const
             {
                 return (it != m_stlMap.end());
             }
 
             //! @brief Iterates the iterator.
-            const bool MoveNext(Iterator& it) const
+            //! @return true if the iterator has moved to a valid place, false otherwise.
+            const bool MoveNext(
+                    Iterator& it            //!< Iterator to move forward.
+                    ) const
             {
                 it ++;
                 return IsValid(it);
             }
 
             //! @brief Key retrieval.
-            const K& GetKey(const Iterator& it) const
+            //! @return Key of the element pointed by the iterator.
+            const K& GetKey(
+                    const Iterator& it      //!< Current iterator.
+                    ) const
             {
                 return it->first;
             }
 
             //! @brief Read-only item retrieval.
-            const T& GetAt(const Iterator& it) const
+            //! @return Read-only value of the element pointed by the iterator.
+            const T& GetAt(
+                    const Iterator& it      //!< Current iterator.
+                    ) const
             {
                 return it->second;
             }
 
             //! @brief Modifiable item retrieval.
-            T& GetAt(const Iterator& it)
+            //! @return Modifiable value of the element pointed by the iterator.
+            T& GetAt(
+                    const Iterator& it      //!< Current iterator.
+                    )
             {
                 return it->second;
             }
@@ -631,23 +796,13 @@ CLI_NS_BEGIN(cli)
             //! @brief Item removal.
             //! @param it Position. Set to next item.
             //! @return The remove element.
-            const T Remove(Iterator& it)
+            const T Remove(
+                    Iterator& it            //!< Current iterator.
+                    )
             {
                 const T t_Element = GetAt(it);
-                m_stlMap.erase(it);
+                /*it =*/ m_stlMap.erase(it);
                 return t_Element;
-            }
-
-            //! @brief Determines whether the map is empty.
-            const bool IsEmpty(void) const
-            {
-                return m_stlMap.empty();
-            }
-
-            //! @brief Item count.
-            const unsigned int GetCount(void) const
-            {
-                return m_stlMap.size();
             }
 
         private:

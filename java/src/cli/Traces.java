@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -32,20 +32,68 @@ public final class Traces
     private Traces() {
     }
 
-    /** Modifies the traces output stream.
-        @param CLI_Stream   Output device to be used.
-        @return true: success, false: failure. */
-    public static final boolean setStream(OutputDevice CLI_Stream) {
+    /** Traces output stream accessor.
+        @return Traces output device, or null-device if an error occured. */
+    public static final OutputDevice.Interface getStream() {
+        int i_TracesStream = __getStream();
+
+        // Check whether this is an already known output device on Java side.
+        Object j_TracesStream = NativeObject.getObject(i_TracesStream);
+        if (j_TracesStream != null) {
+            if (j_TracesStream instanceof OutputDevice.Interface) {
+                return (OutputDevice.Interface) j_TracesStream;
+            } else {
+                return OutputDevice.getNullDevice();
+            }
+        }
+
+        // Otherwise, check with common devices.
+        if (i_TracesStream == OutputDevice.getStdOut().getNativeRef()) {
+            return OutputDevice.getStdOut();
+        }
+        if (i_TracesStream == OutputDevice.getStdErr().getNativeRef()) {
+            return OutputDevice.getStdErr();
+        }
+        if (i_TracesStream == OutputDevice.getNullDevice().getNativeRef()) {
+            return OutputDevice.getNullDevice();
+        }
+        if (i_TracesStream == IODevice.getStdIn().getNativeRef()) {
+            return IODevice.getStdIn();
+        }
+        if (i_TracesStream == IODevice.getNullDevice().getNativeRef()) {
+            return IODevice.getNullDevice();
+        }
+
+        // Default return.
+        return OutputDevice.getNullDevice();
+    }
+    private static final native int __getStream();
+
+    /** Stack overflow protection.
+        @param CLI_AvoidTraces Device which output is about to be traced.
+        @return true if traces are safe for this output device, false if no trace should be set. */
+    public static final boolean isSafe(cli.OutputDevice.Interface CLI_AvoidTraces) {
+        return (! Traces.getStream().wouldOutput(CLI_AvoidTraces));
+    }
+
+    /** Stream positionning (if not already set).
+        @param CLI_Stream Stream reference.
+        @return true: success, false: failure.
+
+        When SetStream() has not been called previously, then it takes CLI_Stream in account immediately for tracing.
+        Otherwise it stacks the stream (for consistency concerns) and waits for the previous ones to be released possibly. */
+    public static final boolean setStream(OutputDevice.Interface CLI_Stream) {
         return __setStream(CLI_Stream.getNativeRef());
     }
     private static final native boolean __setStream(int I_NativeOutputDeviceRef);
 
     /** Restores the initial traces output stream.
+        @param CLI_Stream Output device to be used.
         @return true: success, false: failure. */
-    public static final boolean unsetStream() {
-        return __unsetStream();
+    public static final boolean unsetStream(OutputDevice.Interface CLI_Stream) {
+        return __unsetStream(CLI_Stream.getNativeRef());
     }
-    private static final native boolean __unsetStream();
+    private static final native boolean __unsetStream(int I_NativeOutputDeviceRef);
 
     /** Modifies the traces filter.
         @param CLI_Class    Trace class object of the filter modification.
@@ -70,44 +118,28 @@ public final class Traces
     }
     private static final native void __trace(int I_TraceClassNativeRef, String STR_Text);
 
-    /** Traces the entrance within a method.
-        @param STR_Method   Method name. */
-    public static final void traceMethod(String STR_Method) {
-        __traceMethod(STR_Method);
-    }
-    private static final native void __traceMethod(String STR_Method);
+    /** Safe trace routine.
+        @param CLI_TraceClass   Corresponding trace class.
+        @param CLI_AvoidTraces  Avoid stream from being sent traces.
+        @param STR_Text         Text of the trace.
 
-    /** Traces a parameter value, when entering a method basically.
-        @param STR_ParamName    Name of the parameter.
-        @param STR_ParamValue   Value of the parameter. */
-    public static final void traceParam(String STR_ParamName, String STR_ParamValue) {
-        __traceParam(STR_ParamName, STR_ParamValue);
-    }
-    private static final native void __traceParam(String STR_ParamName, String STR_ParamValue);
-
-    /** Traces a variable value, within the body of a method basically.
-        @param STR_VarName      Name of the variable.
-        @param STR_VarValue     Value of the variable. */
-    public static final void traceValue(String STR_VarName, String STR_VarValue) {
-        __traceValue(STR_VarName, STR_VarValue);
-    }
-    private static final native void __traceValue(String STR_VarName, String STR_VarValue);
-
-    /** Traces the output of a void method.
-        @param STR_Method   Method name. */
-    public static final void traceReturn(String STR_Method) {
-        __traceReturn(STR_Method);
-    }
-    /** Traces the output of a method returning a value.
-        @param STR_Method   Method name.
-        @param STR_Result   Value returned by the method. */
-    public static final void traceReturn(String STR_Method, String STR_Result) {
-        if (STR_Result != null) {
-            __traceReturn(STR_Method, STR_Result);
-        } else {
-            __traceReturn(STR_Method);
+        Prevents output from infinite loops. */
+    public static final void safeTrace(TraceClass CLI_TraceClass, OutputDevice.Interface CLI_AvoidTraces, String STR_Text) {
+        if (isSafe(CLI_AvoidTraces)) {
+            trace(CLI_TraceClass, STR_Text);
         }
     }
-    private static final native void __traceReturn(String STR_Method);
-    private static final native void __traceReturn(String STR_Method, String STR_Result);
+
+    /** Safe trace routine.
+        @param CLI_TraceClass           Corresponding trace class.
+        @param I_AvoidTracesDeviceRef   Reference of device to avoid from being sent traces.
+        @param STR_Text                 Text of the trace.
+
+        Prevents output from infinite loops. */
+    public static final void safeTrace(TraceClass CLI_TraceClass, int I_AvoidTracesDeviceRef, String STR_Text) {
+        NativeObject cli_Device = NativeObject.getObject(I_AvoidTracesDeviceRef);
+        if ((cli_Device != null) && (cli_Device instanceof OutputDevice.Interface)) {
+            safeTrace(CLI_TraceClass, (OutputDevice.Interface) cli_Device, STR_Text);
+        }
+    }
 }

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -23,10 +23,14 @@
 -------------------------------------------------------------------------------
 
 KNOWN ISSUES
+    * Bug(major)! " in characters <help/> contents causes compilation errors
+    * Bug(major)! cli2help: 'No help available' lines generated in options because of tag[@hollow=yes]/tag[@ref=backward] structures.
     * Bug(minor)! cli2help: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.
     * Bug(minor)! C++: Build info when building in debug under Cygwin
             Info: resolving _ESCDELAY by linking to __imp__ESCDELAY (auto-import)
             Info: resolving _stdscr by linking to __imp__stdscr (auto-import)
+            Info: resolving _LINES by linking to __imp__LINES (auto-import)
+            Info: resolving _COLS by linking to __imp__COLS (auto-import)
     * Bug(minor)! C++: Incomplete ncurses implementation of cli::Console. Missing:
             CTRL+INSER, SHIFT+SUPPR, SHIFT+INSER,
             CONTROL+arrows, 
@@ -41,22 +45,32 @@ KNOWN ISSUES
             CTRL+INS, SHIFT+INS, SHIFT+SUPPR
             bad output for '€'
             input -93 conflicts between '£' and 'ú' (when 'ú' is copied from the output itself)
-    * Bug(minor)! C++: Improve Windows clean screen behavior.
-    * Bug(minor)! C++: Windows telnet multi-client not implemented.
-            Note: fork() for Windows incompatibility
-    * Bug(minor)! Java(Linux): warning: unmappable character for encoding UTF8 ... "Traces d'ex?cution du CLI"
     * Bug(minor)! XSL: xsltproc infinite loop with interleaved tags.
             <tag id="tag1">...<tag ref="tag2"/>...</tag>
             <tag id="tag2">...<tag ref="tag1"/>...</tag>
             Seems non-sens however.
+    * Bug(minor)! doxygen error/warnings:
+            - wrong error detections for non commented argumented errors on Outputdevice::WouldOutput() / IODevice::WouldInput() non-commented derivations.
+            - wrong short description for cli::tk::Map::IsSet()
+    * Bug(minor)! User-guide: Level 1 sub-menu hides the top menu when scrolling
 
+
+FIXED in 2.7
+(Dec, 9th 2011)
+    * Bug(major)! <tag @ref/> preceding <tag @id/> in sub-nodes causes crashes (correction checked with samples/test/fwd-tag.xml sample)
+    * Bug(major)! XSL: '"select" attribute is not allowed on the xsl:call-template element!' XSL transformation error with Saxon (checked also with Xalan) (yuhuawen's contribution integration)
+    * Bug(major)! cli2help.xsl fails with Saxon: various XSL syntax errors fixed
+    * Bug(major)! <string.h> header missing with g++ version 4.4.4 (ubuntu 10.10): NativeObject.cpp, io_mux.cpp, ncurses_console.cpp, tk.cpp
+    * Bug(minor)! Java(Linux): warning: unmappable character for encoding UTF8 ... "Traces d'ex?cution du CLI"
+    * Bug(major)! Misuse of OutputDevice::FreeInstance() return code in Shell::CloseDevices() (major because of possible crashes, never seen however)
+    * Bug(minor)! XSL: return cli::... statements do not compile with Visual Studio 6.0
 
 FIXED in 2.6
 (Dec, 15th 2010)
-    * bug(major)! Do not print intermediate character for errors with no location.
-    * bug(major)! Bad XSL generation (C++ and Java) with nested tags (dummy tags among others).
-    * bug(major)! No character output with telnet connections.
-    * bug(minor)! Extra /* > */ comments for user code lines.
+    * Bug(major)! Do not print intermediate character for errors with no location.
+    * Bug(major)! Bad XSL generation (C++ and Java) with nested tags (dummy tags among others).
+    * Bug(major)! No character output with telnet connections.
+    * Bug(minor)! Extra /* > */ comments for user code lines.
 
 FIXED in 2.5
 (Sep, 30th 2010)

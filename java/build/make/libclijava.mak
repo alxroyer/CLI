@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -31,9 +31,9 @@ CLI_DIR := ../../..
 include _vars.mak
 PRODUCT = libclijava
 SRC_DIR = $(CLI_DIR)/java/src
-JAVA_FILES = $(wildcard $(SRC_DIR)/cli/*.java)
+JAVA_FILES = $(wildcard $(SRC_DIR)/cli/*.java) $(wildcard $(SRC_DIR)/cli/ui/*.java)
 JAR_OBJ = $(JAVA_ARCHIVE)
-PROJ_CLEAN = $(OUT_DIR)/cli/*.class $(OUT_DIR)/cli/test/*.class
+PROJ_CLEAN = $(OUT_DIR)/cli/*.class $(OUT_DIR)/cli/test/*.class $(JAR_OBJ)
 include _build.mak
 
 # Rules.

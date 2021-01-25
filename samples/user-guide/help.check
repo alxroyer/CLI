@@ -1,5 +1,6 @@
 Hello>
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'Hello'
   help            Get help
   pwm             Print Working Menu
@@ -20,6 +21,7 @@ Langue française
 cli-config>exit
 Hello>
   cli-config      Menu de configuration du CLI
+  cls             Nettoyage de l'écran
   exit            Sortir du menu 'Hello'
   help            Obtenir de l'aide
   pwm             Affichage du menu courant

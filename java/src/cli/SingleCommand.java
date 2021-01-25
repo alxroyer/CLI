@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -26,12 +26,12 @@ package cli;
 
 
 /** Input file device. */
-public class SingleCommand extends IODevice
+public class SingleCommand extends IODevice.Native
 {
     /** Constructor.
         @param STR_CommandLine Command line.
         @param CLI_Out Output device. */
-    public SingleCommand(String STR_CommandLine, OutputDevice CLI_Out) {
+    public SingleCommand(String STR_CommandLine, OutputDevice.Interface CLI_Out) {
         super(__SingleCommand(STR_CommandLine, CLI_Out.getNativeRef()));
     }
     private static final native int __SingleCommand(String STR_CommandLine, int I_NativeOutputDeviceRef);

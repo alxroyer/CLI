@@ -1,17 +1,20 @@
 myCLI>
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'myCLI'
   help            Get help
   pwm             Print Working Menu
   quit            Quit
 myCLI>
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'myCLI'
   help            Get help
   pwm             Print Working Menu
   quit            Quit
 myCLI>help
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'myCLI'
   help            Get help
   pwm             Print Working Menu
@@ -20,6 +23,7 @@ myCLI>h
   help            Get help
 myCLI>help 
   cli-config      CLI configuration menu
+  cls             Clean screen
   exit            Exit menu 'myCLI'
   help            Get help
   pwm             Print Working Menu
@@ -35,6 +39,7 @@ cli-config>pwm
   /myCLI/cli-config
 cli-config>help
   beep            Modify beep behavior
+  cls             Clean screen
   echo            Modify echo behavior
   exit            Exit menu 'cli-config'
   help            Get help
@@ -43,11 +48,11 @@ cli-config>help
   quit            Quit
   show            Show CLI information
 cli-config>show version
-CLI version 2.6
+CLI version 2.7
 cli-config>show author
-Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 cli-config>show license
-Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
 All rights reserved.
 
@@ -98,6 +103,7 @@ cli-config>lang french
 Langue française
 cli-config>help
   beep            Configuration du bip
+  cls             Nettoyage de l'écran
   echo            Configuration de l'écho
   exit            Sortir du menu 'cli-config'
   help            Obtenir de l'aide
@@ -108,6 +114,7 @@ cli-config>help
 cli-config>exit
 myCLI>help
   cli-config      Menu de configuration du CLI
+  cls             Nettoyage de l'écran
   exit            Sortir du menu 'myCLI'
   help            Obtenir de l'aide
   pwm             Affichage du menu courant
@@ -120,6 +127,7 @@ cli-config>lang english
 English language
 cli-config>help
   beep            Modify beep behavior
+  cls             Clean screen
   echo            Modify echo behavior
   exit            Exit menu 'cli-config'
   help            Get help

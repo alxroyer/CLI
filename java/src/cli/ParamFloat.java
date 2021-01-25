@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,12 +39,12 @@ public class ParamFloat extends Param {
         Useful for cloned parameters created for a specific float value given in a command line.
         @param I_NativeParamRef Native instance reference. */
     protected static void createFromNative(int I_NativeParamRef) {
-        Traces.traceMethod("ParamFloat.createFromNative(I_NativeParamRef)");
-        Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamFloat.createFromNative(I_NativeParamRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeParamRef", new Integer(I_NativeParamRef).toString()));
 
         NativeObject.createdFromNative(new ParamFloat(I_NativeParamRef));
 
-        Traces.traceReturn("ParamFloat.createFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("ParamFloat.createFromNative()"));
     }
     private ParamFloat(int I_NativeParamRef) {
         super(I_NativeParamRef);
@@ -63,12 +63,12 @@ public class ParamFloat extends Param {
     /** Destruction from native code.
         See createFromNative(). */
     protected static void deleteFromNative(int I_NativeParamRef) {
-        Traces.traceMethod("ParamFloat.deleteFromNative(I_NativeCmdLineRef)");
-        Traces.traceParam("I_NativeParamRef", new Integer(I_NativeParamRef).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamFloat.deleteFromNative(I_NativeCmdLineRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeParamRef", new Integer(I_NativeParamRef).toString()));
 
         NativeObject.deletedFromNative(NativeObject.getObject(I_NativeParamRef));
 
-        Traces.traceReturn("ParamFloat.deleteFromNative()");
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("ParamFloat.deleteFromNative()"));
     }
 
     /** Double value accessor.

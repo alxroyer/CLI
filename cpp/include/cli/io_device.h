@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -87,6 +87,11 @@ CLI_NS_BEGIN(cli)
         OutputDevice& operator=(const OutputDevice&);
 
     public:
+        //! @brief Debug name accessor.
+        //! @return Debug name.
+        const tk::String GetDebugName(void) const;
+
+    public:
         //! @brief Ensures instance validity.
         //! @return Total number of instance users after this call.
         const int UseInstance(
@@ -141,6 +146,15 @@ CLI_NS_BEGIN(cli)
         virtual const bool CloseDevice(void) = 0;
 
     public:
+        #ifndef CLI_NO_STL
+        //! @brief Output operator.
+        //! @return The output device itself.
+        //! @author [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
+        const OutputDevice& operator<<(
+            const std::string& STR_Out  //!< Output string object.
+            ) const;
+        #endif
+
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
@@ -241,6 +255,79 @@ CLI_NS_BEGIN(cli)
         static OutputDevice& GetStdErr(void);
 
     public:
+        //! @brief Screen information.
+        class ScreenInfo : public Object
+        {
+        public:
+            enum {
+                UNKNOWN = -1,           //!< Unknown value constant for either width or height.
+                DEFAULT_WIDTH = 80,     //!< Default width constant.
+                DEFAULT_HEIGHT = 20     //!< Default height constant.
+            } _RegularValues;
+
+        private:
+            //! No default constructor.
+            ScreenInfo(void);
+
+        public:
+            //! @brief Constructor.
+            ScreenInfo(
+                const int I_Width,      //!< Width of screen. Can be UNKNOWN.
+                const int I_Height,     //!< Height of screen. Can be UNKNOWN.
+                const bool B_TrueCls,   //!< True when an efficient CleanScreen() operation is implemented.
+                const bool B_WrapLines  //!< True when the line automatically goes down when the cursor reached the right end of the screen.
+                ) : Object(),
+                    m_iWidth(I_Width), m_iHeight(I_Height),
+                    m_bTrueCls(B_TrueCls), m_bWrapLines(B_WrapLines)
+            {}
+            //! @brief Copy constructor.
+            ScreenInfo(
+                const ScreenInfo& CLI_Info      //!< Dimension object to copy.
+                ) : Object(),
+                    m_iWidth(CLI_Info.GetWidth()), m_iHeight(CLI_Info.GetHeight()),
+                    m_bTrueCls(CLI_Info.GetbTrueCls()), m_bWrapLines(CLI_Info.GetbWrapLines())
+            {}
+            //! @brief Destructor.
+            ~ScreenInfo(void) {}
+        public:
+            //! @brief Assignment operator.
+            ScreenInfo& operator=(
+                const ScreenInfo& CLI_ScreenInfo    //!< Screen information to copy.
+                )
+            {
+                m_iWidth = CLI_ScreenInfo.m_iWidth;
+                m_iHeight = CLI_ScreenInfo.m_iHeight;
+                m_bTrueCls = CLI_ScreenInfo.m_bTrueCls;
+                m_bWrapLines = CLI_ScreenInfo.m_bWrapLines;
+                return *this;
+            }
+        public:
+            //! @brief Screen width accessor.
+            //! @return Screen width if known, UNKNOWN otherwise.
+            const int GetWidth(void) const { return ((m_iWidth > 0) ? m_iWidth : UNKNOWN); }
+            //! @brief Safe screen width accessor.
+            //! @return Screen width if known, default value otherwise.
+            const unsigned int GetSafeWidth(void) const { return ((m_iWidth > 0) ? m_iWidth : DEFAULT_WIDTH); }
+            //! @brief Screen height accessor.
+            //! @return Screen height if known, UNKNOWN otherwise.
+            const int GetHeight(void) const { return ((m_iHeight > 0) ? m_iHeight : UNKNOWN); }
+            //! @brief Safe screen height accessor.
+            //! @return Screen height if known, default value otherwise.
+            const unsigned int GetSafeHeight(void) const { return ((m_iHeight > 0) ? m_iHeight : DEFAULT_HEIGHT); }
+            //! @brief True CleanScreen() characteristic accessor.
+            //! @return True CleanScreen() characteristic.
+            const bool GetbTrueCls(void) const { return m_bTrueCls; }
+            //! @brief Line wrapping characteristic accessor.
+            //! @return Line wrapping characteristic.
+            const bool GetbWrapLines(void) const { return m_bWrapLines; }
+        private:
+            int m_iWidth;       //!< Page width.
+            int m_iHeight;      //!< Page height.
+            bool m_bTrueCls;    //!< True CleanScreen() implementation.
+            bool m_bWrapLines;  //!< Line wrapping.
+        };
+
+    public:
         //! @brief Output handler.
         virtual void PutString(
             const char* const STR_Out   //!< Output string.
@@ -252,14 +339,22 @@ CLI_NS_BEGIN(cli)
         //! @brief Clean screen.
         virtual void CleanScreen(void) const;
 
-        //! @brief Actual device handler.
+        //! @brief Screen info accessor.
+        //! @return Screen info with possible ScreenInfo::UNKNOWN values.
+        virtual const ScreenInfo GetScreenInfo(void) const;
+
+        //! @brief Stack overflow protection.
+        //! @return true if the callee device would redirect characters to the given device for output.
         //!
-        //! Allows one to find out the actual output device the characters would be output to.
-        virtual const OutputDevice& GetActualDevice(void) const;
+        //! Determines whether the current device would output the given device in any way.
+        //! Default implementation checks whether CLI_Device is the self device.
+        virtual const bool WouldOutput(
+            const OutputDevice& CLI_Device  //!< Other device that the callee device should check it would output characters to.
+            ) const;
 
     private:
         //! Debug name. Useful for traces only.
-        const tk::String m_strDbgName;
+        const tk::String m_strDebugName;
 
         //! Instance lock count.
         int m_iInstanceLock;
@@ -283,10 +378,10 @@ CLI_NS_BEGIN(cli)
         ENTER = 13,         //!< Enter.
         ESCAPE = 27,        //!< Escape.
         SPACE = 32,         //!< Space.
-        BACKSPACE = '\b',   //!< Backspace.
-        DELETE = 128,       //!< Delete key.
-        CLS = 129,          //!< Clean screen key.
-        INSERT = 500,       //!< Insert key.
+        BACKSPACE = 8,      //!< Backspace (changed from '\\b' to 8 in version 2.7 for ASCII compliance).
+        DELETE = 127,       //!< Delete key (changed from 128 to 127 in version 2.7 for ASCII compliance).
+        CLS = 501,          //!< Clean screen key (changed from 129 to 501 in order to avoid overlap with printable ASCII characters).
+        INSERT = 502,       //!< Insert key (changed from 500 to 502 in order to avoid overlap with printable ASCII characters).
 
         TAB = '\t',
         KEY_0 = '0', KEY_1 = '1', KEY_2 = '2', KEY_3 = '3', KEY_4 = '4', KEY_5 = '5',
@@ -416,6 +511,15 @@ CLI_NS_BEGIN(cli)
 
         //! @brief Input location.
         virtual const ResourceString GetLocation(void) const;
+
+        //! @brief Stack overflow protection.
+        //! @return true if the callee device would redirect input to the given device for reading.
+        //!
+        //! Determines whether the current device would input the given device in any ways.
+        //! Default implementation checks whether CLI_Device is the self device.
+        virtual const bool WouldInput(
+            const IODevice& CLI_Device  //!< Other device that the callee device should check it would input characters from.
+            ) const;
 
     public:
         //! @brief Null device.

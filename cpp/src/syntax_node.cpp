@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -126,6 +126,7 @@ const bool SyntaxNode::FindElements(
         const char* const STR_Keyword
         ) const
 {
+    // For each child...
     for (   Element::List::Iterator it = m_cliElements.GetIterator();
             m_cliElements.IsValid(it);
             m_cliElements.MoveNext(it))
@@ -135,6 +136,7 @@ const bool SyntaxNode::FindElements(
             if (0) {}
             else if (const SyntaxTag* const pcli_Tag = dynamic_cast<const SyntaxTag*>(pcli_Element))
             {
+                // Propagate call over child non hollow tag.
                 if (! pcli_Tag->GetbHollow())
                 {
                     if (! pcli_Tag->FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
@@ -145,6 +147,7 @@ const bool SyntaxNode::FindElements(
             }
             else if (const SyntaxRef* const pcli_Ref = dynamic_cast<const SyntaxRef*>(pcli_Element))
             {
+                // Propagate call over referenced tag.
                 if (! pcli_Ref->GetTag().FindElements(CLI_ExactList, CLI_NearList, STR_Keyword))
                 {
                     return false;
@@ -166,7 +169,7 @@ const bool SyntaxNode::FindElements(
 
                 if (const Param* const pcli_Param = dynamic_cast<const Param*>(pcli_Element))
                 {
-                    // Just check SetstrValue() works for parameters.
+                    // If the child element is a parameter, check SetstrValue() works for it.
                     if (str_Keyword != "\n")
                     {
                         if (pcli_Param->SetstrValue(str_Keyword))

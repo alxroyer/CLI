@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -45,9 +45,9 @@ public abstract class Param extends SyntaxNode {
         @param CLI_Element Element to check the correspondance with this parameter.
         @return true if the element matches this parameter, false if the element does not match this parameter. */
     public boolean matches(Element CLI_Element) {
-        Traces.traceMethod("Param.matches(CLI_Element)");
-        Traces.traceParam("this", new Integer(this.getNativeRef()).toString());
-        Traces.traceParam("CLI_Element", new Integer(CLI_Element.getNativeRef()).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Param.matches(CLI_Element)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("this", new Integer(this.getNativeRef()).toString()));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("CLI_Element", new Integer(CLI_Element.getNativeRef()).toString()));
 
         boolean b_Res = false;
         if (CLI_Element instanceof Param) {
@@ -60,7 +60,7 @@ public abstract class Param extends SyntaxNode {
             }
         }
 
-        Traces.traceReturn("Param.matches()", new Boolean(b_Res).toString());
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("Param.matches()", new Boolean(b_Res).toString()));
         return b_Res;
     }
     /** Source clone parameter accessor.

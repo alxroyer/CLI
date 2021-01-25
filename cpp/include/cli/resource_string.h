@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2010, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -72,6 +72,11 @@ CLI_NS_BEGIN(cli)
         } LANG;
 
     public:
+        //! @brief Resets the resource string.
+        //! @return The object itself.
+        //! @author [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
+        ResourceString& Reset(void);
+
         //! @brief Adds resource for a given language.
         //! @return The object itself.
         //!
