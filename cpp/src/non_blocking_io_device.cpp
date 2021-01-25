@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,20 +28,18 @@
 #include "cli/pch.h"
 
 #include "cli/non_blocking_io_device.h"
-#include "cli/shell.h"
 #include "cli/assert.h"
 
+#include "exec_context_manager.h"
 #include "constraints.h"
 
 
 CLI_NS_USE(cli)
 
 
-// NonBlockingIODevice class implementation
-
 NonBlockingIODevice::NonBlockingIODevice(const char* const STR_DbgName, const bool B_AutoDelete)
   : IODevice(STR_DbgName, B_AutoDelete),
-    m_cliKeyReceivers(MAX_MT_CONTEXTS)
+    m_pcliExecutionContextManager(NULL)
 {
 }
 
@@ -54,51 +54,18 @@ const KEY NonBlockingIODevice::GetKey(void) const
     return NULL_KEY;
 }
 
-void NonBlockingIODevice::AttachKeyReceiver(NonBlockingKeyReceiver& CLI_KeyReceiver)
+void NonBlockingIODevice::SetExecutionContextManager(ExecutionContextManager* const PCLI_ExecutionContextManager)
 {
-    m_cliKeyReceivers.AddHead(& CLI_KeyReceiver);
+    m_pcliExecutionContextManager = PCLI_ExecutionContextManager;
 }
 
-void NonBlockingIODevice::DetachKeyReceiver(NonBlockingKeyReceiver& CLI_KeyReceiver)
+const ExecutionContext* const NonBlockingIODevice::GetExecutionContext(void) const
 {
-    for (tk::Queue<NonBlockingKeyReceiver*>::Iterator it = m_cliKeyReceivers.GetIterator(); m_cliKeyReceivers.IsValid(it); m_cliKeyReceivers.MoveNext(it))
+    if (m_pcliExecutionContextManager != NULL)
     {
-        if (const NonBlockingKeyReceiver* const pcli_KeyReceiver = m_cliKeyReceivers.GetAt(it))
+        if (ExecutionContext* const pcli_ExecutionContext = m_pcliExecutionContextManager->GetCurrentContext())
         {
-            if (pcli_KeyReceiver == & CLI_KeyReceiver)
-            {
-                m_cliKeyReceivers.Remove(it);
-                return;
-            }
-        }
-    }
-
-    // If this line is reached, it means that CLI_KeyReceiver has not been found in m_cliKeyReceivers.
-    CLI_ASSERT(false);
-}
-
-const NonBlockingKeyReceiver* const NonBlockingIODevice::GetKeyReceiver(void) const
-{
-    if (! m_cliKeyReceivers.IsEmpty())
-    {
-        if (NonBlockingKeyReceiver* const pcli_KeyReceiver = m_cliKeyReceivers.GetHead())
-        {
-            return pcli_KeyReceiver;
-        }
-    }
-
-    return NULL;
-}
-
-const Shell* const NonBlockingIODevice::GetShell(void) const
-{
-    for (   tk::Queue<NonBlockingKeyReceiver*>::Iterator it = m_cliKeyReceivers.GetIterator();
-            m_cliKeyReceivers.IsValid(it);
-            m_cliKeyReceivers.MoveNext(it))
-    {
-        if (const Shell* const pcli_Shell = dynamic_cast<const Shell*>(m_cliKeyReceivers.GetAt(it)))
-        {
-            return pcli_Shell;
+            return pcli_ExecutionContext;
         }
     }
 
@@ -107,34 +74,11 @@ const Shell* const NonBlockingIODevice::GetShell(void) const
 
 void NonBlockingIODevice::OnKey(const KEY E_Key) const
 {
-    if (! m_cliKeyReceivers.IsEmpty())
+    if (m_pcliExecutionContextManager != NULL)
     {
-        if (NonBlockingKeyReceiver* const pcli_KeyReceiver = m_cliKeyReceivers.GetHead())
+        if (ExecutionContext* const pcli_ExecutionContext = m_pcliExecutionContextManager->GetCurrentContext())
         {
-            pcli_KeyReceiver->OnNonBlockingKey(const_cast<NonBlockingIODevice&>(*this), E_Key);
+            pcli_ExecutionContext->ProcessKey(E_Key);
         }
     }
-    else
-    {
-        CLI_ASSERT(false);
-    }
-}
-
-const bool NonBlockingIODevice::WaitForKeys(unsigned int UI_Milli) const
-{
-    tk::UnusedParameter(UI_Milli);
-
-    // By default, no peek message loop, just return false.
-    return false;
-}
-
-
-// NonBlockingKeyReceiver class implementation
-
-NonBlockingKeyReceiver::NonBlockingKeyReceiver(void)
-{
-}
-
-NonBlockingKeyReceiver::~NonBlockingKeyReceiver(void)
-{
 }

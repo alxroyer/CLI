@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -42,15 +44,9 @@ CLI_NS_BEGIN(cli)
     //! @brief Input file device class.
     class InputFileDevice : public IODevice
     {
-    private:
-        //! @brief No default constructor.
-        InputFileDevice(void);
-        //! @brief No copy constructor.
-        InputFileDevice(const InputFileDevice&);
-
     public:
         //! @brief Constructor.
-        InputFileDevice(
+        explicit InputFileDevice(
             const char* const STR_FileName,     //!< Input file name.
             OutputDevice& CLI_Out,              //!< Output device.
                                                 //!< This output device will be opened automatically
@@ -62,34 +58,50 @@ CLI_NS_BEGIN(cli)
         virtual ~InputFileDevice(void);
 
     private:
+        //! @brief No default constructor.
+        explicit InputFileDevice(void);
+        //! @brief No copy constructor.
+        InputFileDevice(const InputFileDevice&);
         //! @brief No assignment operator.
         InputFileDevice& operator=(const InputFileDevice&);
 
     public:
         //! @brief Special character enabling.
+        //! @return Same InputFileDevice instance reference.
         InputFileDevice& EnableSpecialCharacters(
             const bool B_EnableSpecialCharacters    //!< true for enabling. false otherwise.
             );
 
     protected:
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool OpenDevice(void);
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool CloseDevice(void);
     public:
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const KEY GetKey(void) const;
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const ResourceString GetLocation(void) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void PutString(const char* const STR_Out) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void Beep(void) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void CleanScreen(void) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool WouldOutput(const OutputDevice& CLI_Device) const;
 
     public:
         //! @brief File name accessor.
+        //! @return File name.
         const tk::String GetFileName(void) const;
 
         //! @brief Current line accessor.
+        //! @return Current line, starting from 0.
         const int GetCurrentLine(void) const;
 
         //! @brief Current column accessor.
+        //! @return Current column, starting from 0.
         const int GetCurrentColumn(void) const;
 
     private:
@@ -124,15 +136,9 @@ CLI_NS_BEGIN(cli)
     //! @brief Output file device.
     class OutputFileDevice : public OutputDevice
     {
-    private:
-        //! @brief No default constructor.
-        OutputFileDevice(void);
-        //! @brief No copy constructor.
-        OutputFileDevice(const OutputFileDevice&);
-
     public:
         //! @brief Constructor.
-        OutputFileDevice(
+        explicit OutputFileDevice(
             const char* const STR_OutputFileName,   //!< Output file name.
             const bool B_AutoDelete                 //!< Auto-deletion flag.
             );
@@ -141,22 +147,31 @@ CLI_NS_BEGIN(cli)
         virtual ~OutputFileDevice(void);
 
     private:
+        //! @brief No default constructor.
+        explicit OutputFileDevice(void);
+        //! @brief No copy constructor.
+        OutputFileDevice(const OutputFileDevice&);
         //! @brief No assignment operator.
         OutputFileDevice& operator=(const OutputFileDevice&);
 
     protected:
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool OpenDevice(void);
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool CloseDevice(void);
     public:
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void PutString(const char* const STR_Out) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void Beep(void) const;
 
     public:
         //! @brief File name accessor.
+        //! @return File name.
         const tk::String GetFileName(void) const;
 
     private:
-        //! @brief Output file name.
+        //! Output file name.
         const tk::String m_strFileName;
 
         //! Output file.

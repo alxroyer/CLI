@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,7 +46,13 @@
 
         <para>
         The transformation of the XML resource file into target language code is very easy.
-        It is nothing but a simple XSL transformation.
+        It is nothing but a simple transformation.
+        </para>
+
+        <para>
+        You may use either the original XSL transformation stylesheets <filename>cli2cpp.xsl</filename> and <filename>cli2java.xsl</filename>,
+        or their python tools equivalents <filename>cli2cpp.py</filename> and <filename>cli2java.py</filename>.
+        Even though python tools, added in version 2.8, run faster than XSL stylesheets, both techologies are still provided for backward compatibility reasons.
         </para>
 
         <example id="eg.transformation"><title id="eg.transformation.title">Transformation of an XML resource file</title>
@@ -52,24 +60,28 @@
             Try it out!
             Here is a sample CLI resource file:
                 &sample-empty;
-            Copy the stuff into a new file <filename>empty.xml</filename>.
+            Copy the stuff into a new <filename>empty.xml</filename> file.
             </para>
 
             <para>
             Let's say we want to have C++.
-            Using <filename>cppclic.xsl</filename>, launch the XSL transformation
+            Using <filename>cli2cpp.xsl</filename>, launch the XSL transformation
             thanks to a command line XSLT processor.
             I usually use <!--<command>saxon</command>:
-                <programlisting>saxon empty.xml cppclic.xsl &gt; empty.cpp</programlisting>
+                <programlisting>saxon empty.xml cli2cpp.xsl &gt; empty.cpp</programlisting>
             or--> <command>xsltproc</command>:
-                <programlisting>xsltproc cppclic.xsl empty.xml &gt; empty.cpp</programlisting>
+                <programlisting>xsltproc ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty.cpp</programlisting>
+            Or, since version 2.8, the python tools that do the same:
+                <programlisting>python ${CLI_DIR}/tools/cli2cpp.py empty.xml &gt; empty.cpp</programlisting>
             That's all folks!
             Have a look at the <ulink url="misc/empty.cpp">generated C++ file</ulink> if you want.
             </para>
 
             <para>
             And it works with java also!
-                <programlisting>xsltproc --stringparam STR_CliClassName "Empty" javaclic.xsl empty.xml &gt; Empty.java</programlisting>
+                <programlisting>xsltproc --stringparam STR_CliClassName "Empty" ${CLI_DIR}/tools/cli2java.xsl empty.xml &gt; Empty.java</programlisting>
+            or:
+                <programlisting>python ${CLI_DIR}/tools/cli2java.py --cli-class-name "Empty" empty.xml &gt; Empty.java</programlisting>
             Have a look at the <ulink url="misc/Empty.java">generated Java file</ulink>.
             </para>
 
@@ -123,6 +135,66 @@
             </listitem>
         </varlistentry>
         </variablelist>
+        </para>
+
+        <para>
+        The python tools come with <option>--help</option> options:
+<programlisting>
+$ python ${CLI_DIR}/tools/cli2cpp.py --help
+usage: cli2cpp [-h] [--version] [--cli-class-name CLI_CLASS_NAME]
+               [--cli-class-scope CLI_CLASS_SCOPE] [--static | --no-static]
+               [--class-prefix CLASS_PREFIX] [--var-prefix VAR_PREFIX]
+               [--indent INDENT] [--user-indent USER_INDENT]
+               xml-res
+
+positional arguments:
+  xml-res               CLI XML resource file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --cli-class-name CLI_CLASS_NAME
+                        Main CLI class name (default is based on &lt;class-
+                        prefix&gt; and @name attribute).
+  --cli-class-scope CLI_CLASS_SCOPE
+                        Main CLI class scope (default is empty).
+  --static              Static instance creation
+  --no-static           No static instance creation (default)
+  --class-prefix CLASS_PREFIX
+                        Class prefix (default is empty).
+  --var-prefix VAR_PREFIX
+                        Variable prefix (default is 'm_pcli_').
+  --indent INDENT       Indentation pattern (default is 4 spaces).
+  --user-indent USER_INDENT
+                        User-code indentation pattern (default is '/* &gt; */ ').
+</programlisting>
+<programlisting>
+$ python ${CLI_DIR}/tools/cli2java.py --help
+usage: cli2java [-h] [--version] [--cli-class-name CLI_CLASS_NAME]
+                [--cli-class-scope CLI_CLASS_SCOPE]
+                [--class-prefix CLASS_PREFIX] [--var-prefix VAR_PREFIX]
+                [--indent INDENT] [--user-indent USER_INDENT]
+                xml-res
+
+positional arguments:
+  xml-res               CLI XML resource file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --cli-class-name CLI_CLASS_NAME
+                        Main CLI class name (default is based on &lt;class-
+                        prefix&gt; and @name attribute).
+  --cli-class-scope CLI_CLASS_SCOPE
+                        Main CLI class scope (default is empty).
+  --class-prefix CLASS_PREFIX
+                        Class prefix (default is empty).
+  --var-prefix VAR_PREFIX
+                        Variable prefix (default is 'm_cli').
+  --indent INDENT       Indentation pattern (default is 4 spaces).
+  --user-indent USER_INDENT
+                        User-code indentation pattern (default is '/* &gt; */ ').
+</programlisting>
         </para>
 
         <note>
@@ -185,27 +257,28 @@
 
             <example id="eg.cpp.init1"><title id="eg.cpp.init1.title">C++ integration - instantiation from user code</title>
                 <para>
-                Use <filename>cppclic.xsl</filename> parameters to give an explicit name to CLI class generated:
-                    <programlisting>xsltproc --param STR_CliClassName "'EmptyCli'" cppclic.xsl empty.xml &gt; empty_cli.h</programlisting>
+                Use <filename>cli2cpp.xsl</filename> parameters to give an explicit name to CLI class generated:
+                    <programlisting>xsltproc --param STR_CliClassName "'EmptyCli'" ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty_cli.h</programlisting>
                 Create a <filename>goempty.cpp</filename> file that simply includes <filename>empty_cli.h</filename> and make the instantiation at the appropriate time:
 <programlisting>
 #include "cli/common.h"
+#include "cli/console.h"
 #include "empty_cli.h"
 
 int main(void) {
     EmptyCli cli_EmptyCli;
     cli::Shell cli_Shell(cli_EmptyCli);
-    cli::Console cli_Console(false)
+    cli::Console cli_Console(false);
     cli_Shell.Run(cli_Console);
 }
 </programlisting>
                 </para>
 
                 <para>
-                Compile (with <command>g++</command> for instance):
+                Compile and link (with <command>g++</command> for instance):
 <programlisting>
-g++ -Icli/cpp/include -c goempty.cpp
-g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a
+g++ -I${CLI_DIR}/cpp/include -Wno-unused-label -c goempty.cpp
+g++ -o empty goempty.o -L${CLI_DIR}/cpp/build/make/Cygwing++/Release -lclicpp -lncurses
 </programlisting>
                 And run:
                     <programlisting>./empty</programlisting>
@@ -213,15 +286,17 @@ g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a
                 </para>
             </example>
 
-            <example id="eg.cpp.init2"><title id="eg.cpp.init2.title">C++ integration - static instantiation + <function>cli::Cli::FindFromName</function></title>
+            <example id="eg.cpp.init2"><title id="eg.cpp.init2.title">C++ integration - static instantiation</title>
                 <para>
-                Use <filename>cppclic.xsl</filename> parameters to activate static CLI creation:
-                    <programlisting>xsltproc --param B_CliStaticCreation 1 cppclic.xsl empty.xml &gt; empty_cli.cpp</programlisting>
-                Then the file <filename>goempty.cpp</filename> below looks for CLI instances that had been created thanks to a regular expression on their names:
+                Use <filename>cli2cpp.xsl</filename> parameters to activate static CLI creation:
+                    <programlisting>xsltproc --param B_CliStaticCreation 1 ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty_cli.cpp</programlisting>
+                Then the file <filename>goempty2.cpp</filename> below looks for CLI instances that had been created thanks to a regular expression on their names:
 <programlisting>
 #include "cli/common.h"
+#include "cli/console.h"
+
 int main(void) {
-    cli::CliList cli_List(10);
+    cli::Cli::List cli_List(10);
     const int i_Clis = cli::Cli::FindFromName(cli_List, ".*");
     if (i_Clis == 0)
     {
@@ -233,21 +308,21 @@ int main(void) {
         fprintf(stderr, "Warning: Several CLIs found. Executing only the first one.\n");
     }
     cli::Shell cli_Shell(*cli_List.GetHead());
-    cli::Console cli_Console(false)
+    cli::Console cli_Console(false);
     cli_Shell.Run(cli_Console);
 }
 </programlisting>
                 </para>
 
                 <para>
-                Once again, compile:
+                Once again, compile and link:
 <programlisting>
-g++ -Icli/cpp/include -c empty.cpp
-g++ -Icli/cpp/include -c goempty.cpp
-g++ -o empty empty.o goempty.o cli/build/make/libclicpp.a /usr/lib/libncurses.a
+g++ -I${CLI_DIR}/cpp/include -Wno-unused-label -c empty_cli.cpp
+g++ -I${CLI_DIR}/cpp/include -c goempty2.cpp
+g++ -o empty2 empty_cli.o goempty2.o -L${CLI_DIR}/cpp/build/make/${TARGET}${CXX}/${RDX} -lclicpp -lncurses
 </programlisting>
                 And run:
-                    <programlisting>./empty</programlisting>
+                    <programlisting>./empty2</programlisting>
                 </para>
             </example>
 
@@ -293,10 +368,10 @@ int main(void) {
 
             <example id="eg.java.init"><title id="eg.java.init.title">Java integration</title>
                 <para>
-                Considering you have generated an <filename>Empty.java</filename> file
+                Considering you have generated a <filename>Empty.java</filename> file
                 as described in <link linkend="xslt">XSLT transformation section</link>,
                 you may just compile this file with <command>javac</command>,
-                and another one loading the <classname>Empty</classname> class:
+                and another source file <filename>GoEmpty.java</filename> loading the <classname>Empty</classname> class:
 <programlisting>
 class GoEmpty {
     public static void main(String ARJ_Args[]) {
@@ -310,7 +385,7 @@ class GoEmpty {
             return;
         }
         // Create an I/O device.
-        cli.IODevice cli_Input = new cli.Console();
+        cli.IODevice.Interface cli_Input = new cli.Console();
         // Create a shell.
         cli.Shell cli_Shell = new cli.Shell(cli_Cli);
         // Launch the shell.
@@ -319,13 +394,35 @@ class GoEmpty {
 }
 </programlisting>
                 </para>
+
+                <para>
+                Define a <varname>CLI_JAVA_DIR</varname> that points to the place where you installed the CLI library.
+                Either point directly compilation outputs in the <filename class="directory">${CLI_DIR}/java/build/make/${RDX}</filename> directory,
+                or copy <filename>cli.jar</filename> and <filename>${DYN_LIB_PREFIX}cli${DYN_LIB_SUFFIX}</filename> in your own directory and point to it.
+                </para>
+
+                <para>
+                Compile:
+                <programlisting>javac -classpath ${CLI_JAVA_DIR}/cli.jar GoEmpty.java Empty.java</programlisting>
+                Finally run:
+                <programlisting>java -classpath "${CLI_JAVA_DIR}/cli.jar;." -Djava.library.path=${CLI_JAVA_DIR} GoEmpty</programlisting>
+                    <note>
+                    If you get stuck at this point, please read the <link linkend="faq.Q650">dedicated FAQ</link>.
+                    </note>
+                The <option>-classpath</option> option let the Java Virtual Machine know were to find the CLI Java objects.
+                The <option>-Djava.library.path=</option> option tells the Java Virtual Machine where to load the CLI native library from.
+                <varname>CLI_JAVA_DIR</varname> can point to an external installation path,
+                or directly to the <filename class="directory">${CLI_DIR}/java/build/make/${RDX}</filename> output directory in a devel configuration.
+                But you may prefer to copy Java output files in your own execution directory.
+                These options become useless then.
+                </para>
             </example>
 
         </section>
 
         <para>
         The examples above showed you how to create and launch an empty CLI.
-        Now you want to do more interesting stuff don't you?
+        Now you want to do more interesting stuff, don't you?
             <blockquote>Oh yes I do!</blockquote>
         So go to <link linkend="xmlres">next section</link>.
         </para>

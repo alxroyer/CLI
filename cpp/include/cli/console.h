@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,15 +42,9 @@ CLI_NS_BEGIN(cli)
     //! @brief Console intput/output device class.
     class Console : public IODevice
     {
-    private:
-        //! @brief No default constructor.
-        Console(void);
-        //! @brief No copy constructor.
-        Console(const Console&);
-
     public:
         //! @brief Constructor.
-        Console(
+        explicit Console(
             const bool B_AutoDelete     //!< Auto-deletion flag.
             );
 
@@ -56,26 +52,30 @@ CLI_NS_BEGIN(cli)
         virtual ~Console(void);
 
     private:
+        //! @brief No default constructor.
+        explicit Console(void);
+        //! @brief No copy constructor.
+        Console(const Console&);
         //! @brief No assignment operator.
         Console& operator=(const Console&);
 
     protected:
-        //! @brief Open device handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool OpenDevice(void);
-        //! @brief Close device handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool CloseDevice(void);
     public:
-        //! @brief Character input handler.
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const KEY GetKey(void) const;
 
     public:
-        //! @brief Output handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void PutString(const char* const STR_Out) const;
-        //! @brief Beep handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void Beep(void) const;
-        //! @brief Clean screen handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void CleanScreen(void) const;
-        //! @brief Screen info handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const ScreenInfo GetScreenInfo(void) const;
 
     private:

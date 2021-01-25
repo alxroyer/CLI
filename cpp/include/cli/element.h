@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -55,13 +57,15 @@ CLI_NS_BEGIN(cli)
     public:
         // Typedefs.
         //! @brief CLI element list type.
+        //! @return N/A (doxygen warning)
         typedef tk::Queue<const Element*> List;
         //! @brief CLI element map type.
+        //! @return N/A (doxygen warning)
         typedef tk::Map<const tk::String, const Element*> Map;
 
     public:
         //! @brief Constructor.
-        Element(
+        explicit Element(
             const char* const STR_Keyword,  //!< String identifier.
             const Help& STR_Help            //!< Help.
             );
@@ -73,49 +77,58 @@ CLI_NS_BEGIN(cli)
 
     private:
         //! @brief No default constructor.
-        Element(void);
+        explicit Element(void);
         //! @brief No copy constructor.
         Element(const Element&);
         //! @brief No assignment operator.
         Element& operator=(const Element&);
 
     public:
-        //! @brief Access to the string identifier.
+        //! @brief String identifier accessor.
+        //! @return String identifier.
         virtual const tk::String GetKeyword(void) const;
 
-        //! @brief Access to the help object.
+        //! @brief Element help accessor.
+        //! @return Element help member reference.
         virtual const Help& GetHelp(void) const;
 
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Sub-elements search.
-        virtual const bool FindElements(
-            Element::List& CLI_ExactList,   //!< Output list of elements exactly matching STR_Keyword.
-            Element::List& CLI_NearList,    //!< Output list of elements matching STR_Keyword exactly or not.
-            const char* const STR_Keyword   //!< Keyword or beginning of a keyword.
-                                            //!< Can be the whole word, or just the beginning, or something possibly matching (for parameters).
-                                            //!< NULL means no keyword begun.
-                                            //!< Put NULL to retrieve all sub-elements.
-            ) const;
+        //! @param CLI_ExactList Output list of elements exactly matching STR_Keyword.
+        //! @param CLI_NearList Output list of elements matching STR_Keyword exactly or not.
+        //! @param STR_Keyword  Keyword or beginning of a keyword.
+        //!                     Can be the whole word, or just the beginning, or something possibly matching (for parameters).
+        //!                     NULL means no keyword begun.
+        //!                     Put NULL to retrieve all sub-elements.
+        //! @return true for success, false otherwise.
+        virtual const bool FindElements(Element::List& CLI_ExactList, Element::List& CLI_NearList, const char* const STR_Keyword) const;
 
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Cli reference setting.
+        //! @param CLI_Cli Cli reference.
         //!
         //! The m_pcliCli member should be set for each Element object.
         //! However, generally, this method is automaticaly called, as in SyntaxNode::AddElement() for instance.
-        virtual void SetCli(
-            Cli& CLI_Cli                    //!< Cli reference.
-            );
+        virtual void SetCli(Cli& CLI_Cli);
 
-        //! @brief Access to the CLI reference.
+        //! @brief Read-Write Cli reference accessor.
+        //! @return Read-Write Cli reference.
         Cli& GetCli(void);
-        //! @brief Access to the CLI reference.
+        //! @brief Read-only Cli reference accessor.
+        //! @return Read-only Cli reference.
         const Cli& GetCli(void) const;
 
-        //! @brief Access to the shell.
+        //! @brief Shell reference accessor.
+        //! @return Shell reference.
+        //! @note Returns a read-write Shell reference even though the element may be read-only.
         Shell& GetShell(void) const;
 
-        //! @brief Access to the output stream.
+        //! @brief Output stream reference accessor.
+        //! @return Output stream reference.
         const OutputDevice& GetOutputStream(void) const;
 
-        //! @brief Access to the error stream.
+        //! @brief Error stream reference accessor.
+        //! @return Error stream reference.
         const OutputDevice& GetErrorStream(void) const;
 
     private:

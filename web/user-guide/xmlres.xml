@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -55,14 +57,14 @@
         - Define a syntax tree</title>
 
         <para>
-        Keywords and carriage returns are the basics of a CLI.
+        Keywords and end of lines are the basics of a CLI.
         </para>
 
         <example id="eg.hello"><title id="eg.hello.title">Hello world!</title>
             Consider the following command <command>say hello</command>.
             It is actually a sequence of two keywords
             <command>say</command> and <command>hello</command>,
-            terminated by a carriage return.
+            terminated by an and of line specification.
             Here is an XML resource file <filename>hello.xml</filename>
             implementing the command line:
                 &sample-hello;
@@ -182,50 +184,21 @@
         </example>
 
         <para>
-        Note that you give straight away user code to be executed in the XML resource file.
-        This may seem weird firstly, but it is however, to my point of view, a nice way to do.
-        You've got everything in a single readable file.
-        Though, it's easy to maintain.
-        On the other hand, it's easy to understand what is executed on each command.
-        And if you indent your XML resource file elegantly,
-        it could look like a piece of code somehow.
-        </para>
-
-        <para>
-        Here is how sections are organized for C++ generation:
-        <orderedlist>
-        <listitem><sgmltag class="attvalue">head</sgmltag> section:
-                    you may use this section for very first includes
-                    or for pre-processing for instance</listitem>
-
-        <listitem>(auto-generated) CLI includes.</listitem>
-        <listitem><sgmltag class="attvalue">include</sgmltag> section:
-                    this section basically receives user includes.</listitem>
-
-        <listitem>(auto-generated) CLI definition:
-                    the static CLI structure, and the related command executions are defined here.
-                    Within that section, the following subsections are available for each menu:
-                    <orderedlist>
-                    <listitem><sgmltag class="attvalue">members</sgmltag> section:
-                                this section receives member variables or methods for the current menu.</listitem>
-                    <listitem><sgmltag class="attvalue">constructor</sgmltag> section:
-                                this section receives code to be placed in the constructor of the current menu.</listitem>
-                    </orderedlist>
-        </listitem>
-
-        <listitem><sgmltag class="attvalue">tail</sgmltag> section:
-                    very last section.</listitem>
-        </orderedlist>
-
-        Java sections look the same except for <sgmltag class="attvalue">include</sgmltag> section,
-        which is named <sgmltag class="attvalue">import</sgmltag> section in Java.
+        <sgmltag class="element">cpp</sgmltag> and <sgmltag class="element">java</sgmltag>
+        are not restricted to <sgmltag class="element">endl</sgmltag> elements.
+        You can attach target code to almost any element of your syntax tree,
+        as shown in examples <link linkend="eg.tag.circle1" endterm="eg.tag.circle1.title"/>
+        and <link linkend="eg.tag.circle2" endterm="eg.tag.circle2.title"/>.
         </para>
 
         <note>
-        <para>
-        C++ sections have changed a lot in version 2.1,
-        being greatly improved thanks to Java experience.
-        </para>
+        The user code to be executed is given straight away in the XML resource file.
+        This may seem weird at frst, but it is however, to my point of view, a nice way to do.
+        You've got everything in a single readable file.
+        Thus, it's easy to maintain.
+        On the other hand, it's easy to understand what is executed on each command.
+        And if you indent your XML resource file elegantly,
+        it could look like a piece of code somehow.
         </note>
 
         <para>
@@ -253,6 +226,40 @@
         if it is launched from a TCP connection, output is sent on this TCP connection...
         without changing anything in your XML resource file.
         </tip>
+
+        <para>
+        Special sections have been introduced in the example <link linkend="eg.code">above</link>.
+        Here is the detail of how they are organized, for C++ generation:
+        <orderedlist>
+        <listitem><sgmltag class="attvalue">head</sgmltag> section:
+                    you may use this section for very first includes
+                    or for pre-processing for instance</listitem>
+        <listitem>(auto-generated) CLI includes.</listitem>
+        <listitem><sgmltag class="attvalue">include</sgmltag> section:
+                    this section basically receives user includes.</listitem>
+        <listitem>(auto-generated) CLI definition:
+                    the static CLI structure, and the related command executions are defined here.
+                    Within that section, the following subsections are available for each menu:
+                    <orderedlist>
+                    <listitem><sgmltag class="attvalue">members</sgmltag> section:
+                                this section receives member variables or methods for the current menu.</listitem>
+                    <listitem><sgmltag class="attvalue">constructor</sgmltag> section:
+                                this section receives code to be placed in the constructor of the current menu.</listitem>
+                    </orderedlist></listitem>
+        <listitem><sgmltag class="attvalue">tail</sgmltag> section:
+                    very last section.</listitem>
+        </orderedlist>
+        </para>
+
+        <para>
+        Java sections look the same except for the <sgmltag class="attvalue">include</sgmltag> section,
+        which is named <sgmltag class="attvalue">import</sgmltag> in Java.
+        </para>
+
+        <note>
+        C++ sections have changed a lot in version 2.1,
+        being greatly improved thanks to Java experience.
+        </note>
 
         <blockquote>
         I got it.
@@ -1036,7 +1043,7 @@ add circle green
         </para>
 
         <example id="eg.xsd"><title id="eg.xsd.title">Xml Schema validation</title>
-<programlisting>$ xmllint --schema $CLI_DIR/schema/cli.xsd --noout my-cli.xml
+<programlisting>$ xmllint --schema ${CLI_DIR}/tools/cli.xsd --noout my-cli.xml
 my-cli.xml validates</programlisting>
         </example>
 
@@ -1052,7 +1059,7 @@ my-cli.xml validates</programlisting>
         </para>
 
         <example id="eg.rng"><title id="eg.rng.title">Relax NG validation</title>
-<programlisting>$ xmllint --relaxng $CLI_DIR/cli.rng --noout --noout my-cli.xml
+<programlisting>$ xmllint --relaxng ${CLI_DIR}/tools/cli.rng --noout --noout my-cli.xml
 my-cli.xml validates</programlisting>
         </example>
 
@@ -1067,31 +1074,73 @@ my-cli.xml validates</programlisting>
     </section>
 
     <section id="xmlres.cli2help">
-    <title id="xmlres.cli2help.title">
-        <filename>cli2help.xsl</filename>
-        - Automatic documentation generation</title>
+    <title id="xmlres.cli2help.title">Automatic documentation generation</title>
 
         <para>
         Since version 2.5, the CLI toolkit is provided with a <filename>cli2help.xsl</filename> XSL stylesheet.
-        This stylesheet generates CLI documentation automatically.
+        And since version 2.8, a python tool equivalent <filename>cli2help.py</filename> is also provided.
+        These tools generate CLI documentation automatically.
         </para>
 
-        <example id="eg.cli2help"><title id="cli2help.title"><filename>cli2help.xsl</filename> automatic documentation generation</title>
+        <note>
+        As discussed in the <link linkend="xslt" endterm="xslt.title"/> section
+        for <filename>cli2cpp.py</filename> and <filename>cli2java.py</filename>,
+        the python tool works better than the XSL stylesheets,
+        but both technologies are still provided for backward compatibility reasons.
+        </note>
+
+        <example id="eg.cli2help"><title id="cli2help.title"><filename>cli2help.xsl</filename> / <filename>cli2help.py</filename> automatic documentation generation</title>
             Based on the following sample <ulink url="misc/clisample.xml">clisample.xml</ulink> CLI XML resource file,
             the XSL transformation below automatically generates the given documentation <ulink url="misc/clisample.html">clisample.html</ulink>.
-            <programlisting>$ xsltproc cli2helpxsl clisample.xml &gt; clisample.html</programlisting>
+            <programlisting>xsltproc ${CLI_DIR}/tools/cli2help.xsl clisample.xml &gt; clisample.html</programlisting>
+            or:
+            <programlisting>python ${CLI_DIR}/tools/cli2help.py clisample.xml &gt; clisample.html</programlisting>
         </example>
 
         <para>
-        This XSL stylesheet is not as clever as a human being,
+        The XSL transformation stylesheet has several parameters:
+        <itemizedlist>
+        <listitem><varname>STR_Lang</varname>:
+                    Documentation language. May be either 'en' or 'fr'. Default is 'en'.</listitem>
+        <listitem><varname>B_GenerateToc</varname>:
+                    Table of content generation. 1 to enable. O to disable. Default is 1.</listitem>
+        <listitem><varname>B_NumberTitles</varname>:
+                    Set chapter numbers to titles. 1 to enable. 0 to disable. Default is 1.</listitem>
+        </itemizedlist>
+        </para>
+
+        <para>
+        The python tool comes with a <option>--help</option> option:
+<programlisting>
+$ python ${CLI_DIR}/tools/cli2help.py --help
+usage: cli2help [-h] [--version] [--lang LANG] [--toc | --no-toc]
+                [--title-numbers | --no-title-numbers]
+                xml-res
+
+positional arguments:
+  xml-res             CLI XML resource file
+
+optional arguments:
+  -h, --help          show this help message and exit
+  --version           show program's version number and exit
+  --lang LANG         Language ('en', 'fr'...).
+  --toc               Generate table of content.
+  --no-toc            Do not generate table of content.
+  --title-numbers     Generate titles with their number.
+  --no-title-numbers  Generate titles with no number.
+</programlisting>
+        </para>
+
+        <para>
+        This documentation generation is not as clever as a human being,
         therefore here is a couple of directions in order to generate a smart documentation:
         <itemizedlist>
-        <listitem>The <filename>cli2help.xsl</filename> XSL stylesheet consider backward and forward tags.
+        <listitem>The documentation generation consider backward and forward tags.
             Backward tags basically implement non mandatory options, and are presented <command>[this way]</command>.
             Forward tags implement mandatory options following <command>a(b1|b2)c</command> patterns.
             <itemizedlist>
-            <listitem>Avoid exotic tag nesting, in order to let the XSL transformation have a simple understanding of the organization of the options.
-                Please refer to the <link linkend="xmlres.tag"><sgmltag class="element">tag</sgmltag> section</link>
+            <listitem>Avoid exotic tag nesting, in order to let the tools have a simple understanding of the organization of the options.
+                Please refer to the <link linkend="xmlres.tag"><sgmltag class="element">tag</sgmltag></link> section
                 for the implementation of such regular patterns.
             </listitem>
             </itemizedlist>
@@ -1121,7 +1170,7 @@ my-cli.xml validates</programlisting>
 
     <blockquote>
     Very good.
-    Now I'm getting back to making the user enter out of command lines.
+    Now I'm getting back to making the user enter data out of command line editions.
     You told me we would deal with it?
     </blockquote>
 

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -42,30 +44,31 @@
 
         <para>
         Let's start with telnet implementation.
-        The CLI library is provided <classname>TelnetServer</classname> and <classname>TelnetConnection</classname> classes.
+        The CLI library provides <classname>TelnetServer</classname> and <classname>TelnetConnection</classname> classes.
         These classes allow you to easily make your CLI run with network connections.
         </para>
 
-            <example id="eg.telnet"><title id="eg.telnet">Simple telnet server</title>
-                <para>
-                First of all, inherit from <classname>TelnetServer</classname>.
-                All you have to do is to override
-                <function>onNewConnection</function> to allocate resources for new network connections,
-                and <function>onCloseConnection</function> to free them when the thing is done. 
+        <example id="eg.telnet"><title id="eg.telnet.title">Simple telnet server</title>
+            <para>
+            First of all, inherit from <classname>TelnetServer</classname>.
+            All you have to do is to override
+            <function>onNewConnection</function> to allocate resources for new network connections,
+            and <function>onCloseConnection</function> to free them when the thing is done. 
 <programlisting>
 class MyServer extends cli.TelnetServer {
     public MyServer() {
         // Up to 10 clients on port 9012.
         super(10, 9012, cli.ResourceString.LANG_EN);
     }
-    protected cli.Shell onNewConnection(cli.TelnetConnection CLI_NewConnection) {
+    protected cli.ExecutionContext.Interface onNewConnection(cli.TelnetConnection CLI_NewConnection) {
         // Create CLI and Shell instances for that new connection.
         cli.Cli cli_Cli = new MyCli();
         cli.Shell cli_Shell = new cli.Shell(cli_Cli);
         return cli_Shell;
     }
-    protected void onCloseConnection(cli.Shell CLI_Shell, cli.TelnetConnection CLI_ConnectionClosed) {
+    protected void onCloseConnection(cli.TelnetConnection CLI_ConnectionClosed, cli.ExecutionContext.Interface CLI_Context) {
         // Free connection resources: the garbage collector does the thing for us in Java.
+        // Note: CLI_Context corresponds to the cli.Shell instance we have created in onNewConnection().
     }
 }
 </programlisting>
@@ -80,17 +83,38 @@ cli_Server.startServer(); // Blocking call
             </para>
 
             <note>
-            <classname>TelnetServer</classname> and <classname>TelnetConnection</classname> have been improved a lot with CLI 2.7.
-            By the way, APIs have changed a bit, but no problem until you refer to that user guide section, also added in version 2.7.
+            <para>
+            The <classname>TelnetServer</classname> and <classname>TelnetConnection</classname> interfaces have been modified in 2.7 and 2.8 consequent versions.
+            Sorry if those changes disturb integrations of some of your software with prior versions of the library,
+            but note that the motivation for those modifications is real improvements:
+            <variablelist>
+            <varlistentry><term>CLI 2.7 improvements</term>
+                <listitem>
+                    <itemizedlist>
+                    <listitem>Redesign of <classname>TelnetConnection</classname>, made as <link linkend="adv.non-blocking">non blocking</link>
+                        for a better management of parallel connections.</listitem>
+                    <listitem>Redesign of <classname>TelnetServer</classname>, made virtual,
+                        so that the user software can create as many shells and clis for each connection.</listitem>
+                    </itemizedlist>
+                </listitem></varlistentry>
+            <varlistentry><term>CLI 2.8 improvements</term>
+                <listitem>
+                    <itemizedlist>
+                    <listitem>Redesign again of <classname>TelnetServer</classname>, due to <link linkend="adv.exec-ctx">execution contexts improvements </link>,
+                        so that the user software can create shells and clis, but also any other kind of execution contexts.</listitem>
+                    </itemizedlist>
+                </listitem></varlistentry>
+            </variablelist>
+            </para>
             </note>
 
             <para>
-            Start your server, and connect to it thanks to Teraterm for instance:
-                <informalfigure>
+            Start your server, and connect to it thanks to <application>teraterm</application> for instance:
+                <informalfigure id="fig.telnet.teraterm">
                     <mediaobject>
                         <imageobject><imagedata fileref="misc/tterm-telnet.png" srccredit="tterm-doxygen"/></imageobject>
-                    <textobject><phrase>Teraterm telnet settings.</phrase></textobject>
-                    <caption><para>Teraterm telnet settings.</para></caption>
+                    <textobject><phrase><application>teraterm</application> telnet settings.</phrase></textobject>
+                    <caption id="fig.telnet.teraterm.title"><application>teraterm</application> telnet settings</caption>
                     </mediaobject>
                 </informalfigure>
             </para>
@@ -324,7 +348,7 @@ cli_Server.startServer(); // Blocking call
         Please refer to <productname>doxygen</productname> or <productname>javadoc</productname> documentation for additional information.
         </para>
 
-        <table><title><classname>Shell</classname> advanced features</title>
+        <table id="table.shellfeatures"><title id="table.shellfeatures.title"><classname>Shell</classname> advanced features</title>
         <tgroup cols="3" colsep="1" rowsep="1" align="left">
         <colspec colname="description"/><colspec colname="cpp"/><colspec colname="java"/>
         <spanspec spanname="section" namest="description" nameend="java" align="left"/>
@@ -335,90 +359,99 @@ cli_Server.startServer(); // Blocking call
                     <entry>Java</entry></row>
         </thead>
         <tbody>
-            <row>   <entry spanname="section">Input management</entry></row>
+            <row>   <entry spanname="section">Input / output management</entry></row>
             <row>   <entry>Input stream access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#d2291c8673fec28e2f8151f09413b6a1"><function>Shell::GetInput</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#getInput()"><function>Shell.getInput</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#add8486199a73f2bb56830ed003dcb321"><function>ExecutionContext::GetInput</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#getInput()"><function>ExecutionContext.Interface.getInput</function></ulink></entry></row>
             <row>   <entry>Output stream access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#70af9792100a23e8b5f509737269ffe1"><function>Shell::GetStream</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#getStream(int)"><function>Shell.getStream</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#a6fd7a732424cb3fd253079bbf704ebef"><function>ExecutionContext::GetStream</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#getStream(int)"><function>ExecutionContext.Interface.getStream</function></ulink></entry></row>
             <row>   <entry>Output stream positioning</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#b8ef37dc6a98ba279bf0901e2cd9155c"><function>Shell::SetStream</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#setStream(int, cli.OutputDevice.Interface)"><function>Shell.setStream</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#aaf750f141101e90f2c78cb35fe825605"><function>ExecutionContext::SetStream</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#setStream(int, cli.OutputDevice.Interface)"><function>ExecutionContext.Interface.setStream</function></ulink></entry></row>
             <row>   <entry>Enabled/disabled stream accessor</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#de17c6ad4098d8ce4fe9bf5bcc96f172"><function>Shell::StreamEnabled</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#streamEnabled(int)"><function>Shell.streamEnabled</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#a5cd3152dd5d07393cb4ff775f8c337cb"><function>ExecutionContext::StreamEnabled</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#streamEnabled(int)"><function>ExecutionContext.Interface.streamEnabled</function></ulink></entry></row>
             <row>   <entry>Enable/disable stream</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#bf9b1288aa95e7a4668d43f6e4aa497d"><function>Shell::EnableStream</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#enableStream(int,%20boolean)"><function>Shell.enableStream</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#aef973dee56940366895986e63f276f81"><function>ExecutionContext::EnableStream</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#enableStream(int, boolean)"><function>ExecutionContext.Interface.enableStream</function></ulink></entry></row>
             <row>   <entry spanname="section">Presentation</entry></row>
             <row>   <entry>Welcome message setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#8778b8def7fbd6df15c9e615530097d4"><function>Shell::SetWelcomeMessage</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a8778b8def7fbd6df15c9e615530097d4"><function>Shell::SetWelcomeMessage</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setWelcomeMessage(cli.ResourceString)"><function>Shell.setWelcomeMessage</function></ulink></entry></row>
             <row>   <entry>Bye message setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#e80179cef20af1e277ccec1d78d6b775"><function>Shell::SetByeMessage</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ae80179cef20af1e277ccec1d78d6b775"><function>Shell::SetByeMessage</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setByeMessage(cli.ResourceString)"><function>Shell.setByeMessage</function></ulink></entry></row>
             <row>   <entry>Prompt message positioning</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#f4e5a2eaa80d146926bcde65351a3e4d"><function>Shell::SetPrompt</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#af4e5a2eaa80d146926bcde65351a3e4d"><function>Shell::SetPrompt</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#setPrompt(cli.ResourceString)"><function>Shell.setPrompt</function></ulink></entry></row>
             <row>   <entry>Error formatting</entry>
                     <entry spanname="deprecation">Deprecated since version 2.6, use <link linkend="adv.menus.handlers">error handlers</link> instead.</entry></row>
             <row>   <entry>Help margin accessor</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#88ecb7b84507a6a0a328bbad2f7dc546"><function>Shell::GetHelpMargin</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a88ecb7b84507a6a0a328bbad2f7dc546"><function>Shell::GetHelpMargin</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getHelpMargin()"><function>Shell.getHelpMargin</function></ulink></entry></row>
             <row>   <entry>Help offset accessor</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#b634fad29d7130768a0d035b4b84fa5c"><function>Shell::GetHelpOffset</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ab634fad29d7130768a0d035b4b84fa5c"><function>Shell::GetHelpOffset</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getHelpOffset()"><function>Shell.getHelpOffset</function></ulink></entry></row>
             <row>   <entry spanname="section">Language settings</entry></row>
             <row>   <entry>Language setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#4da46821d20e0c7519dec0ad3e381c3a"><function>Shell::SetLang</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#setLang(int)"><function>Shell.setLang</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#a3af7157b8ee0980415614fe68a84fe5c"><function>ExecutionContext::SetLang</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#setLang(int)"><function>ExecutionContext.Interface.setLang</function></ulink></entry></row>
             <row>   <entry>Language access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#fae8f69c25a41e89d184e3c49b1b3918"><function>Shell::GetLang</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#getLang()"><function>Shell.getLang</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#a17c4b76a71977d05f72b6e8b54dfb5a1"><function>ExecutionContext::GetLang</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#getLang()"><function>ExecutionContext.Interface.getLang</function></ulink></entry></row>
             <row>   <entry spanname="section">Beep settings</entry></row>
             <row>   <entry>Beep configuration setting</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#d14c863b1b25d88be7575e0ed6ee36ae"><function>Shell::SetBeep</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#setBeep(boolean)"><function>Shell.setBeep</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#a254d057dcc0dfe1a2373bdb2b9e0bb2f"><function>ExecutionContext::SetBeep</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#setBeep(boolean)"><function>ExecutionContext.Interface.setBeep</function></ulink></entry></row>
             <row>   <entry>Beep configuration access</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#0ac2a73a2b92fcdc38f682a6c2267590"><function>Shell::GetBeep</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#getBeep()"><function>Shell.getBeep</function></ulink></entry></row>
+                    <entry><ulink url="../doxygen/html/classExecutionContext.html#af30a9621e3b3aaf3a4c11d2283697a38"><function>ExecutionContext::GetBeep</function></ulink></entry>
+                    <entry><ulink url="../javadoc/html/cli/ExecutionContext.Interface.html#getBeep()"><function>ExecutionContext.Interface.getBeep</function></ulink></entry></row>
             <row>   <entry spanname="section">Execution</entry></row>
             <row>   <entry>Retrieves the current menu (or one of those in the current menu stack)</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#2a2d05ec7a5c7302d548dd6d064be127"><function>Shell::GetCurrentMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#acd89663e4920f82781e067924ebb0d0c"><function>Shell::GetCurrentMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#getCurrentMenu(int)"><function>Shell.getCurrentMenu</function></ulink></entry></row>
             <row>   <entry>Enters a menu</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#fc960160c73e316a462e3dafa76c083e"><function>Shell::EnterMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#afc960160c73e316a462e3dafa76c083e"><function>Shell::EnterMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#enterMenu(cli.Menu, boolean)"><function>Shell.enterMenu</function></ulink></entry></row>
             <row>   <entry>Exits the current menu</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#c155dd1bbf445626efb288e3305d7bcb"><function>Shell::ExitMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#ac155dd1bbf445626efb288e3305d7bcb"><function>Shell::ExitMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#exitMenu(boolean)"><function>Shell.exitMenu</function></ulink></entry></row>
             <row>   <entry>Terminates the shell</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#3d082082d4a4ee56c6d4e82564ae868b"><function>Shell::Quit</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a3d082082d4a4ee56c6d4e82564ae868b"><function>Shell::Quit</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#quit()"><function>Shell.quit</function></ulink></entry></row>
-            <row>   <entry>Terminates the shell</entry>
+            <!--<row>   <entry>Terminates the shell</entry>
                     <entry><ulink url="../doxygen/html/classShell.html#14b1f93386a3f66d65beec6fbbd80a20"><function>Shell::QuitThreadSafe</function></ulink></entry>
-                    <entry><ulink url="../javadoc/html/cli/Shell.html#quitThreadSafe()"><function>Shell.quitThreadSafe</function></ulink></entry></row>
+                    <entry><ulink url="../javadoc/html/cli/Shell.html#quitThreadSafe()"><function>Shell.quitThreadSafe</function></ulink></entry></row>-->
             <row>   <entry spanname="section">Basic command access</entry></row>
             <row>   <entry>Displays help depending on the context of the current line</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#10d22c619c06ef903ffde6153cf7ec1e"><function>Shell::DisplayHelp</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a10d22c619c06ef903ffde6153cf7ec1e"><function>Shell::DisplayHelp</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#displayHelp()"><function>Shell.displayHelp</function></ulink></entry></row>
             <row>   <entry>Prints the working menu</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#9e18d5399d3855c50f1d54015e09bc86"><function>Shell::PrintWorkingMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a9e18d5399d3855c50f1d54015e09bc86"><function>Shell::PrintWorkingMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#printWorkingMenu()"><function>Shell.printWorkingMenu</function></ulink></entry></row>
             <row>   <entry>Cleans the screen</entry>
-                    <entry><ulink url="../doxygen/html/classShell.html#6b6751262f2ee8f36302902747ed56a2"><function>Shell::CleanScreen</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classShell.html#a6b6751262f2ee8f36302902747ed56a2"><function>Shell::CleanScreen</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Shell.html#cleanScreen(boolean)"><function>Shell.cleanScreen</function></ulink></entry></row>
             <row>   <entry spanname="section">Debug</entry></row>
             <row>   <entry>Configuration menu enabling</entry>
-                    <entry><ulink url="../doxygen/html/classCli.html#fcef4a4232b6a21d8a6262adb51b8b49"><function>Cli::EnableConfigMenu</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classCli.html#afcef4a4232b6a21d8a6262adb51b8b49"><function>Cli::EnableConfigMenu</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Cli.html#enableConfigMenu(boolean)"><function>Cli.enableConfigMenu</function></ulink></entry></row>
             <row>   <entry>Configuration menu enabled status</entry>
-                    <entry><ulink url="../doxygen/html/classCli.html#2dba8bf5e11a92c68324cf77c59413a2"><function>Cli::IsConfigMenuEnabled</function></ulink></entry>
+                    <entry><ulink url="../doxygen/html/classCli.html#a2dba8bf5e11a92c68324cf77c59413a2"><function>Cli::IsConfigMenuEnabled</function></ulink></entry>
                     <entry><ulink url="../javadoc/html/cli/Cli.html#isConfigMenuEnabled()"><function>Cli.isConfigMenuEnabled</function></ulink></entry></row>
         </tbody>
         </tgroup>
         </table>
+
+        <note>
+        You may notice that a couple of the features above are directly available from the base <classname>ExecutionContext</classname>,
+        and not only from the <classname>Shell</classname> class.
+        Indeed, the generic <classname>ExecutionContext</classname> class, new in version 2.8,
+        gathers many useful features, that were implemented in the <classname>Shell</classname> class in former versions,
+        but for any kind of <link linkend="adv.exec-ctx">execution context</link> now.
+        </note>
+
     </section>
 
     <section id="adv.traces"><title id="adv.traces.title">Traces</title>
@@ -460,11 +493,11 @@ cli_Server.startServer(); // Blocking call
             The CLI library has generic classes defining input/output device interfaces:
             <classname>cli::OutputDevice</classname>, <classname>cli::IODevice</classname> and <classname>cli::NonBlockingIODevice</classname>.
             The CLI library gives several implementations of these generic classes:
-                <informalfigure>
+                <informalfigure id="fig.iodevices">
                     <mediaobject>
                         <imageobject><imagedata fileref="../doxygen/html/classOutputDevice__inherit__graph.png" srccredit="doxygen"/></imageobject>
                     <textobject><phrase>Input/output devices class hierarchy.</phrase></textobject>
-                    <caption><para>Input/output devices class hierarchy.</para></caption>
+                    <caption id="fig.iodevices.title">Input/output devices class hierarchy</caption>
                     </mediaobject>
                 </informalfigure>
             <variablelist>
@@ -514,7 +547,7 @@ cli_Server.startServer(); // Blocking call
             When inheriting from <classname>cli::OutputDevice</classname>, <classname>cli::IODevice</classname> or <classname>cli::NonBlockingIODevice</classname>,
             the following handlers must/may be overridden:
 
-                <table><title>Output device handlers</title>
+                <table id="table.OutputDevice"><title id="table.OutputDevice.title">Output device handlers</title>
                     <para>
                     See <ulink url="../doxygen/html/classOutputDevice.html"><classname>cli::OutputDevice</classname></ulink> for C++,
                     <ulink url="../javadoc/html/cli/OutputDevice.Java.html"><classname>cli.OutputDevice.Java</classname></ulink> for Java.
@@ -626,7 +659,7 @@ cli_Server.startServer(); // Blocking call
                 </tgroup>
                 </table>
 
-                <table><title>Input device handlers</title>
+                <table id="table.IODevice"><title id="table.IODevice.title">Input device handlers</title>
                     <para>
                     See <ulink url="../doxygen/html/classIODevice.html"><classname>cli::IODevice</classname></ulink> for C++,
                     <ulink url="../javadoc/html/cli/IODevice.Java.html"><classname>cli.IODevice</classname></ulink> for Java.
@@ -687,7 +720,7 @@ cli_Server.startServer(); // Blocking call
                 </tgroup>
                 </table>
 
-                <table><title>Non blocking device handlers</title>
+                <table id="table.NonBlockingIODevice"><title id="table.NonBlockingIODevice.title">Non blocking device handlers</title>
                     <para>
                     See <ulink url="../doxygen/html/classNonBlockingIODevice.html"><classname>cli::NonBlockingIODevice</classname></ulink> for C++,
                     <ulink url="../javadoc/html/cli/NonBlockingIODevice.Java.html"><classname>cli.NonBlockingIODevice</classname></ulink> for Java.
@@ -702,8 +735,8 @@ cli_Server.startServer(); // Blocking call
                             <entry>Description</entry></row>
                 </thead>
                 <tbody>
-                    <row>   <entry><ulink url="../doxygen/html/classNonBlockingIODevice.html#b3bd1255c2b1f9416fec8a9dbc5bb35a"><function>WaitForKeys</function></ulink></entry>
-                            <entry><ulink url="../javadoc/html/cli/NonBlockingIODevice.Java.html#waitForKeys(int)"><function>waitForKeys</function></ulink></entry>
+                    <!--<row>   <entry><function>WaitForKeys</function></entry>
+                            <entry><function>waitForKeys</function></entry>
                             <entry>Optional</entry>
                             <entry>
                                 <para>
@@ -716,27 +749,48 @@ cli_Server.startServer(); // Blocking call
                                 This kind of wait implementation may cause nested peek message loops,
                                 but if you are using <link linkend="ui">UI features</link>, you might need to implement such kind of loops.
                                 </para>
-                            </entry></row>
+                            </entry></row>-->
                     <row>   <entry><ulink url="../doxygen/html/classNonBlockingIODevice.html#e7f95aa8e13de4a2b4a271da01b19db2"><function>OnKey</function></ulink></entry>
                             <entry><ulink url="../javadoc/html/cli/NonBlockingIODevice.Java.html#onKey(int)"><function>onKey</function></ulink></entry>
                             <entry>Optional</entry>
                             <entry>
-                                <para>
+                                <!--<para>
                                 This method is declared as handler as a consequence of the previous <function>WaitForKeys</function> handler.
                                 When the device is waiting for keys, this handler allows you to trap the information of incoming keys,
                                 and make the waiting loop exit.
+                                </para>-->
+                                <para>
+                                Handler to call in order to push non blocking keys for processing.
                                 </para>
                             </entry></row>
                 </tbody>
                 </tgroup>
                 </table>
+
+                <note>
+                <para>
+                <function>NonBlockingIODevice::WaitForKeys</function> is deprecated since version 2.8.
+                </para>
+
+                <para>
+                UI controls were added in version 2.7, but they did not fully support non blocking executions at first,
+                that's the reason why a <function>NonBlockingIODevice::WaitForKeys</function> method had been added then.
+                </para>
+
+                <para>
+                Thanks to the creation of the <link linkend="adv.exec-ctx">execution context classes</link> classes in version 2.8,
+                shells and <link linkend="ui">UI controls</link> now behave the same.
+                There was no more reason for the <function>NonBlockingIODevice::WaitForKeys</function> method to be,
+                that's the reason why it has been removed and has no existence out of version 2.7.
+                </para>
+                </note>
             </para>
 
         </section>
 
     </section>
 
-    <section id="adv.IOMux"><title>Input / output multiplexer device</title>
+    <section id="adv.IOMux"><title id="adv.IOMux.title">Input / output multiplexer device</title>
 
         <para>
         Considering the input device could be not the same all along CLI execution,
@@ -752,9 +806,9 @@ cli_Server.startServer(); // Blocking call
 
     </section>
 
-    <section id="adv.quit"><title>Thread-safe termination</title>
+    <section id="adv.quit"><title id="adv.quit.title">Thread-safe termination (deprecated)</title>
 
-        <para>
+        <!--<para>
         Some of you may need the ability to stop the CLI execution immediately on certain events.
         </para>
 
@@ -767,6 +821,15 @@ cli_Server.startServer(); // Blocking call
         This method indicates the shell that it should stop its execution as soon as possible, i.e. as soon as a character is entered for most cases.
         By the way, if the input device of the shell is a personal input device you have designed for your special needs,
         you could also have this device return <code class="value">cli::NULL_KEY</code> immediately.
+        </para>-->
+
+        <para>
+        Thanks to real improvements of <link linkend="adv.non-blocking">non blocking executions</link>
+        with the addition of <link linkend="adv.exec-ctx">execution contexts</link>,
+        the <function>cli::Shell::QuitThreadSafe</function> method has been deprecated and even removed in version 2.8.
+        Indeed, if you need to terminate a CLI execution from external events,
+        it is far much better to make it work in a non blocking mode.
+        This way, it can remain in a single main thread, without the threat of threading border effects.
         </para>
 
     </section>
@@ -774,13 +837,25 @@ cli_Server.startServer(); // Blocking call
     <section id="adv.non-blocking"><title id="adv.non-blocking.title">Non blocking execution</title>
 
         <para>
-        The regular integration of the CLI is to have the shell running its main loop in a dedicated thread or a process,
+        The basic integration of the CLI is to have the shell running its main loop in the main thread,
         waiting for the input device to return characters, thanks to the blocking call <function>cli::IODevice::GetKey</function>.
         </para>
 
         <para>
-        This is often source of problems when the integration takes place in a mono-thread application (such as Windows MFC for instance).
-        Such kind of applications is not usually designed to safely manage threading and access concurrency.
+        This method is fast, but not convenient in various situations:
+        <itemizedlist>
+        <listitem>
+            When the integration takes place in a mono-thread application (such as Windows MFC for instance).
+            Such kind of applications is usually not designed to safely manage threading and access concurrency.
+            Thus creating a thread for a blocking CLI to run in it is source of troubles.
+        </listitem>
+        <listitem>
+            When the CLI needs to be stopped from external events.
+            Unless you have developped your <link linkend="adv.iodevices.inherit">own input/output</link>
+            and made something special for that,
+            pretty sure the CLI will be blocked waiting for a single character when you actually need to stop it.
+        </listitem>
+        </itemizedlist>
         That's the reason why a "non blocking" execution mode has been developed.
         </para>
 
@@ -790,12 +865,12 @@ cli_Server.startServer(); // Blocking call
         <itemizedlist>
         <listitem>Inherit from this abstract class (see <link linkend="adv.iodevices" endterm="adv.iodevices.title"/>),</listitem>
         <listitem>Have your characters being trapped by the application,</listitem>
-        <listitem>Push them to the shell thanks to the protected <function>cli::NonBlockingIODevice::OnKey</function> method.</listitem>
+        <listitem>Push them to the shell thanks to the <function>cli::NonBlockingIODevice::OnKey</function> method.</listitem>
         </itemizedlist>
         </para>
 
         <example id="eg.non-blocking"><title id="eg.non-blocking.title">Non blocking execution</title>
-            The following Java example illustrates the execution thread when using a non blocking device:
+            The following Java example illustrates the use case when using a non blocking device:
 <programlisting>
 cli.Cli cli_Cli = new MyCli();
 cli.Shell cli_Shell = new cli.Shell(cli_Cli);
@@ -815,9 +890,138 @@ cli_Device.onKey(cli.OutputDevice.ENTER);
 </programlisting>
         </example>
 
+        <para>
+        Regarding <link linkend="ui">UI controls</link>,
+        in non blocking mode, you have to rely on the <classname>ExecutionResult</classname> interface in order to be notified when their execution is done
+        (see <link linkend="adv.exec-ctx" endterm="adv.exec-ctx.title"/>).
+        </para>
+
+        <example id="eg.non-blocking-ui"><title id="eg.non-blocking-ui.title">Non blocking execution and UI controls</title>
+            Non blocking execution Java code illustration below,
+            same as <link linkend="eg.non-blocking">previous example</link>,
+            but for UI controls:
+<!-- See last test case of TestUI.java. -->
+<programlisting>
+final MyNonBlockingIODevice cli_Device = new MyNonBlockingIODevice(); // extends cli.NonBlockingIODevice
+final cli.ui.Line ui_Line = new cli.ui.Line(cli_Shell, "", 0, 1024);
+cli_Device.put("Enter line: ");
+ui_Line.watchResult(
+    new cli.ExecutionResult() {
+        // This method will be called when the control is done
+        protected void onResult(cli.ExecutionContext.Interface CLI_Context) {
+            cli_Device.put("End of execution: ").put(ui_Line.getLine()).endl();
+        }
+    }
+);
+ui_Line.run();
+cli_Device.onKey(cli.OutputDevice.KEY_h);
+cli_Device.onKey(cli.OutputDevice.KEY_e);
+cli_Device.onKey(cli.OutputDevice.KEY_l);
+cli_Device.onKey(cli.OutputDevice.KEY_l);
+cli_Device.onKey(cli.OutputDevice.KEY_o);
+cli_Device.onKey(cli.OutputDevice.ENTER);
+// "End of execution: hello" printed out there
+</programlisting>
+        </example>
+
     </section>
 
-    <section id="adv.dimension"><title>Embedded integration and memory management</title>
+    <section id="adv.exec-ctx"><title id="adv.exec-ctx.title">Execution contexts</title>
+
+        <para>
+        Generic execution contexts have been added in version 2.8.
+        They consist in something that manages:
+        <itemizedlist>
+        <listitem>a set of input/output devices,</listitem>
+        <listitem>settings: language, beep...,</listitem>
+        <listitem>input character processing.</listitem>
+        </itemizedlist>
+        It basically corresponds to what the <classname>Shell</classname> does, but also <link linkend="ui">UI controls</link>,
+        and possibly something you could define for your own needs.
+        This feature is basically implemented with the <classname>ExecutionContext</classname> and <classname>ExecutionResult</classname> classes.
+        </para>
+
+        <section id="adv.exec-ctx.input-char"><title id="adv.exec-ctx.input-char.title">Input character processing</title>
+
+            <para>
+            Input character processing is implemented through the <function>ExecutionContext::Run</function> method.
+            It may be either a blocking or a non blocking call depending on the type of input/output device given.
+            </para>
+
+            <para>
+            The following flow chart illustrates how it works for a regular blocking call execution,
+            (i.e. when the input/output device is a direct <classname>IODevice</classname>-derived class):
+                <informalfigure id="fig.exec-ctx.blocking-call">
+                    <mediaobject>
+                        <imageobject><imagedata fileref="../doxygen/html/inline_mscgraph_1.png" srccredit="doxygen"/></imageobject>
+                    <textobject><phrase>Execution contexts: blocking call executions flow chart.</phrase></textobject>
+                    <caption id="fig.exec-ctx.blocking-call.title">Execution contexts: blocking call execution flow chart</caption>
+                    </mediaobject>
+                </informalfigure>
+            </para>
+
+            <para>
+            As discussed in the <link linkend="adv.non-blocking" endterm="adv.non-blocking.title"/> section, it also supports non blocking call executions
+            (i.e. when the input/output device is a <classname>NonBlockingIODevice</classname>).
+            In that case, the <classname>ExecutionResult</classname> allows one to retrieve execution results of <classname>ExecutionContext</classname> once they are done,
+            as shown in the <link linkend="eg.non-blocking-ui" endterm="eg.non-blocking-ui.title"/> example.
+            The following flow chart illustrates a non blocking call execution:
+                <informalfigure id="fig.exec-ctx.non-blocking-call">
+                    <mediaobject>
+                        <imageobject><imagedata fileref="../doxygen/html/inline_mscgraph_2.png" srccredit="doxygen"/></imageobject>
+                    <textobject><phrase>Execution contexts: non blocking call executions flow chart.</phrase></textobject>
+                    <caption id="fig.exec-ctx.non-blocking-call.title">Execution contexts: non blocking call execution flow chart</caption>
+                    </mediaobject>
+                </informalfigure>
+            </para>
+
+        </section>
+
+        <section id="adv.exec-ctx.top-child"><title id="adv.exec-ctx.top-child.title">Top and child execution contexts</title>
+
+            <para>
+            Execution contexts can be launched within the execution of another execution context.
+            <link linkend="ui">UI controls</link> basically run within the context of a <classname>Shell</classname> for example.
+            That's why we talk about top and child execution contexts.
+            </para>
+
+            <para>
+            Whether it is a top or child execution context depends on the constructor overload you call.
+            When no <classname>ExecutionContext</classname> reference is given for construction, this is a top execution context.
+            When a reference is given, this is a child execution context.
+            See the example below for a practical use case.
+            </para>
+
+            <example id="eg.exec-ctx.pwd-shell"><title id="eg.exec-ctx.pwd-shell.title"><classname>PwdShellContext</classname> execution context</title>
+                <para>
+                The CLI library does not intend to provide a fortified implementation for authentications.
+                That's the reason why no password is managed with the <classname>Shell</classname> class.
+                </para>
+
+                <para>
+                By the way, here is a <classname>PwdShellContext</classname> sample class
+                that chain a simple <classname>ui::Password</classname> execution with a <classname>Shell</classname>.
+                </para>
+
+<programlisting>
+&misc-pwd-shell-cpp;
+</programlisting>
+
+                <para>
+                Same thing in Java:
+                </para>
+
+<programlisting>
+&misc-pwd-shell-java;
+</programlisting>
+
+            </example>
+
+        </section>
+
+    </section>
+
+    <section id="adv.dimension"><title id="adv.dimension.title">Embedded integration and memory management</title>
 
         <para>
         When integrating the CLI in an embedded context, memory considerations become a critical point.
@@ -862,7 +1066,7 @@ cli_Device.onKey(cli.OutputDevice.ENTER);
 
     </section>
 
-    <section id="adv.compilers"><title>Making compilers</title>
+    <section id="adv.compilers"><title id="adv.compilers.title">Making compilers</title>
 
         <para>
         The CLI library can be used to make out compilers of simple syntaxes.
@@ -888,7 +1092,7 @@ cli_Device.onKey(cli.OutputDevice.ENTER);
 
     </section>
 
-    <section id="adv.noxmlres"><title>Without the XML resource file</title>
+    <section id="adv.noxmlres"><title id="adv.noxmlres.title">Without the XML resource file</title>
 
         <para>
         Some of you could find the library interesting for what it already implements,

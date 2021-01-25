@@ -1,13 +1,15 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,14 +25,8 @@
 -------------------------------------------------------------------------------
 
 KNOWN ISSUES
+    * Bug(major)! cli2help: 'No help available' lines generated in options because of tag[@hollow=yes]/tag[@ref=backward] structures (to be checked with cli2help.py)
     * Bug(major)! " in characters <help/> contents causes compilation errors
-    * Bug(major)! cli2help: 'No help available' lines generated in options because of tag[@hollow=yes]/tag[@ref=backward] structures.
-    * Bug(minor)! cli2help: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.
-    * Bug(minor)! C++: Build info when building in debug under Cygwin
-            Info: resolving _ESCDELAY by linking to __imp__ESCDELAY (auto-import)
-            Info: resolving _stdscr by linking to __imp__stdscr (auto-import)
-            Info: resolving _LINES by linking to __imp__LINES (auto-import)
-            Info: resolving _COLS by linking to __imp__COLS (auto-import)
     * Bug(minor)! C++: Incomplete ncurses implementation of cli::Console. Missing:
             CTRL+INSER, SHIFT+SUPPR, SHIFT+INSER,
             CONTROL+arrows, 
@@ -49,11 +45,37 @@ KNOWN ISSUES
             <tag id="tag1">...<tag ref="tag2"/>...</tag>
             <tag id="tag2">...<tag ref="tag1"/>...</tag>
             Seems non-sens however.
-    * Bug(minor)! doxygen error/warnings:
-            - wrong error detections for non commented argumented errors on Outputdevice::WouldOutput() / IODevice::WouldInput() non-commented derivations.
-            - wrong short description for cli::tk::Map::IsSet()
-    * Bug(minor)! User-guide: Level 1 sub-menu hides the top menu when scrolling
 
+
+FIXED in 2.8
+(July, 15th 2013)
+    * Bug(major)! C++: 0x%08x to display pointer values causes a compile error (%p used instead)
+    * Bug(minor)! C++: Compilation errors with g++ 4.6.3
+    * Bug(minor)! C++: Crash in Traces::UnsetStream when streams are unset in the wrong order (trace output consistency improvement)
+    * Bug(minor)! C++: telnet unit test does not compile on certain configurations (#include <stdio.h> changed into #include <unistd.h> for close() definition)
+    * Bug(minor)! C++: OutputDevice::operator<<(void*) format improvements for better compatibility with 64 bits compilers
+    * Bug(minor)! C++: Build info when building in debug under Cygwin
+            Info: resolving _ESCDELAY by linking to __imp__ESCDELAY (auto-import)
+            Info: resolving _stdscr by linking to __imp__stdscr (auto-import)
+            Info: resolving _LINES by linking to __imp__LINES (auto-import)
+            Info: resolving _COLS by linking to __imp__COLS (auto-import)
+    * Bug(minor)! C++: _mkres.mak: bad force rule on $(CLI_CPP_LIB): dependencies always relink the applications
+    * Bug(minor)! C++: test_telnet "connect() failed" errors uner Linux (sleep added)
+    * Bug(major)! Java: "Java faile while executing command: 'cls'" => well-known command control 'cls' missing in NativeMenu.cpp
+    * Bug(minor)! Java: java.lang.UnsatisfiedLinkError: __Native__getScreenInfo at cli.OutputDevice.__Native__getScreenInfo(Native Method) (visible when the getScreenInfo() is called from Java, fixed and checked with I/O devices unit test: java/build/make/io_device.mak, java/src/cli/test/TestIODevice.java)
+    * Bug(minor)! Java: Crash on Endl deletion with MenuRef reference set (visible when calling deprecated System.runFinalizersOnExit(true))
+    * Bug(minor)! Java: Native object references misfunctionning when declaring twice a same keyword in the same context (fixed and checked with test_no_res.mak)
+    * Bug(minor)! Java: Crash when calling deprecated System.runFinalizersOnExit(true) (token addition for static null/stdin/stdout/stderr devices)
+    * Bug(minor)! Java: Crash when calling deprecated System.runFinalizersOnExit(true) (no more finalization for TraceClass("CLI_JNI") main instance)
+    * Bug(minor)! Java: TestTelnet "Connection refused" errors under Linux java-6-openjdk (sleep added)
+    * Bug(minor)! cli2cpp.xsl/cli2java.xsl: accented character management in T_MkCppName/T_MkJavaName
+    * Bug(minor)! cli2java.xsl: Explicit java.lang/java.util package specification (avoid possible conflicts)
+    * Bug(minor)! cli2help.xsl: Forward tag commands do not appear in documentation (T_Recursion|CHECK_MENU fix)
+    * Bug(minor)! cli2help.xsl: Wrong default description for forward tag options.
+    * Bug(minor)! cli2help.xsl: Space missing in command names (due to xsltproc limitation?)
+REJECTED in 2.8
+    * Bug(minor)! cli2help.xsl: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.
+            Work around: cli2help.xsl still unfixed, but cli2help.py provides a fix.
 
 FIXED in 2.7
 (Dec, 9th 2011)

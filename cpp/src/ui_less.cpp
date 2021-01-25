@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,6 +46,13 @@ CLI_NS_BEGIN(cli)
         {
         }
 
+        Less::Less(ExecutionContext& CLI_ParentContext, const unsigned int UI_MaxLines, const unsigned int UI_MaxLineLength)
+          : UI(CLI_ParentContext),
+            m_uiText(* new Text(UI_MaxLines, UI_MaxLineLength)), m_puiTextIt(NULL),
+            m_cliLessLine(* new CmdLineEdition())
+        {
+        }
+
         Less::~Less(void)
         {
             delete & m_uiText;
@@ -70,7 +79,7 @@ CLI_NS_BEGIN(cli)
             // Very first display.
             if (m_puiTextIt == NULL)
             {
-                const OutputDevice::ScreenInfo cli_ScreenInfo = GetShell().GetStream(OUTPUT_STREAM).GetScreenInfo();
+                const OutputDevice::ScreenInfo cli_ScreenInfo = GetStream(OUTPUT_STREAM).GetScreenInfo();
                 m_puiTextIt = new TextIterator(cli_ScreenInfo, cli_ScreenInfo.GetSafeHeight() - 1);
             }
             CLI_ASSERT(m_puiTextIt != NULL);
@@ -92,21 +101,21 @@ CLI_NS_BEGIN(cli)
                     break;
                 case PAGE_UP:
                     if (m_uiText.PageUp(*m_puiTextIt)) PrintScreen();
-                    else GetShell().Beep();
+                    else Beep();
                     break;
                 case KEY_UP:
                     if (m_uiText.LineUp(*m_puiTextIt)) PrintScreen();
-                    else GetShell().Beep();
+                    else Beep();
                     break;
                 case KEY_DOWN:
                 case ENTER:
                     if (m_uiText.LineDown(*m_puiTextIt, NULL)) PrintScreen();
-                    else GetShell().Beep();
+                    else Beep();
                     break;
                 case PAGE_DOWN:
                 case SPACE:
                     if (m_uiText.PageDown(*m_puiTextIt, NULL)) PrintScreen();
-                    else GetShell().Beep();
+                    else Beep();
                     break;
                 case KEY_END:
                     m_uiText.End(*m_puiTextIt, NULL);
@@ -123,7 +132,7 @@ CLI_NS_BEGIN(cli)
                     break;
                 default:
                     // Non managed character: beep.
-                    GetShell().Beep();
+                    Beep();
                     break;
                 }
             }
@@ -131,7 +140,7 @@ CLI_NS_BEGIN(cli)
 
         void Less::PrintScreen(void)
         {
-            const OutputDevice::ScreenInfo cli_ScreenInfo = GetShell().GetStream(OUTPUT_STREAM).GetScreenInfo();
+            const OutputDevice::ScreenInfo cli_ScreenInfo = GetStream(OUTPUT_STREAM).GetScreenInfo();
 
             // Then let current bottom position move one page down while printing the page.
             const StringDevice cli_Out(cli_ScreenInfo.GetSafeHeight() * (cli_ScreenInfo.GetSafeWidth() + 1), false);
@@ -140,15 +149,15 @@ CLI_NS_BEGIN(cli)
 
             // Eventually clean out the screen and print out the computed string.
             m_cliLessLine.Reset();
-            GetShell().GetStream(OUTPUT_STREAM).CleanScreen();
-            GetShell().GetStream(OUTPUT_STREAM) << cli_Out.GetString();
-            m_cliLessLine.Put(GetShell().GetStream(OUTPUT_STREAM), tk::String(10, ":"));
+            GetStream(OUTPUT_STREAM).CleanScreen();
+            GetStream(OUTPUT_STREAM) << cli_Out.GetString();
+            m_cliLessLine.Put(GetStream(OUTPUT_STREAM), tk::String(10, ":"));
         }
 
         void Less::Quit(void)
         {
-            m_cliLessLine.CleanAll(GetShell().GetStream(OUTPUT_STREAM));
-            UI::Finish(true);
+            m_cliLessLine.CleanAll(GetStream(OUTPUT_STREAM));
+            EndControl(true);
         }
 
     CLI_NS_END(ui)

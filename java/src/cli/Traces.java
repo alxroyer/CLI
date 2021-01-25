@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,8 +28,8 @@ package cli;
 
 
 /** Traces management class. */
-public final class Traces
-{
+public final class Traces {
+
     /** Static class. No constructor. */
     private Traces() {
     }
@@ -68,13 +70,6 @@ public final class Traces
         return OutputDevice.getNullDevice();
     }
     private static final native int __getStream();
-
-    /** Stack overflow protection.
-        @param CLI_AvoidTraces Device which output is about to be traced.
-        @return true if traces are safe for this output device, false if no trace should be set. */
-    public static final boolean isSafe(cli.OutputDevice.Interface CLI_AvoidTraces) {
-        return (! Traces.getStream().wouldOutput(CLI_AvoidTraces));
-    }
 
     /** Stream positionning (if not already set).
         @param CLI_Stream Stream reference.
@@ -122,24 +117,36 @@ public final class Traces
         @param CLI_TraceClass   Corresponding trace class.
         @param CLI_AvoidTraces  Avoid stream from being sent traces.
         @param STR_Text         Text of the trace.
+        @return true if traces are safe, false otherwise.
 
         Prevents output from infinite loops. */
-    public static final void safeTrace(TraceClass CLI_TraceClass, OutputDevice.Interface CLI_AvoidTraces, String STR_Text) {
-        if (isSafe(CLI_AvoidTraces)) {
+    public static final boolean safeTrace(TraceClass CLI_TraceClass, NativeObject CLI_AvoidTraces, String STR_Text) {
+        boolean b_SafeTrace = true;
+        if (CLI_AvoidTraces instanceof OutputDevice.Interface) {
+            if (Traces.getStream().wouldOutput((OutputDevice.Interface) CLI_AvoidTraces)) {
+                b_SafeTrace = false;
+            }
+        }
+        if (b_SafeTrace) {
             trace(CLI_TraceClass, STR_Text);
         }
+        return b_SafeTrace;
     }
 
     /** Safe trace routine.
         @param CLI_TraceClass           Corresponding trace class.
         @param I_AvoidTracesDeviceRef   Reference of device to avoid from being sent traces.
         @param STR_Text                 Text of the trace.
+        @return true if traces are safe, false otherwise.
 
         Prevents output from infinite loops. */
-    public static final void safeTrace(TraceClass CLI_TraceClass, int I_AvoidTracesDeviceRef, String STR_Text) {
+    public static final boolean safeTrace(TraceClass CLI_TraceClass, int I_AvoidTracesDeviceRef, String STR_Text) {
         NativeObject cli_Device = NativeObject.getObject(I_AvoidTracesDeviceRef);
-        if ((cli_Device != null) && (cli_Device instanceof OutputDevice.Interface)) {
-            safeTrace(CLI_TraceClass, (OutputDevice.Interface) cli_Device, STR_Text);
+        if (cli_Device != null) {
+            return safeTrace(CLI_TraceClass, cli_Device, STR_Text);
+        } else {
+            return false;
         }
     }
+
 }

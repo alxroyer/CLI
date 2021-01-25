@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,11 +30,12 @@ Makefile.default: $(.DEFAULT_GOAL) ;
 # Includes
 CLI_DIR := ../..
 include _vars.mak
-PROJECTS += schema.mak
-PROJECTS += cli2help.mak
+# Dispatch over C++, Java and tools
 PROJECTS += $(CLI_DIR)/cpp/build/make/Makefile
 PROJECTS += $(CLI_DIR)/java/build/make/Makefile
+PROJECTS += $(CLI_DIR)/tools/build/make/Makefile
 DEFAULT_HELP = Generate libraries and tests
+CLEAN_DIR = $(OUT_DIR)
 include _all.mak
 
 # C++ only
@@ -49,7 +52,6 @@ java: default ;
 .PHONY: doc
 doc: PROJECTS = $(CLI_DIR)/web/build/make/Makefile
 doc: default ;
-clean: PROJECTS += $(CLI_DIR)/web/build/make/Makefile
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak

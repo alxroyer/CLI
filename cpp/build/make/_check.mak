@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -45,16 +47,15 @@ include _mkres.mak
 .PHONY: log
 log: build_depends $(CLI_LOG) ;
 
-$(CLI_LOG): $(CLI_BINARY) $(CLI_TEST) $(CLI_DIR)/samples/cleanlog.sh
+$(CLI_LOG): $(CLI_BINARY) $(CLI_TEST) $(CLI_DIR)/samples/clean_outlog.sh
 	dos2unix $(CLI_TEST) 2> /dev/null
-	$(CLI_BINARY) $(CLI_TEST) $(CLI_LOG) 1> /dev/null 2> /dev/null
-	dos2unix $(CLI_DIR)/samples/cleanlog.sh 2> /dev/null
-	chmod a+x $(CLI_DIR)/samples/cleanlog.sh
-	$(CLI_DIR)/samples/cleanlog.sh $(CLI_LOG)
+	$(CLI_BINARY) --input $(CLI_TEST) --output $(CLI_LOG) 1> /dev/null 2> /dev/null
+	$(call CheckSh,$(CLI_DIR)/samples/clean_outlog.sh)
+	$(CLI_DIR)/samples/clean_outlog.sh $(CLI_LOG)
 	dos2unix $(CLI_LOG) 2> /dev/null
 
-.PHONY: check
-check: build_depends $(CLI_LOG) $(CLI_CHECK)
+.PHONY: check check.xml
+check check.xml: build_depends $(CLI_LOG) $(CLI_CHECK)
 	dos2unix $(CLI_CHECK) 2> /dev/null
 	diff $(CLI_LOG) $(CLI_CHECK)
 
@@ -64,8 +65,9 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(CLI_DIR)/cpp/build/make/_check.help
 help: $(CLI_DIR)/cpp/build/make/_check.help
 $(CLI_DIR)/cpp/build/make/_check.help:
-	$(call PrintHelp, check, Check test output)
-	$(call PrintHelp, log, Generate $(notdir $(CLI_LOG)))
+	$(call PrintHelp, check.xml, Check test output for the given XML resource file (CLI_XML_RES))
+	$(call PrintHelp, check,     Shortcut for check.xml rule)
+	$(call PrintHelp, log,       Generate $(notdir $(CLI_LOG)))
 
 .PHONY: $(CLI_DIR)/cpp/build/make/_check.vars
 vars: $(CLI_DIR)/cpp/build/make/_check.vars

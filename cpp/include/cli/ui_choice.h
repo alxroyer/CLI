@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,15 +42,16 @@ CLI_NS_BEGIN(cli)
         //! @brief Choice user interface class.
         class Choice : public Line
         {
-        private:
-            //! @brief No default constructor.
-            Choice(void);
-            //! @brief No copy costructor.
-            Choice(const Choice&);
-
         public:
-            //! @brief Constructor.
-            Choice(
+            //! @brief Top execution context constructor.
+            explicit Choice(
+                const int I_DefaultChoice,                  //!< Index in the input queue corresponding to the default answer.
+                const tk::Queue<ResourceString>& TK_Choices //!< Input choice list.
+                );
+
+            //! @brief Child execution context constructor.
+            explicit Choice(
+                ExecutionContext& CLI_ParentContext,        //!< Parent execution context.
                 const int I_DefaultChoice,                  //!< Index in the input queue corresponding to the default answer.
                 const tk::Queue<ResourceString>& TK_Choices //!< Input choice list.
                 );
@@ -57,6 +60,10 @@ CLI_NS_BEGIN(cli)
             virtual ~Choice(void);
 
         private:
+            //! @brief No default constructor.
+            explicit Choice(void);
+            //! @brief No copy constructor.
+            Choice(const Choice&);
             //! @brief No assignment operator.
             Choice& operator=(const Choice&);
 
@@ -75,7 +82,7 @@ CLI_NS_BEGIN(cli)
             // cli::ui::UI interface implementation.
             virtual void ResetToDefault(void);
         public:
-            // cli::ui::UI interface implementation.
+            // Inherit doxygen comments from cli::ExecutionContext interface documentation.
             virtual void OnKey(const KEY E_KeyCode);
         private:
             //! @brief Moves the current choice on arrow keys.

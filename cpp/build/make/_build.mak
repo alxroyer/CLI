@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -38,6 +40,7 @@ cppbuild.default: $(.DEFAULT_GOAL) ;
 CLI_DIR ?= ../../..
 include $(CLI_DIR)/build/make/_vars.mak
 include $(CLI_DIR)/cpp/build/make/_vars.mak
+include $(CLI_DIR)/build/make/_utils.mak
 
 
 ##############
@@ -101,6 +104,7 @@ endif
 		PROJ_CLEAN ?=
 		# Final cleanup item list
 		CLEAN ?= $(OBJS) $(PRODUCT) $(PROJ_CLEAN)
+		CLEAN_DIR ?= $(INT_DIR)
 
 
 ##############
@@ -120,32 +124,30 @@ build: build_depends dirs $(PRODUCT) ;
 build_depends:
 	$(call MkDispatch,$(PROJECT_DEPS),)
 
+$(PRODUCT): NO_AUTO_IMPORT_WARNINGS = -Wl,--enable-auto-import
+$(PRODUCT): EXPORT_CYGWIN_DLL_SYMBOLS = -Wl,--add-stdcall-alias
 $(PRODUCT): $(OBJS)
 ifeq ($(PRODUCT_TYPE),BIN)
-	$(CXX) -o $(PRODUCT) $(OBJS) $(LIBS)
+	$(CXX) $(call IfEquals,$(TARGET),Cygwin,$(NO_AUTO_IMPORT_WARNINGS)) -o $(PRODUCT) $(OBJS) $(LIBS)
 endif
 ifeq ($(PRODUCT_TYPE),STATIC_LIB)
 	$(AR) -cru $(PRODUCT) $(OBJS)
 	$(RANLIB) $(PRODUCT)
 endif
 ifeq ($(PRODUCT_TYPE),DYN_LIB)
-ifeq ($(TARGET),Cygwin)
-	$(CXX) -shared -Wl,--add-stdcall-alias -o $(PRODUCT) $(OBJS) $(LIBS)
-endif
-ifeq ($(TARGET),Linux)
-	$(CXX) -shared -Wl -o $(PRODUCT) $(OBJS) $(LIBS)
-endif
+	$(call IfEquals,$(TARGET),Cygwin,$(CXX) -shared $(EXPORT_CYGWIN_DLL_SYMBOLS) -o $(PRODUCT) $(OBJS) $(LIBS))
+	$(call IfEquals,$(TARGET),Linux,$(CXX) -shared -o $(PRODUCT) $(OBJS) $(LIBS))
 endif
 
 %.o:
-	$(CXX) $(CPP_FLAGS) $(INCLUDES) -c $< -o $@
+	$(if $<,$(CXX) $(CPP_FLAGS) $(INCLUDES) -c $< -o $@,@echo "Error: dependency missing for $@. Please update dependencies ('deps' rule)." && false)
 
 # Automatic dependencies
 .PHONY: deps
 ifeq ($(AUTO_DEPS),yes)
 MkDepFile = $(CXX) $(CPP_FLAGS) $(INCLUDES) -MT $(patsubst %.cpp,$$\(INT_DIR\)/%.o,$(notdir $(1))) -MM $(1) >> $(AUTO_DEPS_FILE)
 deps:
-	$(RM) $(AUTO_DEPS_FILE) && touch $(AUTO_DEPS_FILE)
+	rm -f $(AUTO_DEPS_FILE) && touch $(AUTO_DEPS_FILE)
 	$(call Map,MkDepFile,$(CPP_FILES))
 else
 # Do nothing
@@ -155,13 +157,14 @@ endif
 # Clean up and directories
 .PHONY: dirs
 dirs:
-	@mkdir -p $(OUT_DIR)
-	@mkdir -p $(INT_DIR)
+	$(call CheckDir,$(OUT_DIR))
+	$(call CheckDir,$(INT_DIR))
 
 .PHONY: clean
 clean:
 	$(call MkDispatch,$(PROJECT_DEPS),clean)
-	$(RM) $(CLEAN)
+	rm -f $(CLEAN)
+	$(call RemoveDir,$(CLEAN_DIR))
 
 # Debug and help
 .PHONY: $(CLI_DIR)/cpp/build/make/_build.help
@@ -183,7 +186,7 @@ $(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += AUTO_DEPS AUTO_DEPS_FILE
 $(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJ_CPP_FLAGS CPP_OPT_FLAG CPP_DEBUG_FLAG CPP_OS_FLAGS CPP_FLAGS PROJ_INCLUDES INCLUDES
 $(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJ_LIBS LIBS
 $(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += INT_DIR OUT_DIR
-$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJ_CLEAN CLEAN
+$(CLI_DIR)/cpp/build/make/_build.vars: MY_VARS += PROJ_CLEAN CLEAN CLEAN_DIR
 $(CLI_DIR)/cpp/build/make/_build.vars:
 	$(call ShowVariables,$(MY_VARS))
 

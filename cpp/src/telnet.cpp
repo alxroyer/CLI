@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,7 +33,7 @@
     #include <sys/types.h> // socket, bind, listen
     #include <sys/socket.h> // socket, bind, listen
     #include <netinet/in.h> // sockaddr_in
-    #include <unistd.h> // getpid
+    #include <unistd.h> // getpid, close
 #else
     #include <winsock2.h> // Windows sockets
     #define socket_errno WSAGetLastError()
@@ -45,12 +47,11 @@
     // Disable disturbing macros.
     #undef DELETE
 #endif
-#include <stdio.h> // close
 #include <string.h>
 #include <time.h> // time
 
 #include "cli/telnet.h"
-#include "cli/shell.h"
+#include "cli/exec_context.h"
 #include "cli/traces.h"
 
 CLI_NS_USE(cli)
@@ -350,24 +351,24 @@ const bool TelnetServer::AcceptConnection(void)
         }
         else
         {
-            // Create the appropriate shell.
-            if (Shell* const pcli_Shell = OnNewConnection(*pcli_Connection))
+            // Require an execution context for the given connection.
+            if (ExecutionContext* const pcli_Context = OnNewConnection(*pcli_Connection))
             {
                 // Store in the connection registry.
-                const ConnectionInfo s_ConnectionInfo = { i_ConnectionSocket, pcli_Connection, pcli_Shell };
+                const ConnectionInfo s_ConnectionInfo = { i_ConnectionSocket, pcli_Connection, pcli_Context };
                 if ((! m_tkConnections.IsSet(i_ConnectionSocket))
                     && m_tkConnections.SetAt(i_ConnectionSocket, s_ConnectionInfo))
                 {
                     // Run the shell on that telnet connection.
                     pcli_Connection->UseInstance(__CALL_INFO__);
-                    pcli_Shell->Run(*pcli_Connection);
+                    pcli_Context->Run(*pcli_Connection);
 
                     // Since telnet connections are non-blocking devices, let's return successfully right now.
                     return true;
                 }
 
-    // Fallback releases.
-                OnCloseConnection(pcli_Shell, *pcli_Connection); // Shell.
+                // Fallback releases.
+                OnCloseConnection(*pcli_Connection, pcli_Context);
             }
         }
         delete pcli_Connection; // Telnet connection instance.
@@ -385,9 +386,9 @@ const bool TelnetServer::CloseConnection(const int I_ConnectionSocket)
     {
         if (TelnetConnection* const pcli_Connection = pcli_Info->pcli_Connection)
         {
-            if (Shell* const pcli_Shell = pcli_Info->pcli_Shell)
+            if (ExecutionContext* const pcli_Context = pcli_Info->pcli_Context)
             {
-                OnCloseConnection(pcli_Shell, *pcli_Connection);
+                OnCloseConnection(*pcli_Connection, pcli_Context);
             }
             pcli_Connection->FreeInstance(__CALL_INFO__);
         }
@@ -410,12 +411,12 @@ const bool TelnetServer::TerminateServer(void)
             const ConnectionInfo cli_Info = m_tkConnections.Remove(it);
 
             // Let the shell terminate.
-            if (cli_Info.pcli_Shell != NULL)
+            if (cli_Info.pcli_Context != NULL)
             {
-                if (cli_Info.pcli_Shell->IsRunning())
+                if (cli_Info.pcli_Context->IsRunning())
                 {
                     GetTraces().Trace(CLI_TELNET_SERVER) << "Terminating shell of connection " << cli_Info.i_Socket << "..." << cli::endl;
-                    cli_Info.pcli_Shell->Quit();
+                    cli_Info.pcli_Context->StopExecution();
                 }
             }
         }
@@ -569,8 +570,8 @@ const bool TelnetConnection::ProcessKeys(void) const
 
 const bool TelnetConnection::CheckUp(void) const
 {
-    const Shell* const pcli_Shell = GetShell();
-    if ((pcli_Shell == NULL) || (! pcli_Shell->IsRunning()))
+    const ExecutionContext* const pcli_ExecutionContext = NonBlockingIODevice::GetExecutionContext();
+    if ((pcli_ExecutionContext == NULL) || (! pcli_ExecutionContext->IsRunning()))
     {
         // The shell is done. Hold on!
         if (m_pcliServer != NULL)
@@ -802,7 +803,7 @@ const KEY TelnetConnection::GetKey(void) const
         case 126:   return TILDE;
         case 127:   return DELETE;
 
-        // Accentuated characters.
+        // Accented characters.
         case -31:   return KEY_aacute;
         case -32:   return KEY_agrave;
         case -28:   return KEY_auml;
@@ -824,7 +825,7 @@ const KEY TelnetConnection::GetKey(void) const
         case -7:    return KEY_ugrave;
         case -4:    return KEY_uuml;
         case -5:    return KEY_ucirc;
-        // Accentuated characters copied from the output itself.
+        // Accented characters copied from the output itself.
         case -96:   return KEY_aacute;
         case -123:  return KEY_agrave;
         case -124:  return KEY_auml;
@@ -888,35 +889,6 @@ void TelnetConnection::OnKey(const KEY E_Key) const
         m_bWaitingForKeys = false;
     }
     NonBlockingIODevice::OnKey(E_Key);
-}
-
-const bool TelnetConnection::WaitForKeys(const unsigned int UI_Milli) const
-{
-    if (! m_qChars.IsEmpty())
-    {
-        const KEY e_Key = GetKey();
-        OnKey(e_Key);
-        return true;
-    }
-    else
-    {
-        time_t t0 = time(NULL);
-        for (m_bWaitingForKeys = true; m_bWaitingForKeys && (time(NULL) - t0 < (time_t) UI_Milli); )
-        {
-            if (m_pcliServer != NULL)
-            {
-                const time_t t_Passed = time(NULL) - t0;
-                const time_t t_Delay = (t_Passed > (time_t) UI_Milli ? 0 : UI_Milli - t_Passed);
-                m_pcliServer->RunLoop((int) t_Delay); // cast to avoid warnings
-            }
-            else
-            {
-                ReceiveChars();
-                ProcessKeys();
-            }
-        }
-        return (! m_bWaitingForKeys);
-    }
 }
 
 void TelnetConnection::PutString(const char* const STR_Out) const

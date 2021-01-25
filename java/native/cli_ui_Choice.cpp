@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -72,41 +74,39 @@ extern "C" JNIEXPORT void JNICALL Java_cli_ui_Choice__1_1addChoice(
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Choice__1_1Choice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_DefaultChoice, jint I_NativeChoiceListRef)
+        jint I_NativeParentContextRef, jint I_DefaultChoice, jint I_NativeChoiceListRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__Choice(I_DefaultChoice, I_NativeChoiceListRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__Choice(I_NativeParentContextRef, I_DefaultChoice, I_NativeChoiceListRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_DefaultChoice", I_DefaultChoice) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeChoiceListRef", I_NativeChoiceListRef) << cli::endl;
     NativeObject::REF i_ChoiceRef = 0;
     if (const cli::tk::Queue<cli::ResourceString>* const ptk_ChoiceList = NativeObject::GetNativeObject<const cli::tk::Queue<cli::ResourceString>*>(I_NativeChoiceListRef))
     {
-        if (cli::ui::Choice* const pcli_Choice = new cli::ui::Choice(I_DefaultChoice, *ptk_ChoiceList))
+        cli::ui::Choice* pcli_Choice = NULL;
+        if (I_NativeParentContextRef != 0)
+        {
+            if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+            {
+                pcli_Choice = new cli::ui::Choice(*pcli_ParentContext, I_DefaultChoice, *ptk_ChoiceList);
+            }
+        }
+        else
+        {
+            pcli_Choice = new cli::ui::Choice(I_DefaultChoice, *ptk_ChoiceList);
+        }
+        if (pcli_Choice != NULL)
         {
             NativeObject::Use(*pcli_Choice);
             i_ChoiceRef = NativeObject::GetNativeRef(*pcli_Choice);
         }
-        // Delete the  list previously allocated in __beginChoiceList().
+        // Delete the list previously allocated in __beginChoiceList().
         delete ptk_ChoiceList;
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Choice.__Choice()", i_ChoiceRef) << cli::endl;
     return i_ChoiceRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_ui_Choice__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeChoiceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__finalize(I_NativeChoiceRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeChoiceRef", I_NativeChoiceRef) << cli::endl;
-    if (const cli::ui::Choice* const pcli_Choice = NativeObject::GetNativeObject<const cli::ui::Choice*>(I_NativeChoiceRef))
-    {
-        NativeObject::Free(*pcli_Choice);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("ui.Choice.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Choice__1_1getChoice(

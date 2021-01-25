@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +28,6 @@
 #include "cli/pch.h"
 
 #include <deque>
-#include <iostream>
 
 #include "cli/menu.h"
 #include "cli/shell.h"
@@ -42,7 +43,7 @@
 
 const bool __NativeMenu__Execute(const cli::Menu& CLI_Menu, const cli::CommandLine& CLI_CmdLine)
 {
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("__NativeMenu__Execute(CLI_CmdLine)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("__NativeMenu__Execute(CLI_Menu, CLI_CmdLine)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_Menu", NativeObject::GetNativeRef(CLI_Menu)) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_CmdLine", NativeObject::GetNativeRef(CLI_CmdLine)) << cli::endl;
 
@@ -80,7 +81,7 @@ const bool __NativeMenu__Execute(const cli::Menu& CLI_Menu, const cli::CommandLi
                 if (const jmethodID pj_ExecuteMethodID = pj_Env->GetMethodID(pj_MenuClass, "__execute", "(I)Z"))
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_ExecuteMethodID", pj_ExecuteMethodID) << cli::endl;
-                    if (const jobject pj_Object = NativeObject::GetJavaObject(NativeObject::GetNativeRef(CLI_Menu), true))
+                    if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Menu, true))
                     {
                         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
                         b_Res = pj_Env->CallBooleanMethod(pj_Object, pj_ExecuteMethodID, (jint) NativeObject::GetNativeRef(CLI_CmdLine));
@@ -104,6 +105,7 @@ const bool __NativeMenu__Execute(const cli::Menu& CLI_Menu, const cli::CommandLi
                             // Display unless the command is a well known command.
                             if (true
                                 && (str_CommandLine != "cli-config")
+                                && (str_CommandLine != "cls")
                                 && (str_CommandLine != "exit")
                                 && (str_CommandLine != "help")
                                 && (str_CommandLine != "pwm")
@@ -120,7 +122,7 @@ const bool __NativeMenu__Execute(const cli::Menu& CLI_Menu, const cli::CommandLi
                 }
             }
 
-            NativeObject::DeleteFromNative(CLI_CmdLine);
+            NativeObject::DeleteFromNative(NativeObject::GetNativeRef(CLI_CmdLine));
         }
 
         // For each parameter, release the corresponding Java object.
@@ -128,7 +130,7 @@ const bool __NativeMenu__Execute(const cli::Menu& CLI_Menu, const cli::CommandLi
         {
             if (const cli::Param* const pcli_Param = q_Params.back())
             {
-                NativeObject::DeleteFromNative(*pcli_Param);
+                NativeObject::DeleteFromNative(NativeObject::GetNativeRef(*pcli_Param));
             }
             q_Params.pop_back();
         }
@@ -156,7 +158,7 @@ const bool __NativeMenu__OnError(const cli::Menu& CLI_Menu, const cli::ResourceS
             if (const jmethodID pj_OnErrorMethodID = pj_Env->GetMethodID(pj_MenuClass, "__onError", "(II)Z"))
             {
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnErrorMethodID", pj_OnErrorMethodID) << cli::endl;
-                if (const jobject pj_Object = NativeObject::GetJavaObject(NativeObject::GetNativeRef(CLI_Menu), true))
+                if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Menu, true))
                 {
                     if (NativeObject::CreateFromNative(CLI_Location))
                     {
@@ -165,9 +167,9 @@ const bool __NativeMenu__OnError(const cli::Menu& CLI_Menu, const cli::ResourceS
                             cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
                             b_Res = pj_Env->CallBooleanMethod(pj_Object, pj_OnErrorMethodID, (jint) NativeObject::GetNativeRef(CLI_Location), (jint) NativeObject::GetNativeRef(CLI_ErrorMessage));
 
-                            NativeObject::DeleteFromNative(CLI_Location);
+                            NativeObject::DeleteFromNative(NativeObject::GetNativeRef(CLI_Location));
                         }
-                        NativeObject::DeleteFromNative(CLI_ErrorMessage);
+                        NativeObject::DeleteFromNative(NativeObject::GetNativeRef(CLI_ErrorMessage));
                     }
                 }
             }
@@ -179,7 +181,7 @@ const bool __NativeMenu__OnError(const cli::Menu& CLI_Menu, const cli::ResourceS
 
 const bool __NativeMenu__OnExit(const cli::Menu& CLI_Menu)
 {
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("__NativeMenu__OnExit()") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("__NativeMenu__OnExit(CLI_Menu)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_Menu", NativeObject::GetNativeRef(CLI_Menu)) << cli::endl;
 
     bool b_Res = false;
@@ -193,7 +195,7 @@ const bool __NativeMenu__OnExit(const cli::Menu& CLI_Menu)
             if (const jmethodID pj_OnExitMethodID = pj_Env->GetMethodID(pj_MenuClass, "__onExit", "()V"))
             {
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnExitMethodID", pj_OnExitMethodID) << cli::endl;
-                if (const jobject pj_Object = NativeObject::GetJavaObject(NativeObject::GetNativeRef(CLI_Menu), true))
+                if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Menu, true))
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
                     pj_Env->CallVoidMethod(pj_Object, pj_OnExitMethodID);
@@ -208,7 +210,7 @@ const bool __NativeMenu__OnExit(const cli::Menu& CLI_Menu)
 
 const std::string __NativeMenu__OnPrompt(const cli::Menu& CLI_Menu)
 {
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("__NativeMenu__OnPrompt()") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("__NativeMenu__OnPrompt(CLI_Menu)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_Menu", NativeObject::GetNativeRef(CLI_Menu)) << cli::endl;
 
     std::string str_Prompt;
@@ -222,7 +224,7 @@ const std::string __NativeMenu__OnPrompt(const cli::Menu& CLI_Menu)
             if (const jmethodID pj_OnPromptMethodID = pj_Env->GetMethodID(pj_MenuClass, "__onPrompt", "()Ljava/lang/String;"))
             {
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnPromptMethodID", pj_OnPromptMethodID) << cli::endl;
-                if (const jobject pj_Object = NativeObject::GetJavaObject(NativeObject::GetNativeRef(CLI_Menu), true))
+                if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Menu, true))
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
                     if (const jobject pj_Prompt = pj_Env->CallObjectMethod(pj_Object, pj_OnPromptMethodID))
@@ -234,6 +236,6 @@ const std::string __NativeMenu__OnPrompt(const cli::Menu& CLI_Menu)
             }
         }
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndStr("__NativeMenu__OnExit()", str_Prompt.c_str()) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndStr("__NativeMenu__OnPrompt()", str_Prompt.c_str()) << cli::endl;
     return str_Prompt;
 }

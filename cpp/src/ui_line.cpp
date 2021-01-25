@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -41,6 +43,13 @@ CLI_NS_BEGIN(cli)
         {
         }
 
+        Line::Line(ExecutionContext& CLI_ParentContext, const tk::String& TK_DefaultLine, const int I_MinLineLength, const int I_MaxLineLength)
+          : UI(CLI_ParentContext),
+            m_tkDefaultLine(TK_DefaultLine), m_iMinLineLength(I_MinLineLength), m_iMaxLineLength(I_MaxLineLength),
+            m_cliLine(* new CmdLineEdition()), m_bResetOnTyping(false)
+        {
+        }
+
         Line::~Line(void)
         {
             delete & m_cliLine;
@@ -53,7 +62,7 @@ CLI_NS_BEGIN(cli)
 
         void Line::SetLine(const tk::String& TK_Line, const bool B_NewLine, const bool B_ResetOnTyping)
         {
-            const OutputDevice& ECHO = GetShell().GetStream(ECHO_STREAM);
+            const OutputDevice& ECHO = GetStream(ECHO_STREAM);
 
             m_cliLine.CleanAll(ECHO);
             m_cliLine.Put(ECHO, TK_Line);
@@ -76,10 +85,13 @@ CLI_NS_BEGIN(cli)
 
         void Line::OnKey(const KEY E_KeyCode)
         {
-            const OutputDevice& ECHO = GetShell().GetStream(ECHO_STREAM);
+            const OutputDevice& ECHO = GetStream(ECHO_STREAM);
 
             switch (E_KeyCode)
             {
+            case NULL_KEY:
+                EndControl(false);
+                break;
             //case KEY_UP:
             //case KEY_DOWN:
             //case PAGE_UP:
@@ -100,7 +112,7 @@ CLI_NS_BEGIN(cli)
                 }
                 else
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 break;
             case KEY_RIGHT:
@@ -111,7 +123,7 @@ CLI_NS_BEGIN(cli)
                 }
                 else
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 break;
             case BACKSPACE:
@@ -122,7 +134,7 @@ CLI_NS_BEGIN(cli)
                 }
                 else
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 break;
             case DELETE:
@@ -133,7 +145,7 @@ CLI_NS_BEGIN(cli)
                 }
                 else
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 break;
             case ENTER:
@@ -141,19 +153,19 @@ CLI_NS_BEGIN(cli)
                     && ((m_iMaxLineLength < 0) || (m_cliLine.GetLine().GetLength() <= (unsigned int) m_iMaxLineLength)))
                 {
                     m_cliLine.NextLine(ECHO);
-                    UI::Finish(true);
+                    EndControl(true);
                 }
                 else
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 break;
             case BREAK:
             case ESCAPE:
             case LOGOUT:
-                UI::Finish(false);
+                EndControl(false);
                 break;
-            case TAB:       GetShell().Beep(); break;
+            case TAB:       Beep(); break;
             case CLS:       m_cliLine.CleanAll(ECHO); m_bResetOnTyping = false; break;
 
             case QUESTION:
@@ -227,7 +239,7 @@ CLI_NS_BEGIN(cli)
                 }
                 else
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 break;
 

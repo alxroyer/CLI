@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -124,28 +126,6 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1Java_1_1Java(
     return i_IODeviceRef;
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_IODevice_Java__1_1finalize(
-extern "C" JNIEXPORT void JNICALL Java_cli_IODevice__1_1Java_1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeIODeviceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    if (cli::IODevice* const pcli_IODevice = NativeObject::GetNativeObject<cli::IODevice*>(I_NativeIODeviceRef))
-    {
-        // If b_SafeTrace is true, it means the current trace stream is not pcli_IODevice nor it would output pcli_IODevice.
-        // Whether pcli_IODevice is about to be destroyed, if b_SafeTrace is true, there is no problem for tracing even after possible destruction.
-        const bool b_SafeTrace = cli::GetTraces().IsSafe(*pcli_IODevice);
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("IODevice.Java.__finalize(I_NativeOutputDeviceRef)") << cli::endl;
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeIODeviceRef", I_NativeIODeviceRef) << cli::endl;
-
-        NativeObject::Free(*pcli_IODevice); // <- possible destruction.
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("IODevice.Java.__finalize()") << cli::endl;
-    }
-}
-
 
 // IODevice static methods implementation.
 
@@ -155,8 +135,14 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1getNullDevice(
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("IODevice.__getNullDevice()") << cli::endl;
+
     const cli::IODevice& cli_NullDevice = cli::IODevice::GetNullDevice();
     const NativeObject::REF i_NullDeviceRef = NativeObject::GetNativeRef(cli_NullDevice);
+
+    // Note: Java should call this JNI interface once only for IODevice.m_cliNullDevice static member initialization.
+    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+    const_cast<cli::IODevice&>(cli_NullDevice).UseInstance(__CALL_INFO__);
+
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("IODevice.__getNullDevice()", i_NullDeviceRef) << cli::endl;
     return i_NullDeviceRef;
 }
@@ -167,8 +153,14 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_IODevice__1_1getStdIn(
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("IODevice.__getStdIn()") << cli::endl;
+
     const cli::IODevice& cli_StdInDevice = cli::IODevice::GetStdIn();
     const NativeObject::REF i_StdInDeviceRef = NativeObject::GetNativeRef(cli_StdInDevice);
+
+    // Note: Java should call this JNI interface once only for IODevice.m_cliStdIn static member initialization.
+    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+    const_cast<cli::IODevice&>(cli_StdInDevice).UseInstance(__CALL_INFO__);
+
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("IODevice.__getStdIn()", i_StdInDeviceRef) << cli::endl;
     return i_StdInDeviceRef;
 }

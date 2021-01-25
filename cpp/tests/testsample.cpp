@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,73 +25,25 @@
 */
 
 
-#include <string.h> // strcmp
-
 #include "cli/pch.h"
-#include "cli/common.h"
-#include "cli/shell.h"
-#include "cli/console.h"
-#include "cli/file_device.h"
+
+#include "test_args.h"
+#include "test_cli.h"
 
 
-int main(int I_Args, char** ARSTR_Args)
+int main(int I_Args, const char* ARSTR_Args[])
 {
-    if (I_Args >= 2)
-    {
-        if ((strcmp(ARSTR_Args[1], "-h") == 0)
-            || (strcmp(ARSTR_Args[1], "-?") == 0)
-            || (strcmp(ARSTR_Args[1], "-help") == 0)
-            || (strcmp(ARSTR_Args[1], "--help") == 0))
-        {
-            cli::OutputDevice::GetStdOut() << "USAGE" << cli::endl;
-            cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << cli::endl;
-            cli::OutputDevice::GetStdOut() << "       Interactive mode." << cli::endl;
-            cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << " <input file>" << cli::endl;
-            cli::OutputDevice::GetStdOut() << "       Output to standard output." << cli::endl;
-            cli::OutputDevice::GetStdOut() << "   " << ARSTR_Args[0] << " <input file> <output file>" << cli::endl;
-            cli::OutputDevice::GetStdOut() << "       Output to given file." << cli::endl;
-
-            return -1;
-        }
-    }
-
-    // Look for a CLI to launch.
-    cli::Cli::List cli_List(10);
-    cli::Cli::FindFromName(cli_List, ".*");
-    if (cli_List.IsEmpty())
-    {
-        cli::OutputDevice::GetStdErr() << "No CLI found" << cli::endl;
-        return -1;
-    }
-    else if (cli_List.GetCount() > 1)
-    {
-        cli::OutputDevice::GetStdErr() << "Several CLI found" << cli::endl;
-    }
+    // Parse arguments.
+    SampleArgs cli_Args;
+    if (! cli_Args.ParseArgs(I_Args, ARSTR_Args)) { return -1; }
 
     // Create a shell.
-    cli::Shell cli_Shell(*cli_List.GetHead());
-
-    // Create devices.
-    cli::OutputDevice* const pcli_Out = (
-        (I_Args >= 3)
-        ? dynamic_cast<cli::OutputDevice*>(new cli::OutputFileDevice(ARSTR_Args[2], true))
-        : dynamic_cast<cli::OutputDevice*>(new cli::Console(true))
-    );
-    cli::IODevice* const pcli_In = (
-        (I_Args >= 2)
-        ? dynamic_cast<cli::IODevice*>(new cli::InputFileDevice(ARSTR_Args[1], *pcli_Out, true))
-        : dynamic_cast<cli::IODevice*>(pcli_Out)
-    );
-    if (cli::InputFileDevice* const pcli_InFile = dynamic_cast<cli::InputFileDevice*>(pcli_In))
-    {
-        pcli_InFile->EnableSpecialCharacters(true);
-    }
-
+    cli::Shell cli_Shell(GetXmlResCli());
     // Redirect only echo, prompt, output and error streams.
     cli_Shell.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
 
     // Launch it.
-    cli_Shell.Run(*pcli_In);
+    cli_Args.Execute(cli_Shell);
 
     // Successful return.
     return 0;

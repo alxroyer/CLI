@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +32,8 @@ jni.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 include _vars.mak
 
-JAVA_FILES = $(wildcard $(JAVA_SRC_DIR)/cli/*.java) $(wildcard $(JAVA_SRC_DIR)/cli/ui/*.java)
+JAVA_FILES += $(filter-out $(JAVA_SRC_DIR)/cli/package-info.java,$(wildcard $(JAVA_SRC_DIR)/cli/*.java))
+JAVA_FILES += $(filter-out $(JAVA_SRC_DIR)/cli/ui/package-info.java,$(wildcard $(JAVA_SRC_DIR)/cli/ui/*.java))
 JAVA_CLASSES = $(patsubst $(JAVA_SRC_DIR)/cli/%.java,$(OUT_DIR)/cli/%.class,$(JAVA_FILES))
 CPP_HEADERS = $(patsubst %,$(NATIVE_DIR)/%.h,$(subst /,_,$(patsubst $(OUT_DIR)/%.class,%,$(JAVA_CLASSES))))
 CPP_HEADERS += $(CLI_DIR)/java/native/cli_OutputDevice_OutputStream.h
@@ -55,7 +58,7 @@ deps: ;
 
 .PHONY: clean
 clean:
-	$(RM) $(CPP_HEADERS)
+	rm -f $(CPP_HEADERS)
 
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak

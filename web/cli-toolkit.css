@@ -1,13 +1,15 @@
 /*
-	Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+	Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
 	All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
 		* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-		* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-		* Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+		* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+		  and/or other materials provided with the distribution.
+		* Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+		  without specific prior written permission.
 
 	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +27,7 @@
 /* General styles. */
 	body {
 		font-family: arial;             /* Arial font. */
-		font-size: normal;              /* Regular size. */
+		font-size: medium;              /* Regular size. */
 		margin-left: 50px;              /* Leave blank space from the left border. */
 		margin-right: 50px;             /* Same from the right border. */
 		text-align: justify;            /* Justify text. */
@@ -37,11 +39,11 @@
 	}
 
 	/* Style H2 titles and content. */
-	div.section > * {
-		margin-left: 100px;             /* Use 100px more offset from the left. */
+	div.section h2 {
+		/*margin-left: 0px;               /* But not H2 elements. */
 	}
-	h2 {
-		margin-left: 0px;                 /* But not H2 elements. */
+	div.section h3, div.section p, div.section ul, div.section ol {
+		margin-left: 100px;             /* Use 100px more offset from the left. */
 	}
 
 	/* Style H3 titles. */
@@ -107,6 +109,7 @@
 	}
 	#example p {
 		width: 648px;                   /* Same width as the image below. */
+		margin-left: 0px;
 		margin-bottom: 0px;
 	}
 	#example pre {
@@ -122,6 +125,11 @@
 	/* History. */
 	#version-list {
 		font-size: 62.5%;               /* Same as jquery-ui/smoothness sample for accordions and tabs display. */
+		margin-left: 100px;             /* Apply 100px margin also. */
+		width: 90%;
+	}
+	#version-list p, #version-list ul, #version-list ol {
+		margin-left: 0px;               /* Break general 100px margin. */
 	}
 	#version-list table tr td {
 		font-size: 62.5%;               /* Ensure font size. */

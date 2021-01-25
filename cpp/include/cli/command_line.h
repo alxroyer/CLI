@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -51,7 +53,7 @@ CLI_NS_BEGIN(cli)
     {
     public:
         //! @brief Default constructor.
-        CommandLine(void);
+        explicit CommandLine(void);
 
         //! @brief Destructor.
         virtual ~CommandLine(void);
@@ -64,8 +66,7 @@ CLI_NS_BEGIN(cli)
 
     public:
         //! @brief Parse and analysis invocation.
-        //! @return true: Success.
-        //! @return false: Failure.
+        //! @return true for success, false otherwise.
         //!
         //! If this method succeeds,
         //! the result is stored in the object itself,
@@ -77,31 +78,33 @@ CLI_NS_BEGIN(cli)
                                             //!< Implicitely say completion otherwise.
             );
 
-        //! @brief Last element access.
+        //! @brief Last element accessor.
+        //! @return Last element reference.
         const Element& GetLastElement(void) const;
 
         //! @brief Last word (for completion).
-        //! @return NULL when no last word.
-        //! @return The last word otherwise.
-        //!         After parsing, the buffer is valid as far as the command line object is valid.
+        //! @return The last word if any, NULL when no last word.
+        //! @note After parsing, the buffer is valid as far as the command line object is valid.
         //! 
         //! When used for completion, this object does not analyse the last word and just stores it.
         //! This method retrieves this last word.
         const char* const GetLastWord(void) const;
 
         //! @brief Number of backspaces for completion.
+        //! @return Number of backspaces.
         //!
         //! Number of backspaces in order to erase the last word of the line.
         const int GetNumBackspacesForCompletion(void) const;
 
         //! @brief Last error.
+        //! @return Last error resource string.
         //!
         //! This resource is cleared on every parse.
         const ResourceString& GetLastError(void) const;
 
     private:
         //! @brief Splits a command line in words.
-        //! @return A collection of words.
+        //! @return true for success, false otherwise.
         const bool Split(
             const tk::String& STR_Line,            //!< Input command line in its string form.
             tk::Queue<tk::String>& Q_Words,         //!< Word list.
@@ -142,15 +145,9 @@ CLI_NS_BEGIN(cli)
     //! Scans the results of a command line analysis described in the CommandLine class.
     class CommandLineIterator : public Object
     {
-    private:
-        //! @brief No default constructor.
-        CommandLineIterator(void);
-        //! @brief No copy constructor.
-        CommandLineIterator(const CommandLineIterator&);
-
     public:
-        //! @brief Basic constructor.
-        CommandLineIterator(
+        //! @brief Regular constructor.
+        explicit CommandLineIterator(
             const CommandLine& CLI_CmdLine  //!< Command line objet to iterate.
             );
 
@@ -158,6 +155,10 @@ CLI_NS_BEGIN(cli)
         virtual ~CommandLineIterator(void);
 
     private:
+        //! @brief No default constructor.
+        explicit CommandLineIterator(void);
+        //! @brief No copy constructor.
+        CommandLineIterator(const CommandLineIterator&);
         //! @brief No assignment operator.
         CommandLineIterator& operator=(const CommandLineIterator&);
 
@@ -168,11 +169,13 @@ CLI_NS_BEGIN(cli)
         const bool StepIt(void);
 
         //! @brief Checks whether the element corresponds to the current element.
+        //! @return true if the element matches, false otherwise.
         const bool operator==(
             const Element& CLI_Element      //!< Element to check.
             ) const;
 
         //! @brief Current element accessor.
+        //! @return Current element reference.
         const Element* const operator*(void) const;
 
     private:

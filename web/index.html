@@ -1,13 +1,18 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 <!--
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -21,15 +26,13 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-
-<html>
-<head>
     <title>CLI toolkit - How to quickly implement a command line interface</title>
     <script type="text/javascript" src="jquery-1.6.4.js"></script>
     <link type="text/css" rel="stylesheet" href="jquery-ui-1.8.16.custom/css/smoothness/jquery-ui-1.8.16.custom.css">
     <script type="text/javascript" src="jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js"></script>
     <link type="text/css" rel="stylesheet" href="blackbirdjs-1.0/blackbird-lite.css">
     <script type="text/javascript" src="blackbirdjs-1.0/blackbird.js"></script>
+    <script type="text/javascript" src="cli-traces.js"></script>
     <script type="text/javascript" src="xml-node.js"></script>
     <script type="text/javascript" src="dynamic-menu.js"></script>
     <link type="text/css" rel="stylesheet" href="cli-toolkit.css">
@@ -47,24 +50,28 @@
     </script>
 </head>
 <body onload="onLoad();">
-<div id="last-update"><p class="note">Last updated on Dec, 12th 2011</p></div>
+<div id="last-update"><p class="note">Last updated on July, 15th 2013</p></div>
 
     <h1>CLI toolkit</h1>
 
 <div id="news" class="section"><a name="news"/>
     <h2>Latest news</h2>
     <table class="news">
-    <tr><td class="date">Dec, 9th 2011</td>     <td>Version 2.7:
-                                                    You guys start contributing and that's GREAT !<br/><br/>
-                                                    Bug detection and fixes, feature proposal, question &amp; answers...
-                                                    all that good job makes it a major version.<br/>
-                                                    Text edition facilities, and many other improvements (non blocking execution, telnet...)<br/>
+    <tr><td class="date">July, 15th 2013</td>   <td>Version 2.8:
+                                                    It took me a while to finalize new major improvements.<br/>
+                                                    Execution contexts and faster python transformation tools.<br/>
                                                     &gt;&gt;&gt;
                                                     <a href="#history">[changes]</a>
                                                     <a href="#download">[download]</a>
                                                     &lt;&lt;&lt;</td></tr>
-    <tr><td class="date">Dec, 15th 2010</td>    <td>Version 2.6 release (patch for version 2.5).</td></tr>
-    <tr><td class="date">Sep, 30th 2010</td>    <td>Version 2.5 release.</td></tr>
+    <tr><td class="date">Dec, 9th 2011</td>     <td>Version 2.7:
+                                                    You guys start contributing and that's GREAT!<br/>
+                                                    <!--Bug detection and fixes, feature proposal, question &amp; answers...
+                                                    all that good job makes it a major version.<br/>-->
+                                                    Text edition facilities, and many other improvements (non blocking execution, telnet...)</td></tr>
+    <tr><td class="date">Dec, 15th 2010</td>    <td>Version 2.6 release.</td></tr>
+    <!--<tr><td class="date">Sep, 30th 2010</td>    <td>Version 2.5 release.</td></tr>-->
+    <tr><td class="date">...</td>               <td></td></tr>
     <tr><td class="date">Oct, 1st 2009</td>     <td>Sourceforge registration
                                                     &gt;&gt;&gt; <a href="https://sourceforge.net/projects/aroyer-cli/" target="_blank">[aroyer-cli]</a> &lt;&lt;&lt;<br/>
                                                     (The main location of the project remains this page).</td></tr>
@@ -181,26 +188,7 @@
     </p>
 
     <p>
-    For instance, in C++, the result of the transformation is a C++ source file.
-    You should therefore compile it
-    and link it with the CLI library and your user-defined program.
-    You should also make a call somewhere in your program
-    to launch the execution of your CLI.
-    In most cases, it should not be too difficult to have it work quickly.
-    </p>
-
-    <p>
-    In Java, compile the Java source file resulting of the transformation.
-    Then use the CLI object defined in it and the CLI library to launch it.
-    Just ensure you have the native CLI library available from your system paths.
-    That's it.
-    </p>
-
-    <p>
-    The transformation step is just an XSLT transformation
-    using an XSL stylesheet provided with the toolkit.
-    Therefore, the most difficult (and it aims to be easy) is the XML resource file edition.
-    Have a look at the <a href="user-guide/cli-user-guide.html">CLI user guide</a> for more information.
+    Please refer to the <a href="user-guide/cli-user-guide.html#howto">user guide</a> for detailed instructions.
     </p>
 </div>
 
@@ -251,13 +239,7 @@
     <h2>License</h2>
 
     <p>
-    This software, written by Alexis Royer,
-    has moved to a <a href="LICENSE.txt" target="_blank">BSD-like license</a> since version 2.0.
-    </p>
-
-    <p>
-    This kind of license is compatible with commercial use, modification and redistribution,
-    under the terms of the license.
+    This open source software, written by Alexis Royer, is provided under <a href="LICENSE.txt" target="_blank">BSD-like license</a>.
     </p>
 </div>
 
@@ -269,11 +251,14 @@
         <h3>History</h3>
 
         <div id="version-list">
-            <!--<h4><a href="#"></a></h4>
+            <!--<h4><a href="#">cli 2.x</a></h4>
             <div>
-                <ul><li><span class="keyword">Description:</span>   </li>
-                    <li><span class="keyword">Date:</span>          </li>
-                    <li><span class="keyword">Download:</span>      </li></ul>
+                <table> <tr><td class="keyword">Description:</td>   <td>Bla bla bla</td></tr>
+                        <tr><td class="keyword">Date:</td>          <td>date</td></tr>
+                        <tr><td class="keyword">Download:</td>      <td><p class="download ui-state-default">
+                                                                        <span class="ui-icon ui-icon-arrowthickstop-1-s" style="float: left;"></span>
+                                                                        <a href="/download.php?url=/CLI/cli-2.x.tgz" target="_blank">Download cli 2.x</a>
+                                                                        </p></td></tr></table>
                 <div class="version-details">
                     <h5><a href="#"></a></h5>
                     <div>   <ul><li></li>
@@ -281,6 +266,75 @@
                                 <li></li></ul></div>
                 </div>
             </div>-->
+            <h4><a href="#">cli 2.8</a></h4>
+            <div>
+                <table> <tr><td class="keyword">Description:</td>   <td>New major improvements: execution contexts and faster python transformation tools.</td></tr>
+                        <tr><td class="keyword">Date:</td>          <td>July, 15th 2013</td></tr>
+                        <tr><td class="keyword">Download:</td>      <td><p class="download ui-state-default">
+                                                                        <span class="ui-icon ui-icon-arrowthickstop-1-s" style="float: left;"></span>
+                                                                        <a href="/download.php?url=/CLI/cli-2.8.tgz" target="_blank">Download cli 2.8</a>
+                                                                        </p></td></tr></table>
+                <div class="version-details">
+                    <h5><a href="#">Major modifications</a></h5>
+                    <div>   <ul><li>ExecutionContext class creation:
+                                    <ul><li>Shell ans ui controls improvements</li>
+                                        <li>NonBlockingKeyReceiver interface removal, NonBlockingIODevice::WaitForKeys() removal</li>
+                                        <li>TelnetServer redesign</li>
+                                        <li>PwdShellContext sample</li></ul></li>
+                                <li>Transformation / schema:
+                                    <ul><li>Systematic source generation</li>
+                                        <li>python scripts addition (more stable and faster): cli2cpp.py, cli2java.py, cli2help.py</li>
+                                        <li>XSL stylesheets, schema files and python scripts moved/added in a "tools" directory
+                                            (backward compatibility with old XSL and schema paths is still provided)</li></ul></li></ul></div>
+                    <h5><a href="#">Miscellaneous</a></h5>
+                    <div>   <ul><li>Makefiles:
+                                    <ul><li>'make' and 'make check' dissociation</li>
+                                        <li>Explicit message when dependencies should be regenerated</li>
+                                        <li>IfEquals, CheckDir, RemoveDir, CheckSh tool functions addition</li></ul></li>
+                                <li>C++ improvements:
+                                    <ul><li>Input command lines growing limitation</li>
+                                        <li>'explicit' constructors</li>
+                                        <li>Local protections addition in Cli::SetCli() and Menu::SetMenu() against memory leaks on multiple calls to SetCli()</li>
+                                        <li>Traces::SafeTrace() improvement, Traces::IsSafe() removal</li>
+                                        <li>ESCDELAY modification through set_escdelay() correction</li></ul></li>
+                                <li>Java improvements:
+                                    <ul><li>Useless finalize() methods removal</li>
+                                        <li>deleteFromNative() gathered in NativeObject for any class</li></ul></li>
+                                <li>Test improvements:
+                                    <ul><li>Addition of C++ tests/include headers, cli/test/TestTools.java for unit test routines factorization</li>
+                                        <li>Unit-test makefiles renamed with 'test_' prefix</li>
+                                        <li>test_tk.mak: Dual execution implementation: USE_STL=yes and USE_STL=no</li>
+                                        <li>Java test_no_res.mak unit-test addition</li></ul></li>
+                                <li>Documentation:
+                                    <ul><li>doxygen: msc sequence charts addition, warnings removal</li>
+                                        <li>javadoc: package documentation</li></ul></li></ul></div>
+                    <h5><a href="#">Bug corrections</a></h5>
+                    <div>   <ul><li>Bug(minor)! C++: Crash in Traces::UnsetStream when streams are unset in the wrong order (trace output consistency improvement)</li>
+                                <li>Bug(minor)! C++: telnet unit test does not compile on certain configurations (#include &lt;stdio.h&gt; changed into #include &lt;unistd.h&gt; for close() definition)</li>
+                                <li>Bug(minor)! C++: OutputDevice::operator&lt;&lt;(void*) format improvements for better compatibility with 64 bits compilers</li>
+                                <li>Bug(minor)! C++: Build info when building in debug under Cygwin<br/>
+                                        Info: resolving _ESCDELAY by linking to __imp__ESCDELAY (auto-import)<br/>
+                                        Info: resolving _stdscr by linking to __imp__stdscr (auto-import)<br/>
+                                        Info: resolving _LINES by linking to __imp__LINES (auto-import)<br/>
+                                        Info: resolving _COLS by linking to __imp__COLS (auto-import)</li>
+                                <li>Bug(minor)! _mkres.mak: bad force rule on $(CLI_CPP_LIB): dependencies always relink the applications</li>
+                                <li>Bug(major)! Java: "Java faile while executing command: 'cls'" => well-known command control 'cls' missing in NativeMenu.cpp</li>
+                                <li>Bug(minor)! Java: java.lang.UnsatisfiedLinkError: __Native__getScreenInfo at cli.OutputDevice.__Native__getScreenInfo(Native Method)<br/>
+                                        (visible when the getScreenInfo() is called from Java,
+                                        fixed and checked with I/O devices unit test: java/build/make/io_device.mak, java/src/cli/test/TestIODevice.java)</li>
+                                <li>Bug(minor)! Java: Crash on Endl deletion with MenuRef reference set (visible when calling deprecated System.runFinalizersOnExit(true))</li>
+                                <li>Bug(minor)! Java: Native object references misfunctionning when declaring twice a same keyword in the same context (fixed and checked with test_no_res.mak)</li>
+                                <li>Bug(minor)! Java: Crash when calling deprecated System.runFinalizersOnExit(true) (token addition for static null/stdin/stdout/stderr devices)</li>
+                                <li>Bug(minor)! Java: Crash when calling deprecated System.runFinalizersOnExit(true) (no more finalization for TraceClass("CLI_JNI") main instance)</li>
+                                <li>Bug(minor)! cli2cpp.xsl/cli2java.xsl: accented character management in T_MkCppName/T_MkJavaName</li>
+                                <li>Bug(minor)! cli2java.xsl: Explicit java.lang/java.util package specification (avoid possible conflicts)</li>
+                                <li>Bug(minor)! cli2help.xsl: Forward tag commands do not appear in documentation (T_Recursion|CHECK_MENU fix)</li>
+                                <li>Bug(minor)! cli2help.xsl: Wrong default description for forward tag options.</li>
+                                <li>Bug(minor)! cli2help.xsl: Space missing in command names (due to xsltproc limitation?)</li>
+                                <li>Bug(minor)! cli2help.xsl: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.<br/>
+                                    Work around: cli2help.xsl still unfixed, but cli2help.py provides a fix.</li></ul></div>
+                </div>
+            </div>
             <h4><a href="#">cli 2.7</a></h4>
             <div>
                 <table> <tr><td class="keyword">Description:</td>   <td>Contributions, text edition facilities and many other improvements.</td></tr>
@@ -292,7 +346,7 @@
                 <div class="version-details">
                     <h5><a href="#">Major modifications</a></h5>
                     <div>   <ul><li>Contributions:
-                                    <ul><li>Oleg Smolsky: memory leaks + compilation warnings</li>
+                                    <ul><li>Oleg Smolsky: memory leaks + compilation warnings fixes</li>
                                         <li>Lakshman Naganoor and Venkatrangan G.: ui::More and ui::Less addition</li>
                                         <li>Peter Geremia: 64 bit architecture port</li>
                                         <li>Wilson Yu: Xalan and Saxon stylesheet transformation bug</li>
@@ -648,8 +702,6 @@
         <li><span class="keyword">Other target languages:</span>
             Supported languages are C++ and Java at present.
             Next ones could be Perl or python...</li>
-        <li><span class="keyword">Shell timeout management:</span>
-            Add inner support for timeout management within a shell.</li>
         <li><span class="keyword">Memory pools:</span>
             Implement memory pools in order to provide better memory management with embedded integration contexts.</li>
         <li>...</li>
@@ -662,13 +714,13 @@
     <h2>Download</h2>
 
     <p>
-    Latest version of the CLI toolkit is 2.7.
+    Latest version of the CLI toolkit is 2.8.
     Please refer to <a href="#history">history section</a> for previous downloads.
     </p>
 
     <p class="download ui-state-default">
         <span class="ui-icon ui-icon-arrowthickstop-1-s" style="float: left;"></span>
-        <a href="/download.php?url=/CLI/cli-2.7.tgz" target="_blank">Download cli 2.7 now!</a>
+        <a href="/download.php?url=/CLI/cli-2.8.tgz" target="_blank">Download cli 2.8 now!</a>
     </p>
 
     <p>

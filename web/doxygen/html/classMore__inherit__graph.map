@@ -1,4 +1,5 @@
-base referer
-rect $classUI.html 74,157 112,184
-rect $classNonBlockingKeyReceiver.html 8,82 178,109
-rect $classObject.html 62,8 124,34
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classUI.html" title="Generic user interface class." alt="" coords="49,160,87,189"/>
+<area shape="rect" id="node4" href="$classExecutionContext.html" title="Execution context." alt="" coords="5,83,131,112"/>
+<area shape="rect" id="node6" href="$classObject.html" title="Generic object." alt="" coords="39,5,97,35"/>
+</map>

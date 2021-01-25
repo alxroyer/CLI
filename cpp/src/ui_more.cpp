@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,6 +46,13 @@ CLI_NS_BEGIN(cli)
         {
         }
 
+        More::More(ExecutionContext& CLI_ParentContext, const unsigned int UI_MaxLines, const unsigned int UI_MaxLineLength)
+          : UI(CLI_ParentContext),
+            m_uiText(* new Text(UI_MaxLines, UI_MaxLineLength)), m_puiTextIt(NULL),
+            m_cliMoreLine(* new CmdLineEdition())
+        {
+        }
+
         More::~More(void)
         {
             delete & m_uiText;
@@ -68,7 +77,7 @@ CLI_NS_BEGIN(cli)
         void More::ResetToDefault(void)
         {
             // Very first display.
-            const OutputDevice::ScreenInfo cli_ScreenInfo = GetShell().GetStream(OUTPUT_STREAM).GetScreenInfo();
+            const OutputDevice::ScreenInfo cli_ScreenInfo = GetStream(OUTPUT_STREAM).GetScreenInfo();
             if (m_puiTextIt == NULL)
             {
                 m_puiTextIt = new TextIterator(cli_ScreenInfo, cli_ScreenInfo.GetSafeHeight() - 1);
@@ -79,7 +88,7 @@ CLI_NS_BEGIN(cli)
                 m_uiText.Begin(*m_puiTextIt);
                 const StringDevice cli_Out(cli_ScreenInfo.GetSafeHeight() * (cli_ScreenInfo.GetSafeWidth() + 1), false);
                 m_uiText.PrintPage(*m_puiTextIt, cli_Out, false);
-                GetShell().GetStream(OUTPUT_STREAM) << cli_Out.GetString();
+                GetStream(OUTPUT_STREAM) << cli_Out.GetString();
             }
             ShowMoreMessage();
         }
@@ -98,10 +107,10 @@ CLI_NS_BEGIN(cli)
                     // Optimize line by line at least.
                     for (bool b_LineDown = true; b_LineDown; )
                     {
-                        const OutputDevice::ScreenInfo cli_ScreenInfo = GetShell().GetStream(OUTPUT_STREAM).GetScreenInfo();
+                        const OutputDevice::ScreenInfo cli_ScreenInfo = GetStream(OUTPUT_STREAM).GetScreenInfo();
                         const StringDevice cli_Out(cli_ScreenInfo.GetSafeHeight() * (cli_ScreenInfo.GetSafeWidth() + 1), false);
                         b_LineDown = m_uiText.LineDown(*m_puiTextIt, & cli_Out);
-                        GetShell().GetStream(OUTPUT_STREAM) << cli_Out.GetString();
+                        GetStream(OUTPUT_STREAM) << cli_Out.GetString();
                     }
                     ShowMoreMessage();
                     break;
@@ -111,11 +120,11 @@ CLI_NS_BEGIN(cli)
                     HideMoreMessage();
                     do {
                         // Output lines to a buffer output device.
-                        const OutputDevice::ScreenInfo cli_ScreenInfo = GetShell().GetStream(OUTPUT_STREAM).GetScreenInfo();
+                        const OutputDevice::ScreenInfo cli_ScreenInfo = GetStream(OUTPUT_STREAM).GetScreenInfo();
                         const StringDevice cli_Out(cli_ScreenInfo.GetSafeHeight() * (cli_ScreenInfo.GetSafeWidth() + 1), false);
                         m_uiText.PageDown(*m_puiTextIt, & cli_Out);
                         // Display in one call in order to optimize display.
-                        GetShell().GetStream(OUTPUT_STREAM) << cli_Out.GetString();
+                        GetStream(OUTPUT_STREAM) << cli_Out.GetString();
                     } while(0);
                     ShowMoreMessage();
                     break;
@@ -123,7 +132,7 @@ CLI_NS_BEGIN(cli)
                 case ENTER:
                     // Print one more line
                     HideMoreMessage();
-                    m_uiText.LineDown(*m_puiTextIt, & GetShell().GetStream(OUTPUT_STREAM));
+                    m_uiText.LineDown(*m_puiTextIt, & GetStream(OUTPUT_STREAM));
                     ShowMoreMessage();
                     break;
                 case KEY_q:
@@ -137,7 +146,7 @@ CLI_NS_BEGIN(cli)
                     break;
                 default:
                     // Non managed character. Beep.
-                    GetShell().Beep();
+                    Beep();
                     break;
                 }
             }
@@ -156,7 +165,7 @@ CLI_NS_BEGIN(cli)
                     const ResourceString cli_MoreMessage = ResourceString()
                         .SetString(ResourceString::LANG_EN, "--- More ---")
                         .SetString(ResourceString::LANG_FR, "--- Plus ---");
-                    m_cliMoreLine.Put(GetShell().GetStream(OUTPUT_STREAM), cli_MoreMessage.GetString(GetShell().GetLang()));
+                    m_cliMoreLine.Put(GetStream(OUTPUT_STREAM), cli_MoreMessage.GetString(GetLang()));
                     return;
                 }
             }
@@ -167,13 +176,13 @@ CLI_NS_BEGIN(cli)
 
         void More::HideMoreMessage(void)
         {
-            m_cliMoreLine.CleanAll(GetShell().GetStream(OUTPUT_STREAM));
+            m_cliMoreLine.CleanAll(GetStream(OUTPUT_STREAM));
         }
 
         void More::Quit(void)
         {
             HideMoreMessage();
-            UI::Finish(true);
+            EndControl(true);
         }
 
     CLI_NS_END(ui)

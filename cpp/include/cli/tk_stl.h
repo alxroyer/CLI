@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -50,6 +52,7 @@ CLI_NS_BEGIN(cli)
         {
         public:
             //! @brief Concatenation.
+            //! @return Result string.
             static const tk::String Concat(
                     const unsigned int UI_MaxLength,    //!< Maximum length.
                     const char* const STR_1,            //!< First string.
@@ -63,6 +66,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Concatenation.
+            //! @return Result string.
             static const tk::String Concat(
                     const unsigned int UI_MaxLength,    //!< Maximum length.
                     const char* const STR_1,            //!< First string.
@@ -76,6 +80,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Concatenation.
+            //! @return Result string.
             static const tk::String Concat(
                     const unsigned int UI_MaxLength,    //!< Maximum length.
                     const char* const STR_1,            //!< First string.
@@ -90,6 +95,7 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Concatenation.
+            //! @return Result string.
             static const tk::String Concat(
                     const unsigned int UI_MaxLength,    //!< Maximum length.
                     const char* const STR_1,            //!< First string.
@@ -106,11 +112,11 @@ CLI_NS_BEGIN(cli)
 
         private:
             //! @brief No default constructor.
-            String(void);
+            explicit String(void);
 
         public:
             //! @brief Constructor.
-            String(
+            explicit String(
                     const unsigned int UI_MaxLen    //!< Maximum string length.
                     )
             {
@@ -120,7 +126,7 @@ CLI_NS_BEGIN(cli)
             //! @brief Initial value constructor.
             //! @warning Maximum length inherits the initial string value.
             //!         Objects initialized by this constructor might be constants in general.
-            String(
+            explicit String(
                     const unsigned int UI_MaxLen,   //!< Maximum string length.
                     const char* const STR_String    //!< Initial value.
                     )
@@ -144,12 +150,14 @@ CLI_NS_BEGIN(cli)
 
         public:
             //! @brief String length accessor.
+            //! @return String length.
             const unsigned int GetLength(void) const
             {
                 return (unsigned int) m_stlString.size();
             }
 
             //! @brief Checks whether the string is empty or not.
+            //! @return true for an empty string, false otherwise.
             const bool IsEmpty(void) const
             {
                 return (GetLength() <= 0);
@@ -162,7 +170,10 @@ CLI_NS_BEGIN(cli)
             }
 
             //! @brief Single character accessor.
-            const char GetChar(const unsigned int UI_Pos) const
+            //! @return Character at the given position. Null character when the position is out of bounds.
+            const char GetChar(
+                const unsigned int UI_Pos               //!< Character position from the beginning of the string.
+                ) const
             {
                 char c_Char = '\0';
                 if (UI_Pos < m_stlString.size())
@@ -304,11 +315,11 @@ CLI_NS_BEGIN(cli)
         {
         private:
             //! @brief No default constructor.
-            Queue(void);
+            explicit Queue(void);
 
         public:
             //! @brief Main constructor.
-            Queue(
+            explicit Queue(
                     const unsigned int UI_MaxCount  //!< Maximum item count.
                     )
             {
@@ -363,7 +374,7 @@ CLI_NS_BEGIN(cli)
             {
             private:
                 //! @brief Default constructor.
-                Iterator(void) : std::deque<T>::iterator() {}
+                explicit Iterator(void) : std::deque<T>::iterator() {}
 
             public:
                 //! @brief Copy constructor from an STL iterator.
@@ -592,8 +603,9 @@ CLI_NS_BEGIN(cli)
                 return b_Result;
             }
 
-        protected:
+        private:
             //! Internal queue buffer.
+            //! @return N/A (doxygen warning)
             std::deque<T> m_stlQueue;
         };
 
@@ -602,11 +614,11 @@ CLI_NS_BEGIN(cli)
         {
         private:
             //! @brief No default constructor.
-            Map(void);
+            explicit Map(void);
 
         public:
             //! @brief Main constructor.
-            Map(
+            explicit Map(
                     const unsigned int UI_MaxCount  //!< Maximum item count.
                     )
             {
@@ -712,7 +724,7 @@ CLI_NS_BEGIN(cli)
             {
             private:
                 //! @brief Default constructor.
-                Iterator(void) : std::map<K,T>::iterator() {}
+                explicit Iterator(void) : std::map<K,T>::iterator() {}
 
             public:
                 //! @brief Copy constructor.

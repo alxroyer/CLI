@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,34 +32,14 @@
 
 #include "io_device_impl.h"
 
+#include "test_args.h"
+#include "test_cli.h"
 
-const cli::Cli& GetCli(void)
-{
-    cli::Cli::List cli_List(10);
-    if ((cli::Cli::FindFromName(cli_List, ".*") > 0)
-        && (! cli_List.IsEmpty()))
-    {
-        // Return first CLI if any.
-        return *cli_List.GetHead();
-    }
-    else
-    {
-        // Should not happen.
-        CLI_ASSERT(false);
-        class MyCli : public cli::Cli { public:
-            MyCli(void) : cli::Cli("", cli::Help()) {}
-        };
-        static MyCli cli_MyCli;
-        return cli_MyCli;
-    }
-}
 
 cli::Shell& GetShell(void)
 {
-    // Ensure IOMux creation.
-    GetIOMux();
-
-    static cli::Shell cli_Shell(GetCli());
+    GetIOMux(); // Ensure IOMux creation.
+    static cli::Shell cli_Shell(GetXmlResCli());
     return cli_Shell;
 }
 
@@ -67,17 +49,26 @@ cli::IOMux& GetIOMux(void)
     return cli_IOMux;
 }
 
-int main(int I_Args, char* ARSTR_Args[])
+int main(int I_Args, const char* ARSTR_Args[])
 {
-    if (I_Args != 3)
-    {
-        cli::OutputDevice::GetStdErr() << "USAGE:" << cli::endl;
-        cli::OutputDevice::GetStdErr() << "   io_device <input-file> <traces-output-file>" << cli::endl;
+    SampleArgs cli_Args;
+    if (! cli_Args.ParseArgs(I_Args, ARSTR_Args)) { return -1; }
+    std::string str_InFile, str_OutFile;
+    if (const cli::InputFileDevice* const pcli_In = dynamic_cast<const cli::InputFileDevice*>(cli_Args.GetInput())) {
+        str_InFile = pcli_In->GetFileName();
+    } else {
+        cli::OutputDevice::GetStdErr() << "Please specify input file for this test." << cli::endl;
+        return -1;
+    }
+    if (const cli::OutputFileDevice* const pcli_Out = dynamic_cast<const cli::OutputFileDevice*>(cli_Args.GetOutput())) {
+        str_OutFile = pcli_Out->GetFileName();
+    } else {
+        cli::OutputDevice::GetStdErr() << "Please specify output file for this test." << cli::endl;
         return -1;
     }
 
     // Enable traces.
-    if (cli::OutputDevice* const pcli_TraceDevice = new cli::OutputFileDevice(ARSTR_Args[2], true))
+    if (cli::OutputDevice* const pcli_TraceDevice = new cli::OutputFileDevice(str_OutFile.c_str(), true))
     {
         cli::GetTraces().SetStream(*pcli_TraceDevice);
         cli::GetTraces().Trace(cli::TraceClass("CLI_IO_DEVICE_INSTANCES", cli::Help()));
@@ -86,7 +77,7 @@ int main(int I_Args, char* ARSTR_Args[])
         cli::GetTraces().SetFilter(cli::TraceClass("CLI_IO_DEVICE_OPENING", cli::Help()), true);
 
         // Input.
-        GetIOMux().AddDevice(new cli::InputFileDevice(ARSTR_Args[1], cli::OutputDevice::GetStdOut(), true));
+        GetIOMux().AddDevice(new cli::InputFileDevice(str_InFile.c_str(), cli::OutputDevice::GetStdOut(), true));
 
         // Execute.
         GetShell().Run(GetIOMux());
@@ -98,9 +89,7 @@ int main(int I_Args, char* ARSTR_Args[])
     return 0;
 }
 
-const bool SetDevice(
-        cli::STREAM_TYPE E_Use,
-        cli::OutputDevice* const PCLI_Device)
+const bool SetDevice(cli::STREAM_TYPE E_Use, cli::OutputDevice* const PCLI_Device)
 {
     bool b_Res = false;
 

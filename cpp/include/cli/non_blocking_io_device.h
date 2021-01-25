@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,22 +42,16 @@
 CLI_NS_BEGIN(cli)
 
     // Forward declarations.
-    class NonBlockingKeyReceiver;
-    class Shell;
+    class ExecutionContext;
+    class ExecutionContextManager;
 
 
     //! @brief Non-blocking input device.
     class NonBlockingIODevice : public IODevice
     {
-    private:
-        //! @brief No default constructor.
-        NonBlockingIODevice(void);
-        //! @brief No copy constructor.
-        NonBlockingIODevice(const NonBlockingIODevice&);
-
     public:
         //! @brief Main constructor.
-        NonBlockingIODevice(
+        explicit NonBlockingIODevice(
             const char* const STR_DbgName,  //!< Debug name.
             const bool B_AutoDelete         //!< Auto-deletion flag.
             );
@@ -64,73 +60,40 @@ CLI_NS_BEGIN(cli)
         virtual ~NonBlockingIODevice(void);
 
     private:
+        //! @brief No default constructor.
+        explicit NonBlockingIODevice(void);
+        //! @brief No copy constructor.
+        NonBlockingIODevice(const NonBlockingIODevice&);
         //! @brief No assignment operator.
         NonBlockingIODevice& operator=(const NonBlockingIODevice&);
 
     public:
-        //! @brief IODevice non-blocking implementation.
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const KEY GetKey(void) const;
 
-    public:
-        //! @brief Key receiver registration.
-        //! @warning Should be called by key receivers only.
-        void AttachKeyReceiver(
-            NonBlockingKeyReceiver& CLI_KeyReceiver     //!< Key receiver to register.
-            );
-
-        //! @brief Key receiver unregistration.
-        //! @warning Should be called by key receivers only.
-        void DetachKeyReceiver(
-            NonBlockingKeyReceiver& CLI_KeyReceiver     //!< Key receiver to unregister.
-            );
-
-        //! @brief Returns the current key receiver.
-        //! @return Current key receiver if any, NULL otherwise.
-        const NonBlockingKeyReceiver* const GetKeyReceiver(void) const;
-
-        //! @brief Returns the registered shell (if any).
-        //! @return Registered shell if any, NULL otherwise.
-        const Shell* const GetShell(void) const;
-
-    public:
-        //! @brief Handler to call when a key is received.
-        virtual void OnKey(
-            const KEY E_Key //!< Input key.
-            ) const;
-
-        //! @brief When a blocking call requires keys to be entered before returning, this method makes the thread waits smartly depending on the integration context.
-        //! @warning This kind of wait implementation may cause nested peek message loops, but if you are using cli::ui features, you might need to implement such loop.
-        //! @return false when the caller should not wait for keys anymore, true otherwise.
-        //!
-        //! If a key has been entered during the waiting time, this method MUST call OnKey(), then SHALL stop waiting and return right away.
-        virtual const bool WaitForKeys(
-            const unsigned int UI_Milli //!< Number of milliseconds to wait.
-            ) const;
-
     private:
-        //! Key receivers stack.
-        tk::Queue<NonBlockingKeyReceiver*> m_cliKeyReceivers;
-    };
+        //! @brief Sets an execution context manager reference.
+        void SetExecutionContextManager(
+            ExecutionContextManager* const PCLI_ExecutionContextManager //!< Execution context manager reference. May be NULL.
+            );
 
-    //! @brief Non-blocking key receiver interface.
-    class NonBlockingKeyReceiver : public Object
-    {
     protected:
-        //! @brief Default constructor is not public.
-        NonBlockingKeyReceiver(void);
-    private:
-        //! @brief No copy constructor.
-        NonBlockingKeyReceiver(const NonBlockingKeyReceiver&);
-    public:
-        //! @brief Destructor.
-        virtual ~NonBlockingKeyReceiver(void) = 0;
+        //! @brief Returns the current execution context.
+        //! @return Current execution context if any, NULL otherwise.
+        const ExecutionContext* const GetExecutionContext(void) const;
 
     public:
-        //! @brief Hook called by non-blocking devices on character input.
-        virtual void OnNonBlockingKey(
-            NonBlockingIODevice& CLI_Source,    //!< Input non-blocking device.
-            const KEY E_KeyCode                 //!< Input key.
-            ) = 0;
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
+        //! @brief Handler to call when a key is received.
+        //! @param E_Key Input key.
+        virtual void OnKey(const KEY E_Key) const;
+
+    private:
+        //! Execution context manager reference.
+        ExecutionContextManager* m_pcliExecutionContextManager;
+
+    private:
+        friend class ExecutionContextManager; // SetExecutionContextManager()
     };
 
 CLI_NS_END(cli)

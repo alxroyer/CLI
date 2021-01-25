@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,10 +33,7 @@
 #define _CLI_SHELL_H_
 
 #include "cli/namespace.h"
-#include "cli/non_blocking_io_device.h"
-#include "cli/help.h"
-#include "cli/io_device.h"
-#include "cli/tk.h"
+#include "cli/exec_context.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -43,78 +42,46 @@ CLI_NS_BEGIN(cli)
     class Cli;
     class Menu;
     class Element;
-    class OutputDevice;
-    class IODevice;
     class CmdLineEdition;
     class CmdLineHistory;
 
 
-    //! @brief Output stream enumeration.
-    typedef enum _STREAM_TYPE
-    {
-        ALL_STREAMS = -1,   //!< All streams.
-
-        WELCOME_STREAM = 0, //!< Welcome stream. Useful for bye too.
-        PROMPT_STREAM,      //!< Prompt stream.
-        ECHO_STREAM,        //!< Echo stream.
-        OUTPUT_STREAM,      //!< Output stream.
-        ERROR_STREAM,       //!< Error stream.
-        STREAM_TYPES_COUNT  //!< Number of streams.
-    } STREAM_TYPE;
-
-
     //! @brief Shell management.
-    class Shell : public NonBlockingKeyReceiver
+    class Shell : public ExecutionContext
     {
     private:
-        //! @brief No default constructor.
-        Shell(void);
-        //! @brief No copy constructor.
-        Shell(const Shell&);
+        //! @brief Object initialization.
+        void InitObject(
+            const Cli& CLI_Cli                      //!< CLI reference.
+            );
 
     public:
-        //! @brief Constructor.
-        Shell(
-            const Cli& CLI_Cli  //!< CLI reference.
+        //! @brief Top execution context constructor.
+        explicit Shell(
+            const Cli& CLI_Cli                      //!< CLI reference.
+            );
+
+        //! @brief Child execution context constructor.
+        explicit Shell(
+            ExecutionContext& CLI_ParentContext,    //!< Parent execution context.
+            const Cli& CLI_Cli                      //!< CLI reference.
             );
 
         //! @brief Destructor.
         virtual ~Shell(void);
 
     private:
+        //! @brief No default constructor.
+        explicit Shell(void);
+        //! @brief No copy constructor.
+        Shell(const Shell&);
         //! @brief No assignment operator.
         Shell& operator=(const Shell&);
 
     public:
-        //! @brief CLI access.
+        //! @brief Cli accessor.
+        //! @return Cli instance the shell is running onto.
         const Cli& GetCli(void) const;
-
-        //! @brief Input stream access.
-        const IODevice& GetInput(void) const;
-        //! @brief Output stream access.
-        const OutputDevice& GetStream(
-            const STREAM_TYPE E_StreamType          //!< Output stream identifier.
-            ) const;
-        //! @brief Output stream positionning.
-        //! @warning Please ensure one of the following conditions regarding the given device:
-        //!     - Either the device is an auto-deleted device,
-        //!     - or it will be destroyed after this shell object,
-        //!     - or another call to this method with the null device is done on termination.
-        //! Otherwise you could experience consistency troubles.
-        //! The null device and standard devices are not subject to this remark.
-        const bool SetStream(
-            const STREAM_TYPE E_StreamType,         //!< Output stream identifier.
-            OutputDevice& CLI_Stream                //!< Stream reference.
-            );
-        //! @brief Enabled/disabled stream accessor.
-        const bool StreamEnabled(
-            const STREAM_TYPE E_StreamType          //!< Output stream identifier.
-            ) const;
-        //! @brief Enable/disable stream.
-        const bool EnableStream(
-            const STREAM_TYPE E_StreamType,         //!< Output stream identifier.
-            const bool B_Enable                     //!< Enable flag.
-            );
 
         //! @brief Welcome message setting.
         void SetWelcomeMessage(
@@ -136,32 +103,6 @@ CLI_NS_BEGIN(cli)
                                                         //!< is restored.
             );
 
-        //! @brief Language setting.
-        void SetLang(
-            const ResourceString::LANG E_Lang   //!< New value.
-            );
-        //! @brief Language access.
-        //! @return The language currently set.
-        const ResourceString::LANG GetLang(void) const;
-
-        //! @brief Beep configuration setting.
-        void SetBeep(
-            const bool B_Enable         //!< New value.
-            );
-        //! @brief Beep configuration access.
-        //! @return The current beep configuration. true if enabled, false otherwise.
-        const bool GetBeep(void) const;
-
-    public:
-        //! @brief Runs the shell onto the corresponding input/output device.
-        void Run(
-            IODevice& CLI_IODevice      //!< Input/output device to run onto.
-            );
-
-        //! @brief Tells whether this shell is running or not.
-        //! @return The running status.
-        const bool IsRunning(void) const;
-
     public:
         //! @brief Help margin accessor.
         //! @return Number of spaces for the help margin.
@@ -172,13 +113,6 @@ CLI_NS_BEGIN(cli)
         const unsigned int GetHelpOffset(void) const;
 
     private:
-        //! @brief Assumes input and output devices to be ready for execution.
-        const bool OpenDevices(
-            IODevice& CLI_IODevice      //!< Input/output device to run onto.
-            );
-        //! @brief Release input and output devices after execution.
-        const bool CloseDevices(void);
-
         //! @brief Prints the welcome message.
         void PromptWelcomeMessage(void) const;
         //! @brief Prints the bye message.
@@ -218,12 +152,8 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Terminates the shell.
-        //! @warning Not thread safe. Call QuitThreadSafe() to do so.
+        //! @warning Not thread safe. Implement a non blocking device if your CLI execution should interact with external events.
         void Quit(void);
-
-        //! @brief Terminates the shell.
-        //! @warning The shell will actually quit as soon as the input device return a character.
-        void QuitThreadSafe(void);
 
         //! @brief Displays help depending on the context of the current line.
         void DisplayHelp(void);
@@ -238,29 +168,15 @@ CLI_NS_BEGIN(cli)
                                         //!< true when executed from other contexts.
             );
 
-        //! @brief Sends a beep signal.
-        void Beep(void);
+    protected:
+        // Inherit doxygen comments from cli::ExecutionContext interface documentation.
+        virtual const bool OnStartExecution(void);
+        // Inherit doxygen comments from cli::ExecutionContext interface documentation.
+        virtual void OnKey(const KEY E_KeyCode);
+        // Inherit doxygen comments from cli::ExecutionContext interface documentation.
+        virtual const bool OnStopExecution(void);
 
     private:
-        //! @brief Beginning of execution.
-        const bool StartExecution(
-            IODevice& CLI_IODevice              //!< Input/output device to run onto.
-            );
-        //! @brief Main loop executed when the input device is not a non-blocking device.
-        void MainLoop(void);
-    public:
-        //! @brief Hook called by non-blocking devices on character input.
-        virtual void OnNonBlockingKey(
-            NonBlockingIODevice& CLI_Source,    //!< Input non-blocking device.
-            const KEY E_KeyCode                 //!< Input key.
-            );
-    private:
-        //! @brief Shell termination.
-        const bool FinishExecution(void);
-
-    private:
-        //! @brief Called when a character comes up from the input device.
-        void OnKey(const KEY E_KeyCode);
         //! @brief Called when a printable character comes up from the input device.
         void OnPrintableChar(const char C_KeyCode);
         //! @brief Called when using the 'home'/'begin' key.
@@ -309,35 +225,19 @@ CLI_NS_BEGIN(cli)
 
     private:
         //! CLI reference.
-        const Cli* const m_pcliCli;
-        //! Input device.
-        IODevice* m_pcliInput;
-        //! Output streams.
-        struct {
-            OutputDevice* pcliStream;
-            bool bEnable;
-        } m_artStream[STREAM_TYPES_COUNT];
+        const Cli& m_cliCli;
         //! Welcome message.
         ResourceString m_cliWelcomeMessage;
         //! Bye message.
         ResourceString m_cliByeMessage;
         //! Non-default Prompt.
         ResourceString m_cliNoDefaultPrompt;
-        //! Current language.
-        ResourceString::LANG m_eLang;
-        //! Beep enabled.
-        bool m_bBeep;
         //! Menu stack.
         tk::Queue<const Menu*> m_qMenus;
         //! Current line.
         CmdLineEdition& m_cliCmdLine;
         //! History.
         CmdLineHistory& m_cliHistory;
-        //! Thread safe command.
-        enum {
-            THREAD_SAFE_NONE,   //!< No current thread safe command.
-            THREAD_SAFE_QUIT    //!< Have the shell quit as soon as possible.
-        } m_eThreadSafeCmd;
     };
 
 CLI_NS_END(cli)

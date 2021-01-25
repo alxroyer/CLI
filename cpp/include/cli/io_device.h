@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -45,7 +47,7 @@ CLI_NS_BEGIN(cli)
     {
     public:
         //! @brief Default constructor.
-        IOEndl(void) {}
+        explicit IOEndl(void) {}
 
     private:
         //! @brief No copy constructor.
@@ -54,11 +56,10 @@ CLI_NS_BEGIN(cli)
         IOEndl& operator=(const IOEndl&);
     };
 
-    //! The common IOEndl object.
-    //! endl can be passed to OutputDevice to print carriage returns.
+    //! @brief The common IOEndl object.
+    //! @return Common IOEndl object.
     //!
-    //! It is better to use endl rather to print "\n" or "\r\n"
-    //! since this should depend on the OutputDevice.
+    //! endl can be passed to OutputDevice to print carriage returns.
     extern const IOEndl endl;
 
 
@@ -66,15 +67,9 @@ CLI_NS_BEGIN(cli)
     //! @see endl
     class OutputDevice : public Object
     {
-    private:
-        //! @brief No default constructor.
-        OutputDevice(void);
-        //! @brief No copy constructor.
-        OutputDevice(const OutputDevice&);
-
     protected:
         //! @brief Constructor.
-        OutputDevice(
+        explicit OutputDevice(
             const char* const STR_DbgName,  //!< Debug name. Useful for traces only.
             const bool B_AutoDelete         //!< Auto-deletion flag.
             );
@@ -83,6 +78,10 @@ CLI_NS_BEGIN(cli)
         virtual ~OutputDevice(void);
 
     private:
+        //! @brief No default constructor.
+        explicit OutputDevice(void);
+        //! @brief No copy constructor.
+        OutputDevice(const OutputDevice&);
         //! @brief No assignment operator.
         OutputDevice& operator=(const OutputDevice&);
 
@@ -107,11 +106,13 @@ CLI_NS_BEGIN(cli)
             const CallInfo& CLI_CallInfo    //!< Call information.
             );
 
-        //! @brief Instance user count access.
+        //! @brief Instance user count accessor.
+        //! @return Number of instance users.
         const int GetInstanceUsers(void) const;
 
     public:
         //! @brief Checks the device is opened.
+        //! @return true for success, false otherwise.
         //!
         //! Opens the device if not already opened.
         //! Acquire a lock on the open state in any case.
@@ -120,6 +121,7 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Indicates the device the client does not need the device to opened anymore.
+        //! @return true for success, false otherwise.
         //!
         //! Releases the lock on the open state.
         //! When no more user need the device to be opened, it is closed straight forward.
@@ -127,11 +129,13 @@ CLI_NS_BEGIN(cli)
             const CallInfo& CLI_CallInfo    //!< Call information.
             );
 
-        //! @brief Open state user count access.
+        //! @brief Open state user count accessor.
+        //! @return Number of users that have opened the device.
         const int GetOpenUsers(void) const;
 
     protected:
         //! @brief Device opening handler.
+        //! @return true for success, false otherwise.
         //! @note Devices have to be prepared to be called several times through this method.
         //!       They should do the opening once only
         //!       (unless they have been closed between OpendDevice() calls),
@@ -139,6 +143,7 @@ CLI_NS_BEGIN(cli)
         virtual const bool OpenDevice(void) = 0;
 
         //! @brief Device closure handler.
+        //! @return true for success, false otherwise.
         //! @note Devices have to be prepared to be called several times through this method.
         //!       They should do the closure once only
         //!       (unless they have been opened between CloseDevice() calls),
@@ -230,7 +235,7 @@ CLI_NS_BEGIN(cli)
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            void* const PV_Out          //!< Void address.
+            const void* const PV_Out    //!< Void address.
             ) const;
 
         //! @brief Output operator.
@@ -245,13 +250,16 @@ CLI_NS_BEGIN(cli)
         const ResourceString GetLastError(void) const;
 
     public:
-        //! @brief Null device.
+        //! @brief Null device singleton.
+        //! @return Null device reference.
         static OutputDevice& GetNullDevice(void);
 
-        //! @brief Standard output device.
+        //! @brief Standard output device singleton.
+        //! @return Standard output device reference.
         static OutputDevice& GetStdOut(void);
 
-        //! @brief Standard error device.
+        //! @brief Standard error device singleton.
+        //! @return Standard error device reference.
         static OutputDevice& GetStdErr(void);
 
     public:
@@ -259,6 +267,8 @@ CLI_NS_BEGIN(cli)
         class ScreenInfo : public Object
         {
         public:
+            //! @brief ScreenInfo regular values.
+            //! @return N/A (doxygen warning)
             enum {
                 UNKNOWN = -1,           //!< Unknown value constant for either width or height.
                 DEFAULT_WIDTH = 80,     //!< Default width constant.
@@ -267,11 +277,11 @@ CLI_NS_BEGIN(cli)
 
         private:
             //! No default constructor.
-            ScreenInfo(void);
+            explicit ScreenInfo(void);
 
         public:
             //! @brief Constructor.
-            ScreenInfo(
+            explicit ScreenInfo(
                 const int I_Width,      //!< Width of screen. Can be UNKNOWN.
                 const int I_Height,     //!< Height of screen. Can be UNKNOWN.
                 const bool B_TrueCls,   //!< True when an efficient CleanScreen() operation is implemented.
@@ -291,6 +301,7 @@ CLI_NS_BEGIN(cli)
             ~ScreenInfo(void) {}
         public:
             //! @brief Assignment operator.
+            //! @return Same ScreenInfo instance reference.
             ScreenInfo& operator=(
                 const ScreenInfo& CLI_ScreenInfo    //!< Screen information to copy.
                 )
@@ -328,10 +339,10 @@ CLI_NS_BEGIN(cli)
         };
 
     public:
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Output handler.
-        virtual void PutString(
-            const char* const STR_Out   //!< Output string.
-            ) const = 0;
+        //! @param STR_Out Output string.
+        virtual void PutString(const char* const STR_Out) const = 0;
 
         //! @brief Beep handler.
         virtual void Beep(void) const;
@@ -343,14 +354,14 @@ CLI_NS_BEGIN(cli)
         //! @return Screen info with possible ScreenInfo::UNKNOWN values.
         virtual const ScreenInfo GetScreenInfo(void) const;
 
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Stack overflow protection.
+        //! @param CLI_Device Other device that the callee device should check it would output characters to.
         //! @return true if the callee device would redirect characters to the given device for output.
         //!
         //! Determines whether the current device would output the given device in any way.
         //! Default implementation checks whether CLI_Device is the self device.
-        virtual const bool WouldOutput(
-            const OutputDevice& CLI_Device  //!< Other device that the callee device should check it would output characters to.
-            ) const;
+        virtual const bool WouldOutput(const OutputDevice& CLI_Device) const;
 
     private:
         //! Debug name. Useful for traces only.
@@ -364,11 +375,13 @@ CLI_NS_BEGIN(cli)
 
     protected:
         //! Last error.
+        //! @return N/A (doxygen warning)
         mutable ResourceString m_cliLastError;
     };
 
 
     //! @brief Input characters.
+    //! @return N/A (doxygen warning)
     typedef enum _KEY
     {
         NULL_KEY = '\0',    //!< Null key.
@@ -485,15 +498,9 @@ CLI_NS_BEGIN(cli)
     //! @see endl
     class IODevice : public OutputDevice
     {
-    private:
-        //! @brief No default constructor.
-        IODevice(void);
-        //! @brief No copy constructor.
-        IODevice(const IODevice&);
-
     public:
         //! @brief Constructor.
-        IODevice(
+        explicit IODevice(
             const char* const STR_DbgName,  //!< Debug name.
             const bool B_AutoDelete         //!< Auto-deletion flag.
             );
@@ -502,35 +509,47 @@ CLI_NS_BEGIN(cli)
         virtual ~IODevice(void);
 
     private:
+        //! @brief No default constructor.
+        explicit IODevice(void);
+        //! @brief No copy constructor.
+        IODevice(const IODevice&);
         //! @brief No assignment operator.
         IODevice& operator=(const IODevice&);
 
     public:
         //! @brief Input key capture handler.
+        //! @warning Blocking call.
+        //! @return KEY code captured.
         virtual const KEY GetKey(void) const = 0;
 
-        //! @brief Input location.
+        //! @brief Input location accessor.
+        //! @return Input location resource string.
         virtual const ResourceString GetLocation(void) const;
 
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Stack overflow protection.
+        //! @param CLI_Device Other device that the callee device should check it would input characters from.
         //! @return true if the callee device would redirect input to the given device for reading.
         //!
         //! Determines whether the current device would input the given device in any ways.
         //! Default implementation checks whether CLI_Device is the self device.
-        virtual const bool WouldInput(
-            const IODevice& CLI_Device  //!< Other device that the callee device should check it would input characters from.
-            ) const;
+        virtual const bool WouldInput(const IODevice& CLI_Device) const;
 
     public:
-        //! @brief Null device.
+        //! @brief Null device singleton.
+        //! @return Null device reference.
         static IODevice& GetNullDevice(void);
 
-        //! @brief Standard input device.
+        //! @brief Standard input device singleton.
+        //! @return Standard input device reference.
         static IODevice& GetStdIn(void);
 
-    protected:
+    public:
         //! @brief Common char translation.
-        const KEY GetKey(const int I_Char) const;
+        //! @return KEY code corresponding to the given common char.
+        static const KEY GetKey(
+            const int I_Char    //!< Common char to translate.
+            );
     };
 
 CLI_NS_END(cli)

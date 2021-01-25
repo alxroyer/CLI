@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,49 +34,64 @@
 
 #include "cli/namespace.h"
 #include "cli/tk.h"
-#include "cli/non_blocking_io_device.h"
+#include "cli/exec_context.h"
 
 
 CLI_NS_BEGIN(cli)
 
-    // Forward declarations
-    class Shell;
-
-
+    //! @namespace cli::ui
+    //! @brief Additional user-interface tools.
+    //!
+    //! This packages gathers additional user-interface tools:
+    //!     - Question / answers / challenge:
+    //!         - YesNo: let the user answer "yes" or "no",
+    //!         - Choice: let the user choose between a list of possibilities,
+    //!         - Password: let the user enter a password,
+    //!     - Forms:
+    //!         - Line: to let the user enter a text line,
+    //!         - Int: to let the user enter an int,
+    //!         - Float: to let the user enter a float,
+    //!     - Display:
+    //!         - More: page by page display,
+    //!         - Less: forward and backward page display.
     CLI_NS_BEGIN(ui)
 
         //! @brief Generic user interface class.
-        class UI : public NonBlockingKeyReceiver
+        class UI : public ExecutionContext
         {
-        private:
-            //! @brief No copy constructor.
-            UI(const UI&);
-
         protected:
-            //! @brief Default constructor.
-            UI(void);
+            //! @brief Top execution context constructor.
+            explicit UI(void);
+
+            //! @brief Child execution context constructor.
+            explicit UI(
+                ExecutionContext& CLI_ExecutionContext  //!< Parent execution context.
+                );
 
         public:
             //! @brief Destructor.
             virtual ~UI(void);
 
         private:
+            //! @brief No copy constructor.
+            UI(const UI&);
             //! @brief No assignment operator.
             UI& operator=(const UI&);
 
         public:
-            //! @brief Runs within the context of a running shell.
-            //! @return true for a regular output, false for an error or a cancellation.
-            const bool Run(
-                Shell& CLI_Shell        //!< Shell context.
-                );
+            //! @brief Execution result accessor.
+            //! @return Execution result: true for a regular output, false for an error or a cancellation.
+            const bool GetbExecResult(void) const;
 
-        private:
-            //! @brief Method called when execution starts.
-            void Start(Shell& CLI_Shell);
         protected:
-            //! @brief Method to call by child classes in order to finish execution.
-            void Finish(
+            // Inherit doxygen comments from cli::ExecutionContext interface documentation.
+            virtual const bool OnStartExecution(void);
+            // Inherit doxygen comments from cli::ExecutionContext interface documentation.
+            virtual const bool OnStopExecution(void);
+            // Note: cli::ExecutionContext::OnKey will be overriden by sub-classes...
+        protected:
+            //! @brief Method to call by child classes in order to end the control execution.
+            void EndControl(
                 const bool B_ExecResult //!< Execution result, true for success, false otherwise.
                 );
         protected:
@@ -83,24 +100,7 @@ CLI_NS_BEGIN(cli)
             //! @brief Handler called when default value is required to be restored.
             virtual void ResetToDefault(void) = 0;
 
-        protected:
-            //! @brief Attached shell retrieval.
-            //! @return Shell reference.
-            Shell& GetShell(void) const;
-
-        public:
-            // NonBlockingKeyReceiver interface implementation.
-            void OnNonBlockingKey(NonBlockingIODevice& CLI_Source, const KEY E_KeyCode);
-            //! @brief Key reception handler.
-            virtual void OnKey(
-                const KEY E_KeyCode     //!< Key received.
-                ) = 0;
-
         private:
-            //! Attached Shell.
-            Shell* m_pcliShell;
-            //! Internal flag for execution management.
-            bool m_bKeepRunning;
             //! Execution result.
             bool m_bExecResult;
         };

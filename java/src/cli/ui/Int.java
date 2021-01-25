@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,24 +30,22 @@ package cli.ui;
 /** Integer user interface object. */
 public class Int extends Line {
 
-    /** Constructor.
+    /** Top execution context constructor.
         @param I_DefaultValue Default value.
         @param I_MinValue Minimum value.
         @param I_MaxValue Maximum value. */
     public Int(int I_DefaultValue, int I_MinValue, int I_MaxValue) {
-        super(__Int(I_DefaultValue, I_MinValue, I_MaxValue));
+        super(__Int(0, I_DefaultValue, I_MinValue, I_MaxValue));
     }
-    private static final native int __Int(int I_DefaultValue, int I_MinValue, int I_MaxValue);
-
-    /** Destructor. */
-    protected void finalize() throws Throwable {
-        if (getbDoFinalize()) {
-            __finalize(this.getNativeRef());
-            dontFinalize(); // finalize once.
-        }
-        super.finalize();
+    /** Child execution context constructor.
+        @param CLI_ParentContext Parent execution context.
+        @param I_DefaultValue Default value.
+        @param I_MinValue Minimum value.
+        @param I_MaxValue Maximum value. */
+    public Int(cli.ExecutionContext.Interface CLI_ParentContext, int I_DefaultValue, int I_MinValue, int I_MaxValue) {
+        super(__Int(CLI_ParentContext.getNativeRef(), I_DefaultValue, I_MinValue, I_MaxValue));
     }
-    private static final native void __finalize(int I_NativeIntRef);
+    private static final native int __Int(int I_NativeParentContextRef, int I_DefaultValue, int I_MinValue, int I_MaxValue);
 
     /** Integer retrieval.
         @return Integer value entered by the user. */

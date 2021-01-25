@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -493,7 +495,7 @@ void ConfigMenu::CheckIODevice(void) const
     if (! Press::Key(GetShell(), "Press 'X'", KEY_X)) return;
     if (! Press::Key(GetShell(), "Press 'Y'", KEY_Y)) return;
     if (! Press::Key(GetShell(), "Press 'Z'", KEY_Z)) return;
-    // Accentuated characters
+    // Accented characters
     if (! Press::Key(GetShell(), "Press 'á' ('a' acute)", KEY_aacute)) return;
     if (! Press::Key(GetShell(), "Press 'à' ('a' grave)", KEY_agrave)) return;
     if (! Press::Key(GetShell(), "Press 'ä' ('a' uml)", KEY_auml)) return;

@@ -1,13 +1,15 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -21,6 +23,41 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
+
+Version 2.8
+(July, 15th 2013):
+    Major modifications:
+        * ExecutionContext class creation:
+            - Shell ans ui controls improvements
+            - NonBlockingKeyReceiver interface removal, NonBlockingIODevice::WaitForKeys removal
+            - TelnetServer redesign
+            - PwdShellContext sample
+        * Transformation / schema:
+            - Systematic source generation
+            - python scripts addition (more stable and faster): cli2cpp.py, cli2java.py, cli2help.py
+            - XSL stylesheets, schema files and python scripts moved/added in a "tools" directory (backward compatibility with old XSL and schema paths is still provided)
+    Miscellaneous:
+        * Makefiles:
+            - 'make' and 'make check' dissociation
+            - Explicit message when dependencies should be regenerated
+            - IfEquals, CheckDir, RemoveDir, CheckSh tool functions addition
+        * C++ improvements:
+            - Input command lines growing limitation
+            - 'explicit' constructors
+            - Local protections addition in Cli::SetCli() and Menu::SetMenu() against memory leaks on multiple calls to SetCli()
+            - Traces::SafeTrace() improvement, Traces::IsSafe() removal
+            - ESCDELAY modification through set_escdelay() correction
+        * Java improvements:
+            - Useless finalize() methods removal
+            - deleteFromNative() gathered in NativeObject for any class
+        * Test improvements:
+            - Addition of C++ tests/include headers, cli/test/TestTools.java for unit test routines factorization
+            - Unit-test makefiles renamed with 'test_' prefix
+            - test_tk.mak: Dual execution implementation: USE_STL=yes and USE_STL=no
+            - Java test_no_res.mak unit-test addition
+        * Documentation:
+            - doxygen: msc sequence charts addition, warnings removal
+            - javadoc: package documentation
 
 Version 2.7
 (Dec, 9th 2011)

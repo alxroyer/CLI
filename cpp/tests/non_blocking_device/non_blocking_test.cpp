@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,7 +33,7 @@ class NonBlockingTestDevice : public cli::NonBlockingIODevice
 {
 public:
     // Contruction / destruction.
-    NonBlockingTestDevice(const bool B_AutoDelete) : cli::NonBlockingIODevice("NonBlockingTestDevice", B_AutoDelete)
+    explicit NonBlockingTestDevice(const bool B_AutoDelete) : cli::NonBlockingIODevice("NonBlockingTestDevice", B_AutoDelete)
     {
     }
     virtual ~NonBlockingTestDevice(void)
@@ -103,6 +105,7 @@ int main(void)
         if (! cli_Shell.IsRunning())
         {
             cli::OutputDevice::GetStdErr() << "The shell should still be running after the 'help' command." << cli::endl;
+            cli_Shell.StopExecution();
             return -1;
         }
 
@@ -116,6 +119,7 @@ int main(void)
         if (cli_Shell.IsRunning())
         {
             cli::OutputDevice::GetStdErr() << "The shell should not be running anymore after the 'exit' command." << cli::endl;
+            cli_Shell.StopExecution();
             return -1;
         }
 

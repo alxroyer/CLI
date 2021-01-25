@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -38,16 +40,29 @@
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1Shell(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeCliRef)
+        jint I_NativeParentContextRef, jint I_NativeCliRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__Shell(I_NativeCliRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__Shell(I_NativeParentContextRef, I_NativeCliRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeCliRef", I_NativeCliRef) << cli::endl;
     NativeObject::REF i_ShellRef = 0;
     if (const cli::Cli* const pcli_Cli = NativeObject::GetNativeObject<const cli::Cli*>(I_NativeCliRef))
     {
-        if (cli::Shell* const pcli_Shell = new cli::Shell(*pcli_Cli))
+        cli::Shell* pcli_Shell = NULL;
+        if (I_NativeParentContextRef != 0)
+        {
+            if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+            {
+                pcli_Shell = new cli::Shell(*pcli_ParentContext, *pcli_Cli);
+            }
+        }
+        else
+        {
+            pcli_Shell = new cli::Shell(*pcli_Cli);
+        }
+        if (pcli_Shell != NULL)
         {
             NativeObject::Use(*pcli_Cli);
             NativeObject::Use(*pcli_Shell);
@@ -56,23 +71,6 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1Shell(
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Shell.__Shell()", i_ShellRef) << cli::endl;
     return i_ShellRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__finalize(I_NativeShellRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    if (const cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<const cli::Shell*>(I_NativeShellRef))
-    {
-        const cli::Cli& cli_Cli = pcli_Shell->GetCli();
-        NativeObject::Free(*pcli_Shell);
-        NativeObject::Free(cli_Cli);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Shell.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getCli(
@@ -91,106 +89,6 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getCli(
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Shell.__getCli()", i_CliRef) << cli::endl;
     return i_CliRef;
-}
-
-extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getInput(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__getInput(I_NativeShellRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    NativeObject::REF i_InputRef = 0;
-    if (const cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<const cli::Shell*>(I_NativeShellRef))
-    {
-        const cli::IODevice& cli_Input = pcli_Shell->GetInput();
-        i_InputRef = NativeObject::GetNativeRef(cli_Input);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Shell.__getInput()", i_InputRef) << cli::endl;
-    return i_InputRef;
-}
-
-extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getStream(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jint E_StreamType)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__getStream(I_NativeShellRef, E_StreamType)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
-    NativeObject::REF i_StreamRef = 0;
-    if (const cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<const cli::Shell*>(I_NativeShellRef))
-    {
-        const cli::OutputDevice& cli_Stream = pcli_Shell->GetStream((cli::STREAM_TYPE) E_StreamType);
-        i_StreamRef = NativeObject::GetNativeRef(cli_Stream);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Shell.__getStream()", i_StreamRef) << cli::endl;
-    return i_StreamRef;
-}
-
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1setStream(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jint E_StreamType, jint I_NativeDeviceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__setStream(I_NativeShellRef, E_StreamType, I_NativeDeviceRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
-    bool b_Res = false;
-    if (cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<cli::Shell*>(I_NativeShellRef))
-    {
-        if (((E_StreamType >= 0) && (E_StreamType < cli::STREAM_TYPES_COUNT))
-            || (E_StreamType == cli::ALL_STREAMS))
-        {
-            if (cli::OutputDevice* const pcli_Device = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeDeviceRef))
-            {
-                b_Res = pcli_Shell->SetStream((cli::STREAM_TYPE) E_StreamType, *pcli_Device);
-            }
-        }
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Shell.__setStream()", b_Res) << cli::endl;
-    return b_Res;
-}
-
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1streamEnabled(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jint E_StreamType)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__streamEnabled(I_NativeShellRef, E_StreamType)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
-    bool b_Res = false;
-    if (const cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<const cli::Shell*>(I_NativeShellRef))
-    {
-        b_Res = pcli_Shell->StreamEnabled((cli::STREAM_TYPE) E_StreamType);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Shell.__streamEnabled()", b_Res) << cli::endl;
-    return b_Res;
-}
-
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1enableStream(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jint E_StreamType, jboolean B_Enable)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__enableStream(I_NativeShellRef, E_StreamType, B_Enable)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_Enable", B_Enable) << cli::endl;
-    bool b_Res = false;
-    if (cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<cli::Shell*>(I_NativeShellRef))
-    {
-        b_Res = pcli_Shell->EnableStream((cli::STREAM_TYPE) E_StreamType, B_Enable);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Shell.__enableStream()", b_Res) << cli::endl;
-    return b_Res;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setWelcomeMessage(
@@ -248,114 +146,6 @@ extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setPrompt(
         }
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Shell.__setPrompt()") << cli::endl;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setLang(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jint E_Lang)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__setLang(I_NativeShellRef, E_Lang)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
-    if (cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<cli::Shell*>(I_NativeShellRef))
-    {
-        if ((E_Lang >= 0) && (E_Lang < cli::ResourceString::LANG_COUNT))
-        {
-            pcli_Shell->SetLang((cli::ResourceString::LANG) E_Lang);
-        }
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Shell.__setLang()") << cli::endl;
-}
-
-extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getLang(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__getLang(I_NativeShellRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::ResourceString::LANG e_Lang = cli::ResourceString::LANG_DEFAULT;
-    if (const cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<const cli::Shell*>(I_NativeShellRef))
-    {
-        e_Lang = pcli_Shell->GetLang();
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Shell.__getLang()", e_Lang) << cli::endl;
-    return e_Lang;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1setBeep(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jboolean B_Enable)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__setBeep(I_NativeShellRef, B_Enable)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_Enable", B_Enable) << cli::endl;
-    if (cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<cli::Shell*>(I_NativeShellRef))
-    {
-        pcli_Shell->SetBeep(B_Enable);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Shell.__setBeep()") << cli::endl;
-}
-
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1getBeep(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__getBeep(I_NativeShellRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    bool b_Beep = false;
-    if (const cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<const cli::Shell*>(I_NativeShellRef))
-    {
-        b_Beep = pcli_Shell->GetBeep();
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Shell.__getBeep()", b_Beep) << cli::endl;
-    return b_Beep;
-}
-
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1run(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef, jint I_NativeIODeviceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__run(I_NativeShellRef, I_NativeIODeviceRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeIODeviceRef", I_NativeIODeviceRef) << cli::endl;
-    bool b_Res = false;
-    if (cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<cli::Shell*>(I_NativeShellRef))
-    {
-        if (cli::IODevice* const pcli_IODevice = NativeObject::GetNativeObject<cli::IODevice*>(I_NativeIODeviceRef))
-        {
-            pcli_Shell->Run(*pcli_IODevice);
-            b_Res = true;
-        }
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Shell.__run()", b_Res) << cli::endl;
-    return b_Res;
-}
-
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_Shell__1_1isRunning(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__isRunning(I_NativeShellRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    bool b_IsRunning = false;
-    if (const cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<const cli::Shell*>(I_NativeShellRef))
-    {
-        b_IsRunning = pcli_Shell->IsRunning();
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("Shell.__isRunning()", b_IsRunning) << cli::endl;
-    return b_IsRunning;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_Shell__1_1getHelpMargin(
@@ -462,21 +252,6 @@ extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1quit(
         pcli_Shell->Quit();
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Shell.__quit()") << cli::endl;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1quitThreadSafe(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeShellRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Shell.__quitThreadSafe(I_NativeShellRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeShellRef", I_NativeShellRef) << cli::endl;
-    if (cli::Shell* const pcli_Shell = NativeObject::GetNativeObject<cli::Shell*>(I_NativeShellRef))
-    {
-        pcli_Shell->QuitThreadSafe();
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("Shell.__quitThreadSafe()") << cli::endl;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Shell__1_1displayHelp(

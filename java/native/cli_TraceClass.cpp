@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,6 +36,19 @@
 #include "NativeExec.h"
 #include "NativeTraces.h"
 
+
+extern "C" JNIEXPORT jint JNICALL Java_cli_TraceClass__1_1getJniTraceClass(
+        JNIEnv* PJ_Env, jclass PJ_Class)
+{
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TraceClass.__getJniTraceClass()") << cli::endl;
+
+    const NativeObject::REF i_TraceClassRef = NativeObject::GetNativeRef(NativeTraces::GetTraceClass());
+
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("TraceClass.__TraceClass()", i_TraceClassRef) << cli::endl;
+    return i_TraceClassRef;
+}
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_TraceClass__1_1TraceClass(
         JNIEnv* PJ_Env, jclass PJ_Class,
@@ -63,21 +78,6 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_TraceClass__1_1TraceClass(
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("TraceClass.__TraceClass()", i_TraceClassRef) << cli::endl;
     return i_TraceClassRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_TraceClass__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeTraceClassRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TraceClass.__finalize(I_NativeTraceClassRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeTraceClassRef", I_NativeTraceClassRef) << cli::endl;
-    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I_NativeTraceClassRef))
-    {
-        NativeObject::Free(*pcli_TraceClass);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("TraceClass.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_TraceClass__1_1getClassName(

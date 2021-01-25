@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -52,13 +54,13 @@ const tk::String SyntaxTag::GetKeyword(void) const
 {
     static char str_Buffer[256];
     memset(str_Buffer, '\0', sizeof(str_Buffer));
-    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "tag[0x%p]", this);
+    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "tag[%p]", this);
 
     tk::String str_Keyword(MAX_WORD_LENGTH);
     if (! str_Keyword.Set(str_Buffer))
     {
-        GetTraces().Trace(INTERNAL_ERROR) << "SyntaxTag::GetKeyword() could not constructor the SyntaxTag keyword" << endl;
-}
+        GetTraces().Trace(INTERNAL_ERROR) << "SyntaxTag::GetKeyword() could not construct the SyntaxTag keyword from string '" << str_Buffer << "'" << endl;
+    }
     return str_Keyword;
 }
 
@@ -82,19 +84,19 @@ const tk::String SyntaxRef::GetKeyword(void) const
 {
     static char str_Buffer[256];
     memset(str_Buffer, '\0', sizeof(str_Buffer));
-    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "ref[0x%p]", this);
+    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "ref[%p]", this);
 
     tk::String str_Keyword(MAX_WORD_LENGTH);
     if (! str_Keyword.Set(str_Buffer))
     {
-        GetTraces().Trace(INTERNAL_ERROR) << "SyntaxRef::GetKeyword() could not constructor the SyntaxRef keyword" << endl;
+        GetTraces().Trace(INTERNAL_ERROR) << "SyntaxRef::GetKeyword() could not construct the SyntaxRef keyword from string '" << str_Buffer << "'" << endl;
     }
     if (m_pcliTag != NULL)
     {
         if ((! str_Keyword.Append(" -> "))
             || (! str_Keyword.Append(m_pcliTag->GetKeyword())))
         {
-            GetTraces().Trace(INTERNAL_ERROR) << "SyntaxRef::GetKeyword() could not constructor the SyntaxRef keyword" << endl;
+            GetTraces().Trace(INTERNAL_ERROR) << "SyntaxRef::GetKeyword() could not construct the SyntaxRef keyword from strings ' -> ' or m_pcliTag" << endl;
         }
     }
     return str_Keyword;

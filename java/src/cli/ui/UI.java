@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,25 +28,18 @@ package cli.ui;
 
 
 /** Generic user interface class. */
-abstract class UI extends cli.NativeObject implements cli.NonBlockingIODevice.KeyReceiver {
+public abstract class UI extends cli.ExecutionContext.Native {
 
     /** Default constructor. */
     protected UI(int I_NativeRef) {
         super(I_NativeRef);
     }
 
-    /** Runs within the context of a running shell.
-        @param CLI_Shell Shell context.
-        @return true for a regular output, false for an error or a cancellation. */
-    public boolean run(cli.Shell CLI_Shell) {
-        return __run(this.getNativeRef(), CLI_Shell.getNativeRef());
+    /** Execution result accessor.
+        @return Execution result: true for a regular output, false for an error or a cancellation. */
+    public boolean getbExecResult() {
+        return __getbExecResult(this.getNativeRef());
     }
-    private static final native boolean __run(int I_NativeUIRef, int I_NativeShellRef);
-
-    // NonBlockingKeyReceiver interface implementation.
-    public void onNonBlockingKey(cli.NonBlockingIODevice.Interface CLI_Source, int E_KeyCode) {
-        __onNonBlockingKey(this.getNativeRef(), CLI_Source.getNativeRef(), E_KeyCode);
-    }
-    private static final native void __onNonBlockingKey(int I_NativeUIRef, int I_NativeSourceDeviceRef, int E_KeyCode);
+    private static final native boolean __getbExecResult(int I_NativeUIRef);
 
 }

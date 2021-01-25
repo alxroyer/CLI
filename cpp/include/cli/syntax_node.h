@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -48,15 +50,9 @@ CLI_NS_BEGIN(cli)
     //! and offer operations based on this list.
     class SyntaxNode : public Element
     {
-    private:
-        //! @brief No default constructor.
-        SyntaxNode(void);
-        //! @brief No copy constructor.
-        SyntaxNode(const SyntaxNode&);
-
     public:
         //! @brief Constructor.
-        SyntaxNode(
+        explicit SyntaxNode(
             const char* const STR_Keyword,  //!< Keyword of the element.
             const Help& CLI_Help            //!< Corresponding help.
             );
@@ -65,6 +61,10 @@ CLI_NS_BEGIN(cli)
         virtual ~SyntaxNode(void);
 
     private:
+        //! @brief No default constructor.
+        explicit SyntaxNode(void);
+        //! @brief No copy constructor.
+        SyntaxNode(const SyntaxNode&);
         //! @brief No assignment operator.
         SyntaxNode& operator=(const SyntaxNode&);
 
@@ -82,15 +82,8 @@ CLI_NS_BEGIN(cli)
             const bool B_AutoDelete             //!< Auto-deletion flag. true have the given object being automatically deleted when removed.
             );
 
-        //! @brief Returns the list of child elements coresponding to a keyword
-        //!         or the beginning of a keyword.
-        //! @return false for internal error, true otherwise.
-        virtual const bool FindElements(
-            Element::List& CLI_ExactList,   //!< Exact matching keywords output list.
-            Element::List& CLI_NearList,    //!< All matching keywords output list.
-            const char* const STR_Keyword   //!< Keyword or beginning of a keyword.
-                                            //!< NULL means no keyword begun.
-            ) const;
+        // Inherit doxygen comments from cli::Element documentation.
+        virtual const bool FindElements(Element::List& CLI_ExactList, Element::List& CLI_NearList, const char* const STR_Keyword) const;
 
     private:
         //! List of possible child elements.

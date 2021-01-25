@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -63,82 +65,81 @@ cli::Object* const NativeObject::GetNativeObject(const NativeObject::REF I_Nativ
     return (cli::Object*) I_NativeObjectRef;
 }
 
-const jobject NativeObject::GetJavaObject(const int I_NativeObjectRef, const bool B_Trace)
+const jobject NativeObject::GetJavaObject(const cli::Object& CLI_NativeObject, const bool B_MayTrace)
 {
     jobject pj_Object = NULL;
-    if (B_Trace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("GetJavaObject(I_NativeObjectRef)") << cli::endl;
-    if (B_Trace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeObjectRef", I_NativeObjectRef) << cli::endl;
+
+    if (B_MayTrace) cli::GetTraces().SafeTrace(TRACE_JNI, CLI_NativeObject) << NativeTraces::Begin("GetJavaObject(CLI_NativeObject)") << cli::endl;
+    const REF i_NativeObjectRef = GetNativeRef(CLI_NativeObject);
+    if (B_MayTrace) cli::GetTraces().SafeTrace(TRACE_JNI, CLI_NativeObject) << NativeTraces::ParamInt("CLI_NativeObject", i_NativeObjectRef) << cli::endl;
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
     {
-        if (B_Trace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Env", pj_Env) << cli::endl;
+        if (B_MayTrace) cli::GetTraces().SafeTrace(TRACE_JNI, CLI_NativeObject) << NativeTraces::ValuePtr("pj_Env", pj_Env) << cli::endl;
         if (const jclass pj_Class = pj_Env->FindClass("cli/NativeObject"))
         {
-            if (B_Trace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Class", pj_Class) << cli::endl;
+            if (B_MayTrace) cli::GetTraces().SafeTrace(TRACE_JNI, CLI_NativeObject) << NativeTraces::ValuePtr("pj_Class", pj_Class) << cli::endl;
             pj_Env->ExceptionClear();
             if (const jmethodID j_MethodID = pj_Env->GetStaticMethodID(pj_Class, "getObject", "(I)Lcli/NativeObject;"))
             {
-                if (B_Trace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("j_MethodID", j_MethodID) << cli::endl;
-                pj_Object = pj_Env->CallStaticObjectMethod(pj_Class, j_MethodID, (jint) I_NativeObjectRef);
+                if (B_MayTrace) cli::GetTraces().SafeTrace(TRACE_JNI, CLI_NativeObject) << NativeTraces::ValuePtr("j_MethodID", j_MethodID) << cli::endl;
+                pj_Object = pj_Env->CallStaticObjectMethod(pj_Class, j_MethodID, (jint) i_NativeObjectRef);
             }
         }
     }
-    if (B_Trace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndPtr("GetJavaObject()", pj_Object) << cli::endl;
+    if (B_MayTrace) cli::GetTraces().SafeTrace(TRACE_JNI, CLI_NativeObject) << NativeTraces::EndPtr("GetJavaObject()", pj_Object) << cli::endl;
     return pj_Object;
 }
 
 const bool NativeObject::CreateFromNative(const cli::Object& CLI_Object)
 {
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NativeObject::CreateFromNative(CLI_Object)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_Object", NativeObject::GetNativeRef(CLI_Object)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::Begin("NativeObject::CreateFromNative(CLI_Object)") << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::ParamInt("CLI_Object", NativeObject::GetNativeRef(CLI_Object)) << cli::endl;
 
     bool b_Res = false;
 
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
     {
-        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Env", pj_Env) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::ValuePtr("pj_Env", pj_Env) << cli::endl;
         if (const jclass pj_Class = pj_Env->FindClass(GetJavaClassName(CLI_Object).c_str()))
         {
-            cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Class", pj_Class) << cli::endl;
+            cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::ValuePtr("pj_Class", pj_Class) << cli::endl;
 
             const jmethodID pj_CreateMethodID = pj_Env->GetStaticMethodID(pj_Class, "createFromNative", "(I)V");
-                cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_CreateMethodID", pj_CreateMethodID) << cli::endl;
-            const jmethodID pj_DeleteMethodID = pj_Env->GetStaticMethodID(pj_Class, "deleteFromNative", "(I)V");
-                cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_DeleteMethodID", pj_DeleteMethodID) << cli::endl;
-            if ((pj_CreateMethodID != NULL) && (pj_DeleteMethodID != NULL))
+                cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::ValuePtr("pj_CreateMethodID", pj_CreateMethodID) << cli::endl;
+            if (pj_CreateMethodID != NULL)
             {
-                // Create a java object for the command line.
+                // Create a java object from native source.
                 pj_Env->CallStaticVoidMethod(pj_Class, pj_CreateMethodID, (jint) NativeObject::GetNativeRef(CLI_Object));
                 b_Res = true;
             }
         }
     }
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("NativeObject::CreateFromNative()", b_Res) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::EndBool("NativeObject::CreateFromNative()", b_Res) << cli::endl;
     return b_Res;
 }
 
-const bool NativeObject::DeleteFromNative(const cli::Object& CLI_Object)
+const bool NativeObject::DeleteFromNative(const NativeObject::REF I_ObjectRef)
 {
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NativeObject::DeleteFromNative(CLI_Object)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_Object", NativeObject::GetNativeRef(CLI_Object)) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NativeObject::DeleteFromNative(I_ObjectRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_ObjectRef", I_ObjectRef) << cli::endl;
 
     bool b_Res = false;
 
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
     {
         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Env", pj_Env) << cli::endl;
-        if (const jclass pj_Class = pj_Env->FindClass(GetJavaClassName(CLI_Object).c_str()))
+        if (const jclass pj_Class = pj_Env->FindClass("cli/NativeObject"))
         {
             cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Class", pj_Class) << cli::endl;
 
-            const jmethodID pj_CreateMethodID = pj_Env->GetStaticMethodID(pj_Class, "createFromNative", "(I)V");
-                cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_CreateMethodID", pj_CreateMethodID) << cli::endl;
             const jmethodID pj_DeleteMethodID = pj_Env->GetStaticMethodID(pj_Class, "deleteFromNative", "(I)V");
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_DeleteMethodID", pj_DeleteMethodID) << cli::endl;
-            if ((pj_CreateMethodID != NULL) && (pj_DeleteMethodID != NULL))
+            if (pj_DeleteMethodID != NULL)
             {
-                // Create a java object for the command line.
-                pj_Env->CallStaticVoidMethod(pj_Class, pj_DeleteMethodID, (jint) NativeObject::GetNativeRef(CLI_Object));
+                // Delete the java object from native source.
+                // It will not be actually deleted, but will do nothing with native source on finalization.
+                pj_Env->CallStaticVoidMethod(pj_Class, pj_DeleteMethodID, (jint) I_ObjectRef);
                 b_Res = true;
             }
         }
@@ -148,7 +149,7 @@ const bool NativeObject::DeleteFromNative(const cli::Object& CLI_Object)
     return b_Res;
 }
 
-void NativeObject::Use(const int I_ObjectRef)
+void NativeObject::Use(const NativeObject::REF I_ObjectRef)
 {
     if (I_ObjectRef != 0)
     {
@@ -172,7 +173,7 @@ void NativeObject::Use(const int I_ObjectRef)
     }
 }
 
-const bool NativeObject::Free(const int I_ObjectRef)
+const bool NativeObject::Free(const NativeObject::REF I_ObjectRef)
 {
     bool b_AutoDelete = false;
 
@@ -197,7 +198,7 @@ const bool NativeObject::Free(const int I_ObjectRef)
     return b_AutoDelete;
 }
 
-void NativeObject::Delegate(const int I_WhatRef, const int I_WhoRef)
+void NativeObject::Delegate(const NativeObject::REF I_WhatRef, const NativeObject::REF I_WhoRef)
 {
     // Find out if the object is registered.
     ObjectMap::iterator it = m_mapTokens.find(I_WhatRef);
@@ -211,8 +212,8 @@ void NativeObject::Delegate(const int I_WhatRef, const int I_WhoRef)
 
 const std::string NativeObject::GetJavaClassName(const cli::Object& CLI_Object)
 {
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NativeObject::GetJavaClassName(CLI_Object)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_Object", NativeObject::GetNativeRef(CLI_Object)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::Begin("NativeObject::GetJavaClassName(CLI_Object)") << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::ParamInt("CLI_Object", NativeObject::GetNativeRef(CLI_Object)) << cli::endl;
 
     std::string str_ClassName;
 
@@ -233,11 +234,7 @@ const std::string NativeObject::GetJavaClassName(const cli::Object& CLI_Object)
             }
             if (dynamic_cast<const cli::SyntaxRef*>(& CLI_Object)) { str_ClassName = "cli/SyntaxRef"; }
         }
-        if (dynamic_cast<const cli::Help*>(& CLI_Object)) { str_ClassName = "cli/Help"; }
-        if (dynamic_cast<const cli::Menu*>(& CLI_Object)) { str_ClassName = "cli/Menu";
-            if (dynamic_cast<const cli::Cli*>(& CLI_Object)) { str_ClassName = "cli/Cli"; }
-        }
-        if (dynamic_cast<const cli::NonBlockingKeyReceiver*>(& CLI_Object)) { str_ClassName = "cli/NonBlockingIODevice$KeyReceiver";
+        if (dynamic_cast<const cli::ExecutionContext*>(& CLI_Object)) { str_ClassName = "cli/ExecutionContext$Java";
             if (dynamic_cast<const cli::Shell*>(& CLI_Object)) { str_ClassName = "cli/Shell"; }
             if (dynamic_cast<const cli::ui::UI*>(& CLI_Object)) { str_ClassName = "cli/ui/UI";
                 if (dynamic_cast<const cli::ui::Line*>(& CLI_Object)) { str_ClassName = "cli/ui/Line";
@@ -249,6 +246,11 @@ const std::string NativeObject::GetJavaClassName(const cli::Object& CLI_Object)
                 }
                 if (dynamic_cast<const cli::ui::Password*>(& CLI_Object)) { str_ClassName = "cli/ui/Password"; }
             }
+        }
+        if (dynamic_cast<const cli::ExecutionResult*>(& CLI_Object)) { str_ClassName = "cli/ExecutionResult"; }
+        if (dynamic_cast<const cli::Help*>(& CLI_Object)) { str_ClassName = "cli/Help"; }
+        if (dynamic_cast<const cli::Menu*>(& CLI_Object)) { str_ClassName = "cli/Menu";
+            if (dynamic_cast<const cli::Cli*>(& CLI_Object)) { str_ClassName = "cli/Cli"; }
         }
         if (dynamic_cast<const cli::OutputDevice*>(& CLI_Object)) { str_ClassName = "cli/OutputDevice$Java";
             if (& CLI_Object == & cli::OutputDevice::GetNullDevice()) { str_ClassName = "cli/OutputDevice$Native"; }
@@ -276,6 +278,6 @@ const std::string NativeObject::GetJavaClassName(const cli::Object& CLI_Object)
     }
 
     CLI_ASSERT(! str_ClassName.empty());
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndStr("NativeObject::GetJavaClassName()", str_ClassName.c_str()) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Object) << NativeTraces::EndStr("NativeObject::GetJavaClassName()", str_ClassName.c_str()) << cli::endl;
     return str_ClassName;
 }

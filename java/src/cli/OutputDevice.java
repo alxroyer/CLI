@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -335,26 +337,6 @@ public abstract class OutputDevice {
             super(I_NativeScreenInfoRef);
         }
 
-        /** Destructor. */
-        protected void finalize() throws Throwable {
-            if (getbDoFinalize()) {
-                OutputDevice.__ScreenInfo__finalize(this.getNativeRef());
-                dontFinalize(); // finalize once.
-            }
-            super.finalize();
-        }
-
-        /** Destruction from native code.
-            See createFromNative(). */
-        protected static void deleteFromNative(int I_NativeScreenInfoRef) {
-            Traces.trace(NativeTraces.CLASS, NativeTraces.begin("OutputDevice.ScreenInfo.deleteFromNative(I_NativeScreenInfoRef)"));
-            Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeScreenInfoRef", new Integer(I_NativeScreenInfoRef).toString()));
-
-            NativeObject.deletedFromNative(NativeObject.getObject(I_NativeScreenInfoRef));
-
-            Traces.trace(NativeTraces.CLASS, NativeTraces.end("OutputDevice.ScreenInfo.deleteFromNative()"));
-        }
-
         /** Assignment method.
             @param CLI_ScreenInfo Screen info object to copy. */
         public void copy(ScreenInfo CLI_ScreenInfo) {
@@ -402,7 +384,6 @@ public abstract class OutputDevice {
     // JNI seems to have trouble at linking following methods when they are embedded in the nested ScreenInfo class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global OutputDevice class with a __ScreenInfo prefix.
     private static final native int __ScreenInfo__ScreenInfo(int I_Width, int I_Height, boolean B_TrueCls, boolean B_WrapLines);
-    private static final native void __ScreenInfo__finalize(int I_NativeScreenInfoRef);
     private static final native void __ScreenInfo__copy(int I_NativeScreenInfoRef1, int I_NativeScreenInfoRef2);
     private static final native int __ScreenInfo__getWidth(int I_NativeScreenInfoRef);
     private static final native int __ScreenInfo__getSafeWidth(int I_NativeScreenInfoRef);
@@ -525,15 +506,6 @@ public abstract class OutputDevice {
             super(I_NativeRef);
         }
 
-        /** Destructor. */
-        protected void finalize() throws Throwable {
-            if (getbDoFinalize()) {
-                OutputDevice.__Java__finalize(this.getNativeRef());
-                dontFinalize(); // finalize once.
-            }
-            super.finalize();
-        }
-
         // OutputDevice.Interface Java output device implementation.
 
         public abstract boolean openDevice();
@@ -606,7 +578,6 @@ public abstract class OutputDevice {
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Java class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global OutputDevice class with a __Java prefix.
     private static final native int __Java__Java(String J_DbgName);
-    private static final native void __Java__finalize(int I_NativeConsoleRef);
 
 
     // General static output device features.

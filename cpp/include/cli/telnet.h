@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -39,24 +41,24 @@
 CLI_NS_BEGIN(cli)
 
     // Forward declarations.
-    class Shell;
+    class ExecutionContext;
+    class ExecutionResult;
     class TelnetConnection;
 
 
     //! @brief Telnet server class.
     //!
-    //! Virtual object that shall be overridden for shell (and cli) instance creations.
+    //! Virtual object that shall be overridden for ExecutionContext (shell & cli basically) instance creations.
+    //!
+    //! @warning    With the redesign of telnet connections, made as non blocking, this class had been redesigned in CLI 2.7,
+    //!             made virtual so that the user could create as many shells and clis for each connection.
+    //!             With the redesign of execution contexts, this class has been redesigned again in CLI 2.8,
+    //!             so that the user can create shells and clis, but also any other kind of execution contexts.
     class TelnetServer : public Object
     {
-    private:
-        //! @brief No default constructor.
-        TelnetServer(void);
-        //! @brief No copy constructor.
-        TelnetServer(const TelnetServer&);
-
     public:
         //! @brief Constructor.
-        TelnetServer(
+        explicit TelnetServer(
             const unsigned int UI_MaxConnections,   //!< Maximum number of connections managed at the same time.
             const unsigned long UL_TcpPort,         //!< TCP port to listen onto.
             const ResourceString::LANG E_Lang       //!< Debugging language.
@@ -66,6 +68,10 @@ CLI_NS_BEGIN(cli)
         virtual ~TelnetServer(void);
 
     private:
+        //! @brief No default constructor.
+        explicit TelnetServer(void);
+        //! @brief No copy constructor.
+        TelnetServer(const TelnetServer&);
         //! @brief No assignment operator.
         TelnetServer& operator=(const TelnetServer&);
 
@@ -78,16 +84,16 @@ CLI_NS_BEGIN(cli)
         void StopServer(void);
 
     protected:
-        //! @brief Shell (and cli) creation handler.
-        //! @return Shell created for the given connection.
-        virtual Shell* const OnNewConnection(
-            const TelnetConnection& CLI_NewConnection       //!< New telnet connection to create a shell for.
+        //! @brief Execution context creation handler.
+        //! @return Execution context created for the given connection.
+        virtual ExecutionContext* const OnNewConnection(
+            const TelnetConnection& CLI_NewConnection       //!< New telnet connection to create a context for.
             ) = 0;
 
-        //! @brief Shell (and cli) release handler.
+        //! @brief Execution context release handler.
         virtual void OnCloseConnection(
-            Shell* const PCLI_Shell,                        //!< Shell (and cli) to be released.
-            const TelnetConnection& CLI_ConnectionClosed    //!< Telnet connection being closed.
+            const TelnetConnection& CLI_ConnectionClosed,   //!< Telnet connection being closed.
+            ExecutionContext* const PCLI_Context            //!< Execution context to be released.
             ) = 0;
 
     private:
@@ -121,7 +127,7 @@ CLI_NS_BEGIN(cli)
         typedef struct {
             int i_Socket;                       //!< Connection socket handler.
             TelnetConnection* pcli_Connection;  //!< Telnet connection instance reference.
-            Shell* pcli_Shell;                  //!< Shell instance reference.
+            ExecutionContext* pcli_Context;     //!< Execution context instance reference.
         } ConnectionInfo;
         //! Connections registry.
         tk::Map<int, ConnectionInfo> m_tkConnections;
@@ -135,15 +141,9 @@ CLI_NS_BEGIN(cli)
     //! @brief Telnet connection input/output device.
     class TelnetConnection : public NonBlockingIODevice
     {
-    private:
-        //! @brief No default constructor.
-        TelnetConnection(void);
-        //! @brief No copy constructor.
-        TelnetConnection(const TelnetConnection&);
-
     public:
         //! @brief Constructor.
-        TelnetConnection(
+        explicit TelnetConnection(
             TelnetServer* const PCLI_Server,    //!< Telnet server instance reference. Can be NULL for stand alone connections.
             const int I_Socket,                 //!< Connection socket handler.
             const ResourceString::LANG E_Lang,  //!< Debugging language.
@@ -154,35 +154,38 @@ CLI_NS_BEGIN(cli)
         virtual ~TelnetConnection(void);
 
     private:
+        //! @brief No default constructor.
+        explicit TelnetConnection(void);
+        //! @brief No copy constructor.
+        TelnetConnection(const TelnetConnection&);
         //! @brief No assignment operator.
         TelnetConnection& operator=(const TelnetConnection&);
 
     protected:
-        //! @brief Open device handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool OpenDevice(void);
-        //! @brief Close device handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool CloseDevice(void);
     protected:
         //! @brief Characters received from the socket.
         //! @return true for success, false otherwise.
         const bool ReceiveChars(void) const;
         //! @brief Processes input chars and converts them into keys one by one.
+        //! @return true if the connection is still up, false otherwise.
         const bool ProcessKeys(void) const;
         //! @brief Checks whether the connection should still be up.
         //! @return true if the connection is still up, false otherwise.
         const bool CheckUp(void) const;
     public:
-        //! @brief Character input handler.
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const KEY GetKey(void) const;
-        //! @brief Non-blocking IO device OnKey overriding.
+        // Inherit doxygen comments from cli::NonBlockingIODevice interface documentation.
         virtual void OnKey(const KEY E_Key) const;
-        //! @brief Non-blocking IO device implementation.
-        virtual const bool WaitForKeys(const unsigned int UI_Milli) const;
-        //! @brief Output handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void PutString(const char* const STR_Out) const;
-        //! @brief Beep handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void Beep(void) const;
-        //! @brief Clean screen handler.
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void CleanScreen(void) const;
 
     private:

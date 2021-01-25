@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -42,15 +44,9 @@ static const int ORIGINAL_DELAY = ESCDELAY;
 //! @brief ncurses specific behaviours.
 class NCursesConsole
 {
-private:
-    //! @brief No default constructor.
-    NCursesConsole(void);
-    //! @brief No copy constructor.
-    NCursesConsole(const NCursesConsole&);
-
 public:
     //! @brief Constructor.
-    NCursesConsole(WINDOW* const P_Window)
+    explicit NCursesConsole(WINDOW* const P_Window)
       : m_pWindow(P_Window), m_uiLineCount(0)
     {
     }
@@ -59,6 +55,14 @@ public:
     virtual ~NCursesConsole(void)
     {
     }
+
+private:
+    //! @brief No default constructor.
+    explicit NCursesConsole(void);
+    //! @brief No copy constructor.
+    NCursesConsole(const NCursesConsole&);
+    //! @brief No assignment operation.
+    NCursesConsole& operator=(const NCursesConsole&);
 
 // Public members.
 public:
@@ -77,10 +81,6 @@ public:
             .AddHelp(Help::LANG_FR, "Traces de la console ncurses du CLI"));
         return cli_TraceClass;
     }
-
-private:
-    //! @brief No assignment operation.
-    NCursesConsole& operator=(const NCursesConsole&);
 };
 
 int NCursesConsole::m_iDeviceCount = 0;
@@ -113,7 +113,8 @@ const bool Console::OpenDevice(void)
         // Additional configuration.
         scrollok(p_Window, TRUE); // Enable scrolling.
         keypad(p_Window, TRUE); // Enable arrow keys.
-        ESCDELAY = 0; // Change the escape delay to none instead of 1000 ms by default.
+        set_escdelay(25); // Change the escape delay to 25ms instead of 1000 ms by default.
+                          // see http://en.chys.info/2009/09/esdelay-ncurses/
 
         m_pData = new NCursesConsole(p_Window);
 
@@ -141,7 +142,7 @@ const bool Console::CloseDevice(void)
         if (NCursesConsole::m_iDeviceCount <= 0)
         {
             // Restore original escape delay.
-            ESCDELAY = ORIGINAL_DELAY;
+            set_escdelay(ORIGINAL_DELAY);
         }
 
         endwin();
@@ -214,7 +215,7 @@ const KEY Console::GetKey(void) const
         case KEY_HOME:      return cli::KEY_BEGIN;
         case NC_KEY_END:    return cli::KEY_END;
 
-        // Accentuated characters
+        // Accented characters
         case 225:           return cli::KEY_aacute;
         case 224:           return cli::KEY_agrave;
         case 228:           return cli::KEY_auml;

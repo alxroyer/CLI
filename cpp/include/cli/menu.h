@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -48,15 +50,9 @@ CLI_NS_BEGIN(cli)
     //! @brief Menu definition.
     class Menu : public SyntaxNode
     {
-    private:
-        //! @brief No default constructor.
-        Menu(void);
-        //! @brief No copy constructor.
-        Menu(const Menu&);
-
     public:
         //! @brief Constructor.
-        Menu(
+        explicit Menu(
             const char* const STR_Name,     //!< Menu name.
             const Help& CLI_Help            //!< Corresponding help.
             );
@@ -65,6 +61,10 @@ CLI_NS_BEGIN(cli)
         virtual ~Menu(void);
 
     private:
+        //! @brief No default constructor.
+        explicit Menu(void);
+        //! @brief No copy constructor.
+        Menu(const Menu&);
         //! @brief No assignment operator.
         Menu& operator=(const Menu&);
 
@@ -74,18 +74,18 @@ CLI_NS_BEGIN(cli)
         const tk::String GetName(void) const;
 
     public:
-        //! @brief CLI reference setting.
+        // Inherit doxygen comments from cli::Element documentation.
         virtual void SetCli(Cli& CLI_Cli);
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Reserved commands execution.
+        //! @param CLI_CommandLine Command line to execute.
         //! @return true if the command has found an execution code, false otherwise.
-        virtual const bool ExecuteReserved(
-            const CommandLine& CLI_CommandLine  //!< Command line to execute.
-            ) const;
+        virtual const bool ExecuteReserved(const CommandLine& CLI_CommandLine) const;
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief User-defined commands execution.
+        //! @param CLI_CommandLine Command line to execute.
         //! @return true if the command has found an execution code, false otherwise.
-        virtual const bool Execute(
-            const CommandLine& CLI_CommandLine  //!< Command line to execute.
-            ) const;
+        virtual const bool Execute(const CommandLine& CLI_CommandLine) const;
         //! @brief Handler on menu exit.
         virtual void OnExit(void) const;
         //! @brief Handler on prompt display.
@@ -109,15 +109,9 @@ CLI_NS_BEGIN(cli)
     //! @brief Menu reference element.
     class MenuRef : public Element
     {
-    private:
-        //! @brief No default constructor.
-        MenuRef(void);
-        //! @brief No copy constructor.
-        MenuRef(const MenuRef&);
-
     public:
         //! @brief Constructor.
-        MenuRef(
+        explicit MenuRef(
             const Menu& CLI_Menu        //!< Referenced menu.
             );
 
@@ -125,14 +119,19 @@ CLI_NS_BEGIN(cli)
         virtual ~MenuRef(void);
 
     private:
+        //! @brief No default constructor.
+        explicit MenuRef(void);
+        //! @brief No copy constructor.
+        MenuRef(const MenuRef&);
         //! @brief No assignment operator.
         MenuRef& operator=(const MenuRef&);
 
     public:
-        //! @brief Referenced menu access.
+        //! @brief Target menu accessor.
+        //! @return Target menu reference.
         const Menu& GetMenu(void) const;
 
-    protected:
+    private:
         //! Referenced menu.
         const Menu* const m_pcliMenu;
     };

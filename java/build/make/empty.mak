@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,26 +33,28 @@ CLI_DIR := ../../..
 include _vars.mak
 PRODUCT = empty
 SRC_DIR = $(CLI_DIR)/java/src/cli/test
-JAVA_FILES = $(CLI_GO_JAVA) $(CLI_JAVA)
+CLI_XML_RES = $(CLI_DIR)/samples/user-guide/empty.xml
+CLI_JAVA = $(patsubst %.xml,$(CLI_DIR)/java/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
+CLI_GO_JAVA = $(CLI_DIR)/java/src/cli/test/GoEmpty.java
+JAVA_FILES += $(CLI_GO_JAVA)
+JAVA_FILES += $(CLI_JAVA)
+JAVA_FILES += $(SRC_DIR)/TestTools.java
 PROJECT_DEPS = native.mak
 include _build.mak
 PROJ_CLEAN += $(CLI_JAVA)
 
 # Variables
-CLI_XML_RES = $(CLI_DIR)/samples/user-guide/empty.xml
-CLI_XSL = $(CLI_DIR)/java/xsl/javaclic.xsl
-CLI_JAVA = $(patsubst %.xml,$(CLI_DIR)/java/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
+CLI_XSL = $(CLI_DIR)/tools/cli2java.xsl
 CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
-CLI_GO_JAVA = $(CLI_DIR)/java/src/cli/test/GoEmpty.java
 
 # Rules
 run: build
 	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.GoEmpty
 
 $(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
-	mkdir -p $(dir $(OUT_DIR))
-	echo "package cli.test;" > $(CLI_JAVA)
-	xsltproc --stringparam STR_CliClassName $(CLI_JAVA_CLASS_NAME) $(CLI_XSL) $(CLI_XML_RES) >> $(CLI_JAVA)
+	$(call CheckDir,$(dir $@))
+	echo "package cli.test;" > $@
+	xsltproc --stringparam STR_CliClassName $(CLI_JAVA_CLASS_NAME) $(CLI_XSL) $(CLI_XML_RES) >> $@
 
 .PHONY: deps
 deps: ;
@@ -61,7 +65,7 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(CLI_DIR)/java/build/make/empty.help
 help: $(CLI_DIR)/java/build/make/empty.help
 $(CLI_DIR)/java/build/make/empty.help:
-	$(call PrintHelp, run, 	 Run the Empty sample)
+	$(call PrintHelp, run, Run the Empty sample)
 
 .PHONY: $(CLI_DIR)/java/build/make/empty.vars
 vars: $(CLI_DIR)/java/build/make/empty.vars

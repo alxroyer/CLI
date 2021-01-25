@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -83,7 +85,7 @@ OutputDevice::~OutputDevice(void)
 const tk::String OutputDevice::GetDebugName(void) const
 {
     StringDevice cli_DebugName(MAX_DEVICE_NAME_LENGTH, false);
-    cli_DebugName << m_strDebugName << "/" << (void*) this;
+    cli_DebugName << m_strDebugName << "/" << (const void*) this;
     return cli_DebugName.GetString();
 }
 
@@ -297,11 +299,10 @@ const OutputDevice& OutputDevice::operator <<(const double D_Out) const
     return *this;
 }
 
-const OutputDevice& OutputDevice::operator <<(void* const PV_Out) const
+const OutputDevice& OutputDevice::operator <<(const void* const PV_Out) const
 {
     char str_Out[128];
-    // %p is not used here, because it has strange behaviours when compiled on different environments.
-    snprintf(str_Out, sizeof(str_Out), "0x%08x", (unsigned int) PV_Out);
+    snprintf(str_Out, sizeof(str_Out), "%p", PV_Out);
     PutString(str_Out);
     return *this;
 }
@@ -323,7 +324,7 @@ OutputDevice& OutputDevice::GetNullDevice(void)
     class NullDevice : public OutputDevice
     {
     public:
-        NullDevice(void) : OutputDevice("null", false) {}
+        explicit NullDevice(void) : OutputDevice("null", false) {}
         virtual ~NullDevice(void) {}
 
     protected:
@@ -342,7 +343,7 @@ OutputDevice& OutputDevice::GetStdOut(void)
     class StdOutDevice : public OutputDevice
     {
     public:
-        StdOutDevice(void) : OutputDevice("stdout", false) {}
+        explicit StdOutDevice(void) : OutputDevice("stdout", false) {}
         virtual ~StdOutDevice(void) {}
 
     protected:
@@ -364,7 +365,7 @@ OutputDevice& OutputDevice::GetStdErr(void)
     class StdErrDevice : public OutputDevice
     {
     public:
-        StdErrDevice(void) : OutputDevice("stderr", false) {}
+        explicit StdErrDevice(void) : OutputDevice("stderr", false) {}
         virtual ~StdErrDevice(void) {}
 
     protected:
@@ -425,7 +426,7 @@ IODevice& IODevice::GetNullDevice(void)
     class NullDevice : public IODevice
     {
     public:
-        NullDevice(void) : IODevice("null", false) {}
+        explicit NullDevice(void) : IODevice("null", false) {}
         virtual ~NullDevice(void) {}
 
     protected:
@@ -445,10 +446,8 @@ IODevice& IODevice::GetStdIn(void)
     class StdInDevice : public IODevice
     {
     public:
-        StdInDevice(void) : IODevice("stdin", false) {
-        }
-        virtual ~StdInDevice(void) {
-        }
+        explicit StdInDevice(void) : IODevice("stdin", false) {}
+        virtual ~StdInDevice(void) {}
 
     protected:
         virtual const bool OpenDevice(void) {
@@ -469,15 +468,15 @@ IODevice& IODevice::GetStdIn(void)
         }
         virtual const KEY GetKey(void) const {
             const char c_Char = (char) getchar();
-                return IODevice::GetKey(c_Char);
-            }
+            return IODevice::GetKey(c_Char);
+        }
     };
 
     static StdInDevice cli_StdIn;
     return cli_StdIn;
 }
 
-const KEY IODevice::GetKey(const int I_Char) const
+const KEY IODevice::GetKey(const int I_Char)
 {
     switch (I_Char)
     {

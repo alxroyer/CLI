@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -63,8 +65,15 @@ CLI_NS_BEGIN(cli)
 
         // Unlike ui::Int and ui::Float implementations, ui::Line default value is not used for ui::Choice.
         // Default value management will rather rely on ui::Line::ResetToDefault() overriding.
+
         Choice::Choice(const int I_DefaultChoice, const tk::Queue<ResourceString>& TK_Choices)
           : Line(tk::String(10), -1, -1),
+            m_iDefaultChoice(I_DefaultChoice), m_tkChoices(TK_Choices), m_eLang(ResourceString::LANG_EN)
+        {
+        }
+
+        Choice::Choice(ExecutionContext& CLI_ParentContext, const int I_DefaultChoice, const tk::Queue<ResourceString>& TK_Choices)
+          : Line(CLI_ParentContext, tk::String(10), -1, -1),
             m_iDefaultChoice(I_DefaultChoice), m_tkChoices(TK_Choices), m_eLang(ResourceString::LANG_EN)
         {
         }
@@ -125,7 +134,7 @@ CLI_NS_BEGIN(cli)
         {
             // Remember the shell language setting
             // so that post-execution calls to GetChoice() do not need a shell instance reference anymore.
-            m_eLang = GetShell().GetLang();
+            m_eLang = GetLang();
 
             Line::SetLine(Choice2Str(m_iDefaultChoice, m_tkChoices).GetString(m_eLang), false, true);
         }
@@ -134,6 +143,9 @@ CLI_NS_BEGIN(cli)
         {
             switch (E_KeyCode)
             {
+            case NULL_KEY:
+                EndControl(false);
+                break;
             case KEY_UP:
                 MoveChoice(-1, 1);
                 break;
@@ -150,11 +162,11 @@ CLI_NS_BEGIN(cli)
                 if (GetChoice() >= 0)
                 {
                     Line::SetLine(GetstrChoice().GetString(m_eLang), true, true);
-                    UI::Finish(true);
+                    EndControl(true);
                 }
                 else
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 break;
             default:
@@ -171,7 +183,7 @@ CLI_NS_BEGIN(cli)
             if (i_Choice < 0)
             {
                 // Undefined choice: restore default.
-                GetShell().Beep();
+                Beep();
                 ResetToDefault();
             }
             else if (i_Choice + i_Increment < 0)
@@ -180,7 +192,7 @@ CLI_NS_BEGIN(cli)
                 // Possibly beep.
                 if (i_Choice <= 0)
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 // Reprint.
                 Line::SetLine(Choice2Str(0, m_tkChoices).GetString(m_eLang), false, true);
@@ -191,7 +203,7 @@ CLI_NS_BEGIN(cli)
                 // Possibly beep.
                 if (i_Choice >= ((int) m_tkChoices.GetCount()) - 1)
                 {
-                    GetShell().Beep();
+                    Beep();
                 }
                 // Reprint.
                 Line::SetLine(Choice2Str(m_tkChoices.GetCount() - 1, m_tkChoices).GetString(m_eLang), false, true);

@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,6 +28,14 @@
 .PHONY: doxygen.default
 doxygen.default: $(.DEFAULT_GOAL) ;
 
+ifeq ($(shell which doxygen 2> /dev/null),)
+$(warning Please install doxygen and make your PATH environment variable is up to date)
+.PHONY: doxygen.default deps clean
+doxygen.default: ;
+deps: ;
+clean: ;
+else
+
 # Variables
 CLI_DIR := ../../..
 include $(CLI_DIR)/build/make/_vars.mak
@@ -36,6 +46,12 @@ OUT_DIR = $(dir $(DOXY_FILE))/html
 .PHONY: doxygen
 doxygen: $(DOXY_FILE)
 	cd $(dir $(DOXY_FILE)) && doxygen $(notdir $(DOXY_FILE))
+ifeq ($(shell which dot 2> /dev/null),)
+	@echo "Warning! In order to enhance the documentation with class diagrams, install dot and make your PATH environment variable is up to date"
+endif
+ifeq ($(shell which mscgen 2> /dev/null),)
+	@echo "Warning! In order to enhance the documentation with flow chart diagrams, install mscgen and make your PATH environment variable is up to date"
+endif
 
 .PHONY: deps
 deps: ;
@@ -57,3 +73,5 @@ $(CLI_DIR)/web/build/make/doxygen.help:
 vars: $(CLI_DIR)/web/build/make/doxygen.vars
 $(CLI_DIR)/web/build/make/doxygen.vars:
 	$(call ShowVariables,DOXY_FILE OUT_DIR)
+
+endif

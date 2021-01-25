@@ -1,2 +1,3 @@
-base referer
-rect $classMap_1_1Iterator.html 8,8 154,34
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classMap.html" title="Basic map object." alt="" coords="7,5,100,35"/>
+</map>

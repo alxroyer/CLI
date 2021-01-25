@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +32,7 @@ CLI_XML_OBJ ?= $(patsubst %.cpp,%.o,$(CLI_XML_CPP))
 CLI_MAIN_CPP ?= $(CLI_DIR)/cpp/tests/testsample.cpp
 CLI_MAIN_OBJ ?= $(patsubst %.cpp,$(INT_DIR)/%.o,$(notdir $(CLI_MAIN_CPP)))
 CLI_BINARY ?= $(OUT_DIR)/$(BIN_PREFIX)$(PROJECT)$(BIN_SUFFIX)
-CLI_XSL ?= $(CLI_DIR)/cpp/xsl/cppclic.xsl
+CLI_XSL ?= $(CLI_DIR)/tools/cli2cpp.xsl
 CLI_XSLT_OPTS += --param B_CliStaticCreation 1
 
 # Includes
@@ -39,19 +41,20 @@ PROJECT_DEPS ?= $(CLI_DIR)/cpp/build/make/libclicpp.mak
 PRODUCT ?= $(CLI_BINARY)
 CPP_FILES ?= $(CLI_XML_CPP) $(CLI_MAIN_CPP)
 AUTO_DEPS ?= no
-PROJ_INCLUDES ?= -I$(CLI_DIR)/cpp/include -I$(dir $(CLI_XML_RES))
+PROJ_INCLUDES ?= -I$(CLI_DIR)/cpp/include -I$(CLI_DIR)/cpp/tests/include -I$(dir $(CLI_XML_RES))
 PROJ_LIBS ?= -L$(dir $(CLI_CPP_LIB)) -lclicpp -lncurses
 PROJ_CLEAN += $(CLI_XML_CPP)
 include $(CLI_DIR)/cpp/build/make/_build.mak
 
 # Rules
 $(CLI_XML_CPP): $(CLI_XML_RES) $(CLI_XSL)
-	@mkdir -p $(dir $(CLI_XML_CPP))
+	$(call CheckDir,$(dir $(CLI_XML_CPP)))
 	xsltproc $(CLI_XSLT_OPTS) $(CLI_XSL) $(CLI_XML_RES) > $(CLI_XML_CPP)
 
-.PHONY: $(CLI_CPP_LIB)
-$(CLI_CPP_LIB):
-	$(call MkDispatch, $(CLI_DIR)/cpp/build/make/libclicpp.mak)
+# Rely on PROJECT_DEPS instead, otherwise it keeps on linking
+#.PHONY: $(CLI_CPP_LIB)
+#$(CLI_CPP_LIB):
+#	$(call MkDispatch,$(CLI_DIR)/cpp/build/make/libclicpp.mak)
 
 $(CLI_XML_OBJ): CPP_FLAGS += -Wno-unused-label
 
@@ -65,7 +68,7 @@ $(CLI_DIR)/cpp/build/make/_mkres.vars:
 
 # Dependencies
 $(CLI_XML_OBJ): $(CLI_XML_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
-$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)
+$(CLI_MAIN_OBJ): $(CLI_MAIN_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h) $(wildcard $(CLI_DIR)/cpp/tests/include/*.h)
 $(PRODUCT): $(CLI_CPP_LIB)
 
 

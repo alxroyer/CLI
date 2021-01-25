@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,8 +26,6 @@
 
 #include "cli/pch.h"
 
-#include <stdlib.h> // atoi
-
 #include "cli/cli.h"
 #include "cli/menu.h"
 #include "cli/keyword.h"
@@ -33,24 +33,12 @@
 #include "cli/endl.h"
 #include "cli/syntax_tag.h"
 #include "cli/shell.h"
-#include "cli/console.h"
-#include "cli/telnet.h"
+
+#include "test_args.h"
+#include "test_cli.h"
 
 
-class _Cli : public cli::Cli
-{
-public:
-    _Cli(const char* const STR_Name, const cli::Help& CLI_Help)
-      : Cli(STR_Name, CLI_Help)
-    {
-    }
-
-    virtual ~_Cli(void)
-    {
-    }
-};
-
-_Cli cli_TestCli("test-cli", cli::Help().AddHelp(cli::Help::LANG_EN, "Test CLI"));
+TestCli cli_TestCli("test-cli", cli::Help().AddHelp(cli::Help::LANG_EN, "Test CLI"));
  // show
  cli::Keyword& cli_Show = dynamic_cast<cli::Keyword&>(cli_TestCli.AddElement(new cli::Keyword("show", cli::Help().AddHelp(cli::Help::LANG_EN, "Show parameters"))));
   // all
@@ -75,41 +63,15 @@ _Cli cli_TestCli("test-cli", cli::Help().AddHelp(cli::Help::LANG_EN, "Test CLI")
 cli::Menu& cli_MyMenuMenu = dynamic_cast<cli::Menu&>(cli_Endl3.SetMenu(new cli::Menu("my-menu", cli::Help().AddHelp(cli::Help::LANG_EN, "Personal Menu"))));
 
 
-int main(int I_ArgsCount, char* ARSTR_Args[])
+int main(int I_Args, const char* ARSTR_Args[])
 {
-    if (I_ArgsCount <= 1)
-    {
-        cli::Shell cli_Shell(cli_TestCli);
-        cli::Console cli_Console(false);
-        cli_Shell.Run(cli_Console);
-    }
-    else
-    {
-        cli::OutputDevice::GetStdOut() << "Running telnet server on port " << ARSTR_Args[1] << cli::endl;
-        class MyTelnetServer : public cli::TelnetServer
-        {
-        private:
-            const cli::Cli& m_cliCli;
-        public:
-            MyTelnetServer(const cli::Cli& CLI_Cli, const unsigned long UL_TcpPort)
-              : TelnetServer(1, UL_TcpPort, cli::ResourceString::LANG_EN), m_cliCli(CLI_Cli) // because the CLI is allocated once only, allow only one client.
-            {
-            }
-            virtual cli::Shell* const OnNewConnection(const cli::TelnetConnection& CLI_NewConnection)
-            {
-                return new cli::Shell(m_cliCli);
-            }
-            virtual void OnCloseConnection(cli::Shell* const PCLI_Shell, const cli::TelnetConnection& CLI_ClosedConnection)
-            {
-                if (PCLI_Shell != NULL)
-                {
-                    delete PCLI_Shell;
-                }
-            }
-        };
-        MyTelnetServer cli_Server(cli_TestCli, atoi(ARSTR_Args[1]));
-        cli_Server.StartServer();
-    }
+    // Parse arguments.
+    SampleArgs cli_Args;
+    if (! cli_Args.ParseArgs(I_Args, ARSTR_Args)) { return -1; }
+
+    // Create a shell.
+    cli::Shell cli_Shell(cli_TestCli);
+    cli_Args.Execute(cli_Shell);
     return 0;
 }
 

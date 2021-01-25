@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -93,30 +95,16 @@ const cli::ResourceString __NativeDevice__GetLocation(
 const bool __NativeDevice__WouldInput(
         const cli::OutputDevice& CLI_Device1, const cli::OutputDevice& CLI_Device2);
 
-//! @brief NativeDevice::WaitForKeys method implementation.
-//!
-//! Makes the connection with the Java side.
-const bool __NativeDevice__WaitForKeys(
-        const cli::OutputDevice& CLI_Device,
-        const unsigned int UI_Milli);
-
 
 //! @brief Template class implementing native C++ objects matching with cli.Cli with and cli.Menu derived class.
 template <
     class TDevice //!< Either cli::OutputDevice or cli::IODevice or cli::NonBlockingIODevice.
 > class NativeDevice : public TDevice
 {
-private:
-    //! @brief No default constructor.
-    NativeDevice(void);
-
-    //! @brief No copy constructor.
-    NativeDevice(const NativeDevice&);
-
 public:
     //! @brief Constructor.
     //! @note Native output device are always created as auto-destructive.
-    NativeDevice(
+    explicit NativeDevice(
         const char* const STR_DbgName       //!< Device debug name.
         )
       : TDevice(STR_DbgName, true)
@@ -129,6 +117,10 @@ public:
     }
 
 private:
+    //! @brief No default constructor.
+    explicit NativeDevice(void);
+    //! @brief No copy constructor.
+    NativeDevice(const NativeDevice&);
     //! @brief No assignment operator.
     NativeDevice<TDevice>& operator=(const NativeDevice<TDevice>&);
 
@@ -183,12 +175,6 @@ public:
     virtual const bool WouldInput(const cli::IODevice& CLI_Device) const
     {
         return __NativeDevice__WouldInput(*this, CLI_Device);
-    }
-
-    // cli::NonBlockingIODevice interface implementation.
-    virtual const bool WaitForKeys(const unsigned int UI_Milli) const
-    {
-        return __NativeDevice__WaitForKeys(*this, UI_Milli);
     }
 };
 

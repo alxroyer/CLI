@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -306,21 +308,27 @@ void Cli::SetCli(Cli& CLI_Cli)
 {
     Menu::SetCli(CLI_Cli);
 
-    m_pcliConfigMenu = dynamic_cast<ConfigMenu*>(& AddMenu(new ConfigMenu()));
-    {   Help cli_Help(Help()
+    if (m_pcliConfigMenu == NULL)
+    {
+        m_pcliConfigMenu = dynamic_cast<ConfigMenu*>(& AddMenu(new ConfigMenu()));
+        Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "CLI configuration menu")
             .AddHelp(Help::LANG_FR, "Menu de configuration du CLI"));
         m_pcliConfigMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("cli-config", cli_Help)));
         Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliConfigMenuNode->AddElement(new Endl(cli_Help)));
-        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliConfigMenu)); }
+        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliConfigMenu));
+    }
     #ifdef _DEBUG
-    m_pcliTracesMenu = dynamic_cast<TracesMenu*>(& AddMenu(new TracesMenu()));
-    {   Help cli_Help(Help()
+    if (m_pcliTracesMenu == NULL)
+    {
+        m_pcliTracesMenu = dynamic_cast<TracesMenu*>(& AddMenu(new TracesMenu()));
+        Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Traces menu")
             .AddHelp(Help::LANG_FR, "Menu de configuration de traces"));
         m_pcliTracesMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("traces", cli_Help)));
         Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliTracesMenuNode->AddElement(new Endl(cli_Help)));
-        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliTracesMenu)); }
+        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliTracesMenu));
+    }
     #endif
 }
 

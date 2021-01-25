@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,7 +38,7 @@ public class TestSample {
                 Class j_CliClass = Class.forName(str_ClassName);
                 cli_Cli = (cli.Cli) j_CliClass.newInstance();
             } catch (Exception e) {
-                e.printStackTrace();
+                TestTools.error().printStackTrace(e);
                 return;
             }
         } catch (Exception e) {
@@ -80,8 +82,17 @@ public class TestSample {
             // Launch the shell.
             cli_Shell.run(cli_Input);
         } catch (Exception e) {
-            cli_Input.printStackTrace(e);
+            TestTools.error().printStackTrace(e);
         }
+
+        runFinalizers();
     }
 
+    @SuppressWarnings("deprecation")
+    private static void runFinalizers() {
+        // Generates a warning but whatever!
+        // The aim here is to check that executing all finalizers does not cause a crash.
+        System.runFinalizersOnExit(true);
+        // Note: Exception are not thrown anymore when finalizing objects on exit.
+    }
 }

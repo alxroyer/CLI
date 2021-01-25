@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -130,7 +132,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1openDe
 
         b_Res = pcli_OutputDevice->OpenUp(__CALL_INFO__);
 
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndBool("OutputDevice.Common.__openDevice()", b_Res) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndBool("OutputDevice.Native.__openDevice()", b_Res) << cli::endl;
     }
     return b_Res;
 }
@@ -150,7 +152,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1closeD
 
         b_Res = pcli_OutputDevice->CloseDown(__CALL_INFO__);
 
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndBool("OutputDevice.Common.__closeDevice()", b_Res) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndBool("OutputDevice.Native.__closeDevice()", b_Res) << cli::endl;
     }
     return b_Res;
 }
@@ -210,6 +212,30 @@ extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Native_1_1cleanScree
     }
 }
 
+//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Native__1_1getScreenInfo(
+extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1Native_1_1getScreenInfo(
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeOutputDeviceRef)
+{
+    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
+
+    NativeObject::REF i_ScreenInfoRef = 0;
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    {
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__getScreenInfo(I_NativeOutputDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+
+        if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = new cli::OutputDevice::ScreenInfo(pcli_OutputDevice->GetScreenInfo()))
+        {
+            NativeObject::CreateFromNative(*pcli_ScreenInfo);
+            i_ScreenInfoRef = NativeObject::GetNativeRef(*pcli_ScreenInfo);
+        }
+
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndInt("OutputDevice.Native.__getScreenInfo()", i_ScreenInfoRef) << cli::endl;
+    }
+    return i_ScreenInfoRef;
+}
+
 //extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice_Native_1_1wouldOutput(
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1wouldOutput(
         JNIEnv* PJ_Env, jclass PJ_Class,
@@ -253,28 +279,6 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1Java_1_1Java(
     return i_OutputDeviceRef;
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Java__1_1finalize(
-extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Java_1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    if (NativeDevice<cli::OutputDevice>* const pcli_OutputDevice = NativeObject::GetNativeObject<NativeDevice<cli::OutputDevice>*>(I_NativeOutputDeviceRef))
-    {
-        // If b_SafeTrace is true, it means the current trace stream is not pcli_IODevice nor it would output pcli_IODevice.
-        // Whether pcli_IODevice is about to be destroyed, if b_SafeTrace is true, there is no problem for tracing even after possible destruction.
-        const bool b_SafeTrace = cli::GetTraces().IsSafe(*pcli_OutputDevice);
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.Java.__finalize(I_NativeOutputDeviceRef)") << cli::endl;
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
-
-        NativeObject::Free(*pcli_OutputDevice); // <- possible destruction.
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("OutputDevice.Java.__finalize()") << cli::endl;
-    }
-}
-
 
 // OutputDevice static methods implementation.
 
@@ -284,8 +288,14 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1getNullDevice(
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.__getNullDevice()") << cli::endl;
+
     const cli::OutputDevice& cli_NullDevice = cli::OutputDevice::GetNullDevice();
     const NativeObject::REF i_NullDeviceRef = NativeObject::GetNativeRef(cli_NullDevice);
+
+    // Note: Java should call this JNI interface once only for OutputDevice.m_cliNullDevice static member initialization.
+    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+    const_cast<cli::OutputDevice&>(cli_NullDevice).UseInstance(__CALL_INFO__);
+
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.__getNullDevice()", i_NullDeviceRef) << cli::endl;
     return i_NullDeviceRef;
 }
@@ -296,8 +306,14 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1getStdOut(
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.__getStdOut()") << cli::endl;
+
     const cli::OutputDevice& cli_StdOutDevice = cli::OutputDevice::GetStdOut();
     const NativeObject::REF i_StdOutDeviceRef = NativeObject::GetNativeRef(cli_StdOutDevice);
+
+    // Note: Java should call this JNI interface once only for OutputDevice.m_cliStdOut static member initialization.
+    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+    const_cast<cli::OutputDevice&>(cli_StdOutDevice).UseInstance(__CALL_INFO__);
+
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.__getStdOut()", i_StdOutDeviceRef) << cli::endl;
     return i_StdOutDeviceRef;
 }
@@ -308,8 +324,14 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1getStdErr(
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.__getStdErr()") << cli::endl;
+
     const cli::OutputDevice& cli_StdErrDevice = cli::OutputDevice::GetStdErr();
     const NativeObject::REF i_StdErrDeviceRef = NativeObject::GetNativeRef(cli_StdErrDevice);
+
+    // Note: Java should call this JNI interface once only for OutputDevice.m_cliStdErr static member initialization.
+    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+    const_cast<cli::OutputDevice&>(cli_StdErrDevice).UseInstance(__CALL_INFO__);
+
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.__getStdErr()", i_StdErrDeviceRef) << cli::endl;
     return i_StdErrDeviceRef;
 }

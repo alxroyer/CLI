@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,24 +30,23 @@ package cli.ui;
 /** Password user interface object. */
 public class Password extends UI {
 
-    /** Constructor.
+    /** Top execution context constructor.
         @param B_DisplayStars true in order to display '*' for each character, false for no display at all.
         @param I_MinPasswordLength Minimum password length required. -1 if not set.
         @param I_MaxPasswordLength Maximum password length required. -1 if not set. */
     public Password(boolean B_DisplayStars, int I_MinPasswordLength, int I_MaxPasswordLength) {
-        super(__Password(B_DisplayStars, I_MinPasswordLength, I_MaxPasswordLength));
+        super(__Password(0, B_DisplayStars, I_MinPasswordLength, I_MaxPasswordLength));
     }
-    private static final native int __Password(boolean B_DisplayStars, int I_MinPasswordLength, int I_MaxPasswordLength);
 
-    /** Destructor. */
-    protected void finalize() throws Throwable {
-        if (getbDoFinalize()) {
-            __finalize(this.getNativeRef());
-            dontFinalize(); // finalize once.
-        }
-        super.finalize();
+    /** Child execution context constructor.
+        @param CLI_ParentContext Parent execution context.
+        @param B_DisplayStars true in order to display '*' for each character, false for no display at all.
+        @param I_MinPasswordLength Minimum password length required. -1 if not set.
+        @param I_MaxPasswordLength Maximum password length required. -1 if not set. */
+    public Password(cli.ExecutionContext.Interface CLI_ParentContext, boolean B_DisplayStars, int I_MinPasswordLength, int I_MaxPasswordLength) {
+        super(__Password(CLI_ParentContext.getNativeRef(), B_DisplayStars, I_MinPasswordLength, I_MaxPasswordLength));
     }
-    private static final native void __finalize(int I_NativePasswordRef);
+    private static final native int __Password(int I_NativeParentContextRef, boolean B_DisplayStars, int I_MinPasswordLength, int I_MaxPasswordLength);
 
     /** Password retrieval.
         @return Password entered by the user. */

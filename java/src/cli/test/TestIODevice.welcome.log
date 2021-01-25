@@ -1,7 +1,7 @@
 ---------------------------------------------------
- Welcome to MyCli!
+ Welcome to TestCli!
 
- MyCli is a command line interface
+ TestCli is a command line interface
  using the CLI library
    (c) Alexis Royer http://alexis.royer.free.fr/CLI/
  Type 'help' at any time

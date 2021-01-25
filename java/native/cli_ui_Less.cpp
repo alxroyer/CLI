@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,34 +37,33 @@
 
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Less__1_1Less(
-        JNIEnv* PJ_Env, jclass PJ_Class)
+        JNIEnv* PJ_Env, jclass PJ_Class,
+        jint I_NativeParentContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Less.__Less()") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Less.__Less(I_NativeParentContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
     NativeObject::REF i_LessRef = 0;
-    if (cli::ui::Less* const pcli_Less = new cli::ui::Less(0, 0)) // UI_MaxLines & UI_MaxLineLength not taken in account by tk STL implementation
+    cli::ui::Less* pcli_Less = NULL;
+    if (I_NativeParentContextRef != 0)
+    {
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        {
+            pcli_Less = new cli::ui::Less(*pcli_ParentContext, 0, 0); // UI_MaxLines & UI_MaxLineLength not taken in account by tk STL implementation
+        }
+    }
+    else
+    {
+        pcli_Less = new cli::ui::Less(0, 0); // UI_MaxLines & UI_MaxLineLength not taken in account by tk STL implementation
+    }
+    if (pcli_Less != NULL)
     {
         NativeObject::Use(*pcli_Less);
         i_LessRef = NativeObject::GetNativeRef(*pcli_Less);
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Less.__Less()", i_LessRef) << cli::endl;
     return i_LessRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_ui_Less__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeLessRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Less.__finalize(I_NativeLessRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeLessRef", I_NativeLessRef) << cli::endl;
-    if (const cli::ui::Less* const pcli_Less = NativeObject::GetNativeObject<const cli::ui::Less*>(I_NativeLessRef))
-    {
-        NativeObject::Free(*pcli_Less);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("ui.Less.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Less__1_1getText(

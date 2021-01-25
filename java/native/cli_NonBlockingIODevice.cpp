@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -38,94 +40,32 @@
 
 // NonBlockingIODevice.Common implementation.
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice_Common__1_1attachKeyReceiver(
-extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice__1_1Common_1_1attachKeyReceiver(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeDeviceRef, jint I_NativeKeyReceiverRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    if (cli::NonBlockingIODevice* const pcli_NonBlockingIODevice = NativeObject::GetNativeObject<cli::NonBlockingIODevice*>(I_NativeDeviceRef))
-    {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::Begin("NonBlockingIODevice.Common.__attachKeyReceiver(I_NativeDeviceRef, I_NativeKeyReceiverRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeKeyReceiverRef", I_NativeKeyReceiverRef) << cli::endl;
-
-        if (cli::NonBlockingKeyReceiver* const pcli_NonBlockingKeyReceiver = NativeObject::GetNativeObject<cli::NonBlockingKeyReceiver*>(I_NativeKeyReceiverRef))
-        {
-            pcli_NonBlockingIODevice->AttachKeyReceiver(*pcli_NonBlockingKeyReceiver);
-        }
-
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::EndVoid("NonBlockingIODevice.Common.__attachKeyReceiver()") << cli::endl;
-    }
-}
-
-//extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice_Common__1_1detachKeyReceiver(
-extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice__1_1Common_1_1detachKeyReceiver(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeDeviceRef, jint I_NativeKeyReceiverRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    if (cli::NonBlockingIODevice* const pcli_NonBlockingIODevice = NativeObject::GetNativeObject<cli::NonBlockingIODevice*>(I_NativeDeviceRef))
-    {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::Begin("NonBlockingIODevice.Common.__detachKeyReceiver(I_NativeDeviceRef, I_NativeKeyReceiverRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeKeyReceiverRef", I_NativeKeyReceiverRef) << cli::endl;
-
-        if (cli::NonBlockingKeyReceiver* const pcli_NonBlockingKeyReceiver = NativeObject::GetNativeObject<cli::NonBlockingKeyReceiver*>(I_NativeKeyReceiverRef))
-        {
-            pcli_NonBlockingIODevice->DetachKeyReceiver(*pcli_NonBlockingKeyReceiver);
-        }
-
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::EndVoid("NonBlockingIODevice.Common.__detachKeyReceiver()") << cli::endl;
-    }
-}
-
-//extern "C" JNIEXPORT jint JNICALL Java_cli_NonBlockingIODevice_Common__1_1getKeyReceiver(
-extern "C" JNIEXPORT jint JNICALL Java_cli_NonBlockingIODevice__1_1Common_1_1getKeyReceiver(
+//extern "C" JNIEXPORT jint JNICALL Java_cli_NonBlockingIODevice_Common__1_1getExecutionContext(
+extern "C" JNIEXPORT jint JNICALL Java_cli_NonBlockingIODevice__1_1Common_1_1getExecutionContext(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    NativeObject::REF i_KeyReceiverRef = 0;
+    NativeObject::REF i_ContextRef = 0;
     if (const cli::NonBlockingIODevice* const pcli_NonBlockingIODevice = NativeObject::GetNativeObject<const cli::NonBlockingIODevice*>(I_NativeDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::Begin("NonBlockingIODevice.Common.__getKeyReceiver(I_NativeDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::Begin("NonBlockingIODevice.Common.__getExecutionContext(I_NativeDeviceRef)") << cli::endl;
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
 
-        if (const cli::NonBlockingKeyReceiver* const pcli_KeyReceiver = pcli_NonBlockingIODevice->GetKeyReceiver())
+        class BypassProtected : public cli::NonBlockingIODevice {
+            public: const cli::ExecutionContext* const _GetExecutionContext(void) const {
+                return GetExecutionContext();
+            }
+        };
+        if (const cli::ExecutionContext* const pcli_Context = reinterpret_cast<const BypassProtected*>(pcli_NonBlockingIODevice)->_GetExecutionContext())
         {
-            i_KeyReceiverRef = NativeObject::GetNativeRef(*pcli_KeyReceiver);
+            i_ContextRef = NativeObject::GetNativeRef(*pcli_Context);
         }
 
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::EndInt("NonBlockingIODevice.Common.__getKeyReceiver()", i_KeyReceiverRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::EndInt("NonBlockingIODevice.Common.__getExecutionContext()", i_ContextRef) << cli::endl;
     }
-    return i_KeyReceiverRef;
-}
-
-//extern "C" JNIEXPORT jint JNICALL Java_cli_NonBlockingIODevice_Common__1_1getShell(
-extern "C" JNIEXPORT jint JNICALL Java_cli_NonBlockingIODevice__1_1Common_1_1getShell(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeDeviceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    NativeObject::REF i_ShellRef = 0;
-    if (const cli::NonBlockingIODevice* const pcli_NonBlockingIODevice = NativeObject::GetNativeObject<const cli::NonBlockingIODevice*>(I_NativeDeviceRef))
-    {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::Begin("NonBlockingIODevice.Common.__getShell(I_NativeDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
-
-        if (const cli::Shell* const pcli_Shell = pcli_NonBlockingIODevice->GetShell())
-        {
-            i_ShellRef = NativeObject::GetNativeRef(*pcli_Shell);
-        }
-
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::EndInt("NonBlockingIODevice.Common.__getShell()", i_ShellRef) << cli::endl;
-    }
-    return i_ShellRef;
+    return i_ContextRef;
 }
 
 //extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice_Common__1_1onKey(
@@ -141,6 +81,12 @@ extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice__1_1Common_1_1onK
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("E_Key", E_Key) << cli::endl;
 
+        // Java does not necessarily use C++ encoding for "\n".
+        if (((E_Key == '\r') || (E_Key == '\n')) && (E_Key != cli::ENTER))
+        {
+            E_Key = cli::ENTER;
+            cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ValueInt("E_Key", E_Key) << cli::endl;
+        }
         pcli_NonBlockingIODevice->OnKey((cli::KEY) E_Key);
 
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::EndVoid("NonBlockingIODevice.Common.__onKey()") << cli::endl;
@@ -149,30 +95,6 @@ extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice__1_1Common_1_1onK
 
 
 // NonBlockingIODevice.Native implementation.
-
-//extern "C" JNIEXPORT jboolean JNICALL Java_cli_NonBlockingIODevice_Native__1_1waitForKeys(
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_NonBlockingIODevice__1_1Native_1_1waitForKeys(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeDeviceRef, jint I_Milli)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    bool b_Res = false;
-    if (const cli::NonBlockingIODevice* const pcli_NonBlockingIODevice = NativeObject::GetNativeObject<const cli::NonBlockingIODevice*>(I_NativeDeviceRef))
-    {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::Begin("NonBlockingIODevice.Native.__waitForKeys(I_NativeDeviceRef, I_Milli)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::ParamInt("I_Milli", I_Milli) << cli::endl;
-
-        if (I_Milli >= 0)
-        {
-            b_Res = pcli_NonBlockingIODevice->WaitForKeys(I_Milli);
-        }
-
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_NonBlockingIODevice) << NativeTraces::EndBool("NonBlockingIODevice.Native.__waitForKeys()", b_Res) << cli::endl;
-    }
-    return b_Res;
-}
 
 
 // NonBlockingIODevice.Java implementation.
@@ -196,26 +118,4 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_NonBlockingIODevice__1_1Java_1_1Java(
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("NonBlockingIODevice.Java.__Java()", i_NonBlockingIODeviceRef) << cli::endl;
     return i_NonBlockingIODeviceRef;
-}
-
-//extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice_Java__1_1finalize(
-extern "C" JNIEXPORT void JNICALL Java_cli_NonBlockingIODevice__1_1Java_1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeDeviceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    if (cli::NonBlockingIODevice* const pcli_NonBlockingIODevice = NativeObject::GetNativeObject<cli::NonBlockingIODevice*>(I_NativeDeviceRef))
-    {
-        // If b_SafeTrace is true, it means the current trace stream is not pcli_IODevice nor it would output pcli_IODevice.
-        // Whether pcli_IODevice is about to be destroyed, if b_SafeTrace is true, there is no problem for tracing even after possible destruction.
-        const bool b_SafeTrace = cli::GetTraces().IsSafe(*pcli_NonBlockingIODevice);
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NonBlockingIODevice.Java.__finalize(I_NativeDeviceRef)") << cli::endl;
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
-
-        NativeObject::Free(*pcli_NonBlockingIODevice); // <- possible destruction.
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("NonBlockingIODevice.Java.__finalize()") << cli::endl;
-    }
 }

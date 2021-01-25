@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -43,10 +45,21 @@ const cli::tk::String NativeTraces::Begin(const char* const STR_Method)
 const cli::tk::String NativeTraces::ParamStr(const char* const STR_ParamName, const char* const STR_Value)
 {
     cli::StringDevice cli_Param(0, false);
-    cli_Param << GetIndent() << " " << STR_ParamName << " = " << STR_Value;
+    if (STR_ParamName != NULL)
+    {
+        cli_Param << GetIndent() << " " << STR_ParamName << " = ";
+        if (STR_Value != NULL)
+        {
+            cli_Param << STR_Value;
+        }
+        else
+        {
+            cli_Param << "NULL";
+        }
+    }
     return cli_Param.GetString();
 }
-const cli::tk::String NativeTraces::ParamPtr(const char* const STR_ParamName, void* const PV_Value)
+const cli::tk::String NativeTraces::ParamPtr(const char* const STR_ParamName, const void* const PV_Value)
 {
     cli::StringDevice cli_Param(0, false);
     cli_Param << GetIndent() << " " << STR_ParamName << " = " << PV_Value;
@@ -77,7 +90,7 @@ const cli::tk::String NativeTraces::ValueStr(const char* const STR_ValueName, co
     cli_Value << GetIndent() << "  -> " << STR_ValueName << " = " << STR_Value;
     return cli_Value.GetString();
 }
-const cli::tk::String NativeTraces::ValuePtr(const char* const STR_ValueName, void* const PV_Value)
+const cli::tk::String NativeTraces::ValuePtr(const char* const STR_ValueName, const void* const PV_Value)
 {
     cli::StringDevice cli_Value(0, false);
     cli_Value << GetIndent() << "  -> " << STR_ValueName << " = " << PV_Value;
@@ -116,7 +129,7 @@ const cli::tk::String NativeTraces::EndStr(const char* const STR_Method, const c
     m_iJniStackSize --;
     return cli_End.GetString();
 }
-const cli::tk::String NativeTraces::EndPtr(const char* const STR_Method, void* const PV_Value)
+const cli::tk::String NativeTraces::EndPtr(const char* const STR_Method, const void* const PV_Value)
 {
     cli::StringDevice cli_End(0, false);
     cli_End << GetIndent() << "<< " << STR_Method << " : " << PV_Value;

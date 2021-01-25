@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -50,11 +52,12 @@ CLI_NS_BEGIN(cli)
     {
     public:
         //! @brief Trace class list typedef.
+        //! @return N/A (doxygen warning)
         typedef tk::Queue<TraceClass> List;
 
     private:
         //! @brief No default constructor.
-        TraceClass(void);
+        explicit TraceClass(void);
 
     public:
         //! @brief Copy constructor.
@@ -63,7 +66,7 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Constructor.
-        TraceClass(
+        explicit TraceClass(
             const char* const STR_ClassName,    //!< Class name.
             const Help& CLI_Help                //!< Help description.
             );
@@ -73,13 +76,16 @@ CLI_NS_BEGIN(cli)
 
     public:
         //! @brief Class name accessor.
+        //! @return Class name.
         const tk::String GetName(void) const;
 
         //! @brief Description accessor.
+        //! @return Trace class description.
         const Help& GetHelp(void) const;
 
     public:
         //! @brief Assignment operator.
+        //! @return The TraceClass instance itself.
         TraceClass& operator=(const TraceClass&);
 
     private:
@@ -91,6 +97,7 @@ CLI_NS_BEGIN(cli)
     };
 
     //! @brief Classes equivalence operator.
+    //! @return true if trace classes are equivalent, false otherwise.
     const bool operator==(
         const TraceClass& CLI_Class1,   //!< First member.
         const TraceClass& CLI_Class2    //!< Second member.
@@ -99,6 +106,7 @@ CLI_NS_BEGIN(cli)
     //! @brief Internal error common trace class singleton redirection.
     #define INTERNAL_ERROR GetInternalErrorTraceClass()
     //! @brief Internal error common trace class singleton.
+    //! @return Internal error common trace class instance.
     const TraceClass& GetInternalErrorTraceClass();
 
 
@@ -107,26 +115,26 @@ CLI_NS_BEGIN(cli)
     {
     public:
         //! @brief Singleton.
+        //! @return Only one instance of the kind.
         static Traces& GetInstance(void);
 
     protected:
         //! @brief Default constructor.
-        Traces(void);
-
-    private:
-        //! @brief No copy constructor.
-        Traces(const Traces&);
+        explicit Traces(void);
 
     public:
         //! @brief Destructor.
         virtual ~Traces(void);
 
     private:
+        //! @brief No copy constructor.
+        Traces(const Traces&);
         //! @brief No assignment operator.
         Traces& operator=(const Traces&);
 
     public:
         //! @brief Stream access.
+        //! @return Trace stream reference.
         const OutputDevice& GetStream(void) const;
 
         //! @brief Stream positionning (if not already set).
@@ -147,12 +155,6 @@ CLI_NS_BEGIN(cli)
             OutputDevice& CLI_Stream                //!< Stream reference.
             );
 
-        //! @brief Stack overflow protection.
-        //! @return true if traces are safe for this output device, false if no trace should be set.
-        const bool IsSafe(
-            const OutputDevice& CLI_AvoidTraces     //!< Device which output is about to be traced.
-            ) const;
-
     public:
         //! @brief Trace class declaration.
         //! @return true if the class has been declared successfully or the class was already declared.
@@ -162,20 +164,22 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief All classes accessor.
+        //! @return List of all trace classes that have been registered.
         const TraceClass::List GetAllClasses(void) const;
 
         //! @brief Current filter retrieval.
+        //! @return List of trace classes that constitutes the current trace filter.
         const TraceClass::List GetCurrentFilter(void) const;
 
         //! @brief Current filter modification.
-        //! @return true: Filter is set.
-        //! @return false: Trace class not found.
+        //! @return true if the filter has been set (or was set previously), false otherwise.
         const bool SetFilter(
             const TraceClass& CLI_Class,    //!< Trace class.
             const bool B_ShowTraces         //!< Show traces flag.
             );
 
         //! @brief All filter management.
+        //! @return true for success, false otherwise.
         //!
         //! Same as above but for all filters in one operation.
         const bool SetAllFilter(
@@ -197,11 +201,11 @@ CLI_NS_BEGIN(cli)
             );
 
         //! @brief Safe trace routine.
-        //! @return Trace output stream prepared to receive the trace.
+        //! @return Trace output stream prepared to receive the trace. Null device if trace is avoided.
         //! @note Prevents output from infinite loops.
         const OutputDevice& SafeTrace(
             const TraceClass& CLI_Class,        //!< Trace class.
-            const OutputDevice& CLI_AvoidStream //!< Avoid stream from being sent characters.
+            const Object& CLI_AvoidStream       //!< Avoid stream from being sent characters.
             );
 
     private:
@@ -224,8 +228,8 @@ CLI_NS_BEGIN(cli)
         class TraceClassFlag : public TraceClass
         {
         public:
-            TraceClassFlag(void);
-            TraceClassFlag(const TraceClass& CLI_Source, const bool B_Show);
+            explicit TraceClassFlag(void);
+            explicit TraceClassFlag(const TraceClass& CLI_Source, const bool B_Show);
             TraceClassFlag(const TraceClassFlag& CLI_Source);
             virtual ~TraceClassFlag(void);
         public:

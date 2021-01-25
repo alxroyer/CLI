@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,13 +30,20 @@ package cli.ui;
 /** Choice user interface class. */
 public class Choice extends Line {
 
-    /** Constructor.
+    /** Top execution context constructor.
         @param I_DefaultChoice Index in the input queue corresponding to the default answer.
         @param J_Choices Input choice list. */
     public Choice(int I_DefaultChoice, java.util.Collection<cli.ResourceString> J_Choices) {
-        super(__Choice(I_DefaultChoice, J_Choices));
+        super(__Choice(null, I_DefaultChoice, J_Choices));
     }
-    private static final int __Choice(int I_DefaultChoice, java.util.Collection<cli.ResourceString> J_Choices) {
+    /** Child execution context constructor.
+        @param CLI_ParentContext Parent execution context.
+        @param I_DefaultChoice Index in the input queue corresponding to the default answer.
+        @param J_Choices Input choice list. */
+    public Choice(cli.ExecutionContext.Interface CLI_ParentContext, int I_DefaultChoice, java.util.Collection<cli.ResourceString> J_Choices) {
+        super(__Choice(CLI_ParentContext, I_DefaultChoice, J_Choices));
+    }
+    private static final int __Choice(cli.ExecutionContext.Interface CLI_ParentContext, int I_DefaultChoice, java.util.Collection<cli.ResourceString> J_Choices) {
         int i_NativeChoiceListRef = __beginChoiceList();
         for (java.util.Iterator<cli.ResourceString> it = J_Choices.iterator(); it.hasNext(); ) {
             cli.ResourceString cli_Choice = it.next();
@@ -42,27 +51,21 @@ public class Choice extends Line {
                 __addChoice(i_NativeChoiceListRef, cli_Choice.getNativeRef());
             }
         }
-        return __Choice(I_DefaultChoice, i_NativeChoiceListRef);
+        if (CLI_ParentContext == null) {
+            return __Choice(0, I_DefaultChoice, i_NativeChoiceListRef);
+        } else {
+            return __Choice(CLI_ParentContext.getNativeRef(), I_DefaultChoice, i_NativeChoiceListRef);
+        }
     }
     private static final native int __beginChoiceList();
     private static final native void __addChoice(int I_NativeChoiceListRef, int I_NativeResourceStringRef);
-    private static final native int __Choice(int I_DefaultChoice, int I_NativeChoiceListRef);
+    private static final native int __Choice(int I_NativeParentContextRef, int I_DefaultChoice, int I_NativeChoiceListRef);
 
     /** Contructor for derived classes only.
         @param I_NativeRef Native object reference. */
     protected Choice(int I_NativeRef) {
         super(I_NativeRef);
     }
-
-    /** Destructor. */
-    protected void finalize() throws Throwable {
-        if (getbDoFinalize()) {
-            __finalize(this.getNativeRef());
-            dontFinalize(); // finalize once.
-        }
-        super.finalize();
-    }
-    private static final native void __finalize(int I_NativeChoiceRef);
 
     /** Choice retrieval.
         @return Index in the input queue corresponding to the answer entered by the user. -1 if no matching choice found. */

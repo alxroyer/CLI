@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,8 +28,17 @@ package cli;
 
 
 /** Trace class description. */
-public class TraceClass extends NativeObject
-{
+public class TraceClass extends NativeObject {
+
+    /** Native JNI trace class singleton.
+        @return Native JNI trace class instance. */
+    public static final TraceClass getJniTraceClass() {
+        TraceClass cli_JniTraceClass = new TraceClass(__getJniTraceClass());
+        cli_JniTraceClass.dontFinalize(); // Do not try to finalize native JNI trace class.
+        return cli_JniTraceClass;
+    }
+    private static final native int __getJniTraceClass();
+
     /** Copy constructor.
         @param CLI_Class Source class object. */
     public TraceClass(TraceClass CLI_Class) {
@@ -41,15 +52,12 @@ public class TraceClass extends NativeObject
     }
     private static final native int __TraceClass(String STR_ClassName, int I_NativeHelpRef);
 
-    /** Destructor. */
-    protected void finalize() throws Throwable {
-        if (getbDoFinalize()) {
-            __finalize(this.getNativeRef());
-            dontFinalize(); // finalize once.
-        }
-        super.finalize();
+    /** By native reference constructor.
+        Almost for getJniTraceClass() singleton.
+        @param I_NativeTraceClassRef Native trace class reference. */
+    private TraceClass(int I_NativeTraceClassRef) {
+        super(I_NativeTraceClassRef);
     }
-    private static final native void __finalize(int I_NativeTraceClassRef);
 
     /** Class name accessor.
         @return Class name. null if an error occured. */
@@ -67,4 +75,5 @@ public class TraceClass extends NativeObject
         return cli_Help;
     }
     private static final native int __getHelp(int I_NativeTraceClassRef);
+
 }

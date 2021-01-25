@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -49,15 +51,9 @@ CLI_NS_BEGIN(cli)
     //! The null device and standard devices are not subject to this remark.
     class IOMux : public IODevice
     {
-    private:
-        //! @brief No default constructor.
-        IOMux(void);
-        //! @brief No copy constructor.
-        IOMux(const IOMux&);
-
     public:
         //! @brief Main constructor.
-        IOMux(
+        explicit IOMux(
             const bool AutoDelete               //!< Auto-deletion flag.
             );
 
@@ -65,20 +61,33 @@ CLI_NS_BEGIN(cli)
         virtual ~IOMux(void);
 
     private:
+        //! @brief No default constructor.
+        explicit IOMux(void);
+        //! @brief No copy constructor.
+        IOMux(const IOMux&);
         //! @brief No assignment operator.
         IOMux& operator=(const IOMux&);
 
     // Outputdevice and IODevice interfaces.
     protected:
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool OpenDevice(void);
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool CloseDevice(void);
     public:
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void PutString(const char* const STR_Out) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void Beep(void) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual void CleanScreen(void) const;
+        // Inherit doxygen comments from cli::OutputDevice interface documentation.
         virtual const bool WouldOutput(const OutputDevice& CLI_Device) const;
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const KEY GetKey(void) const;
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const ResourceString GetLocation(void) const;
+        // Inherit doxygen comments from cli::IODevice interface documentation.
         virtual const bool WouldInput(const IODevice& CLI_Device) const;
 
     public:

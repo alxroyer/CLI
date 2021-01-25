@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,7 +37,7 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_SyntaxNode__1_1addElement(
+extern "C" JNIEXPORT jint JNICALL Java_cli_SyntaxNode__1_1addElement(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_NativeSyntaxNodeRef, jint I_NativeElementRef)
 {
@@ -44,16 +46,25 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_SyntaxNode__1_1addElement(
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SyntaxNode.__addElement(I_NativeSyntaxNodeRef, I_NativeElementRef)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeSyntaxNodeRef", I_NativeSyntaxNodeRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
-    bool b_Res = false;
+    NativeObject::REF i_ElementRef = 0;
     if (cli::SyntaxNode* const pcli_SyntaxNode = NativeObject::GetNativeObject<cli::SyntaxNode*>(I_NativeSyntaxNodeRef))
     {
-        if (cli::Element* const pcli_Element = NativeObject::GetNativeObject<cli::Element*>(I_NativeElementRef))
+        if (cli::Element* const pcli_Element1 = NativeObject::GetNativeObject<cli::Element*>(I_NativeElementRef))
         {
-            pcli_SyntaxNode->AddElement(pcli_Element);
-            NativeObject::Delegate(*pcli_Element, *pcli_SyntaxNode);
-            b_Res = true;
+            const cli::Element& cli_Element2 = pcli_SyntaxNode->AddElement(pcli_Element1);
+            if (& cli_Element2 != pcli_Element1)
+            {
+                // pcli_Element1 is deleted at there
+                NativeObject::DeleteFromNative(I_NativeElementRef);
+            }
+            else
+            {
+                // if pcli_Element2 is not already delegated, make the system not trying to delete on Java garbage collector.
+                NativeObject::Delegate(cli_Element2, *pcli_SyntaxNode);
+            }
+            i_ElementRef = NativeObject::GetNativeRef(cli_Element2);
         }
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("SyntaxNode.__addElement()", b_Res);
-    return b_Res;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("SyntaxNode.__addElement()", i_ElementRef) << cli::endl;
+    return i_ElementRef;
 }

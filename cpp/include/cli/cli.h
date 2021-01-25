@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,9 +30,9 @@
 //! @brief Cli class definition.
 
 //! @mainpage
-//! @author Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+//! @author Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 //!
-//! The CLI toolkit allows you to easily define Command Line Interfaces.
+//! The CLI toolkit allows you to easily implement @em "Command Line Interfaces".
 //!
 //! Within a single XML file, you define the tree of menus, keywords and parameters, and match them directly to some target language code.
 //!
@@ -45,17 +47,16 @@
 //!         - files:                        InputFileDevice and OutputFileDevice
 //!         - strings:                      SingleCommand and StringDevice
 //!     - Get back to the Menu class and find out how user code is executed through the handlers.
-//!       It is also interesting at this point to have a look at the XSL transformation.
-//!     - Eventually figure out how UI classes provide text/numbers... edition facilities.
+//!       It is also interesting at this point to have a look at the XSL and python transformations.
+//!     - Eventually figure out how UI classes provide text/numbers/passwords... edition facilities.
 //!
 //! Advanced users:
 //!     - Interested in the traces management system? Have a look at Traces.
 //!     - Want to use pre-compiled headers? See pch.h.
 //!     - Want to define a specific input/output device? Inherit from OutputDevice or IODevice.
 //!     - Need to multiplex input and output devices? Maybe IOMux can help you.
-//!     - Any question about thread-safe CLI termination? Please check the Shell::QuitThreadSafe method.
-//!     - Non-blocking call concerns? Try to implement NonBlockingIODevice
-//!     - Trying to integrate in an embedded context? The cli::CLI_NO_STL compiler directive is there for you.
+//!     - Non-blocking call or thread-safe concerns? Try to implement a NonBlockingIODevice, and see also ExecutionContext and ExecutionResult.
+//!     - Trying to integrate in an embedded context? The CLI_NO_STL compiler directive is there for you.
 //!       Also have a look at the various preprocessing constants described in preprocessing.h.
 //!
 //! Much more info available in the user-guide.
@@ -68,6 +69,8 @@
 #include "cli/tk.h"
 
 
+//! @namespace cli
+//! @brief Main namespace of the CLI library.
 CLI_NS_BEGIN(cli)
 
     // Forward declarations
@@ -75,7 +78,9 @@ CLI_NS_BEGIN(cli)
     class Console;
     class Help;
     class ConfigMenu;
+    #ifdef _DEBUG
     class TracesMenu;
+    #endif
 
 
     //! @brief CLI definition class.
@@ -93,13 +98,13 @@ CLI_NS_BEGIN(cli)
     {
     private:
         //! @brief No default constructor.
-        Cli(void);
+        explicit Cli(void);
         //! @brief No copy constructor.
         Cli(const Cli&);
 
     public:
         //! @brief Constructor.
-        Cli(
+        explicit Cli(
             const char* const STR_Name,     //!< Name of the CLI.
             const Help& CLI_Help            //!< Help object.
             );
@@ -115,6 +120,7 @@ CLI_NS_BEGIN(cli)
 
     public:
         //! @brief CLI list type.
+        //! @return N/A (doxygen warning)
         typedef tk::Queue<const Cli*> List;
 
         //! @brief Retrieve CLI references from their names.
@@ -143,11 +149,12 @@ CLI_NS_BEGIN(cli)
             Shell& CLI_Shell    //!< Shell reference.
             ) const;
         //! @brief Returns the shell reference on execution.
+        //! @return Shell reference.
         Shell& GetShell(void) const;
 
-        //! @brief CLI reference setting.
+        // Inherit doxygen comments from cli::Element documentation.
         virtual void SetCli(Cli& CLI_Cli);
-        //! @brief Reserved commands execution.
+        // Inherit doxygen comments from cli::Menu documentation.
         virtual const bool ExecuteReserved(const CommandLine& CLI_CommandLine) const;
         //! @brief Handler on error.
         //! @return true if the error can be displayed by the shell, false if it should not be displayed.

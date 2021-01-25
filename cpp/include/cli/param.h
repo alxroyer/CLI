@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -47,15 +49,9 @@ CLI_NS_BEGIN(cli)
     //! Not final class.
     class Param : public SyntaxNode
     {
-    private:
-        //! @brief No default constructor.
-        Param(void);
-        //! @brief No copy constructor.
-        Param(const Param&);
-
     protected:
         //! @brief Constructor.
-        Param(
+        explicit Param(
             const char* const STR_Keyword,  //!< Keyword.
                                             //!< Does not mean much for a parameter.
                                             //!< Something like a description of the type of parameter.
@@ -67,33 +63,30 @@ CLI_NS_BEGIN(cli)
         virtual ~Param(void);
 
     private:
+        //! @brief No default constructor.
+        explicit Param(void);
+        //! @brief No copy constructor.
+        Param(const Param&);
         //! @brief No assignment operator.
         Param& operator=(const Param&);
 
     public:
-        //! @brief Keyword access.
-        //!
-        //! Correction of Element::GetKeyword().
-        //! Does not return m_strKeyword, but m_strValue.
+        // Inherit doxygen comments from cli::Element documentation.
         virtual const tk::String GetKeyword(void) const;
 
-        //! @brief Elements research.
-        virtual const bool FindElements(
-            Element::List& CLI_ExactList,   //!< List of elements corresponding exactly.
-            Element::List& CLI_NearList,    //!< List of elements corresponding.
-            const char* const STR_Keyword   //!< Beginning of a keyword.
-            ) const;
+        // Inherit doxygen comments from cli::Element documentation.
+        virtual const bool FindElements(Element::List& CLI_ExactList, Element::List& CLI_NearList, const char* const STR_Keyword) const;
 
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Value setting.
-        //! @return true: the value has been set correctly.
-        //! @return false: the value has not been set.
+        //! @param STR_Value New value.
+        //! @return true if the value has been set correctly, false otherwise.
         //!
         //! To be overloaded by derived classes.
-        virtual const bool SetstrValue(
-            const char* const STR_Value     //!< New value.
-            ) const = 0;
+        virtual const bool SetstrValue(const char* const STR_Value) const = 0;
 
         //! @brief Value access in its string form.
+        //! @return Parameter value in its string form.
         const tk::String GetstrValue(void) const;
 
         //! @brief Parameter cloning handler.
@@ -103,25 +96,30 @@ CLI_NS_BEGIN(cli)
         virtual const Param* const Clone(void) const = 0;
 
         //! @brief Cloned parameter access.
+        //! @return Cloned parameter instance if any. NULL otherwise.
         const Param* const GetCloned(void) const;
 
+        // Note: use of @param doxygen tag in order to avoid doxygen warnings for reimplementations in sub-classes.
         //! @brief Value copy handler.
-        virtual const Param& CopyValue(
-            const Param& CLI_Param          //!< Parameter to copy the value from.
-            ) const = 0;
+        //! @param CLI_Param Parameter to copy the value from.
+        //! @return The Param instance itself.
+        virtual const Param& CopyValue(const Param& CLI_Param) const = 0;
 
     protected:
         //! @brief Value setting from derived class.
+        //! @return true for success, false otherwise.
         const bool SetValue(
             const char* const STR_Value     //!< New value.
             ) const;
 
         //! @brief Clone initialization.
+        //! @return CLI_Param reference.
         const Param* const InitClone(
             Param& CLI_Param                //!< Clone parameter to initialize.
             ) const;
 
         //! @brief Cloned parameter reference setting.
+        //! @return true for success, false otherwise.
         const bool SetCloned(
             const Param& CLI_Cloned         //!< Clone parameter reference.
             );
@@ -138,15 +136,9 @@ CLI_NS_BEGIN(cli)
     //! @brief Template parameter class.
     template <class T> class ParamT : public Param
     {
-    private:
-        //! @brief No default constructor.
-        ParamT<T>(void);
-        //! @brief No copy constructor.
-        ParamT<T>(const ParamT<T>&);
-
     public:
         //! @brief Constructor.
-        ParamT<T>(
+        explicit ParamT<T>(
                 const char* const STR_Keyword,  //!< Keyword.
                 const T& T_Default,             //!< Default value.
                 const Help& CLI_Help            //!< Corresponding help.
@@ -162,6 +154,10 @@ CLI_NS_BEGIN(cli)
         }
 
     private:
+        //! @brief No default constructor.
+        explicit ParamT<T>(void);
+        //! @brief No copy constructor.
+        ParamT<T>(const ParamT<T>&);
         //! @brief No assignment operator.
         ParamT<T>& operator=(const ParamT<T>&);
 
@@ -172,7 +168,7 @@ CLI_NS_BEGIN(cli)
             return m_tValue;
         }
 
-        //! @brief Typed value copy handler.
+        // Inherit doxygen comments from cli::Param documentation.
         virtual const Param& CopyValue(const Param& CLI_Param) const
         {
             if (const ParamT<T>* const pcli_Param = dynamic_cast<const ParamT<T>*>(& CLI_Param))

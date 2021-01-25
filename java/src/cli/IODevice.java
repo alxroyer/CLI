@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -74,7 +76,7 @@ public abstract class IODevice {
         }
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Native class above (at least with java 1.5.0_03).
-    // Therefore they are just declared in the scope of the global OutputDevice class with a __Native prefix.
+    // Therefore they are just declared in the scope of the global IODevice class with a __Native prefix.
     private static final native int __Native__getKey(int I_NativeDeviceRef);
     private static final native int __Native__getLocation(int I_NativeDeviceRef);
     private static final native boolean __Native__wouldInput(int I_NativeIODeviceRef, int I_NativeIODevice2Ref);
@@ -91,15 +93,6 @@ public abstract class IODevice {
             @param I_NativeRef Native instance reference. */
         protected Java(int I_NativeRef) {
             super(I_NativeRef);
-        }
-
-        /** Destructor. */
-        protected void finalize() throws Throwable {
-            if (getbDoFinalize()) {
-                IODevice.__Java__finalize(this.getNativeRef());
-                dontFinalize(); // finalize once.
-            }
-            super.finalize();
         }
 
         // IODevice.Interface Java input/output device implementation.
@@ -153,9 +146,8 @@ public abstract class IODevice {
         }
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Java class above (at least with java 1.5.0_03).
-    // Therefore they are just declared in the scope of the global OutputDevice class with a __Java prefix.
+    // Therefore they are just declared in the scope of the global IODevice class with a __Java prefix.
     private static final native int __Java__Java(String J_DbgName);
-    private static final native void __Java__finalize(int I_NativeConsoleRef);
 
 
     // General static input/output device features.
@@ -191,4 +183,150 @@ public abstract class IODevice {
     }
     private static final native int __getStdIn();
     private static IODevice.Interface m_cliStdIn = null;
+
+    /** @brief Common char translation.
+        @param I_Char Common char to translate.
+        @return KEY code corresponding to the given common char.
+
+        No JNI call to native implementation, but full Java re-implementation in order to avoid strange Java/native character translations. */
+    static final int getKey(int I_Char) {
+        switch (I_Char) {
+        case 10: case 13:   return OutputDevice.ENTER;
+
+        case ' ':   return OutputDevice.SPACE;
+        case '\t':  return OutputDevice.TAB;
+        case '\b':  return OutputDevice.BACKSPACE;
+
+        case '0':   return OutputDevice.KEY_0;
+        case '1':   return OutputDevice.KEY_1;
+        case '2':   return OutputDevice.KEY_2;
+        case '3':   return OutputDevice.KEY_3;
+        case '4':   return OutputDevice.KEY_4;
+        case '5':   return OutputDevice.KEY_5;
+        case '6':   return OutputDevice.KEY_6;
+        case '7':   return OutputDevice.KEY_7;
+        case '8':   return OutputDevice.KEY_8;
+        case '9':   return OutputDevice.KEY_9;
+
+        case 'a':   return OutputDevice.KEY_a;
+        case 'á':   return OutputDevice.KEY_aacute;
+        case 'à':   return OutputDevice.KEY_agrave;
+        case 'ä':   return OutputDevice.KEY_auml;
+        case 'â':   return OutputDevice.KEY_acirc;
+        case 'b':   return OutputDevice.KEY_b;
+        case 'c':   return OutputDevice.KEY_c;
+        case 'ç':   return OutputDevice.KEY_ccedil;
+        case 'd':   return OutputDevice.KEY_d;
+        case 'e':   return OutputDevice.KEY_e;
+        case 'é':   return OutputDevice.KEY_eacute;
+        case 'è':   return OutputDevice.KEY_egrave;
+        case 'ë':   return OutputDevice.KEY_euml;
+        case 'ê':   return OutputDevice.KEY_ecirc;
+        case 'f':   return OutputDevice.KEY_f;
+        case 'g':   return OutputDevice.KEY_g;
+        case 'h':   return OutputDevice.KEY_h;
+        case 'i':   return OutputDevice.KEY_i;
+        case 'í':   return OutputDevice.KEY_iacute;
+        case 'ì':   return OutputDevice.KEY_igrave;
+        case 'ï':   return OutputDevice.KEY_iuml;
+        case 'î':   return OutputDevice.KEY_icirc;
+        case 'j':   return OutputDevice.KEY_j;
+        case 'k':   return OutputDevice.KEY_k;
+        case 'l':   return OutputDevice.KEY_l;
+        case 'm':   return OutputDevice.KEY_m;
+        case 'n':   return OutputDevice.KEY_n;
+        case 'o':   return OutputDevice.KEY_o;
+        case 'ó':   return OutputDevice.KEY_oacute;
+        case 'ò':   return OutputDevice.KEY_ograve;
+        case 'ö':   return OutputDevice.KEY_ouml;
+        case 'ô':   return OutputDevice.KEY_ocirc;
+        case 'p':   return OutputDevice.KEY_p;
+        case 'q':   return OutputDevice.KEY_q;
+        case 'r':   return OutputDevice.KEY_r;
+        case 's':   return OutputDevice.KEY_s;
+        case 't':   return OutputDevice.KEY_t;
+        case 'u':   return OutputDevice.KEY_u;
+        case 'ú':   return OutputDevice.KEY_uacute;
+        case 'ù':   return OutputDevice.KEY_ugrave;
+        case 'ü':   return OutputDevice.KEY_uuml;
+        case 'û':   return OutputDevice.KEY_ucirc;
+        case 'v':   return OutputDevice.KEY_v;
+        case 'w':   return OutputDevice.KEY_w;
+        case 'x':   return OutputDevice.KEY_x;
+        case 'y':   return OutputDevice.KEY_y;
+        case 'z':   return OutputDevice.KEY_z;
+
+        case 'A':   return OutputDevice.KEY_A;
+        case 'B':   return OutputDevice.KEY_B;
+        case 'C':   return OutputDevice.KEY_C;
+        case 'D':   return OutputDevice.KEY_D;
+        case 'E':   return OutputDevice.KEY_E;
+        case 'F':   return OutputDevice.KEY_F;
+        case 'G':   return OutputDevice.KEY_G;
+        case 'H':   return OutputDevice.KEY_H;
+        case 'I':   return OutputDevice.KEY_I;
+        case 'J':   return OutputDevice.KEY_J;
+        case 'K':   return OutputDevice.KEY_K;
+        case 'L':   return OutputDevice.KEY_L;
+        case 'M':   return OutputDevice.KEY_M;
+        case 'N':   return OutputDevice.KEY_N;
+        case 'O':   return OutputDevice.KEY_O;
+        case 'P':   return OutputDevice.KEY_P;
+        case 'Q':   return OutputDevice.KEY_Q;
+        case 'R':   return OutputDevice.KEY_R;
+        case 'S':   return OutputDevice.KEY_S;
+        case 'T':   return OutputDevice.KEY_T;
+        case 'U':   return OutputDevice.KEY_U;
+        case 'V':   return OutputDevice.KEY_V;
+        case 'W':   return OutputDevice.KEY_W;
+        case 'X':   return OutputDevice.KEY_X;
+        case 'Y':   return OutputDevice.KEY_Y;
+        case 'Z':   return OutputDevice.KEY_Z;
+
+        case '+':   return OutputDevice.PLUS;
+        case '-':   return OutputDevice.MINUS;
+        case '*':   return OutputDevice.STAR;
+        case '/':   return OutputDevice.SLASH;
+        case '<':   return OutputDevice.LOWER_THAN;
+        case '>':   return OutputDevice.GREATER_THAN;
+        case '=':   return OutputDevice.EQUAL;
+        case '%':   return OutputDevice.PERCENT;
+
+        case '_':   return OutputDevice.UNDERSCORE;
+        case '@':   return OutputDevice.AROBASE;
+        case '#':   return OutputDevice.SHARP;
+        case '&':   return OutputDevice.AMPERCENT;
+        case '$':   return OutputDevice.DOLLAR;
+        case '\\':  return OutputDevice.BACKSLASH;
+        case '|':   return OutputDevice.PIPE;
+        case '~':   return OutputDevice.TILDE;
+        case '²':   return OutputDevice.SQUARE;
+        case '€':   return OutputDevice.EURO;
+        case '£':   return OutputDevice.POUND;
+        case 'µ':   return OutputDevice.MICRO;
+        case '§':   return OutputDevice.PARAGRAPH;
+        case '°':   return OutputDevice.DEGREE;
+
+        case '?':   return OutputDevice.QUESTION;
+        case '!':   return OutputDevice.EXCLAMATION;
+        case ':':   return OutputDevice.COLUMN;
+        case '.':   return OutputDevice.DOT;
+        case ',':   return OutputDevice.COMA;
+        case ';':   return OutputDevice.SEMI_COLUMN;
+        case '\'':  return OutputDevice.QUOTE;
+        case '"':   return OutputDevice.DOUBLE_QUOTE;
+
+        case '(':   return OutputDevice.OPENING_BRACE;
+        case ')':   return OutputDevice.CLOSING_BRACE;
+        case '{':   return OutputDevice.OPENING_CURLY_BRACE;
+        case '}':   return OutputDevice.CLOSING_CURLY_BRACE;
+        case '[':   return OutputDevice.OPENING_BRACKET;
+        case ']':   return OutputDevice.CLOSING_BRACKET;
+
+        default:
+            // Unrecognized character.
+            return OutputDevice.NULL_KEY;
+        }
+    }
+
 }

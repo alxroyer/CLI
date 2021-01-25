@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -56,27 +58,50 @@ public abstract class NativeObject {
     /** To be called by native created objects.
         @param CLI_Object Object created. */
     protected static final void createdFromNative(NativeObject CLI_Object) {
-        if (CLI_Object != null) {
-            // Object already remembered from the NativeObject constructor (above).
-            //  NativeObject.remember(CLI_Object);
-        }
+        // Object already remembered from the NativeObject constructor (above).
+        //  if (CLI_Object != null) {
+        //      NativeObject.remember(CLI_Object);
+        //  }
     }
 
     /** Destructor. */
     protected void finalize() throws Throwable {
-        forget(this);
-    }
-
-    /** To be called by native-deleted objects.
-        @param CLI_Object Object deleted. */
-    protected static final void deletedFromNative(NativeObject CLI_Object) {
-        if (CLI_Object != null) {
-            Traces.trace(NativeTraces.CLASS, NativeTraces.value("CLI_Object", CLI_Object.toString()));
-            // Do not finalize native-deleted objects.
-            CLI_Object.dontFinalize();
-            // Also forget the native reference.
-            NativeObject.forget(CLI_Object);
+        boolean b_SafeTrace = Traces.safeTrace(NativeTraces.CLASS, this, NativeTraces.begin("NativeObject.finalize()"));
+        if (b_SafeTrace) { Traces.trace(NativeTraces.CLASS, NativeTraces.value("this", toString()));
+            if (this instanceof TraceClass) {
+                Traces.trace(NativeTraces.CLASS, NativeTraces.value("getClassName()", ((TraceClass) this).getClassName()));
+            }
         }
+
+        if (getbDoFinalize()) {
+            NativeObject.__finalize(this.getNativeRef());
+            dontFinalize(); // finalize once.
+        }
+        forget(this);
+
+        if (b_SafeTrace) { Traces.trace(NativeTraces.CLASS, NativeTraces.end("NativeObject.finalize()")); }
+        else { String j_LostTrace = NativeTraces.end("NativeObject.finalize()"); } // Make the call even if not used, for traces indentation.
+    }
+    private static final native void __finalize(int I_NativeRef);
+
+    /** Let the native library notify java when native objects are not used anymore.
+        See createdFromNative().
+        @param I_NativeRef  Native object reference. */
+    private static final void deleteFromNative(int I_NativeRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("NativeObject.deleteFromNative(I_NativeRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeRef", new Integer(I_NativeRef).toString()));
+
+        // Forget the command line references.
+        NativeObject cli_Object = NativeObject.getObject(I_NativeRef);
+        if (cli_Object != null) {
+            Traces.trace(NativeTraces.CLASS, NativeTraces.value("cli_Object", cli_Object.toString()));
+            // Do not finalize native-deleted objects.
+            cli_Object.dontFinalize();
+            // Also forget the native reference.
+            NativeObject.forget(cli_Object);
+        }
+
+        Traces.trace(NativeTraces.CLASS, NativeTraces.end("NativeObject.deleteFromNative()"));
     }
 
     /** Native reference accessor.
@@ -110,6 +135,7 @@ public abstract class NativeObject {
             if (! m_jObjMap.containsKey(CLI_NativeObject.getNativeRef())) {
                 m_jObjMap.put(CLI_NativeObject.getNativeRef(), CLI_NativeObject);
             } else {
+                Traces.trace(NativeTraces.CLASS, "Internal error: cannot remember twice the same reference.");
                 throw new InternalError(
                     "Cannot remember twice the same reference. "
                     + "Conflicting objects "

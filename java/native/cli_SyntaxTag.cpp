@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -49,19 +51,4 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_SyntaxTag__1_1SyntaxTag(
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("SyntaxTag.__SyntaxTag()", i_TagRef) << cli::endl;
     return i_TagRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_SyntaxTag__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeSyntaxTagRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SyntaxTag.__finalize(I_NativeSyntaxTagRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeSyntaxTagRef", I_NativeSyntaxTagRef) << cli::endl;
-    if (const cli::SyntaxTag* const pcli_Tag = NativeObject::GetNativeObject<const cli::SyntaxTag*>(I_NativeSyntaxTagRef))
-    {
-        NativeObject::Free(*pcli_Tag);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("SyntaxTag.__finalize()") << cli::endl;
 }

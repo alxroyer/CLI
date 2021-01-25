@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,24 +42,30 @@ CLI_NS_BEGIN(cli)
         //! @brief Integer user interface object.
         class Int : public Line
         {
-        private:
-            //! @brief No default constructor.
-            Int(void);
-            //! @brief No copy costructor.
-            Int(const Int&);
-
         public:
-            //! @brief Constructor.
-            Int(
-                const int I_DefaultValue,   //!< Default value.
-                const int I_MinValue,       //!< Minimum value.
-                const int I_MaxValue        //!< Maximum value.
+            //! @brief Top execution context constructor.
+            explicit Int(
+                const int I_DefaultValue,               //!< Default value.
+                const int I_MinValue,                   //!< Minimum value.
+                const int I_MaxValue                    //!< Maximum value.
+                );
+
+            //! @brief Child execution context constructor.
+            explicit Int(
+                ExecutionContext& CLI_ParentContext,    //!< Parent execution context.
+                const int I_DefaultValue,               //!< Default value.
+                const int I_MinValue,                   //!< Minimum value.
+                const int I_MaxValue                    //!< Maximum value.
                 );
 
             //! @brief Destructor.
             virtual ~Int(void);
 
         private:
+            //! @brief No default constructor.
+            explicit Int(void);
+            //! @brief No copy constructor.
+            Int(const Int&);
             //! @brief No assignment operator.
             Int& operator=(const Int&);
 
@@ -70,7 +78,7 @@ CLI_NS_BEGIN(cli)
             // cli::ui::UI interface implementation.
             virtual void ResetToDefault(void);
         public:
-            // cli::ui::UI interface implementation.
+            // Inherit doxygen comments from cli::ExecutionContext interface documentation.
             virtual void OnKey(const KEY E_KeyCode);
 
         private:

@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,7 +46,14 @@ Map2 =  @echo -n "" \
 MkCallDefault = $(MAKE) -C $(dir $(1)) -f $(notdir $(1))
 MkCallRule = $(MkCallDefault) $(2)
 MkDispatch = $(if $(2),$(call Map2,MkCallRule,$(1),$(2)),$(call Map,MkCallDefault,$(1)))
+IfEquals = $(if $(findstring $(strip $(1)),$(strip $(2))),$(if $(findstring $(strip $(1)),$(strip $(2))),$(strip $(3)),$(strip $(4))),$(strip $(4)))
+CheckDir = @test -d $(1) || ($(if $(IsSilent),,echo "mkdir -p $(1)" &&) mkdir -p $(1))
+RemoveDir = @echo -n "" \
+        $(foreach a,$(1), \
+                && ((test -d $(a) $(if $(IsSilent),,&& echo "rmdir $(a)") && rmdir $(a)) || true) \
+        )
 
+CheckSh = @((dos2unix $(1) 2> /dev/null) && chmod a+x $(1))
 
 endif
 # __ROOT_UTILS__

@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -48,21 +50,6 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_CommandLine__1_1CommandLine(
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("CommandLine.__CommandLine()", i_CmdLineRef) << cli::endl;
     return i_CmdLineRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_CommandLine__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeCmdLineRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("CommandLine.__finalize(I_NativeCmdLineRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeCmdLineRef", I_NativeCmdLineRef) << cli::endl;
-    if (const cli::CommandLine* const pcli_CmdLine = NativeObject::GetNativeObject<const cli::CommandLine*>(I_NativeCmdLineRef))
-    {
-        NativeObject::Free(*pcli_CmdLine);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("CommandLine.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_CommandLine__1_1getElementCount(

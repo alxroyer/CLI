@@ -1,12 +1,14 @@
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,7 +35,8 @@ PRODUCT = libclijava
 SRC_DIR = $(CLI_DIR)/java/src
 JAVA_FILES = $(wildcard $(SRC_DIR)/cli/*.java) $(wildcard $(SRC_DIR)/cli/ui/*.java)
 JAR_OBJ = $(JAVA_ARCHIVE)
-PROJ_CLEAN = $(OUT_DIR)/cli/*.class $(OUT_DIR)/cli/test/*.class $(JAR_OBJ)
+PROJ_CLEAN = $(OUT_DIR)/cli/*.class $(OUT_DIR)/cli/ui/*.class $(JAR_OBJ)
+CLEAN_DIR = $(OUT_DIR)/cli/ui
 include _build.mak
 
 # Rules.

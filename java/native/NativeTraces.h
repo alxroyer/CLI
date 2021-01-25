@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -55,7 +57,7 @@ public:
     //! @brief Traces a parameter of type pointer of a native method.
     static const cli::tk::String ParamPtr(
             const char* const STR_ParamName,    //!< Parameter name.
-            void* const PV_Value                //!< Parameter value.
+            const void* const PV_Value          //!< Parameter value.
             );
     //! @brief Traces a parameter of type integer of a native method.
     static const cli::tk::String ParamInt(
@@ -81,7 +83,7 @@ public:
     //! @brief Traces a value of a native variable of type pointer.
     static const cli::tk::String ValuePtr(
             const char* const STR_ValueName,    //!< Variable name.
-            void* const PV_Value                //!< Variable value.
+            const void* const PV_Value          //!< Variable value.
             );
     //! @brief Traces a value of a native variable of type integer.
     static const cli::tk::String ValueInt(
@@ -111,7 +113,7 @@ public:
     //! @brief Traces the end of a non-void native method returning a pointer.
     static const cli::tk::String EndPtr(
             const char* const STR_Method,       //!< Method name.
-            void* const PV_Value                //!< Return value.
+            const void* const PV_Value          //!< Return value.
             );
     //! @brief Traces the end of a non-void native method returning an int.
     static const cli::tk::String EndInt(

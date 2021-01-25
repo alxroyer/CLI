@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,25 +30,23 @@ package cli.ui;
 /** 'less' display object. */
 public class Less extends UI {
 
-    /** Constructor. */
+    /** Top execution context constructor. */
     public Less() {
-        super(__Less());
+        super(__Less(0));
+        __LessBody();
+    }
+    /** Child execution context constructor. */
+    public Less(cli.ExecutionContext.Interface CLI_ParentContext) {
+        super(__Less(CLI_ParentContext.getNativeRef()));
+        __LessBody();
+    }
+    private static final native int __Less(int I_NativeParentContextRef);
+    private final void __LessBody() {
         // Create a member inner device right away.
         m_cliInnerDevice = new InnerDevice(__getText(this.getNativeRef()));
         // However, do not let Java propagate deletion to native in order not to delete twice the native object.
         m_cliInnerDevice.dontFinalize();
     }
-    private static final native int __Less();
-
-    /** Destructor. */
-    protected void finalize() throws Throwable {
-        if (getbDoFinalize()) {
-            __finalize(this.getNativeRef());
-            dontFinalize(); // finalize once.
-        }
-        super.finalize();
-    }
-    private static final native void __finalize(int I_NativeLessRef);
 
     /** Inner device accessor.
         @return Inner device instance. */
@@ -65,5 +65,6 @@ public class Less extends UI {
     }
 
     /** Inner device reference. */
-    private final InnerDevice m_cliInnerDevice;
+    private InnerDevice m_cliInnerDevice;
+
 }

@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -54,25 +56,4 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_SingleCommand__1_1SingleCommand(
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("SingleCommand.__SingleCommand()", i_DeviceRef) << cli::endl;
     return i_DeviceRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_SingleCommand__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeDeviceRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    if (const cli::SingleCommand* const pcli_Device = NativeObject::GetNativeObject<const cli::SingleCommand*>(I_NativeDeviceRef))
-    {
-        // If b_SafeTrace is true, it means the current trace stream is not pcli_IODevice nor it would output pcli_IODevice.
-        // Whether pcli_IODevice is about to be destroyed, if b_SafeTrace is true, there is no problem for tracing even after possible destruction.
-        const bool b_SafeTrace = cli::GetTraces().IsSafe(*pcli_Device);
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SingleCommand.__finalize(I_NativeDeviceRef)") << cli::endl;
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
-
-        NativeObject::Free(*pcli_Device); // <- possible destruction.
-
-        if (b_SafeTrace) cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("SingleCommand.__finalize()") << cli::endl;
-    }
 }

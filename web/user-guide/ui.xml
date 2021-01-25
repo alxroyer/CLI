@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,12 +27,20 @@
 -->
 
 
-<section id="ui"><title id="ui.title">UI package</title>
+<section id="ui"><title id="ui.title">UI controls</title>
 
     <para>
     The CLI library also provides a set of classes that helps displaying long texts or making the user enter additional data.
     These classes are scoped in a <package>ui</package> namespace.
     </para>
+
+    <informalfigure id="fig.ui.classes">
+        <mediaobject>
+            <imageobject><imagedata fileref="../doxygen/html/classUI__inherit__graph.png" srccredit="doxygen"/></imageobject>
+        <textobject><phrase>UI controls: class hierarchy</phrase></textobject>
+        <caption id="fig.ui.classes.title">UI controls: class hierarchy</caption>
+        </mediaobject>
+    </informalfigure>
 
     <section id="ui.line"><title id="ui.line.title"><classname>Line</classname></title>
 
@@ -56,12 +66,12 @@
         for details on programming interfaces.
         </para>
 
-        <example id="eg.ui.line"><title id="eg.ui.line.title">UI package - <classname>ui.Line</classname></title>
+        <example id="eg.ui.line"><title id="eg.ui.line.title">UI controls - <classname>ui.Line</classname></title>
                 &sample-ui-line;
             The code above produces the following output:
 <programlisting>
 UI>enter line
-Hello world
+Enter line: Hello world
 User entered 'Hello world'
 UI>
 </programlisting>
@@ -81,7 +91,7 @@ UI>
         for details on programming interfaces.
         </para>
 
-        <example id="eg.ui.password"><title id="eg.ui.password.title">UI package - <classname>ui.Password</classname></title>
+        <example id="eg.ui.password"><title id="eg.ui.password.title">UI controls - <classname>ui.Password</classname></title>
                 &sample-ui-password;
             The code above produces the following output:
 <programlisting>
@@ -107,7 +117,7 @@ UI>
         for details on programming interfaces.
         </para>
 
-        <example id="eg.ui.int"><title id="eg.ui.int.title">UI package - <classname>ui.Int</classname></title>
+        <example id="eg.ui.int"><title id="eg.ui.int.title">UI controls - <classname>ui.Int</classname></title>
                 &sample-ui-int;
             The code above produces the following output:
 <programlisting>
@@ -133,7 +143,7 @@ UI>
         for details on programming interfaces.
         </para>
 
-        <example id="eg.ui.float"><title id="eg.ui.float.title">UI package - <classname>ui.Float</classname></title>
+        <example id="eg.ui.float"><title id="eg.ui.float.title">UI controls - <classname>ui.Float</classname></title>
                 &sample-ui-float;
             The code above produces the following output:
 <programlisting>
@@ -159,7 +169,7 @@ UI>
         for details on programming interfaces.
         </para>
 
-        <example id="eg.ui.yesno"><title id="eg.ui.yesno.title">UI package - <classname>ui.YesNo</classname></title>
+        <example id="eg.ui.yesno"><title id="eg.ui.yesno.title">UI controls - <classname>ui.YesNo</classname></title>
                 &sample-ui-yesno;
             The code above produces the following output:
 <programlisting>
@@ -186,7 +196,7 @@ UI>
         for details on programming interfaces.
         </para>
 
-        <example id="eg.ui.choice"><title id="eg.ui.choice.title">UI package - <classname>ui.Choice</classname></title>
+        <example id="eg.ui.choice"><title id="eg.ui.choice.title">UI controls - <classname>ui.Choice</classname></title>
                 &sample-ui-choice;
             The code above produces the following output:
 <programlisting>
@@ -219,7 +229,7 @@ UI>
         then the <classname>More</classname> execution is invoked for text display.
         </para>
 
-        <example id="eg.ui.more"><title id="eg.ui.more.title">UI package - <classname>ui.More</classname></title>
+        <example id="eg.ui.more"><title id="eg.ui.more.title">UI controls - <classname>ui.More</classname></title>
             C++ code:
                 <programlisting>&sample-ui-text-cpp;</programlisting>
             Java code:
@@ -316,7 +326,7 @@ UI>
         A <classname>Less</classname> object is prepared the same as a <classname>More</classname> object (see <link linkend="ui.more">previous section</link>).
         </para>
 
-        <example id="eg.ui.less"><title id="eg.ui.less.title">UI package - <classname>ui.Less</classname></title>
+        <example id="eg.ui.less"><title id="eg.ui.less.title">UI controls - <classname>ui.Less</classname></title>
             CLI XML resource file:
                 &sample-ui-less;
             The code above produces the following output:
@@ -390,8 +400,8 @@ UI>
     </section>
 
     <blockquote>
-    Yup!
-    I think I'll manage with it now.
+    Well! So far, I think I can do almost everything whith XML resource files and UI classes.
+    I'll manage with it now.
     </blockquote>
 
     <para>

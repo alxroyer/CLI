@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -56,31 +58,46 @@ const tk::String Menu::GetName(void) const
 void Menu::SetCli(Cli& CLI_Cli)
 {
     SyntaxNode::SetCli(CLI_Cli);
-    {   Help cli_Help(Help()
+    if (m_pcliHelp == NULL)
+    {
+        Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Get help")
             .AddHelp(Help::LANG_FR, "Obtenir de l'aide"));
         m_pcliHelp = dynamic_cast<Keyword*>(& AddElement(new Keyword("help", cli_Help)));
-        m_pcliHelp->AddElement(new Endl(cli_Help)); }
-    {   Help cli_Help(Help()
+        m_pcliHelp->AddElement(new Endl(cli_Help));
+    }
+    if (m_pcliExit == NULL)
+    {
+        Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, Help::Concat("Exit menu '", GetKeyword(), "'"))
             .AddHelp(Help::LANG_FR, Help::Concat("Sortir du menu '", GetKeyword(), "'")));
         m_pcliExit = dynamic_cast<Keyword*>(& AddElement(new Keyword("exit", cli_Help)));
-        m_pcliExit->AddElement(new Endl(cli_Help)); }
-    {   Help cli_Help(Help()
+        m_pcliExit->AddElement(new Endl(cli_Help));
+    }
+    if (m_pcliQuit == NULL)
+    {
+        Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Quit")
             .AddHelp(Help::LANG_FR, "Quitter"));
         m_pcliQuit = dynamic_cast<Keyword*>(& AddElement(new Keyword("quit", cli_Help)));
-        m_pcliQuit->AddElement(new Endl(cli_Help)); }
-    {   Help cli_Help(Help()
+        m_pcliQuit->AddElement(new Endl(cli_Help));
+    }
+    if (m_pcliPwm == NULL)
+    {
+        Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Print Working Menu")
             .AddHelp(Help::LANG_FR, "Affichage du menu courant"));
         m_pcliPwm = dynamic_cast<Keyword*>(& AddElement(new Keyword("pwm", cli_Help)));
-        m_pcliPwm->AddElement(new Endl(cli_Help)); }
-    {   Help cli_Help(Help()
+        m_pcliPwm->AddElement(new Endl(cli_Help));
+    }
+    if (m_pcliCls == NULL)
+    {
+        Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Clean screen")
             .AddHelp(Help::LANG_FR, "Nettoyage de l'écran"));
         m_pcliCls = dynamic_cast<Keyword*>(& AddElement(new Keyword("cls", cli_Help)));
-        m_pcliCls->AddElement(new Endl(cli_Help)); }
+        m_pcliCls->AddElement(new Endl(cli_Help));
+    }
 }
 
 const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const

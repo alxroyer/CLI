@@ -1,14 +1,16 @@
 #!/bin/bash
 
-# Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+#     * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+#       and/or other materials provided with the distribution.
+#     * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,6 +37,10 @@ if [ "$1" = "-ro" ] ; then
     rwx=555
 fi
 
+echo "Checking directory permissions..."
+chmod $rwx .
+find . -type d -exec chmod $rwx {} \;
+
 checkperm() {
     files=$1
     perms=$2
@@ -42,7 +48,12 @@ checkperm() {
     find . -name "$files" -exec chmod $perms {} \;
 }
 
+checkperm "*.awk"           $rw
+checkperm "*.bat"           $rw
 checkperm "*.check"         $rw
+checkperm "*.cli"           $rw
+checkperm "*.cli2help.diff" $rw
+checkperm "*.conf"          $rw
 checkperm "*.cpp"           $rw
 checkperm "*.css"           $rw
 checkperm "*.deps"          $rw
@@ -53,10 +64,13 @@ checkperm "*.h"             $rw
 checkperm "*.html"          $rw
 checkperm "*.java"          $rw
 checkperm "*.jpg"           $rw
+checkperm "*.js"            $rw
+checkperm "*.log"           $rw
 checkperm "*.mak"           $rw
 checkperm "*.map"           $rw
 checkperm "*.md5"           $rw
 checkperm "*.png"           $rw
+checkperm "*.py"            $rw
 checkperm "*.rng"           $rw
 checkperm "*.sh"            $rwx
 checkperm "*.test"          $rw
@@ -69,31 +83,47 @@ checkperm "package-list"    $rw
 
 # Eventually check every kind of end file is managed
 echo "Checking no other kind of files..."
-unknown_exts=$(find . -type f -print | sed -e "s/^.*\././" | sed -e "s/^.*\///" | sort | uniq \
-    | grep -v "\.check" \
-    | grep -v "\.cpp" \
-    | grep -v "\.css" \
-    | grep -v "\.deps" \
-    | grep -v "\.dot" \
-    | grep -v "\.doxygen" \
-    | grep -v "\.gif" \
-    | grep -v "\.h" \
-    | grep -v "\.html" \
-    | grep -v "\.java" \
-    | grep -v "\.jpg" \
-    | grep -v "\.mak" \
-    | grep -v "\.map" \
-    | grep -v "\.md5" \
-    | grep -v "\.png" \
-    | grep -v "\.rng" \
-    | grep -v "\.sh" \
-    | grep -v "\.test" \
-    | grep -v "\.txt" \
-    | grep -v "\.xml" \
-    | grep -v "\.xsd" \
-    | grep -v "\.xsl" \
-    | grep -v "Makefile" \
-    | grep -v "package-list")
+unknown_exts=$(find . -type f -print \
+        | grep -v "^\./\.svn/" \
+        | grep -v "Makefile$" \
+        | grep -v "^\./samples/.*\.cli2help\.diff$" \
+        | grep -v "^\./web/javadoc/html/package-list$" \
+        | grep -v "^\./web/user-guide/samples/.*\.db$" \
+    | sed -e "s/^.*\././" | sed -e "s/^.*\///" | sort | uniq \
+        | grep -v "\.awk" \
+        | grep -v "\.bat" \
+        | grep -v "\.check" \
+        | grep -v "\.cli" \
+        | grep -v "\.conf" \
+        | grep -v "\.cpp" \
+        | grep -v "\.css" \
+        | grep -v "\.deps" \
+        | grep -v "\.dot" \
+        | grep -v "\.doxygen" \
+        | grep -v "\.dsp" \
+        | grep -v "\.dsw" \
+        | grep -v "\.gif" \
+        | grep -v "\.h" \
+        | grep -v "\.html" \
+        | grep -v "\.java" \
+        | grep -v "\.jpg" \
+        | grep -v "\.js" \
+        | grep -v "\.log" \
+        | grep -v "\.mak" \
+        | grep -v "\.map" \
+        | grep -v "\.md5" \
+        | grep -v "\.png" \
+        | grep -v "\.py" \
+        | grep -v "\.rng" \
+        | grep -v "\.sh" \
+        | grep -v "\.sln" \
+        | grep -v "\.test" \
+        | grep -v "\.txt" \
+        | grep -v "\.vcproj" \
+        | grep -v "\.xml" \
+        | grep -v "\.xsd" \
+        | grep -v "\.xsl" \
+    )
 for unknown_ext in $unknown_exts ; do
     echo "Unknown extension: $unknown_ext"
 done

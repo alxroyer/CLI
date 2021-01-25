@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +29,13 @@ package cli;
 
 /** Telnet server class.
 
-    Virtual object that shall be overridden for shell (and cli) instance creations. */
+    Virtual object that shall be overridden for ExecutionContext (shell & cli basically) instance creations.
+
+    Note:
+    With the redesign of telnet connections, made as non blocking, this class had been redesigned in CLI 2.7,
+    made virtual so that the user could create as many shells and clis for each connection.
+    With the redesign of execution contexts, this class has been redesigned again in CLI 2.8,
+    so that the user can create shells and clis, but also any other kind of execution contexts. */
 public abstract class TelnetServer extends NativeObject
 {
     /** Constructor.
@@ -38,16 +46,6 @@ public abstract class TelnetServer extends NativeObject
         super(__TelnetServer(I_MaxConnections, I_TcpPort, E_Lang));
     }
     private static final native int __TelnetServer(int I_MaxConnections, int I_TcpPort, int E_Lang);
-
-    /** Destructor. */
-    protected void finalize() throws Throwable {
-        if (getbDoFinalize()) {
-            __finalize(this.getNativeRef());
-            dontFinalize(); // finalize once.
-        }
-        super.finalize();
-    }
-    private static final native void __finalize(int I_NativeServerRef);
 
     /** Starts the server.
         Warning: blocking call. */
@@ -70,43 +68,41 @@ public abstract class TelnetServer extends NativeObject
     }
     private static final native void __stopServer(int I_NativeServerRef);
 
-    /** Shell (and cli) creation handler.
-        @param CLI_NewConnection New telnet connection to create a shell for.
-        @return Shell created for the given connection. */
-    protected abstract Shell onNewConnection(TelnetConnection CLI_NewConnection);
+    protected abstract ExecutionContext.Interface onNewConnection(TelnetConnection CLI_NewConnection);
     private final int __onNewConnection(int I_NativeConnectionRef) {
         Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.begin("TelnetServer.__onNewConnection(I_NativeConnectionRef)"));
         Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeConnectionRef", new Integer(I_NativeConnectionRef).toString()));
 
-        int i_NativeShellRef = 0;
+        int i_NativeContextRef = 0;
         NativeObject cli_Connection = NativeObject.getObject(I_NativeConnectionRef);
         if ((cli_Connection != null) && (cli_Connection instanceof TelnetConnection)) {
-            Shell cli_Shell = onNewConnection((TelnetConnection) cli_Connection);
-            if (cli_Shell != null) {
-                i_NativeShellRef = cli_Shell.getNativeRef();
+            ExecutionContext.Interface cli_Context = onNewConnection((TelnetConnection) cli_Connection);
+            if (cli_Context != null) {
+                // Let's remember the new execution context, in case it is not referenced anywhere else, and could be destroyed by the garbage collector.
+                // Forget will be done in __onCloseConnection().
+                //NativeObject.remember((ExecutionContext.Common) cli_Context); // Note: No need to force remembering of the Java object for the CLI lib, already done by construction.
+                i_NativeContextRef = cli_Context.getNativeRef();
             }
         }
 
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.end("TelnetServer.__onNewConnection()", new Integer(i_NativeShellRef).toString()));
-        return i_NativeShellRef;
+        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.end("TelnetServer.__onNewConnection()", new Integer(i_NativeContextRef).toString()));
+        return i_NativeContextRef;
     }
-    private final native int __foo(int I_Bar);
 
-    /** Shell (and cli) release handler.
-        @param CLI_Shell Shell (and cli) to be released.
-        @param CLI_ConnectionClosed Telnet connection being closed. */
-    protected abstract void onCloseConnection(Shell CLI_Shell, TelnetConnection CLI_ConnectionClosed);
-    private final void __onCloseConnection(int I_NativeShellRef, int I_NativeConnectionRef) {
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.begin("TelnetServer.__onCloseConnection(I_NativeShellRef, I_NativeConnectionRef)"));
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeShellRef", new Integer(I_NativeShellRef).toString()));
+    /** Execution context release handler.
+        @param CLI_ConnectionClosed Telnet connection being closed.
+        @param CLI_Context Execution context to be released. */
+    protected abstract void onCloseConnection(TelnetConnection CLI_ConnectionClosed, ExecutionContext.Interface CLI_Context);
+    private final void __onCloseConnection(int I_NativeConnectionRef, int I_NativeContextRef) {
+        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.begin("TelnetServer.__onCloseConnection(I_NativeConnectionRef, I_NativeContextRef)"));
         Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeConnectionRef", new Integer(I_NativeConnectionRef).toString()));
+        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeContextRef", new Integer(I_NativeContextRef).toString()));
 
-        NativeObject cli_Shell = NativeObject.getObject(I_NativeShellRef);
         NativeObject cli_ConnectionClosed = NativeObject.getObject(I_NativeConnectionRef);
-        if (    (cli_Shell != null) && (cli_Shell instanceof Shell)
-                && (cli_ConnectionClosed != null) && (cli_ConnectionClosed instanceof TelnetConnection)) {
-            onCloseConnection((Shell) cli_Shell, (TelnetConnection) cli_ConnectionClosed);
-        }
+        NativeObject cli_Context = NativeObject.getObject(I_NativeContextRef);
+        onCloseConnection((TelnetConnection) cli_ConnectionClosed, (ExecutionContext.Interface) cli_Context);
+        // Execution done for the CLI lib: let's forget Java objects here.
+        if (cli_Context != null) { NativeObject.forget(cli_Context); }
 
         Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.end("TelnetServer.__onCloseConnection()"));
     }

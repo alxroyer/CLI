@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +27,7 @@
 
 function onLoad() {
     try {
-        log.profile("onLoad()");
+        trace.profile("onLoad()");
 
         // Display blackbird logger.
         window.setTimeout(function() {
@@ -33,37 +35,35 @@ function onLoad() {
                 var b_Display = false;
                 $("#blackbird").css({ display: (b_Display ? "block" : "none") });
             } catch (err) {
-                log.error("onLoad()/timeout[display blackbird]: " + err);
+                trace.error("onLoad()/timeout[display blackbird]: " + err);
                 throw err;
             }
         }, 10);
 
         // Create a dynamic menu.
         var p_Menu = new DynamicMenu("nav");
-            var p_MainMenu = p_Menu.createItem(null, "CLI toolkit", null, "#");
-                var p_News = p_Menu.createItem(p_MainMenu, "News", null, "#news");
-                var p_Presentation = p_Menu.createItem(p_MainMenu, "Overview", null, "#overview");
-                var p_License = p_Menu.createItem(p_MainMenu, "License", null, "#license");
-            var p_Changes = p_Menu.createItem(null, "Changes", null, "#changes");
-                var p_History = p_Menu.createItem(p_Changes, "History", null, "#history");
-                var p_NextChanges = p_Menu.createItem(p_Changes, "Next evolutions", null, "#evolutions");
-            var p_Download = p_Menu.createItem(null, "Download", null, "#download");
-                var p_Latest = p_Menu.createItem(p_Download, "Latest", null, "#download");
-                var p_AllVersions = p_Menu.createItem(p_Download, "All versions", null, "#history");
-            var p_Documentation = p_Menu.createItem(null, "Documentation", null, "#");
-                var p_UserGuide = p_Menu.createItem(p_Documentation, "User guide", null, "user-guide/cli-user-guide.html");
-                var p_Doxygen = p_Menu.createItem(p_Documentation, "Doxygen", null, "doxygen/html/index.html");
-                var p_Javadoc = p_Menu.createItem(p_Documentation, "Javadoc", null, "javadoc/html/index.html");
-                var p_FAQ = p_Menu.createItem(p_Documentation, "FAQ", null, "user-guide/cli-user-guide.html#faq");
-            var p_Contact = p_Menu.createItem(null, "Contact", null, "#contact");
-        p_Menu.applyStyles();
-        p_Menu.colorMenu(p_MainMenu, "#ff0000"); // red
-        p_Menu.colorMenu(p_Changes, "#006600"); // green
-        p_Menu.colorMenu(p_Download, "#000066"); // blue
-        p_Menu.colorMenu(p_Documentation, "#ff8800"); // orange
-        p_Menu.colorMenu(p_Contact, "#880088"); // purple
-        p_Menu.animate();
-        p_Menu.show();
+            var p_MainMenu = p_Menu.createItem(null, "CLI toolkit", "#");
+            p_MainMenu.setColor("#ff0000"); // red
+                var p_News = p_Menu.createItem(p_MainMenu, "News", "#news");
+                var p_Presentation = p_Menu.createItem(p_MainMenu, "Overview", "#overview");
+                var p_License = p_Menu.createItem(p_MainMenu, "License", "#license");
+            var p_Changes = p_Menu.createItem(null, "Changes", "#changes");
+            p_Changes.setColor("#006600"); // green
+                var p_History = p_Menu.createItem(p_Changes, "History", "#history");
+                var p_NextChanges = p_Menu.createItem(p_Changes, "Next evolutions", "#evolutions");
+            var p_Download = p_Menu.createItem(null, "Download", "#download");
+            p_Download.setColor("#000066"); // blue
+                var p_Latest = p_Menu.createItem(p_Download, "Latest", "#download");
+                var p_AllVersions = p_Menu.createItem(p_Download, "All versions", "#history");
+            var p_Documentation = p_Menu.createItem(null, "Documentation", "#");
+            p_Documentation.setColor("#ff8800"); // orange
+                var p_UserGuide = p_Menu.createItem(p_Documentation, "User guide", "user-guide/cli-user-guide.html");
+                var p_Doxygen = p_Menu.createItem(p_Documentation, "Doxygen", "doxygen/html/index.html");
+                var p_Javadoc = p_Menu.createItem(p_Documentation, "Javadoc", "javadoc/html/index.html");
+                var p_FAQ = p_Menu.createItem(p_Documentation, "FAQ", "user-guide/cli-user-guide.html#faq");
+            var p_Contact = p_Menu.createItem(null, "Contact", "#contact");
+            p_Contact.setColor("#880088"); // purple
+        p_Menu.show("onLoad()");
 
         // Create an accordion for history changes.
         $("#version-list").accordion({ header: "h4" });
@@ -98,7 +98,7 @@ function onLoad() {
                     p_div.node.removeChild(p_h5.node);
                 } p_ul.node.appendChild(p_li.node);
             } catch (err) {
-                log.error("for-each('#version-list .version-details h5'): node processing error (" + this + "), " + err);
+                trace.error("for-each('#version-list .version-details h5'): node processing error (" + this + "), " + err);
             }
         });
         $("#history .version-details").tabs();
@@ -113,9 +113,9 @@ function onLoad() {
             function() { $(this).removeClass('ui-state-hover'); }
         );
 
-        log.profile("onLoad()");
+        trace.profile("onLoad() done");
     } catch (err) {
-        log.error("onLoad(): " + err); throw err;
+        trace.error("onLoad(): " + err); throw err;
     }
 }
 
@@ -137,6 +137,6 @@ function mailTo(str_Text) {
             + '</a>'
         );
     } catch (err) {
-        log.error("mailTo(): " + err); throw err;
+        trace.error("mailTo(): " + err); throw err;
     }
 }

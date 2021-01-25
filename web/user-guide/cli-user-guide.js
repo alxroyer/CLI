@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,163 +46,154 @@ function UserGuideMenu() {
     //! @brief Create main menu items
     this.create = function() {
         try {
-            log.profile("UserGuideMenu.create()");
+            trace.profile("UserGuideMenu.create()");
 
             userGuideMenu.menu = new DynamicMenu("nav");
 
-            function reStyle() {
-                userGuideMenu.menu.applyStyles();
-                userGuideMenu.menu.animate();
-                userGuideMenu.applyMoreStyles();
-            }
-
             // The main items of the menu are created right away, but sub-items are populated on mouseover event.
-            userGuideMenu.toc = userGuideMenu.menu.createItem(null, "Table of content", "navtoc", "#");
-            $(userGuideMenu.toc.a).hover(function() {
-                if (userGuideMenu.populateToc) {
-                    userGuideMenu.populateToc();
-                    reStyle();
-                    userGuideMenu.populateToc = null;
-                }
-            });
-            userGuideMenu.examples = userGuideMenu.menu.createItem(null, "Examples", "navexamples", "#");
-            $(userGuideMenu.examples.a).hover(function() {
-                if (userGuideMenu.populateExamples) {
-                    userGuideMenu.populateExamples();
-                    reStyle();
-                    userGuideMenu.populateExamples = null;
-                }
-            });
-            userGuideMenu.figures = userGuideMenu.menu.createItem(null, "Figures", "navfigures", "#");
-            $(userGuideMenu.figures.a).hover(function() {
-                if (userGuideMenu.populateFigures) {
-                    userGuideMenu.populateFigures();
-                    reStyle();
-                    userGuideMenu.populateFigures = null;
-                }
-            });
-            userGuideMenu.tables = userGuideMenu.menu.createItem(null, "Tables", "navtables", "#");
-            $(userGuideMenu.tables.a).hover(function() {
-                if (userGuideMenu.populateTables) {
-                    userGuideMenu.populateTables();
-                    reStyle();
-                    userGuideMenu.populateTables = null;
-                }
-            });
-            userGuideMenu.changes = userGuideMenu.menu.createItem(null, "Changes", "navchanges", "#");
-            $(userGuideMenu.changes.a).hover(function() {
-                if (userGuideMenu.populateChanges) {
-                    userGuideMenu.populateChanges();
-                    reStyle();
-                    userGuideMenu.populateChanges = null;
-                }
-            });
-            log.profile("UserGuideMenu.create()");
+            userGuideMenu.toc = userGuideMenu.menu.createItem(null, "Table of content", "#");
+            userGuideMenu.toc.setId("navtoc");
+            userGuideMenu.toc.setColor("#ff0000"); // red
+            userGuideMenu.populateToc();
+
+            userGuideMenu.examples = userGuideMenu.menu.createItem(null, "Examples", "#");
+            userGuideMenu.examples.setId("navexamples");
+            userGuideMenu.examples.setColor("#006600"); // green
+            userGuideMenu.populateExamples();
+
+            userGuideMenu.figures = userGuideMenu.menu.createItem(null, "Figures", "#");
+            userGuideMenu.figures.setId("navfigures");
+            userGuideMenu.figures.setColor("#000066"); // blue
+            userGuideMenu.populateFigures();
+
+            userGuideMenu.tables = userGuideMenu.menu.createItem(null, "Tables", "#");
+            userGuideMenu.tables.setId("navtables");
+            userGuideMenu.tables.setColor("#ff8800"); // orange
+            userGuideMenu.populateTables();
+
+            userGuideMenu.changes = userGuideMenu.menu.createItem(null, "Changes", "#");
+            userGuideMenu.changes.setId("navchanges");
+            userGuideMenu.changes.setColor("#880088"); // purple
+            userGuideMenu.populateChanges();
+
+            trace.profile("UserGuideMenu.create() done");
         } catch (err) {
-            log.error("UserGuideMenu.create(): " + err); throw err;
+            trace.error("UserGuideMenu.create(): " + err); throw err;
         }
     }
 
     //! @brief Create TOC menu items.
     this.populateToc = function() {
         try {
-            log.profile("UserGuideMenu.populateToc()");
+            trace.profile("UserGuideMenu.populateToc()");
             var ar_TocItems = new Array(userGuideMenu.toc);
             $(".titlepage").each(function() {
                 try {
                     var p_Node = new XmlNode(this);
                     var str_Title = p_Node.child("div").child("div").child(null).fullText();
-                    var str_Id = null;
-                    if (/Frequently Asked Questions/.exec(str_Title)) {
-                        str_Id = "faq-menu";
-                    }
                     var str_Anchor = p_Node.child("div").child("div").child(null).child("a").attribute("name");
                     var i_HeaderLevel = p_Node.child("div").child("div").child(null).name().substring(1);
                     if (i_HeaderLevel >= 2) {
-                        ar_TocItems[i_HeaderLevel - 1] = userGuideMenu.menu.createItem(ar_TocItems[i_HeaderLevel - 2], str_Title, str_Id, "#" + str_Anchor);
+                        var p_NewItem = userGuideMenu.menu.createItem(ar_TocItems[i_HeaderLevel - 2], str_Title, "#" + str_Anchor);
+                        if (/Frequently Asked Questions/.exec(str_Title)) {
+                            p_NewItem.setId("faq-menu");
+                            p_NewItem.setChildWidth("600");
+                        }
+                        ar_TocItems[i_HeaderLevel - 1] = p_NewItem;
                     }
                 } catch (err) {
-                    log.warn("UserGuideMenu.populateToc(): title processing error: this = " + this + ", err = " + err);
+                    trace.warn("UserGuideMenu.populateToc(): title processing error: this = " + this + ", err = " + err);
                 }
             });
-            log.profile("UserGuideMenu.populateToc()");
+            trace.profile("UserGuideMenu.populateToc() done");
         } catch (err) {
-            log.error("UserGuideMenu.populateToc(): " + err); throw err;
+            trace.error("UserGuideMenu.populateToc(): " + err); throw err;
         }
     }
 
     //! @brief Create examples menu items.
     this.populateExamples = function() {
         try {
-            log.profile("UserGuideMenu.populateExamples()");
+            trace.profile("UserGuideMenu.populateExamples()");
             $(".example").each(function() {
                 try {
                     var p_Node = new XmlNode(this);
                     var str_Title = p_Node.child("p").fullText();
                     var str_Anchor = p_Node.child("a").attribute("name");
-                    userGuideMenu.menu.createItem(userGuideMenu.examples, str_Title, null, "#" + str_Anchor);
+                    var p_NewItem = userGuideMenu.menu.createItem(userGuideMenu.examples, str_Title, "#" + str_Anchor);
                 } catch (err) {
-                    log.warn("UserGuideMenu.populateExamples(): example processing error: this = " + this + ", err = " + err);
+                    trace.warn("UserGuideMenu.populateExamples(): example processing error: this = " + this + ", err = " + err);
                 }
             });
-            log.profile("UserGuideMenu.populateExamples()");
+            userGuideMenu.examples.setChildWidth("600");
+            trace.profile("UserGuideMenu.populateExamples() done");
         } catch (err) {
-            log.error("UserGuideMenu.populateExamples(): " + err); throw err;
+            trace.error("UserGuideMenu.populateExamples(): " + err); throw err;
         }
     }
 
     //! @brief Create figure menu items.
     this.populateFigures = function() {
         try {
-            log.profile("UserGuideMenu.populateFigures()");
+            trace.profile("UserGuideMenu.populateFigures()");
             var i_FigureCount = 0;
             $(".informalfigure").each(function() {
                 try {
-                    var p_Node = new XmlNode(this);
-                    var str_Title = p_Node.child("div").child("div").child("p").fullText();
                     i_FigureCount ++;
-                    var str_Anchor = "Figure_" + i_FigureCount; {
+                    var p_Node = new XmlNode(this);
+                    var str_Title = "Figure_" + i_FigureCount; {
+                        var p_Div = p_Node.child("div").child("div");
+                        // Figure tables are not enumerated by docbook XSL transformation.
+                        p_Div.node.insertBefore(document.createTextNode("Figure " + i_FigureCount + ". "), p_Div.node.firstChild);
+                        // Eventually retrieve the full title.
+                        str_Title = p_Div.fullText();
+                    }
+                    var str_Anchor = "Figure_" + i_FigureCount;
+                    if ((p_Node.child("a") != null) && (p_Node.child("a").attribute("name") != null)) {
+                        str_Anchor = p_Node.child("a").attribute("name");
+                    } else {
                         // Runtime A element creation.
                         var p_a = createXmlNode("a"); {
                             // Create @name attribute.
                             p_a.setAttribute("name", str_Anchor);
                         } p_Node.node.insertBefore(p_a.node, p_Node.node.firstChild);
                     }
-                    userGuideMenu.menu.createItem(userGuideMenu.figures, str_Title, null, "#" + str_Anchor);
+                    userGuideMenu.menu.createItem(userGuideMenu.figures, str_Title, "#" + str_Anchor);
                 } catch (err) {
-                    log.warn("UserGuideMenu.populateFigures(): figure processing error: this = " + this + ", err = " + err);
+                    trace.warn("UserGuideMenu.populateFigures(): figure processing error: this = " + this + ", err = " + err);
                 }
             });
-            log.profile("UserGuideMenu.populateFigures()");
+            userGuideMenu.figures.setChildWidth("600");
+            trace.profile("UserGuideMenu.populateFigures() done");
         } catch (err) {
-            log.error("UserGuideMenu.populateExamples(): " + err); throw err;
+            trace.error("UserGuideMenu.populateExamples(): " + err); throw err;
         }
     }
 
     //! @brief Create table menu items.
     this.populateTables = function() {
         try {
-            log.profile("UserGuideMenu.populateTables()");
+            trace.profile("UserGuideMenu.populateTables()");
             $(".table").each(function() {
                 try {
                     var p_Node = new XmlNode(this);
                     var str_Title = p_Node.child("p").fullText();
                     var str_Anchor = p_Node.child("a").attribute("name");
-                    userGuideMenu.menu.createItem(userGuideMenu.tables, str_Title, null, "#" + str_Anchor);
+                    userGuideMenu.menu.createItem(userGuideMenu.tables, str_Title, "#" + str_Anchor);
                 } catch (err) {
-                    log.warn("UserGuideMenu.populateTables(): table processing error: this = " + this + ", err = " + err);
+                    trace.warn("UserGuideMenu.populateTables(): table processing error: this = " + this + ", err = " + err);
                 }
             });
-            log.profile("UserGuideMenu.populateTables()");
+            trace.profile("UserGuideMenu.populateTables() done");
         } catch (err) {
-            log.err("UserGuideMenu.populateTables(): " + err); throw err;
+            trace.error("UserGuideMenu.populateTables(): " + err); throw err;
         }
     }
 
     //! @brief Create change menu items.
     this.populateChanges = function() {
         try {
-            log.profile("UserGuideMenu.populateChanges()");
+            trace.profile("UserGuideMenu.populateChanges()");
             $(".revhistory").each(function() {
                 var xml_trs = new XmlNode(this).child("table").node.getElementsByTagName("tr");
                 // Scan changes from the end of the table, in order to restore a chronological order.
@@ -214,7 +207,7 @@ function UserGuideMenu() {
                             var str_Title = new XmlNode(xml_tr1tds[0]).fullText();
                             var str_Date = new XmlNode(xml_tr1tds[1]).fullText();
                             var str_Details = new XmlNode(xml_tr2tds[0]).fullText();
-                            var p_Item = userGuideMenu.menu.createItem(userGuideMenu.changes, str_Title, null, "#");
+                            var p_Item = userGuideMenu.menu.createItem(userGuideMenu.changes, str_Title, "#");
 
                             // Create a dialogbox
                             p_Item.a.dlg = new DynamicDialog("change" + i, "change", str_Title); {
@@ -238,59 +231,29 @@ function UserGuideMenu() {
                                 // in order not to have it hidden when the menu hides because of being clicked.
                                 window.setTimeout(function() { xml_a.dlg.open(); }, 10);
                             }
-                            new XmlNode(p_Item.a).setAttribute("onclick", "this.showDlg();");
+                            $(p_Item.a).click(function() { this.showDlg(); });
                         }
                     } catch (err) {
-                        log.warn("UserGuideMenu.populateChanges(): change processing error: i = " + i + ", xml_trs[i] = " + xml_trs[i] + ", err = " + err);
+                        trace.warn("UserGuideMenu.populateChanges(): change processing error: i = " + i + ", xml_trs[i] = " + xml_trs[i] + ", err = " + err);
                     }
                 }
 
                 // Eventually remove the change table from the body.
                 this.parentNode.removeChild(this);
             });
-            log.profile("UserGuideMenu.populateChanges()");
+            userGuideMenu.changes.setChildWidth("150");
+            trace.profile("UserGuideMenu.populateChanges() done");
         } catch (err) {
-            log.error("UserGuideMenu.populateChanges(): " + err); throw err;
-        }
-    }
-
-    //! @brief Apply more styles.
-    this.applyMoreStyles = function() {
-        try {
-            // 'Table of content' menu item in red.
-            userGuideMenu.menu.colorMenu(userGuideMenu.toc, "#ff0000");
-            // 'Examples' menu item in green.
-            userGuideMenu.menu.colorMenu(userGuideMenu.examples, "#006600");
-            // 'Figures' menu item in blue.
-            userGuideMenu.menu.colorMenu(userGuideMenu.figures, "#000066");
-            // 'Tables' menu item in orange.
-            userGuideMenu.menu.colorMenu(userGuideMenu.tables, "#ff8800");
-            // 'Changes' menu item in purple.
-            userGuideMenu.menu.colorMenu(userGuideMenu.changes, "#880088");
-
-            // 'FAQ' menu items width
-            $("#faq-menu ul").css({ width: "35em" });
-            $("#faq-menu ul li").css({ width: "35em" });
-            $("#faq-menu ul li a").css({ width: "35em" });
-
-            // 'Examples' menu items width.
-            $("#" + userGuideMenu.examples.li.id + " ul").css({ width: "35em" });
-            $("#" + userGuideMenu.examples.li.id + " ul li").css({ width: "35em" });
-            $("#" + userGuideMenu.examples.li.id + " ul li a").css({ width: "35em" });
-        } catch (err) {
-            log.error("UserGuideMenu.applyMoreStyles(): " + err); throw err;
+            trace.error("UserGuideMenu.populateChanges(): " + err); throw err;
         }
     }
 
     // Initialization calls.
     try {
         userGuideMenu.create();
-        userGuideMenu.menu.applyStyles();
-        //userGuideMenu.menu.animate(); // Do not animate right now. That will be done with sub-items creation.
-        userGuideMenu.applyMoreStyles();
-        userGuideMenu.menu.show();
+        userGuideMenu.menu.show("main");
     } catch (err) {
-        log.error("UserGuideMenu.&lt;init&gt;: " + err); throw err;
+        trace.error("UserGuideMenu.&lt;init&gt;: " + err); throw err;
     }
 }
 
@@ -349,10 +312,7 @@ function UserGuideInfo(xml_div, str_Icon, str_DlgTitle) {
                 } p_li.node.appendChild(xml_Text);
             } p_ul.node.appendChild(p_li.node);
         } xml_div.appendChild(p_ul.node);
-    }
 
-    //! @brief Apply styles to info items.
-    this.applyStyles = function() {
         // Apply styles to the icon.
         $(info.ul).css({ margin: "0", padding: "0" });
         $(info.li).css({ margin: "2px", position: "relative", padding: "4px 0", cursor: "pointer", float: "right", listStyle: "none", width: 70 });
@@ -362,17 +322,13 @@ function UserGuideInfo(xml_div, str_Icon, str_DlgTitle) {
         $(info.ul).css({ zIndex: 0 });
         $(info.li).css({ zIndex: 0 });
         $(info.icon).css({ zIndex: 0 });
-    }
 
-    //! @brief Animate info items.
-    this.animate = function() {
         // Make the info change of color when mouse is over.
         $(info.li).hover(
             function() { $(this).addClass('ui-state-hover'); }, 
             function() { $(this).removeClass('ui-state-hover'); }
         );
         // Display the dialog on click.
-        info.li.dlg = this.dlg;
         $(info.li).click(
             function() { info.dlg.open(); }
         );
@@ -380,21 +336,19 @@ function UserGuideInfo(xml_div, str_Icon, str_DlgTitle) {
 
     this.debug = function() {
         window.setTimeout(function() {
-            log.info("p_Info.shortText = " + info.shortText);
-            log.info("p_Info.div.zIndex = " + info.div.style.zIndex);
-            log.info("p_Info.ul.zIndex = " + info.ul.style.zIndex);
-            log.info("p_Info.li.zIndex = " + info.li.style.zIndex);
-            log.info("p_Info.icon.zIndex = " + info.icon.style.zIndex);
+            trace.info("p_Info.shortText = " + info.shortText);
+            trace.info("p_Info.div.zIndex = " + info.div.style.zIndex);
+            trace.info("p_Info.ul.zIndex = " + info.ul.style.zIndex);
+            trace.info("p_Info.li.zIndex = " + info.li.style.zIndex);
+            trace.info("p_Info.icon.zIndex = " + info.icon.style.zIndex);
         }, 10);
     }
 
     // Initialization calls.
     try {
         this.create();
-        this.applyStyles();
-        this.animate();
     } catch (err) {
-        log.error("UserGuideInfo.&lt;init&gt;: " + err); throw err;
+        trace.error("UserGuideInfo.&lt;init&gt;: " + err); throw err;
     }
 }
 
@@ -402,7 +356,7 @@ function UserGuideInfo(xml_div, str_Icon, str_DlgTitle) {
 //! @brief Handler called when the page is loaded.
 function onLoad() {
     try {
-        log.profile("onLoad()");
+        trace.profile("onLoad()");
 
         // Display blackbird logger.
         window.setTimeout(function() {
@@ -410,7 +364,7 @@ function onLoad() {
                 var b_Display = false;
                 $("#blackbird").css({ display: (b_Display ? "block" : "none") });
             } catch (err) {
-                log.error("onLoad()/timeout[display blackbird]: " + err);
+                trace.error("onLoad()/timeout[display blackbird]: " + err);
                 throw err;
             }
         }, 10);
@@ -423,18 +377,18 @@ function onLoad() {
             // Other transformations.
             function makeInfos(str_Class, str_Icon, str_DlgTitle) {
                 try {
-                    log.profile("onLoad()/makeInfos(str_Class = " + str_Class + ")");
+                    trace.profile("onLoad()/makeInfos(str_Class = " + str_Class + ")");
                     // For each note, create a UserGuideInfo object that will transform the page.
                     $("." + str_Class).each(function() {
                         try {
                             this.info = new UserGuideInfo(this, str_Icon, str_DlgTitle);
                         } catch (err) {
-                            log.warn("onLoad()/makeInfos(): div processing error: this = " + this + ", err = " + err);
+                            trace.warn("onLoad()/makeInfos(): div processing error: this = " + this + ", err = " + err);
                         }
                     });
-                    log.profile("onLoad()/makeInfos(str_Class = " + str_Class + ")");
+                    trace.profile("onLoad()/makeInfos(str_Class = " + str_Class + ")");
                 } catch (err) {
-                    log.error("onLoad()/makeInfos(): " + err); throw err;
+                    trace.error("onLoad()/makeInfos(): " + err); throw err;
                 }
             }
             window.setTimeout(function() {
@@ -448,16 +402,16 @@ function onLoad() {
             }
         }
 
-        log.profile("onLoad()");
+        trace.profile("onLoad() done");
     } catch (err) {
-        log.error("onLoad(): " + err); throw err;
+        trace.error("onLoad(): " + err); throw err;
     }
 }
 
 //! @brief Handler called when the page is scrolled.
 function onScroll() {
     try {
-        log.profile("onScroll()");
+        trace.profile("onScroll()");
 
         if (document.all) {
             var xml_BlackBird = document.getElementById("blackbird");
@@ -468,9 +422,9 @@ function onScroll() {
             }
         }
 
-        log.profile("onScroll()");
+        trace.profile("onScroll()");
     } catch (err) {
-        log.error("onScroll(): " + err);
+        trace.error("onScroll(): " + err);
         throw err;
     }
 }

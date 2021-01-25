@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,21 +46,15 @@ CLI_NS_BEGIN(cli)
     //! @brief String parameter element class.
     class ParamString : public Param
     {
-    private:
-        //! @brief No default constructor.
-        ParamString(void);
-        //! @brief No copy constructor.
-        ParamString(const ParamString&);
-
     public:
         //! @brief Constructor.
-        ParamString(
+        explicit ParamString(
             const Help& CLI_Help    //!< Corresponding help.
             );
 
     protected:
         //! @brief Sub-classes constructor.
-        ParamString(
+        explicit ParamString(
             const char* const STR_Keyword,  //!< Keyword.
             const Help& CLI_Help            //!< Corresponding help.
             );
@@ -68,6 +64,10 @@ CLI_NS_BEGIN(cli)
         virtual ~ParamString(void);
 
     private:
+        //! @brief No default constructor.
+        explicit ParamString(void);
+        //! @brief No copy constructor.
+        ParamString(const ParamString&);
         //! @brief No assignment operator.
         ParamString& operator=(const ParamString&);
 
@@ -76,17 +76,17 @@ CLI_NS_BEGIN(cli)
         operator const char* const(void) const;
 
     public:
-        //! @brief Value setting handler.
+        // Inherit doxygen comments from cli::Param documentation.
         virtual const bool SetstrValue(const char* const STR_Value) const;
 
-        //! @brief Typed value copy handler.
+        // Inherit doxygen comments from cli::Param documentation.
         virtual const Param& CopyValue(const Param& CLI_Param) const;
 
-        //! @brief Parameter cloning handler.
+        // Inherit doxygen comments from cli::Param documentation.
         virtual const Param* const Clone(void) const;
 
     private:
-        //! Controlled value.
+        //! Controled value.
         mutable tk::String m_strValue;
     };
 

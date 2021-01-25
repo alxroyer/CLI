@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +30,9 @@
 #include "cli/string_device.h"
 #include "cli/ui_more.h"
 
-#include "ui_test.h"
+#include "test_error.h"
+#include "test_device.h"
+#include "test_exec.h"
 
 
 // cli::ui::More unit-tests.
@@ -37,34 +41,45 @@ const bool CheckMore(void)
     class Test {
     public:
         static const bool More(
-                const char* const STR_File, const unsigned int UI_Line,
+                const cli::CallInfo& CLI_CallInfo,
                 const char* const STR_Text, const char* const STR_InputKeys, const bool B_WrapLines, const cli::ResourceString::LANG E_Lang,
                 const bool B_ExpectedResult, const char* const STR_DeviceOutput)
         {
-            my_Cli cli_Cli("test", cli::Help());
-            cli::Shell cli_Shell(cli_Cli);
-            cli_Shell.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
-            cli_Shell.SetStream(cli::PROMPT_STREAM, cli::OutputDevice::GetNullDevice());
-            cli_Shell.SetLang(E_Lang);
-            my_MTDevice cli_MTDevice;
-            ShellGuard cli_ShellGuard(cli_Shell, cli_MTDevice);
-
-            cli::ui::More cli_More(10, 1024);
-            cli_More.GetText() << STR_Text;
-            cli_MTDevice.SetInputString(STR_InputKeys);
-            cli_MTDevice.SetbWrapLines(B_WrapLines);
-            const bool b_Result = cli_More.Run(cli_Shell);
-            cli_MTDevice.SetbWrapLines(false);
-
-            if (b_Result != B_ExpectedResult) {
-                UIError(STR_File, UI_Line);
-                std::cerr << "UI::More() returned " << b_Result << " (" << B_ExpectedResult << " was expected)" << std::endl;
+            TestBlockingDevice cli_BlockingDevice(false);
+            if (! More(CLI_CallInfo, cli_BlockingDevice, cli_BlockingDevice, STR_Text, STR_InputKeys, B_WrapLines, E_Lang, B_ExpectedResult, STR_DeviceOutput)) {
                 return false;
             }
-            const cli::tk::String cli_OutputString = cli_MTDevice.GetOutputString();
+            TestNonBlockingDevice cli_NonBlockingDevice(false);
+            if (! More(CLI_CallInfo, cli_NonBlockingDevice, cli_NonBlockingDevice, STR_Text, STR_InputKeys, B_WrapLines, E_Lang, B_ExpectedResult, STR_DeviceOutput)) {
+                return false;
+            }
+            return true;
+        }
+    private:
+        static const bool More(
+                const cli::CallInfo& CLI_CallInfo, cli::IODevice& CLI_TestDevice, TestDeviceData& CLI_TestDeviceData,
+                const char* const STR_Text, const char* const STR_InputKeys, const bool B_WrapLines, const cli::ResourceString::LANG E_Lang,
+                const bool B_ExpectedResult, const char* const STR_DeviceOutput)
+        {
+            cli::ui::More cli_More(10, 1024);
+            cli_More.SetStream(cli::WELCOME_STREAM, cli::OutputDevice::GetNullDevice());
+            cli_More.SetStream(cli::PROMPT_STREAM, cli::OutputDevice::GetNullDevice());
+            cli_More.SetLang(E_Lang);
+            cli_More.GetText() << STR_Text;
+            CLI_TestDeviceData.SetbWrapLines(B_WrapLines);
+            const bool b_Result = (
+                CheckExecuteContext(CLI_CallInfo, cli_More, CLI_TestDevice, STR_InputKeys)
+                && cli_More.GetbExecResult()
+            );
+            CLI_TestDeviceData.SetbWrapLines(false);
+
+            if (b_Result != B_ExpectedResult) {
+                TestError(CLI_CallInfo) << "UI::More() returned " << b_Result << " (" << B_ExpectedResult << " was expected)" << cli::endl;
+                return false;
+            }
+            const cli::tk::String cli_OutputString = CLI_TestDeviceData.GetOutput();
             if (strcmp((const char* const) cli_OutputString, STR_DeviceOutput) != 0) {
-                UIError(STR_File, UI_Line);
-                std::cerr << "Device output '" << cli_OutputString << "' does not match '" << STR_DeviceOutput << "'" << std::endl;
+                TestError(CLI_CallInfo) << "Device output '" << cli_OutputString << "' does not match '" << STR_DeviceOutput << "'" << cli::endl;
                 return false;
             }
             return true;
@@ -80,21 +95,21 @@ const bool CheckMore(void)
     static const bool NO_WRAP_LINES = false;
 
     // Test empty text
-    if (! Test::More(__FILE__, __LINE__, "", "", NO_WRAP_LINES, EN, true, Out())) return false;
+    if (! Test::More(__CALL_INFO__, "", "", NO_WRAP_LINES, EN, true, Out())) return false;
     // Test single line
-    if (! Test::More(__FILE__, __LINE__, "abc", "", NO_WRAP_LINES, EN, true, Out().txt("abc").endl())) return false;
+    if (! Test::More(__CALL_INFO__, "abc", "", NO_WRAP_LINES, EN, true, Out().txt("abc").endl())) return false;
     // Test long line
     do {
         cli::StringDevice txt(1024, false), in(1024, false); Out out;
         txt << "abcde"; out.txt("abcde").endl();
         txt << "f"; out.txt("f").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
     } while(0);
     do {
         cli::StringDevice txt(1024, false), in(1024, false); Out out;
         txt << "abcde"; out.txt("abcde");
         txt << "f"; out.txt("f").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
     } while(0);
     // Test very long line.
     do {
@@ -109,7 +124,7 @@ const bool CheckMore(void)
         txt << "fffff"; out.txt("fffff").endl().txt(WAIT_EN);
         in << "%d"; out.bsp((unsigned int) strlen(WAIT_EN));
         txt << "gg"; out.txt("gg").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
     } while(0);
     do {
         cli::StringDevice txt(1024, false), in(1024, false); Out out;
@@ -123,7 +138,7 @@ const bool CheckMore(void)
         txt << "fffff"; out.txt("fffff").txt(WAIT_EN);
         in << "%d"; out.bsp((unsigned int) strlen(WAIT_EN));
         txt << "gg"; out.txt("gg").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
     } while(0);
 
     // Test 1 + half page down.
@@ -137,7 +152,7 @@ const bool CheckMore(void)
         txt << "eeeee" << cli::endl; out.txt("eeeee").endl();
         txt << "fffff" << cli::endl; out.txt("fffff").endl();
         txt << "gg" << cli::endl; out.txt("gg").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
     } while(0);
     do {
         cli::StringDevice txt(1024, false), in(1024, false); Out out;
@@ -149,7 +164,7 @@ const bool CheckMore(void)
         txt << "eeeee" << cli::endl; out.txt("eeeee");
         txt << "fffff" << cli::endl; out.txt("fffff");
         txt << "gg" << cli::endl; out.txt("gg").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
     } while(0);
     // Test exact two page down.
     do {
@@ -163,7 +178,7 @@ const bool CheckMore(void)
         txt << "22+" << cli::endl; out.txt("22+").endl();
         txt << "333+" << cli::endl; out.txt("333+").endl();
         txt << "4444+" << cli::endl; out.txt("4444+").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
     } while(0);
     do {
         cli::StringDevice txt(1024, false), in(1024, false); Out out;
@@ -176,7 +191,7 @@ const bool CheckMore(void)
         txt << "22+" << cli::endl; out.txt("22+").endl();
         txt << "333+" << cli::endl; out.txt("333+").endl();
         txt << "4444+" << cli::endl; out.txt("4444+");
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
     } while(0);
     // Test 2+ page down.
     do {
@@ -192,7 +207,7 @@ const bool CheckMore(void)
         txt << "4444+" << cli::endl; out.txt("4444+").endl().txt(WAIT_EN);
         in << " "; out.bsp((unsigned int) strlen(WAIT_EN));
         txt << "++" << cli::endl; out.txt("++").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
     } while(0);
     do {
         cli::StringDevice txt(1024, false), in(1024, false); Out out;
@@ -207,7 +222,7 @@ const bool CheckMore(void)
         txt << "4444+" << cli::endl; out.txt("4444+").txt(WAIT_EN);
         in << " "; out.bsp((unsigned int) strlen(WAIT_EN));
         txt << "++" << cli::endl; out.txt("++").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
     } while(0);
 
     // Test end.
@@ -223,7 +238,7 @@ const bool CheckMore(void)
         txt << "333+" << cli::endl; out.txt("333+").endl();
         txt << "4444+" << cli::endl; out.txt("4444+").endl();
         txt << "++" << cli::endl; out.txt("++").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
     } while(0);
     do {
         cli::StringDevice txt(1024, false), in(1024, false); Out out;
@@ -237,7 +252,7 @@ const bool CheckMore(void)
         txt << "333+" << cli::endl; out.txt("333+").endl();
         txt << "4444+" << cli::endl; out.txt("4444+");
         txt << "++" << cli::endl; out.txt("++").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
     } while(0);
 
     // Test quit.
@@ -249,7 +264,7 @@ const bool CheckMore(void)
         txt << "ddddd" << cli::endl; out.txt("ddddd").endl().txt(WAIT_EN);
         in << "q"; out.bsp((unsigned int) strlen(WAIT_EN));
         txt << "void" << cli::endl;
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, EN, true, out)) return false;
     } while(0);
 
     // Test French.
@@ -261,7 +276,7 @@ const bool CheckMore(void)
         txt << "ddddd" << cli::endl; out.txt("ddddd").endl().txt(WAIT_FR);
         in << "q"; out.bsp((unsigned int) strlen(WAIT_FR));
         txt << "void" << cli::endl;
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), NO_WRAP_LINES, FR, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), NO_WRAP_LINES, FR, true, out)) return false;
     } while(0);
 
     // Bug with line wrapping.
@@ -280,7 +295,7 @@ const bool CheckMore(void)
         txt << "abcdefghijk" << cli::endl; out.txt("abcde").txt("fghij").txt("k").endl();
         txt << "abcdefghijkl" << cli::endl; out.txt("abcde").txt(WAIT_EN);
         in << " "; out.bsp((unsigned int) strlen(WAIT_EN)).txt("fghij").txt("kl").endl();
-        if (! Test::More(__FILE__, __LINE__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
+        if (! Test::More(__CALL_INFO__, txt.GetString(), in.GetString(), WRAP_LINES, EN, true, out)) return false;
     } while(0);
 
     return true;

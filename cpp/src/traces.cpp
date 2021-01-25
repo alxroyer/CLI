@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -97,7 +99,6 @@ const bool cli::operator==(const TraceClass& CLI_Class1, const TraceClass& CLI_C
 {
     return (CLI_Class1.GetName() == CLI_Class2.GetName());
 }
-
 
 
 Traces& cli::GetTraces(void)
@@ -200,11 +201,6 @@ const bool Traces::UnsetStream(OutputDevice& CLI_Stream)
     return false;
 }
 
-const bool Traces::IsSafe(const cli::OutputDevice& CLI_AvoidTraces) const
-{
-    return (! GetStream().WouldOutput(CLI_AvoidTraces));
-}
-
 const bool Traces::Declare(const TraceClass& CLI_Class)
 {
     if (m_mapClasses.GetAt(CLI_Class.GetName()) != NULL)
@@ -298,7 +294,10 @@ const bool Traces::SetAllFilter(const bool B_ShowTraces)
     BeginTrace(TRACE_TRACES) << "All traces " << (B_ShowTraces ? "enabled" : "disabled") << endl;
 
     // Trace traces modifications.
-    SetFilter(TRACE_TRACES, true);
+    if (! SetFilter(TRACE_TRACES, true))
+    {
+        return false;
+    }
 
     // Then adapt every filter configuration.
     for (   ClassMap::Iterator it = m_mapClasses.GetIterator();
@@ -343,16 +342,16 @@ const OutputDevice& Traces::Trace(const TraceClass& CLI_Class)
     }
 }
 
-const OutputDevice& Traces::SafeTrace(const TraceClass& CLI_Class, const OutputDevice& CLI_AvoidStream)
+const OutputDevice& Traces::SafeTrace(const TraceClass& CLI_Class, const Object& CLI_AvoidStream)
 {
-    if (! GetStream().WouldOutput(CLI_AvoidStream))
+    if (const OutputDevice* const pcli_AvoidStream = dynamic_cast<const OutputDevice*>(& CLI_AvoidStream))
     {
-        return Trace(CLI_Class);
+        if (GetStream().WouldOutput(*pcli_AvoidStream))
+        {
+            return OutputDevice::GetNullDevice();
+        }
     }
-    else
-    {
-        return OutputDevice::GetNullDevice();
-    }
+    return Trace(CLI_Class);
 }
 
 const OutputDevice& Traces::BeginTrace(const TraceClass& CLI_Class)

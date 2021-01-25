@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -58,6 +60,22 @@ function XmlNode(xml_Node) {
         return null;
     };
 
+    //! @brief Children of the kind accessor.
+    //! @param str_NodeName Name of the child node to search.
+    //!                     null for child of any kind.
+    //! @return Array of HTML toolkit object for the child if found, null otherwise.
+    this.children = function(str_NodeName) {
+        var res = [];
+        for (var i = 0; i < this.node.childNodes.length; i++) {
+            if (this.node.childNodes[i].nodeType != 3) {
+                if ((str_NodeName == null) || (this.node.childNodes[i].nodeName.toLowerCase() == str_NodeName.toLowerCase())) {
+                    res.push(new XmlNode(this.node.childNodes[i]));
+                }
+            }
+        }
+        return res;
+    };
+
     //! @brief Attribute accessor.
     //! @param str_AttributeName Name of the attribute.
     //! @return Value of the attribute.
@@ -69,9 +87,7 @@ function XmlNode(xml_Node) {
     //! @param str_AttributeName Name of the attribute.
     //! @param str_AttributeValue Value of the attribute.
     this.setAttribute = function(str_AttributeName, str_AttributeValue) {
-        var xml_Attribute = document.createAttribute(str_AttributeName);
-        xml_Attribute.nodeValue = str_AttributeValue;
-        this.node.setAttributeNode(xml_Attribute);
+        this.node.setAttribute(str_AttributeName, str_AttributeValue);
     }
 
     //! @brief Node text accessor.
@@ -110,7 +126,7 @@ function XmlNode(xml_Node) {
     //! @brief Bottom position computation.
     //! @return Current bottom position.
     this.bottom = function() {
-        return this.top() + this.height();
+        return (this.top() + this.height());
     }
 
     //! @brief Height accessor.

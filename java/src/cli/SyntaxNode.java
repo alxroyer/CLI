@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -38,11 +40,13 @@ public class SyntaxNode extends Element {
         @param CLI_Element Next element after this node.
         @return The element added. null if an error occured. */
     public final Element addElement(Element CLI_Element) {
-        if (__addElement(this.getNativeRef(), CLI_Element.getNativeRef())) {
-            return CLI_Element;
+        Element cli_Element = CLI_Element;
+        int i_NativeElementRef = __addElement(this.getNativeRef(), CLI_Element.getNativeRef());
+        if (i_NativeElementRef != 0) {
+            cli_Element = (Element) NativeObject.getObject(i_NativeElementRef);
         }
-        return null;
+        return cli_Element;
     }
-    private static final native boolean __addElement(int I_NativeSyntaxNodeRef, int I_NativeElementRef);
+    private static final native int __addElement(int I_NativeSyntaxNodeRef, int I_NativeElementRef);
 
 }

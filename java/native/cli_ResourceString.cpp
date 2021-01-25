@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -66,21 +68,6 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ResourceString__1_1ResourceString__I(
     }
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ResourceString.__ResourceString()", i_StringRef) << cli::endl;
     return i_StringRef;
-}
-
-extern "C" JNIEXPORT void JNICALL Java_cli_ResourceString__1_1finalize(
-        JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeStringRef)
-{
-    NativeExec::GetInstance().RegJNIEnv(PJ_Env);
-
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ResourceString.__finalize(I_NativeStringRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeStringRef", I_NativeStringRef) << cli::endl;
-    if (const cli::ResourceString* const pcli_String = NativeObject::GetNativeObject<const cli::ResourceString*>(I_NativeStringRef))
-    {
-        NativeObject::Free(*pcli_String);
-    }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("ResourceString.__finalize()") << cli::endl;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ResourceString__1_1setString(

@@ -1,13 +1,15 @@
 /*
-    Copyright (c) 2006-2011, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
         * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation
+          and/or other materials provided with the distribution.
+        * Neither the name of the CLI library project nor the names of its contributors may be used to endorse or promote products derived from this software
+          without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -92,38 +94,49 @@ void CmdLineEdition::Put(const OutputDevice& CLI_OutputDevice, const char C_Char
 
 void CmdLineEdition::Put(const OutputDevice& CLI_OutputDevice, const tk::String& TK_String)
 {
-    // First of all, append the left part of the command line.
-    unsigned int ui_Len0 = m_tkLeft.GetLength();
-    m_tkLeft.Append(TK_String);
-    if (m_tkLeft.GetLength() > ui_Len0)
+    // Do not extend the edition line more than MAX_CMD_LINE_LENGTH characters.
+    const unsigned int ui_CurrentLineLength = m_tkLeft.GetLength() + m_tkRight.GetLength();
+    if (ui_CurrentLineLength < MAX_CMD_LINE_LENGTH)
     {
-        const unsigned int ui_CharCount = m_tkLeft.GetLength() - ui_Len0;
-
-        // Print out the expanded characters.
-        CLI_OutputDevice << m_tkLeft.SubString(ui_Len0, (int) ui_CharCount);
-
-        if (m_bInsertMode)
+        tk::String tk_String(TK_String);
+        if (ui_CurrentLineLength > MAX_CMD_LINE_LENGTH)
         {
-            // Refresh the right part of the line.
-
-            // Print out the right part of the line.
-            CLI_OutputDevice << m_tkRight;
-            // Move the cursor to the left.
-            for (unsigned int ui=m_tkRight.GetLength(); ui>0; ui--)
-            {
-                CLI_OutputDevice.PutString("\b");
-            }
+            tk_String = tk_String.SubString(0, MAX_CMD_LINE_LENGTH - ui_CurrentLineLength);
         }
-        else
+
+        // First of all, append the left part of the command line.
+        unsigned int ui_Len0 = m_tkLeft.GetLength();
+        m_tkLeft.Append(tk_String);
+        if (m_tkLeft.GetLength() > ui_Len0)
         {
-            // Remove the first characters of the right part of the command line.
-            if (m_tkRight.GetLength() > ui_CharCount)
+            const unsigned int ui_CharCount = m_tkLeft.GetLength() - ui_Len0;
+
+            // Print out the expanded characters.
+            CLI_OutputDevice << m_tkLeft.SubString(ui_Len0, (int) ui_CharCount);
+
+            if (m_bInsertMode)
             {
-                m_tkRight = m_tkRight.SubString(ui_CharCount, (int) (m_tkRight.GetLength() - ui_CharCount));
+                // Refresh the right part of the line.
+
+                // Print out the right part of the line.
+                CLI_OutputDevice << m_tkRight;
+                // Move the cursor to the left.
+                for (unsigned int ui=m_tkRight.GetLength(); ui>0; ui--)
+                {
+                    CLI_OutputDevice.PutString("\b");
+                }
             }
             else
             {
-                m_tkRight.Reset();
+                // Remove the first characters of the right part of the command line.
+                if (m_tkRight.GetLength() > ui_CharCount)
+                {
+                    m_tkRight = m_tkRight.SubString(ui_CharCount, (int) (m_tkRight.GetLength() - ui_CharCount));
+                }
+                else
+                {
+                    m_tkRight.Reset();
+                }
             }
         }
     }
