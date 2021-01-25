@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -89,7 +89,7 @@
             </param>
         </keyword>
         <keyword string="float"><help lang="en">Print out a float</help>
-                                <help lang="fr">Affichage d'un nombre décimal</help>
+                                <help lang="fr">Affichage d'un nombre dÃ©cimal</help>
             <!-- Here is a float parameter. -->
             <param id="float-value" type="float">
                 <endl>
@@ -99,7 +99,7 @@
             </param>
         </keyword>
         <keyword string="words">    <help lang="en">Print out several words</help>
-                                    <help lang="fr">Affichage d'une série de mots</help>
+                                    <help lang="fr">Affichage d'une sÃ©rie de mots</help>
             <!-- Sometimes, you might need to break out the tree structure. You can use 'tag' elements and references to them. Tags and tag references can be compared to labels and gotos in C. -->
             <cpp>std::vector&lt;std::string&gt; vstr_Words;</cpp>
             <java>Vector&lt;String&gt; j_Words = new Vector&lt;String&gt;();</java>
@@ -129,9 +129,9 @@
 
     <!-- Now we deal about menus --> 
     <keyword string="enter"><help lang="en">Enter a menu</help>
-                            <help lang="fr">Entrée dans un menu</help>
+                            <help lang="fr">EntrÃ©e dans un menu</help>
         <keyword string="sample-menu">  <help lang="en">Enter sample-menu</help>
-                                        <help lang="fr">Entrée dans le menu sample-menu</help>
+                                        <help lang="fr">EntrÃ©e dans le menu sample-menu</help>
             <endl>
                 <cpp><out/> &lt;&lt; "Entering sample-menu" &lt;&lt; cli::endl;</cpp>
                 <java><out/>.put("Entering sample-menu").endl();</java>

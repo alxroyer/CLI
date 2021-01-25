@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -104,6 +104,11 @@ const bool Console::OpenDevice(void)
 {
     if (m_pData == NULL)
     {
+        // Ensure UTF-8 output before configuring ncurses.
+        // See https://stackoverflow.com/questions/9922528/how-to-make-ncurses-display-utf-8-chars-correctly-in-c
+        const char* const str_PreviousLocale = setlocale(LC_CTYPE, "");
+        GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "Console::OpenDevice(): setlocale() returned '" << str_PreviousLocale << "'" << endl;
+
         // Configure ncurses
 
         // Regular ncurses configuration.
@@ -125,7 +130,7 @@ const bool Console::OpenDevice(void)
     {
         m_cliLastError
             .SetString(ResourceString::LANG_EN, "ncurses configuration failed")
-            .SetString(ResourceString::LANG_FR, "La configuration de ncurses a échoué");
+            .SetString(ResourceString::LANG_FR, "La configuration de ncurses a Ã©chouÃ©");
         return false;
     }
     else
@@ -183,39 +188,70 @@ const KEY Console::GetKey(void) const
                 GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "i_Char2 = " << i_Char2 << endl;
                 switch (i_Char2)
                 {
-                // Escape character.
-                case ERR:   return cli::ESCAPE;
-                // ALT sequences
-                case 'c':   return cli::COPY;
-                case 'x':   return cli::CUT;
-                case 'v':   return cli::PASTE;
-                case 'z':   return cli::UNDO;
-                case 'y':   return cli::REDO;
-                case NC_KEY_LEFT:   return PAGE_LEFT;
-                case NC_KEY_RIGHT:  return PAGE_RIGHT;
+                case ERR:   return cli::ESCAPE;     // Escape character.
+                case 'c':   return cli::COPY;       // ALT+C
+                case 3:     return cli::COPY;       // CTR+ALT+C
+                case 'x':   return cli::CUT;        // ALT+X
+                case 24:    return cli::CUT;        // CTRL+ALT+X
+                case 'v':   return cli::PASTE;      // ALT+V
+                case 22:    return cli::PASTE;      // CTRL+ALT+V
+                case 'z':   return cli::UNDO;       // ALT+Z
+                case 26:    return cli::UNDO;       // CTRL+ALT+Z
+                case 'y':   return cli::REDO;       // ALT+Y
+                case 25:    return cli::REDO;       // CTRL+ALT+Y
                 default:
-                    // Unknown ALT sequence.
+                    // Unknown sequence.
+                    break;
+                }
+            }
+            break;
+        case 130:
+            if (NCursesConsole* const pcli_Data = (NCursesConsole*) m_pData) {
+                nodelay(pcli_Data->m_pWindow, TRUE);
+                const int i_Char2 = getch();
+                nodelay(pcli_Data->m_pWindow, FALSE);
+                GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "i_Char2 = " << i_Char2 << endl;
+                switch (i_Char2)
+                {
+                case 172:   return cli::EURO;       // Tested on 2018-01-10
+                default:
+                    // Unknown sequence.
                     break;
                 }
             }
             break;
 
         // Deletions.
-        case KEY_BACKSPACE: return cli::BACKSPACE;
+        case KEY_BACKSPACE: // Test failed on 2018-01-08: seems that some ncurses implementations do not use that constant.
+#if KEY_BACKSPACE != 127
+        case 127:           // See https://stackoverflow.com/questions/27200597/c-ncurses-key-backspace-not-working#27203263
+#endif
+                            GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "KEY_BACKSPACE (ncurses) = " << (int) KEY_BACKSPACE << endl;
+                            return cli::BACKSPACE;
         case KEY_DC:        return cli::DELETE;
+        case KEY_SDC:       return cli::CUT;        // SHIFT+DELETE, tested on 2018-01-09
+        case 1011:          return cli::CUT;        // CTRL+SHIFT+DELETE, tested on 2018-01-09, no octal equivalent in 'curses.h'
         case KEY_IC:        return cli::INSERT;
 
         // Movements
         case NC_KEY_UP:     return cli::KEY_UP;
         case KEY_PPAGE:     return cli::PAGE_UP;
+        case 567:           return cli::PAGE_UP;    // CTRL+UP, tested on 2018-01-09, no octal equivalent in 'curses.h'
         case NC_KEY_DOWN:   return cli::KEY_DOWN;
         case KEY_NPAGE:     return cli::PAGE_DOWN;
+        case 526:           return cli::PAGE_DOWN;  // CTRL+DOWN, tested on 2018-01-08, no octal equivalent in 'curses.h'
         case NC_KEY_LEFT:   return cli::KEY_LEFT;
+        case 546:           return cli::PAGE_LEFT;  // CTRL+LEFT, tested on 2018-01-08, no octal equivalent in 'curses.h'
         case NC_KEY_RIGHT:  return cli::KEY_RIGHT;
+        case 561:           return cli::PAGE_RIGHT; // CTRL+RIGHT, tested on 2018-01-08, no octal equivalent in 'curses.h'
         case KEY_HOME:      return cli::KEY_BEGIN;
+        case 1:             return cli::KEY_BEGIN;  // CTRL+A
         case NC_KEY_END:    return cli::KEY_END;
+        case 5:             return cli::KEY_END;    // CTRL+E
 
         // Accented characters
+#if 0
+        // iso-8859-1 specific
         case 225:           return cli::KEY_aacute;
         case 224:           return cli::KEY_agrave;
         case 228:           return cli::KEY_auml;
@@ -237,25 +273,32 @@ const KEY Console::GetKey(void) const
         case 249:           return cli::KEY_ugrave;
         case 252:           return cli::KEY_uuml;
         case 251:           return cli::KEY_ucirc;
+#endif
 
         // Special characters.
-        case 96:            return BACK_QUOTE;
-        case 163:           return POUND;
-        case 167:           return PARAGRAPH;
-        case 176:           return DEGREE;
-        case 178:           return SQUARE;
-        case 181:           return MICRO;
+        case 96:            return cli::BACK_QUOTE;
+#if 0
+        // iso-8859-1 specific
+        case 163:           return cli::POUND;
+        //case 167:           return cli::PARAGRAPH; // Conflict with utf-8 encoding for cli::KEY_ccedil.
+        case 176:           return cli::DEGREE;
+        //case 178:           return cli::SQUARE; // Conflict with utf-8 encoding for cli::KEY_ograve.
+        case 181:           return cli::MICRO;
+#endif
 
         // Control sequences.
-        case 1:             return cli::KEY_BEGIN;  // CTRL+A
         case 3:             return cli::BREAK;      // CTRL+C
         case 4:             return cli::LOGOUT;     // CTRL+D
-        case 5:             return cli::KEY_END;    // CTRL+E
         case 12:            return cli::CLS;        // CTRL+L
-        case 14:            return NEXT;            // CTRL+N
-        case 16:            return PREVIOUS;        // CTRL+P
+        case 14:            return cli::NEXT;       // CTRL+N
+        case 559:           return cli::NEXT;       // ALT+RIGHT, tested on 2018-01-09, no octal equivalent in 'curses.h'
+        case 16:            return cli::PREVIOUS;   // CTRL+P
+        case 544:           return cli::PREVIOUS;   // ALT+LEFT, tested on 2018-01-09, no octal equivalent in 'curses.h'
         case 25:            return cli::REDO;       // CTRL+Y
-        case 407:           return cli::UNDO;       // CTRL+Z
+        case 26:            return cli::UNDO;       // CTRL+Z, tested on 2018-01-09, no octal equivalent in 'curses.h'
+        case 24:            return cli::CUT;        // CTRL+X, tested on 2018-01-09, no octal equivalent in 'curses.h'
+        case 521:           return cli::CUT;        // CTRL+SHIFT+DELETE, tested on 2018-01-10, no octal equivalent in 'curses.h'
+        case 22:            return cli::PASTE;      // CTRL+V, tested on 2018-01-09, no octal equivalent in 'curses.h'
 
         // Function keys.
         case 265:           return F1;
@@ -273,10 +316,22 @@ const KEY Console::GetKey(void) const
 
         default:
             do {
-                // Call the base implementation.
-                const KEY e_Char = IODevice::GetKey(i_Char);
-                if (e_Char != NULL_KEY)
+                // Call the base implementation transformation routine.
+                const KEY e_Char = Char2Key(i_Char);
+                if (e_Char == NULL_KEY)
                 {
+                    GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "Char2Key(i_Char) -> NULL_KEY" << endl;
+                    // Do nothing, just ignore.
+                    // Let the loop waiting for another character.
+                }
+                else if (e_Char == FEED_MORE)
+                {
+                    GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "Char2Key(i_Char) -> FEED_MORE" << endl;
+                    // Let the loop waiting for another character.
+                }
+                else
+                {
+                    GetTraces().SafeTrace(CLI_NCURSES_CONSOLE, *this) << "Char2Key(i_Char) -> " << (int) e_Char << endl;
                     return e_Char;
                 }
             } while(0);
@@ -299,7 +354,7 @@ void Console::PutString(const char* const STR_Out) const
 
         // ncurses seems to have refresh troubles with 'more' page displays.
         // However, it works good with 'less' page displays.
-        // Over one page, refreshing every new line is a workaround that fixes that misfunctionning.
+        // Over one page, refreshing every new line is a workaround that fixes that behaviour.
         if (*pc_Out == '\n')
         {
             if (NCursesConsole* const pcli_Data = (NCursesConsole*) m_pData)

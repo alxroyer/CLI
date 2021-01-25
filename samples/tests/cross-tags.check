@@ -1,0 +1,22 @@
+cross-tags>
+  cli-config      CLI configuration menu
+  cls             Clean screen
+  do              
+  exit            Exit menu 'cross-tags'
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+cross-tags>do 
+  option1         
+  option2         
+cross-tags>do option1 
+  <cr>            
+  option2         
+cross-tags>do option1 option2 
+  <cr>            
+  option1         
+cross-tags>do option1 option2 option1 
+  <cr>            
+  option2         
+cross-tags>do option1 option2 option1 
+cross-tags>

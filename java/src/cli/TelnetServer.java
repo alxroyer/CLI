@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,7 +29,7 @@ package cli;
 
 /** Telnet server class.
 
-    Virtual object that shall be overridden for ExecutionContext (shell & cli basically) instance creations.
+    Virtual object that shall be overridden for ExecutionContext (shell &amp; cli basically) instance creations.
 
     Note:
     With the redesign of telnet connections, made as non blocking, this class had been redesigned in CLI 2.7,
@@ -45,7 +45,7 @@ public abstract class TelnetServer extends NativeObject
     public TelnetServer(int I_MaxConnections, int I_TcpPort, int E_Lang) {
         super(__TelnetServer(I_MaxConnections, I_TcpPort, E_Lang));
     }
-    private static final native int __TelnetServer(int I_MaxConnections, int I_TcpPort, int E_Lang);
+    private static final native long __TelnetServer(int I_MaxConnections, int I_TcpPort, int E_Lang);
 
     /** Starts the server.
         Warning: blocking call. */
@@ -56,7 +56,7 @@ public abstract class TelnetServer extends NativeObject
             cli.OutputDevice.getStdErr().printStackTrace(e);
         }
     }
-    private static final native void __startServer(int I_NativeServerRef);
+    private static final native void __startServer(long I64_NativeServerRef);
 
     /** Stops the server */
     public void stopServer() {
@@ -66,44 +66,44 @@ public abstract class TelnetServer extends NativeObject
             cli.OutputDevice.getStdErr().printStackTrace(e);
         }
     }
-    private static final native void __stopServer(int I_NativeServerRef);
+    private static final native void __stopServer(long I64_NativeServerRef);
 
     protected abstract ExecutionContext.Interface onNewConnection(TelnetConnection CLI_NewConnection);
-    private final int __onNewConnection(int I_NativeConnectionRef) {
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.begin("TelnetServer.__onNewConnection(I_NativeConnectionRef)"));
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeConnectionRef", new Integer(I_NativeConnectionRef).toString()));
+    private final long __onNewConnection(long I64_NativeConnectionRef) {
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.begin("TelnetServer.__onNewConnection(I64_NativeConnectionRef)"));
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.param("I64_NativeConnectionRef", new Long(I64_NativeConnectionRef).toString()));
 
-        int i_NativeContextRef = 0;
-        NativeObject cli_Connection = NativeObject.getObject(I_NativeConnectionRef);
+        long i64_NativeContextRef = 0;
+        NativeObject cli_Connection = NativeObject.getObject(I64_NativeConnectionRef);
         if ((cli_Connection != null) && (cli_Connection instanceof TelnetConnection)) {
             ExecutionContext.Interface cli_Context = onNewConnection((TelnetConnection) cli_Connection);
             if (cli_Context != null) {
                 // Let's remember the new execution context, in case it is not referenced anywhere else, and could be destroyed by the garbage collector.
                 // Forget will be done in __onCloseConnection().
                 //NativeObject.remember((ExecutionContext.Common) cli_Context); // Note: No need to force remembering of the Java object for the CLI lib, already done by construction.
-                i_NativeContextRef = cli_Context.getNativeRef();
+                i64_NativeContextRef = cli_Context.getNativeRef();
             }
         }
 
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.end("TelnetServer.__onNewConnection()", new Integer(i_NativeContextRef).toString()));
-        return i_NativeContextRef;
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.end("TelnetServer.__onNewConnection()", new Long(i64_NativeContextRef).toString()));
+        return i64_NativeContextRef;
     }
 
     /** Execution context release handler.
         @param CLI_ConnectionClosed Telnet connection being closed.
         @param CLI_Context Execution context to be released. */
     protected abstract void onCloseConnection(TelnetConnection CLI_ConnectionClosed, ExecutionContext.Interface CLI_Context);
-    private final void __onCloseConnection(int I_NativeConnectionRef, int I_NativeContextRef) {
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.begin("TelnetServer.__onCloseConnection(I_NativeConnectionRef, I_NativeContextRef)"));
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeConnectionRef", new Integer(I_NativeConnectionRef).toString()));
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeContextRef", new Integer(I_NativeContextRef).toString()));
+    private final void __onCloseConnection(long I64_NativeConnectionRef, long I64_NativeContextRef) {
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.begin("TelnetServer.__onCloseConnection(I64_NativeConnectionRef, I64_NativeContextRef)"));
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.param("I64_NativeConnectionRef", new Long(I64_NativeConnectionRef).toString()));
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.param("I64_NativeContextRef", new Long(I64_NativeContextRef).toString()));
 
-        NativeObject cli_ConnectionClosed = NativeObject.getObject(I_NativeConnectionRef);
-        NativeObject cli_Context = NativeObject.getObject(I_NativeContextRef);
+        NativeObject cli_ConnectionClosed = NativeObject.getObject(I64_NativeConnectionRef);
+        NativeObject cli_Context = NativeObject.getObject(I64_NativeContextRef);
         onCloseConnection((TelnetConnection) cli_ConnectionClosed, (ExecutionContext.Interface) cli_Context);
         // Execution done for the CLI lib: let's forget Java objects here.
         if (cli_Context != null) { NativeObject.forget(cli_Context); }
 
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.end("TelnetServer.__onCloseConnection()"));
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.end("TelnetServer.__onCloseConnection()"));
     }
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -62,7 +62,7 @@ void TracesMenu::SetCli(Cli& CLI_Cli)
     Menu::SetCli(CLI_Cli);
     {   Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Show traces behavior")
-            .AddHelp(Help::LANG_FR, "Affichage du comportement du syst�me de traces"));
+            .AddHelp(Help::LANG_FR, "Affichage du comportement du système de traces"));
         m_pcliShowNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("show", cli_Help)));
         {   Help cli_Help(Help()
                 .AddHelp(Help::LANG_EN, "Show current filter")
@@ -77,22 +77,30 @@ void TracesMenu::SetCli(Cli& CLI_Cli)
     {   SyntaxTag* pcli_Tag = dynamic_cast<SyntaxTag*>(& AddElement(new SyntaxTag(false)));
         {   Help cli_Help(Help()
                 .AddHelp(Help::LANG_EN, "Trace setting")
-                .AddHelp(Help::LANG_FR, "Configuration du syst�me de traces"));
+                .AddHelp(Help::LANG_FR, "Configuration du système de traces"));
             m_pcliTraceNode = dynamic_cast<Keyword*>(& pcli_Tag->AddElement(new Keyword("trace", cli_Help)));
             {   Help cli_Help(Help()
                     .AddHelp(Help::LANG_EN, "Filter selection")
-                    .AddHelp(Help::LANG_FR, "S�lection d'un filtre"));
+                    .AddHelp(Help::LANG_FR, "Sélection d'un filtre"));
                 m_pcliTraceFilterNode = dynamic_cast<Keyword*>(& m_pcliTraceNode->AddElement(new Keyword("filter", cli_Help)));
                 {   Help cli_Help(Help()
                         .AddHelp(Help::LANG_EN, "Trace class name")
                         .AddHelp(Help::LANG_FR, "Nom d'une classe de traces"));
                     m_pcliFilterParam = dynamic_cast<ParamString*>(& m_pcliTraceFilterNode->AddElement(new ParamString(cli_Help)));
-                    m_pcliFilterParam->AddElement(new Endl(cli_Help)); }}
+                    {
+                        Help cli_Help(Help()
+                            .AddHelp(Help::LANG_EN, "Enable/disable traces for the given trace filter")
+                            .AddHelp(Help::LANG_EN, "Activer/désactiver les traces pour le filtre donné"));
+                        m_pcliFilterParam->AddElement(new Endl(cli_Help)); }}}
             {   Help cli_Help(Help()
                     .AddHelp(Help::LANG_EN, "All traces")
                     .AddHelp(Help::LANG_FR, "Toutes les traces"));
                 m_pcliAllFilterNode = dynamic_cast<Keyword*>(& m_pcliTraceNode->AddElement(new Keyword("all", cli_Help)));
-                m_pcliAllFilterNode->AddElement(new Endl(cli_Help)); }}
+                {
+                    Help cli_Help(Help()
+                        .AddHelp(Help::LANG_EN, "Enable/disable all traces")
+                        .AddHelp(Help::LANG_EN, "Activer/désactiver toutes les traces"));
+                    m_pcliAllFilterNode->AddElement(new Endl(cli_Help)); }}}
         Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Remove traces")
             .AddHelp(Help::LANG_FR, "Suppression de traces"));
@@ -142,7 +150,7 @@ const bool TracesMenu::ExecuteReserved(const CommandLine& CLI_CmdLine) const
     {
         if (! it.StepIt()) { return false; }
 trace_label:
-        if (0) {}
+        if (false) {}
         else if (it == GetFilterNode())
         {
             if (! it.StepIt()) { return false; }

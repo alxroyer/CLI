@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,12 +35,12 @@ public final class Traces {
     }
 
     /** Traces output stream accessor.
-        @return Traces output device, or null-device if an error occured. */
+        @return Traces output device, or null-device if an error occurred. */
     public static final OutputDevice.Interface getStream() {
-        int i_TracesStream = __getStream();
+        long i64_TracesStream = __getStream();
 
         // Check whether this is an already known output device on Java side.
-        Object j_TracesStream = NativeObject.getObject(i_TracesStream);
+        Object j_TracesStream = NativeObject.getObject(i64_TracesStream);
         if (j_TracesStream != null) {
             if (j_TracesStream instanceof OutputDevice.Interface) {
                 return (OutputDevice.Interface) j_TracesStream;
@@ -50,26 +50,26 @@ public final class Traces {
         }
 
         // Otherwise, check with common devices.
-        if (i_TracesStream == OutputDevice.getStdOut().getNativeRef()) {
+        if (i64_TracesStream == OutputDevice.getStdOut().getNativeRef()) {
             return OutputDevice.getStdOut();
         }
-        if (i_TracesStream == OutputDevice.getStdErr().getNativeRef()) {
+        if (i64_TracesStream == OutputDevice.getStdErr().getNativeRef()) {
             return OutputDevice.getStdErr();
         }
-        if (i_TracesStream == OutputDevice.getNullDevice().getNativeRef()) {
+        if (i64_TracesStream == OutputDevice.getNullDevice().getNativeRef()) {
             return OutputDevice.getNullDevice();
         }
-        if (i_TracesStream == IODevice.getStdIn().getNativeRef()) {
+        if (i64_TracesStream == IODevice.getStdIn().getNativeRef()) {
             return IODevice.getStdIn();
         }
-        if (i_TracesStream == IODevice.getNullDevice().getNativeRef()) {
+        if (i64_TracesStream == IODevice.getNullDevice().getNativeRef()) {
             return IODevice.getNullDevice();
         }
 
         // Default return.
         return OutputDevice.getNullDevice();
     }
-    private static final native int __getStream();
+    private static final native long __getStream();
 
     /** Stream positionning (if not already set).
         @param CLI_Stream Stream reference.
@@ -80,7 +80,7 @@ public final class Traces {
     public static final boolean setStream(OutputDevice.Interface CLI_Stream) {
         return __setStream(CLI_Stream.getNativeRef());
     }
-    private static final native boolean __setStream(int I_NativeOutputDeviceRef);
+    private static final native boolean __setStream(long I64_NativeOutputDeviceRef);
 
     /** Restores the initial traces output stream.
         @param CLI_Stream Output device to be used.
@@ -88,7 +88,7 @@ public final class Traces {
     public static final boolean unsetStream(OutputDevice.Interface CLI_Stream) {
         return __unsetStream(CLI_Stream.getNativeRef());
     }
-    private static final native boolean __unsetStream(int I_NativeOutputDeviceRef);
+    private static final native boolean __unsetStream(long I64_NativeOutputDeviceRef);
 
     /** Modifies the traces filter.
         @param CLI_Class    Trace class object of the filter modification.
@@ -96,7 +96,7 @@ public final class Traces {
     public static final void setFilter(TraceClass CLI_Class, boolean B_ShowTraces) {
         __setFilter(CLI_Class.getNativeRef(), B_ShowTraces);
     }
-    private static final native void __setFilter(int I_NativeTraceClassRef, boolean B_ShowTraces);
+    private static final native void __setFilter(long I64_NativeTraceClassRef, boolean B_ShowTraces);
 
     /** Modifies the traces filter for all trace classes.
         @param B_ShowTraces true if the traces should be displayed, false otherwise. */
@@ -111,7 +111,7 @@ public final class Traces {
     public static final void trace(TraceClass CLI_TraceClass, String STR_Text) {
         __trace(CLI_TraceClass.getNativeRef(), STR_Text);
     }
-    private static final native void __trace(int I_TraceClassNativeRef, String STR_Text);
+    private static final native void __trace(long I64_TraceClassNativeRef, String STR_Text);
 
     /** Safe trace routine.
         @param CLI_TraceClass   Corresponding trace class.
@@ -135,13 +135,13 @@ public final class Traces {
 
     /** Safe trace routine.
         @param CLI_TraceClass           Corresponding trace class.
-        @param I_AvoidTracesDeviceRef   Reference of device to avoid from being sent traces.
+        @param I64_AvoidTracesDeviceRef Reference of device to avoid from being sent traces.
         @param STR_Text                 Text of the trace.
         @return true if traces are safe, false otherwise.
 
         Prevents output from infinite loops. */
-    public static final boolean safeTrace(TraceClass CLI_TraceClass, int I_AvoidTracesDeviceRef, String STR_Text) {
-        NativeObject cli_Device = NativeObject.getObject(I_AvoidTracesDeviceRef);
+    public static final boolean safeTrace(TraceClass CLI_TraceClass, long I64_AvoidTracesDeviceRef, String STR_Text) {
+        NativeObject cli_Device = NativeObject.getObject(I64_AvoidTracesDeviceRef);
         if (cli_Device != null) {
             return safeTrace(CLI_TraceClass, cli_Device, STR_Text);
         } else {

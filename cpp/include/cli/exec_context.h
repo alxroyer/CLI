@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -178,7 +178,7 @@ CLI_NS_BEGIN(cli)
         const IODevice& GetInput(void) const;
 
         //! @brief Output stream accessor.
-        //! @return The required stream. null if an error occured.
+        //! @return The required stream. null if an error occurred.
         const OutputDevice& GetStream(
             const STREAM_TYPE E_StreamType          //!< Output stream identifier.
             ) const;

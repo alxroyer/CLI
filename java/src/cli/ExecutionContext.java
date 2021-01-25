@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -64,7 +64,7 @@ public abstract class ExecutionContext {
 
         /** Output stream accessor.
             @param E_StreamType Output stream identifier.
-            @return The required stream. null if an error occured. */
+            @return The required stream. null if an error occurred. */
         public OutputDevice.Interface getStream(int E_StreamType);
 
         /** Output stream positionning.
@@ -101,7 +101,8 @@ public abstract class ExecutionContext {
         public boolean getBeep();
 
         /** Context execution result interface registration.
-            Note: Registration for each interface is discarded as soon as the end of execution is notified. */
+            Note: Registration for each interface is discarded as soon as the end of execution is notified.
+            @param CLI_Result Execution context to be watched. */
         public void watchResult(ExecutionResult CLI_Result);
 
         /** Runs the execution context onto the corresponding input/output device.
@@ -129,15 +130,15 @@ public abstract class ExecutionContext {
 
         /** Native object interface compliance.
             @return The native reference of the instance. */
-        public int getNativeRef();
+        public long getNativeRef();
     }
 
-    /** Common behaviours of non-blocking intput/output devices, whatever their location of implementation. */
+    /** Common behaviours of non-blocking input/output devices, whatever their location of implementation. */
     public static abstract class Common extends NativeObject implements ExecutionContext.Interface {
         /** Top and child execution context constructor.
-            @param I_NativeRef Native instance referenced corresponding to this Java instance. */
-        protected Common(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference corresponding to this Java instance. */
+        protected Common(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
 
         public final IODevice.Interface getInput() {
@@ -208,26 +209,26 @@ public abstract class ExecutionContext {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Common class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global ExecutionContext class with a __Common prefix.
-    private static final native int __Common__getInput(int I_NativeContextRef);
-    private static final native int __Common__getStream(int I_NativeContextRef, int E_StreamType);
-    private static final native boolean __Common__setStream(int I_NativeContextRef, int E_StreamType, int I_NativeDeviceRef);
-    private static final native boolean __Common__streamEnabled(int I_NativeContextRef, int E_StreamType);
-    private static final native boolean __Common__enableStream(int I_NativeContextRef, int E_StreamType, boolean B_Enable);
-    private static final native void __Common__setLang(int I_NativeContextRef, int E_Lang);
-    private static final native int __Common__getLang(int I_NativeContextRef);
-    private static final native void __Common__setBeep(int I_NativeContextRef, boolean B_Enable);
-    private static final native boolean __Common__getBeep(int I_NativeContextRef);
-    private static final native boolean __Common__run(int I_NativeContextRef, int I_NativeIODeviceRef);
-    private static final native boolean __Common__isRunning(int I_NativeContextRef);
-    private static final native void __Common__stopExecution(int I_NativeContextRef);
-    private static final native void __Common__stopAllExecutions(int I_NativeContextRef);
+    private static final native long __Common__getInput(long I64_NativeContextRef);
+    private static final native long __Common__getStream(long I64_NativeContextRef, int E_StreamType);
+    private static final native boolean __Common__setStream(long I64_NativeContextRef, int E_StreamType, long I64_NativeDeviceRef);
+    private static final native boolean __Common__streamEnabled(long I64_NativeContextRef, int E_StreamType);
+    private static final native boolean __Common__enableStream(long I64_NativeContextRef, int E_StreamType, boolean B_Enable);
+    private static final native void __Common__setLang(long I64_NativeContextRef, int E_Lang);
+    private static final native int __Common__getLang(long I64_NativeContextRef);
+    private static final native void __Common__setBeep(long I64_NativeContextRef, boolean B_Enable);
+    private static final native boolean __Common__getBeep(long I64_NativeContextRef);
+    private static final native boolean __Common__run(long I64_NativeContextRef, long I64_NativeIODeviceRef);
+    private static final native boolean __Common__isRunning(long I64_NativeContextRef);
+    private static final native void __Common__stopExecution(long I64_NativeContextRef);
+    private static final native void __Common__stopAllExecutions(long I64_NativeContextRef);
 
     /** Native-implemented execution contexts. */
     public static abstract class Native extends Common {
         /** Top and child execution context constructor.
-            @param I_NativeRef Native instance referenced corresponding to this Java instance. */
-        protected Native(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference corresponding to this Java instance. */
+        protected Native(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
     }
 
@@ -277,5 +278,5 @@ public abstract class ExecutionContext {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Java class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global ExecutionContext class with a __Java prefix.
-    private static final native int __Java__ExecutionContext(int I_NativeParentContextRef);
+    private static final native long __Java__ExecutionContext(long I64_NativeParentContextRef);
 }

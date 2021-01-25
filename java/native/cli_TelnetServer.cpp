@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -57,9 +57,9 @@ public:
     virtual cli::ExecutionContext* const OnNewConnection(const cli::TelnetConnection& CLI_NewConnection)
     {
         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NativeTelnetServer::OnNewConnection(CLI_NewConnection)") << cli::endl;
-        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_NewConnection", NativeObject::GetNativeRef(CLI_NewConnection)) << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("CLI_NewConnection", NativeObject::GetNativeRef(CLI_NewConnection)) << cli::endl;
 
-        NativeObject::REF i_ContextRef = 0;
+        NativeObject::REF i64_ContextRef = 0;
         cli::ExecutionContext* pcli_Context = NULL;
         if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
         {
@@ -69,30 +69,30 @@ public:
                 if (const jclass pj_ServerClass = pj_Env->FindClass(NativeObject::GetJavaClassName(*this).c_str()))
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_ServerClass", pj_ServerClass) << cli::endl;
-                    if (const jmethodID pj_OnNewConnectionMethodID = pj_Env->GetMethodID(pj_ServerClass, "__onNewConnection", "(I)I"))
+                    if (const jmethodID pj_OnNewConnectionMethodID = pj_Env->GetMethodID(pj_ServerClass, "__onNewConnection", "(J)J")) // 'J' stands for 'long'.
                     {
                         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnNewConnectionMethodID", pj_OnNewConnectionMethodID) << cli::endl;
                         if (const jobject pj_Object = NativeObject::GetJavaObject(*this, true))
                         {
                             cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
-                            i_ContextRef = pj_Env->CallIntMethod(pj_Object, pj_OnNewConnectionMethodID, (jint) NativeObject::GetNativeRef(CLI_NewConnection));
-                            pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(i_ContextRef);
+                            i64_ContextRef = pj_Env->CallLongMethod(pj_Object, pj_OnNewConnectionMethodID, (jlong) NativeObject::GetNativeRef(CLI_NewConnection));
+                            pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(i64_ContextRef);
                         }
                     }
                 }
             }
         }
 
-        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("NativeTelnetServer::OnNewConnection()", i_ContextRef) << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("NativeTelnetServer::OnNewConnection()", i64_ContextRef) << cli::endl;
         return pcli_Context;
     }
 
     virtual void OnCloseConnection(const cli::TelnetConnection& CLI_ConnectionClosed, cli::ExecutionContext* const PCLI_Context)
     {
         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NativeTelnetServer::OnCloseConnection(CLI_ConnectionClosed, PCLI_Context)") << cli::endl;
-        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_ConnectionClosed", NativeObject::GetNativeRef(CLI_ConnectionClosed)) << cli::endl;
-        const NativeObject::REF i_ContextRef = ((PCLI_Context != NULL) ? NativeObject::GetNativeRef(*PCLI_Context) : 0);
-        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("PCLI_Context", i_ContextRef) << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("CLI_ConnectionClosed", NativeObject::GetNativeRef(CLI_ConnectionClosed)) << cli::endl;
+        const NativeObject::REF i64_ContextRef = ((PCLI_Context != NULL) ? NativeObject::GetNativeRef(*PCLI_Context) : 0);
+        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("PCLI_Context", i64_ContextRef) << cli::endl;
 
         if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
         {
@@ -100,7 +100,7 @@ public:
             if (const jclass pj_ServerClass = pj_Env->FindClass(NativeObject::GetJavaClassName(*this).c_str()))
             {
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_ServerClass", pj_ServerClass) << cli::endl;
-                if (const jmethodID pj_OnCloseConnectionMethodID = pj_Env->GetMethodID(pj_ServerClass, "__onCloseConnection", "(II)V"))
+                if (const jmethodID pj_OnCloseConnectionMethodID = pj_Env->GetMethodID(pj_ServerClass, "__onCloseConnection", "(JJ)V")) // 'J' stands for 'long'.
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnCloseConnectionMethodID", pj_OnCloseConnectionMethodID) << cli::endl;
                     if (const jobject pj_Object = NativeObject::GetJavaObject(*this, true))
@@ -108,7 +108,7 @@ public:
                         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
                         pj_Env->CallVoidMethod(
                             pj_Object, pj_OnCloseConnectionMethodID,
-                            (jint) NativeObject::GetNativeRef(CLI_ConnectionClosed), (jint) i_ContextRef
+                            (jlong) NativeObject::GetNativeRef(CLI_ConnectionClosed), (jlong) i64_ContextRef
                         );
                     }
                 }
@@ -123,7 +123,7 @@ public:
 };
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_TelnetServer__1_1TelnetServer(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_TelnetServer__1_1TelnetServer(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_MaxConnections, jint I_TcpPort, jint E_Lang)
 {
@@ -133,25 +133,25 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_TelnetServer__1_1TelnetServer(
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_MaxConnections", I_MaxConnections) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_TcpPort", I_TcpPort) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
-    NativeObject::REF i_ServerRef = 0;
+    NativeObject::REF i64_ServerRef = 0;
     if (cli::TelnetServer* const pcli_Server = new NativeTelnetServer(I_MaxConnections, I_TcpPort, (cli::ResourceString::LANG) E_Lang))
     {
         NativeObject::Use(*pcli_Server);
-        i_ServerRef = NativeObject::GetNativeRef(*pcli_Server);
+        i64_ServerRef = NativeObject::GetNativeRef(*pcli_Server);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("TelnetServer.__TelnetServer()", i_ServerRef) << cli::endl;
-    return i_ServerRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("TelnetServer.__TelnetServer()", i64_ServerRef) << cli::endl;
+    return i64_ServerRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_TelnetServer__1_1startServer(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeServerRef)
+        jlong I64_NativeServerRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TelnetServer.__startServer(I_NativeServerRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeServerRef", I_NativeServerRef) << cli::endl;
-    if (NativeTelnetServer* const pcli_Server = NativeObject::GetNativeObject<NativeTelnetServer*>(I_NativeServerRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TelnetServer.__startServer(I64_NativeServerRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeServerRef", I64_NativeServerRef) << cli::endl;
+    if (NativeTelnetServer* const pcli_Server = NativeObject::GetNativeObject<NativeTelnetServer*>(I64_NativeServerRef))
     {
         pcli_Server->StartServer();
     }
@@ -160,13 +160,13 @@ extern "C" JNIEXPORT void JNICALL Java_cli_TelnetServer__1_1startServer(
 
 extern "C" JNIEXPORT void JNICALL Java_cli_TelnetServer__1_1stopServer(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeServerRef)
+        jlong I64_NativeServerRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TelnetServer.__stopServer(I_NativeServerRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeServerRef", I_NativeServerRef) << cli::endl;
-    if (NativeTelnetServer* const pcli_Server = NativeObject::GetNativeObject<NativeTelnetServer*>(I_NativeServerRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("TelnetServer.__stopServer(I64_NativeServerRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeServerRef", I64_NativeServerRef) << cli::endl;
+    if (NativeTelnetServer* const pcli_Server = NativeObject::GetNativeObject<NativeTelnetServer*>(I64_NativeServerRef))
     {
         pcli_Server->StopServer();
     }

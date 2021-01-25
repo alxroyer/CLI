@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -98,7 +98,7 @@ CLI_NS_BEGIN(cli)
 
     private:
         //! @brief Makes one run of the main loop.
-        //! @return false when an error occured, true otherwise (even for a timeout).
+        //! @return false when an error occurred, true otherwise (even for a timeout).
         const bool RunLoop(
             const int I_Milli       //!< Maximum number of milliseconds to wait for.
                                     //!< -1 for infinite waiting.

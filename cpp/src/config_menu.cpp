@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -81,16 +81,16 @@ void ConfigMenu::SetCli(Cli& CLI_Cli)
             m_pcliShowLicense->AddElement(new Endl(cli_Help)); }}
     {   Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Modify echo behavior")
-            .AddHelp(Help::LANG_FR, "Configuration de l'écho"));
+            .AddHelp(Help::LANG_FR, "Configuration de l'Ã©cho"));
         m_pcliEcho = dynamic_cast<Keyword*>(& AddElement(new Keyword("echo", cli_Help)));
         {   Help cli_Help(Help()
                 .AddHelp(Help::LANG_EN, "Set echo on")
-                .AddHelp(Help::LANG_FR, "Activation de l'écho"));
+                .AddHelp(Help::LANG_FR, "Activation de l'Ã©cho"));
             m_pcliEchoOn = dynamic_cast<Keyword*>(& m_pcliEcho->AddElement(new Keyword("on", cli_Help)));
             m_pcliEchoOn->AddElement(new Endl(cli_Help)); }
         {   Help cli_Help(Help()
                 .AddHelp(Help::LANG_EN, "Set echo off")
-                .AddHelp(Help::LANG_FR, "Désactivation de l'écho"));
+                .AddHelp(Help::LANG_FR, "DÃ©sactivation de l'Ã©cho"));
             m_pcliEchoOff = dynamic_cast<Keyword*>(& m_pcliEcho->AddElement(new Keyword("off", cli_Help)));
             m_pcliEchoOff->AddElement(new Endl(cli_Help)); }}
     {   Help cli_Help(Help()
@@ -104,7 +104,7 @@ void ConfigMenu::SetCli(Cli& CLI_Cli)
             m_pcliBeepOn->AddElement(new Endl(cli_Help)); }
         {   Help cli_Help(Help()
                 .AddHelp(Help::LANG_EN, "Set beep off")
-                .AddHelp(Help::LANG_FR, "Désactivation du bip"));
+                .AddHelp(Help::LANG_FR, "DÃ©sactivation du bip"));
             m_pcliBeepOff = dynamic_cast<Keyword*>(& m_pcliBeep->AddElement(new Keyword("off", cli_Help)));
             m_pcliBeepOff->AddElement(new Endl(cli_Help)); }}
     {   Help cli_Help(Help()
@@ -118,22 +118,22 @@ void ConfigMenu::SetCli(Cli& CLI_Cli)
             m_pcliEnglishLang->AddElement(new Endl(cli_Help)); }
         {   Help cli_Help(Help()
                 .AddHelp(Help::LANG_EN, "French language")
-                .AddHelp(Help::LANG_FR, "Langue française"));
+                .AddHelp(Help::LANG_FR, "Langue franÃ§aise"));
             m_pcliFrenchLang = dynamic_cast<Keyword*>(& m_pcliLang->AddElement(new Keyword("french", cli_Help)));
             m_pcliFrenchLang->AddElement(new Endl(cli_Help)); }}
     #ifdef _DEBUG
     {   Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Check CLI stuff")
-            .AddHelp(Help::LANG_FR, "Vérifications du CLI"));
+            .AddHelp(Help::LANG_FR, "VÃ©rifications du CLI"));
         m_pcliCheck = dynamic_cast<Keyword*>(& AddElement(new Keyword("check", cli_Help)));
         {   Help cli_Help(Help()
                 .AddHelp(Help::LANG_EN, "Check input/output")
-                .AddHelp(Help::LANG_FR, "Vérification des entrées/sorties"));
+                .AddHelp(Help::LANG_FR, "VÃ©rification des entrÃ©es/sorties"));
             m_pcliCheckIO = dynamic_cast<Keyword*>(& m_pcliCheck->AddElement(new Keyword("io-device", cli_Help)));
             m_pcliCheckIO->AddElement(new Endl(cli_Help));
             {   Help cli_Help(Help()
                     .AddHelp(Help::LANG_EN, "Check output character")
-                    .AddHelp(Help::LANG_FR, "Vérification sorties de caractères"));
+                    .AddHelp(Help::LANG_FR, "VÃ©rification sorties de caractÃ¨res"));
                 m_pcliOutChar = dynamic_cast<Keyword*>(& m_pcliCheckIO->AddElement(new Keyword("outputs", cli_Help)));
                 m_pcliOutChar->AddElement(new Endl(cli_Help)); }}}
     #endif
@@ -294,7 +294,7 @@ void ConfigMenu::EchoOn(void) const
     GetShell().EnableStream(ECHO_STREAM, true);
     const ResourceString cli_EchoOn = ResourceString()
         .SetString(ResourceString::LANG_EN, "echo is on")
-        .SetString(ResourceString::LANG_FR, "écho activé");
+        .SetString(ResourceString::LANG_FR, "Ã©cho activÃ©");
     GetOutputStream() << cli_EchoOn.GetString(GetShell().GetLang()) << endl;
 }
 
@@ -303,7 +303,7 @@ void ConfigMenu::EchoOff(void) const
     GetShell().EnableStream(ECHO_STREAM, false);
     const ResourceString cli_EchoOff = ResourceString()
         .SetString(ResourceString::LANG_EN, "echo is off")
-        .SetString(ResourceString::LANG_FR, "écho désactivé");
+        .SetString(ResourceString::LANG_FR, "Ã©cho dÃ©sactivÃ©");
     GetOutputStream() << cli_EchoOff.GetString(GetShell().GetLang()) << endl;
 }
 
@@ -312,7 +312,7 @@ void ConfigMenu::BeepOn(void) const
     GetShell().SetBeep(true);
     const ResourceString cli_BeepOn = ResourceString()
         .SetString(ResourceString::LANG_EN, "beep is on")
-        .SetString(ResourceString::LANG_FR, "bip activé");
+        .SetString(ResourceString::LANG_FR, "bip activÃ©");
     GetOutputStream() << cli_BeepOn.GetString(GetShell().GetLang()) << endl;
 }
 
@@ -321,7 +321,7 @@ void ConfigMenu::BeepOff(void) const
     GetShell().SetBeep(false);
     const ResourceString cli_BeepOff = ResourceString()
         .SetString(ResourceString::LANG_EN, "beep is off")
-        .SetString(ResourceString::LANG_FR, "bip désactivé");
+        .SetString(ResourceString::LANG_FR, "bip dÃ©sactivÃ©");
     GetOutputStream() << cli_BeepOff.GetString(GetShell().GetLang()) << endl;
 }
 
@@ -330,7 +330,7 @@ void ConfigMenu::SetLang(const ResourceString::LANG E_Lang) const
     GetShell().SetLang(E_Lang);
     const ResourceString cli_SelectedLanguage = ResourceString()
         .SetString(ResourceString::LANG_EN, "English language")
-        .SetString(ResourceString::LANG_FR, "Langue française");
+        .SetString(ResourceString::LANG_FR, "Langue franÃ§aise");
     GetOutputStream() << cli_SelectedLanguage.GetString(GetShell().GetLang()) << endl;
 }
 
@@ -382,19 +382,19 @@ void ConfigMenu::CheckIODevice(void) const
 
     // First of all, check break and escape.
     if (! Press::Key(GetShell(), "Press the break sequence (CTRL+C)", BREAK)) return;
-    if (! Press::Key(GetShell(), "Press ESCAPE", ESCAPE)) return;
+    if (! Press::Key(GetShell(), "Press ESCAPE key", ESCAPE)) return;
 
     // Logout sequence
     if (! Press::Key(GetShell(), "Press the logout sequence (CTRL+D)", LOGOUT)) return;
 
     // Spacing keys
     if (! Press::Key(GetShell(), "Press the space bar", SPACE)) return;
-    if (! Press::Key(GetShell(), "Press TAB", TAB)) return;
-    if (! Press::Key(GetShell(), "Press ENTER", ENTER)) return;
+    if (! Press::Key(GetShell(), "Press TAB key", TAB)) return;
+    if (! Press::Key(GetShell(), "Press ENTER key", ENTER)) return;
 
     // Deletion keys
-    if (! Press::Key(GetShell(), "Press BACKSPACE", BACKSPACE)) return;
-    if (! Press::Key(GetShell(), "Press SUPPR", DELETE)) return;
+    if (! Press::Key(GetShell(), "Press BACKSPACE key", BACKSPACE)) return;
+    if (! Press::Key(GetShell(), "Press DELETE key (or SUPPR key)", DELETE)) return;
     if (! Press::Key(GetShell(), "Press the clean screen sequence (CTRL+L)", CLS)) return;
 
     // Navigation keys
@@ -406,29 +406,39 @@ void ConfigMenu::CheckIODevice(void) const
     if (! Press::Key(GetShell(), "Press the PAGE UP key (CTRL+UP)", PAGE_UP)) return;
     if (! Press::Key(GetShell(), "Press the PAGE DOWN key", PAGE_DOWN)) return;
     if (! Press::Key(GetShell(), "Press the PAGE DOWN key (CTRL+DOWN)", PAGE_DOWN)) return;
-    if (! Press::Key(GetShell(), "Press the PAGE LEFT key", PAGE_LEFT)) return;
+    if (! Press::Key(GetShell(), "Press the PAGE LEFT key (if any)", PAGE_LEFT)) return;
     if (! Press::Key(GetShell(), "Press the PAGE LEFT key (CTRL+LEFT)", PAGE_LEFT)) return;
-    if (! Press::Key(GetShell(), "Press the PAGE RIGHT key", PAGE_RIGHT)) return;
+    if (! Press::Key(GetShell(), "Press the PAGE RIGHT key (if any)", PAGE_RIGHT)) return;
     if (! Press::Key(GetShell(), "Press the PAGE RIGHT key (CTRL+RIGHT)", PAGE_RIGHT)) return;
     if (! Press::Key(GetShell(), "Press the BEGIN key (or HOME key)", KEY_BEGIN)) return;
     if (! Press::Key(GetShell(), "Press the BEGIN key (CTRL+A)", KEY_BEGIN)) return;
     if (! Press::Key(GetShell(), "Press the END key", KEY_END)) return;
     if (! Press::Key(GetShell(), "Press the END key (CTRL+E)", KEY_END)) return;
-    if (! Press::Key(GetShell(), "Press the PREVIOUS key", PREVIOUS)) return;
-    if (! Press::Key(GetShell(), "Press the NEXT key", NEXT)) return;
+    if (! Press::Key(GetShell(), "Press the PREVIOUS key (ALT+LEFT)", PREVIOUS)) return;
+    if (! Press::Key(GetShell(), "Press the PREVIOUS key (CTRL+P)", PREVIOUS)) return;
+    if (! Press::Key(GetShell(), "Press the NEXT key (ALT+RIGHT)", NEXT)) return;
+    if (! Press::Key(GetShell(), "Press the NEXT key (CTRL+N)", NEXT)) return;
 
     // Modifiers
     if (! Press::Key(GetShell(), "Press the INSERT key", INSERT)) return;
     if (! Press::Key(GetShell(), "Press the copy sequence (ALT+C)", COPY)) return;
+    if (! Press::Key(GetShell(), "Press the copy sequence (CTRL+ALT+C)", COPY)) return;
     if (! Press::Key(GetShell(), "Press the copy sequence (CTRL+INS)", COPY)) return;
     if (! Press::Key(GetShell(), "Press the cut sequence (ALT+X)", CUT)) return;
-    if (! Press::Key(GetShell(), "Press the cut sequence (SHIFT+SUPPR)", CUT)) return;
+    if (! Press::Key(GetShell(), "Press the cut sequence (CTRL+X)", CUT)) return;
+    if (! Press::Key(GetShell(), "Press the cut sequence (CTRL+ALT+X)", CUT)) return;
+    if (! Press::Key(GetShell(), "Press the cut sequence (SHIFT+DELETE)", CUT)) return;
+    if (! Press::Key(GetShell(), "Press the cut sequence (CTRL+SHIFT+DELETE)", CUT)) return;
     if (! Press::Key(GetShell(), "Press the paste sequence (ALT+V)", PASTE)) return;
+    if (! Press::Key(GetShell(), "Press the paste sequence (CTRL+V)", PASTE)) return;
+    if (! Press::Key(GetShell(), "Press the paste sequence (CTRL+ALT+V)", PASTE)) return;
     if (! Press::Key(GetShell(), "Press the paste sequence (SHIFT+INSERT)", PASTE)) return;
     if (! Press::Key(GetShell(), "Press the undo sequence (ALT+Z)", UNDO)) return;
     if (! Press::Key(GetShell(), "Press the undo sequence (CTRL+Z)", UNDO)) return;
+    if (! Press::Key(GetShell(), "Press the undo sequence (CTRL+ALT+Z)", UNDO)) return;
     if (! Press::Key(GetShell(), "Press the redo sequence (ALT+Y)", REDO)) return;
     if (! Press::Key(GetShell(), "Press the redo sequence (CTRL+Y)", REDO)) return;
+    if (! Press::Key(GetShell(), "Press the redo sequence (CTRL+ALT+Y)", REDO)) return;
 
     // Number keys
     if (! Press::Key(GetShell(), "Press '0'", KEY_0)) return;
@@ -496,27 +506,27 @@ void ConfigMenu::CheckIODevice(void) const
     if (! Press::Key(GetShell(), "Press 'Y'", KEY_Y)) return;
     if (! Press::Key(GetShell(), "Press 'Z'", KEY_Z)) return;
     // Accented characters
-    if (! Press::Key(GetShell(), "Press 'á' ('a' acute)", KEY_aacute)) return;
-    if (! Press::Key(GetShell(), "Press 'à' ('a' grave)", KEY_agrave)) return;
-    if (! Press::Key(GetShell(), "Press 'ä' ('a' uml)", KEY_auml)) return;
-    if (! Press::Key(GetShell(), "Press 'â' ('a' circ)", KEY_acirc)) return;
-    if (! Press::Key(GetShell(), "Press 'ç' ('c' cedil)", KEY_ccedil)) return;
-    if (! Press::Key(GetShell(), "Press 'é' ('e' acute)", KEY_eacute)) return;
-    if (! Press::Key(GetShell(), "Press 'è' ('e' grave)", KEY_egrave)) return;
-    if (! Press::Key(GetShell(), "Press 'ë' ('e' uml)", KEY_euml)) return;
-    if (! Press::Key(GetShell(), "Press 'ê' ('e' circ)", KEY_ecirc)) return;
-    if (! Press::Key(GetShell(), "Press 'í' ('i' acute)", KEY_iacute)) return;
-    if (! Press::Key(GetShell(), "Press 'ì' ('i' grave)", KEY_igrave)) return;
-    if (! Press::Key(GetShell(), "Press 'ï' ('i' uml)", KEY_iuml)) return;
-    if (! Press::Key(GetShell(), "Press 'î' ('i' circ)", KEY_icirc)) return;
-    if (! Press::Key(GetShell(), "Press 'ó' ('o' acute)", KEY_oacute)) return;
-    if (! Press::Key(GetShell(), "Press 'ò' ('o' grave)", KEY_ograve)) return;
-    if (! Press::Key(GetShell(), "Press 'ö' ('o' uml)", KEY_ouml)) return;
-    if (! Press::Key(GetShell(), "Press 'ô' ('o' circ)", KEY_ocirc)) return;
-    if (! Press::Key(GetShell(), "Press 'ú' ('u' acute)", KEY_uacute)) return;
-    if (! Press::Key(GetShell(), "Press 'ù' ('u' grave)", KEY_ugrave)) return;
-    if (! Press::Key(GetShell(), "Press 'ü' ('u' uml)", KEY_uuml)) return;
-    if (! Press::Key(GetShell(), "Press 'û' ('u' circ)", KEY_ucirc)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¡' ('a' acute)", KEY_aacute)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã ' ('a' grave)", KEY_agrave)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¤' ('a' uml)", KEY_auml)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¢' ('a' circ)", KEY_acirc)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã§' ('c' cedil)", KEY_ccedil)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã©' ('e' acute)", KEY_eacute)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¨' ('e' grave)", KEY_egrave)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã«' ('e' uml)", KEY_euml)) return;
+    if (! Press::Key(GetShell(), "Press 'Ãª' ('e' circ)", KEY_ecirc)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã­' ('i' acute)", KEY_iacute)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¬' ('i' grave)", KEY_igrave)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¯' ('i' uml)", KEY_iuml)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã®' ('i' circ)", KEY_icirc)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã³' ('o' acute)", KEY_oacute)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã²' ('o' grave)", KEY_ograve)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¶' ('o' uml)", KEY_ouml)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã´' ('o' circ)", KEY_ocirc)) return;
+    if (! Press::Key(GetShell(), "Press 'Ãº' ('u' acute)", KEY_uacute)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¹' ('u' grave)", KEY_ugrave)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã¼' ('u' uml)", KEY_uuml)) return;
+    if (! Press::Key(GetShell(), "Press 'Ã»' ('u' circ)", KEY_ucirc)) return;
 
     // Special characters / ponctuation
     if (! Press::Key(GetShell(), "Press '+' (plus)", PLUS)) return;
@@ -535,13 +545,13 @@ void ConfigMenu::CheckIODevice(void) const
     if (! Press::Key(GetShell(), "Press '\\' (backslash)", BACKSLASH)) return;
     if (! Press::Key(GetShell(), "Press '|' (pipe)", PIPE)) return;
     if (! Press::Key(GetShell(), "Press '~' (tilde)", TILDE)) return;
-    if (! Press::Key(GetShell(), "Press '²' (square)", SQUARE)) return;
-    if (! Press::Key(GetShell(), "Press '€' (euro)", EURO)) return;
-    if (! Press::Key(GetShell(), "Press '£' (pound)", POUND)) return;
-    if (! Press::Key(GetShell(), "Press 'µ' (micro)", MICRO)) return;
-    if (! Press::Key(GetShell(), "Press '§' (paragraph)", PARAGRAPH)) return;
-    if (! Press::Key(GetShell(), "Press '°' (degree)", DEGREE)) return;
-    if (! Press::Key(GetShell(), "Press '©' (copyright)", COPYRIGHT)) return;
+    if (! Press::Key(GetShell(), "Press 'Â²' (square)", SQUARE)) return;
+    if (! Press::Key(GetShell(), "Press 'â‚¬' (euro)", EURO)) return;
+    if (! Press::Key(GetShell(), "Press 'Â£' (pound)", POUND)) return;
+    if (! Press::Key(GetShell(), "Press 'Âµ' (micro)", MICRO)) return;
+    if (! Press::Key(GetShell(), "Press 'Â§' (paragraph)", PARAGRAPH)) return;
+    if (! Press::Key(GetShell(), "Press 'Â°' (degree)", DEGREE)) return;
+    if (! Press::Key(GetShell(), "Press 'Â©' (copyright)", COPYRIGHT)) return;
     if (! Press::Key(GetShell(), "Press '?' (question)", QUESTION)) return;
     if (! Press::Key(GetShell(), "Press '!' (exclamation)", EXCLAMATION)) return;
     if (! Press::Key(GetShell(), "Press ':' (column)", COLUMN)) return;

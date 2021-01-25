@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -34,6 +34,7 @@
 #include "cli/assert.h"
 #include "consistency.h"
 #include "constraints.h"
+#include "utils.h"
 
 CLI_NS_USE(cli)
 
@@ -84,7 +85,7 @@ const bool InputFileDevice::OpenDevice(void)
         {
             m_cliLastError
                 .SetString(ResourceString::LANG_EN, ResourceString::Concat("Cannot open input file '", m_strFileName, "'"))
-                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible d'ouvrir le fichier d'entrée '", m_strFileName, "'"));
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible d'ouvrir le fichier d'entrÃ©e '", m_strFileName, "'"));
             return false;
         }
     }
@@ -102,7 +103,7 @@ const bool InputFileDevice::CloseDevice(void)
         {
             m_cliLastError
                 .SetString(ResourceString::LANG_EN, ResourceString::Concat("Cannot close input file '", m_strFileName, "'"))
-                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible de fermer le fichier d'entrée '", m_strFileName, "'"));
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Impossible de fermer le fichier d'entrÃ©e '", m_strFileName, "'"));
             b_Res = false;
         }
         m_pfFile = NULL;
@@ -142,7 +143,7 @@ const KEY InputFileDevice::GetKey(void) const
                     {
                         m_cliLastError
                             .SetString(ResourceString::LANG_EN, ResourceString::Concat("Error while reading input file '", m_strFileName, "'"))
-                            .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrée '", m_strFileName, "'"));
+                            .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrÃ©e '", m_strFileName, "'"));
                         return NULL_KEY;
                     }
                 }
@@ -199,12 +200,16 @@ const KEY InputFileDevice::GetKey(void) const
                 }
 
                 // Character analysis.
-                KEY e_Key = IODevice::GetKey(c_Char);
+                const KEY e_Key = Char2Key(c_Char);
                 if (e_Key == NULL_KEY)
                 {
                     m_cliLastError
                         .SetString(ResourceString::LANG_EN, ResourceString::Concat("Error while reading input file '", m_strFileName, "'"))
-                        .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrée '", m_strFileName, "'"));
+                        .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de lecture du fichier d'entrÃ©e '", m_strFileName, "'"));
+                }
+                else if (e_Key == FEED_MORE)
+                {
+                    // Let's move on the next character
                 }
                 else
                 {
@@ -219,11 +224,12 @@ const KEY InputFileDevice::GetKey(void) const
 
 const ResourceString InputFileDevice::GetLocation(void) const
 {
+    ResourceString cli_Location;
+
     char str_Location[1024];
     memset(str_Location, '\0', sizeof(str_Location));
-    snprintf(str_Location, sizeof(str_Location) - 1, "%s:%d", (const char* const) m_strFileName, GetCurrentLine());
-
-    ResourceString cli_Location;
+    const int i_Res = snprintf(str_Location, sizeof(str_Location), "%s:%d", (const char* const) m_strFileName, GetCurrentLine());
+    CheckSnprintfResult(str_Location, sizeof(str_Location), i_Res);
     for (int i_Lang = 0; i_Lang < ResourceString::LANG_COUNT; i_Lang ++)
     {
         cli_Location.SetString((ResourceString::LANG) i_Lang, str_Location);

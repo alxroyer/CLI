@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,22 +36,22 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Password__1_1Password(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Password__1_1Password(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef, jboolean B_DisplayStars, jint I_MinPasswordLength, jint I_MaxPasswordLength)
+        jlong I64_NativeParentContextRef, jboolean B_DisplayStars, jint I_MinPasswordLength, jint I_MaxPasswordLength)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Password.__Password(I_NativeParentContextRef, B_DisplayStars, I_MinPasswordLength, I_MaxPasswordLength)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Password.__Password(I64_NativeParentContextRef, B_DisplayStars, I_MinPasswordLength, I_MaxPasswordLength)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_DisplayStars", B_DisplayStars) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_MinPasswordLength", I_MinPasswordLength) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_MaxPasswordLength", I_MaxPasswordLength) << cli::endl;
-    NativeObject::REF i_PasswordRef = 0;
+    NativeObject::REF i64_PasswordRef = 0;
     cli::ui::Password* pcli_Password = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_Password = new cli::ui::Password(*pcli_ParentContext, B_DisplayStars, I_MinPasswordLength, I_MaxPasswordLength);
         }
@@ -63,22 +63,22 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Password__1_1Password(
     if (pcli_Password != NULL)
     {
         NativeObject::Use(*pcli_Password);
-        i_PasswordRef = NativeObject::GetNativeRef(*pcli_Password);
+        i64_PasswordRef = NativeObject::GetNativeRef(*pcli_Password);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Password.__Password()", i_PasswordRef) << cli::endl;
-    return i_PasswordRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Password.__Password()", i64_PasswordRef) << cli::endl;
+    return i64_PasswordRef;
 }
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_ui_Password__1_1getPassword(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativePasswordRef)
+        jlong I64_NativePasswordRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Password.__getPassword(I_NativePasswordRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativePasswordRef", I_NativePasswordRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Password.__getPassword(I64_NativePasswordRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativePasswordRef", I64_NativePasswordRef) << cli::endl;
     std::string str_Password;
-    if (const cli::ui::Password* const pcli_Password = NativeObject::GetNativeObject<const cli::ui::Password*>(I_NativePasswordRef))
+    if (const cli::ui::Password* const pcli_Password = NativeObject::GetNativeObject<const cli::ui::Password*>(I64_NativePasswordRef))
     {
         str_Password = (const char*) pcli_Password->GetPassword();
     }

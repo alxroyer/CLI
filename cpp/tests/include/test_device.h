@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,6 +31,7 @@
 #include "cli/debug.h"
 #include "cli/assert.h"
 #include "cli/non_blocking_io_device.h"
+#include "cli/single_command.h"
 
 #include "test_error.h"
 
@@ -43,32 +44,49 @@ public:
         // Clear input.
         m_tkInput.Reset();
         // For each character,
-        for (const char* ptc_Input = STR_Input; (ptc_Input != NULL) && (*ptc_Input != '\0'); ptc_Input++) {
-            if (*ptc_Input == '%') {
+        cli::SingleCommand cli_Input(STR_Input, cli::OutputDevice::GetNullDevice(), false);
+        cli_Input.OpenUp(__CALL_INFO__);
+        for (   cli::KEY e_Key = cli_Input.GetKey();
+                e_Key != cli::NULL_KEY;
+                e_Key = cli_Input.GetKey())
+        {
+            if (e_Key == cli::PERCENT) {
                 // Escaped characters
-                ptc_Input++;
-                switch (*ptc_Input) {
-                case '%': m_tkInput.AddTail(cli::PERCENT); break;
-                case ']': m_tkInput.AddTail(cli::ESCAPE); break;
-                case '!': m_tkInput.AddTail(cli::BREAK); break;
-                case 'u': m_tkInput.AddTail(cli::KEY_UP); break;
-                case 'U': m_tkInput.AddTail(cli::PAGE_UP); break;
-                case 'd': m_tkInput.AddTail(cli::KEY_DOWN); break;
-                case 'D': m_tkInput.AddTail(cli::PAGE_DOWN); break;
-                case 'l': m_tkInput.AddTail(cli::KEY_LEFT); break;
-                case 'L': m_tkInput.AddTail(cli::PAGE_LEFT); break;
-                case 'r': m_tkInput.AddTail(cli::KEY_RIGHT); break;
-                case 'R': m_tkInput.AddTail(cli::PAGE_RIGHT); break;
-                case 'h': case 'H': m_tkInput.AddTail(cli::KEY_BEGIN); break;
-                case 'e': case 'E': m_tkInput.AddTail(cli::KEY_END); break;
-                case 'i': case 'I': m_tkInput.AddTail(cli::INSERT); break;
-                default: CLI_ASSERT(false); break;
+                e_Key = cli_Input.GetKey();
+                if (e_Key != cli::NULL_KEY)
+                {
+                    switch (e_Key) {
+                    case cli::PERCENT:                  m_tkInput.AddTail(cli::PERCENT); break;
+                    case cli::CLOSING_BRACKET:          m_tkInput.AddTail(cli::ESCAPE); break;
+                    case cli::EXCLAMATION:              m_tkInput.AddTail(cli::BREAK); break;
+                    case cli::KEY_u:                    m_tkInput.AddTail(cli::KEY_UP); break;
+                    case cli::KEY_U:                    m_tkInput.AddTail(cli::PAGE_UP); break;
+                    case cli::KEY_d:                    m_tkInput.AddTail(cli::KEY_DOWN); break;
+                    case cli::KEY_D:                    m_tkInput.AddTail(cli::PAGE_DOWN); break;
+                    case cli::KEY_l:                    m_tkInput.AddTail(cli::KEY_LEFT); break;
+                    case cli::KEY_L:                    m_tkInput.AddTail(cli::PAGE_LEFT); break;
+                    case cli::KEY_r:                    m_tkInput.AddTail(cli::KEY_RIGHT); break;
+                    case cli::KEY_R:                    m_tkInput.AddTail(cli::PAGE_RIGHT); break;
+                    case cli::KEY_h: case cli::KEY_H:   m_tkInput.AddTail(cli::KEY_BEGIN); break;
+                    case cli::KEY_e: case cli::KEY_E:   m_tkInput.AddTail(cli::KEY_END); break;
+                    case cli::KEY_i: case cli::KEY_I:   m_tkInput.AddTail(cli::INSERT); break;
+                    default:                            CLI_ASSERT(false); break;
+                    }
+                }
+                else
+                {
+                    m_tkInput.AddTail(cli::PERCENT);
+                    break;
                 }
             } else {
                 // simple key: push in the input queue.
-                m_tkInput.AddTail(cli::IODevice::GetKey(*ptc_Input));
+                m_tkInput.AddTail(e_Key);
             }
         }
+        cli_Input.CloseDown(__CALL_INFO__);
+        // SingleCommand always give a final cli::ENTER key that we should remove here.
+        CLI_ASSERT(m_tkInput.GetTail() == cli::ENTER);
+        m_tkInput.RemoveTail();
     }
     void SetbWrapLines(const bool B_WrapLines) {
         m_bWrapLines = B_WrapLines;

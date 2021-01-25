@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -45,13 +45,13 @@ public class Int extends Line {
     public Int(cli.ExecutionContext.Interface CLI_ParentContext, int I_DefaultValue, int I_MinValue, int I_MaxValue) {
         super(__Int(CLI_ParentContext.getNativeRef(), I_DefaultValue, I_MinValue, I_MaxValue));
     }
-    private static final native int __Int(int I_NativeParentContextRef, int I_DefaultValue, int I_MinValue, int I_MaxValue);
+    private static final native long __Int(long I64_NativeParentContextRef, int I_DefaultValue, int I_MinValue, int I_MaxValue);
 
     /** Integer retrieval.
         @return Integer value entered by the user. */
     public int getInt() {
         return __getInt(this.getNativeRef());
     }
-    private static final native int __getInt(int I_NativeIntRef);
+    private static final native int __getInt(long I64_NativeIntRef);
 
 }

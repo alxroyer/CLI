@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -43,14 +43,14 @@
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_Element__1_1getKeyword(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeElementRef)
+        jlong I64_NativeElementRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getKeyword(I_NativeElementRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getKeyword(I64_NativeElementRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeElementRef", I64_NativeElementRef) << cli::endl;
     std::string str_Keyword;
-    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I_NativeElementRef))
+    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I64_NativeElementRef))
     {
         str_Keyword = (const char*) pcli_Element->GetKeyword();
     }
@@ -58,94 +58,94 @@ extern "C" JNIEXPORT jstring JNICALL Java_cli_Element__1_1getKeyword(
     return NativeExec::Native2Java(str_Keyword);
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getHelp(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Element__1_1getHelp(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeElementRef)
+        jlong I64_NativeElementRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getHelp(I_NativeElementRef, I_NativeHelpRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
-    NativeObject::REF i_HelpRef = 0;
-    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I_NativeElementRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getHelp(I64_NativeElementRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeElementRef", I64_NativeElementRef) << cli::endl;
+    NativeObject::REF i64_HelpRef = 0;
+    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I64_NativeElementRef))
     {
         const cli::Help& cli_Help = pcli_Element->GetHelp();
         NativeObject::CreateFromNative(cli_Help);
         NativeObject::Delegate(cli_Help, *pcli_Element);
-        i_HelpRef = NativeObject::GetNativeRef(cli_Help);
+        i64_HelpRef = NativeObject::GetNativeRef(cli_Help);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Element.__getHelp()", i_HelpRef) << cli::endl;
-    return i_HelpRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Element.__getHelp()", i64_HelpRef) << cli::endl;
+    return i64_HelpRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getCli(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Element__1_1getCli(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeElementRef)
+        jlong I64_NativeElementRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getCli(I_NativeElementRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
-    NativeObject::REF i_CliRef = 0;
-    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I_NativeElementRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getCli(I64_NativeElementRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeElementRef", I64_NativeElementRef) << cli::endl;
+    NativeObject::REF i64_CliRef = 0;
+    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I64_NativeElementRef))
     {
         const cli::Cli& cli_Cli = pcli_Element->GetCli();
-        i_CliRef = NativeObject::GetNativeRef(cli_Cli);
+        i64_CliRef = NativeObject::GetNativeRef(cli_Cli);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Element.__getCli()", i_CliRef) << cli::endl;
-    return i_CliRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Element.__getCli()", i64_CliRef) << cli::endl;
+    return i64_CliRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getShell(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Element__1_1getShell(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeElementRef)
+        jlong I64_NativeElementRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getShell(I_NativeElementRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
-    NativeObject::REF i_ShellRef = 0;
-    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I_NativeElementRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getShell(I64_NativeElementRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeElementRef", I64_NativeElementRef) << cli::endl;
+    NativeObject::REF i64_ShellRef = 0;
+    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I64_NativeElementRef))
     {
         const cli::Shell& cli_Shell = pcli_Element->GetShell();
-        i_ShellRef = NativeObject::GetNativeRef(cli_Shell);
+        i64_ShellRef = NativeObject::GetNativeRef(cli_Shell);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Element.__getShell()", i_ShellRef) << cli::endl;
-    return i_ShellRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Element.__getShell()", i64_ShellRef) << cli::endl;
+    return i64_ShellRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getOutputStream(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Element__1_1getOutputStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeElementRef)
+        jlong I64_NativeElementRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getOutputStream(I_NativeElementRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
-    NativeObject::REF i_OutputDeviceRef = 0;
-    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I_NativeElementRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getOutputStream(I64_NativeElementRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeElementRef", I64_NativeElementRef) << cli::endl;
+    NativeObject::REF i64_OutputDeviceRef = 0;
+    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I64_NativeElementRef))
     {
         const cli::OutputDevice& cli_OutputDevice = pcli_Element->GetOutputStream();
-        i_OutputDeviceRef = NativeObject::GetNativeRef(cli_OutputDevice);
+        i64_OutputDeviceRef = NativeObject::GetNativeRef(cli_OutputDevice);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Element.__getOutputStream()", i_OutputDeviceRef) << cli::endl;
-    return i_OutputDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Element.__getOutputStream()", i64_OutputDeviceRef) << cli::endl;
+    return i64_OutputDeviceRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Element__1_1getErrorStream(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Element__1_1getErrorStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeElementRef)
+        jlong I64_NativeElementRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getErrorStream(I_NativeElementRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeElementRef", I_NativeElementRef) << cli::endl;
-    NativeObject::REF i_ErrorDeviceRef = 0;
-    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I_NativeElementRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Element.__getErrorStream(I64_NativeElementRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeElementRef", I64_NativeElementRef) << cli::endl;
+    NativeObject::REF i64_ErrorDeviceRef = 0;
+    if (const cli::Element* const pcli_Element = NativeObject::GetNativeObject<const cli::Element*>(I64_NativeElementRef))
     {
         const cli::OutputDevice& cli_ErrorDevice = pcli_Element->GetErrorStream();
-        i_ErrorDeviceRef = NativeObject::GetNativeRef(cli_ErrorDevice);
+        i64_ErrorDeviceRef = NativeObject::GetNativeRef(cli_ErrorDevice);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Element.__getErrorStream()", i_ErrorDeviceRef) << cli::endl;
-    return i_ErrorDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Element.__getErrorStream()", i64_ErrorDeviceRef) << cli::endl;
+    return i64_ErrorDeviceRef;
 }

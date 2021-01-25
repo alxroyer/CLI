@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -106,7 +106,7 @@ static const bool TestCmdLineEdition(void)
     cli::StringDevice cli_Out(256, false);
 
     // Append the command line.
-    cli_CmdLine.Put(cli_Out, '0');
+    cli_CmdLine.Put(cli_Out, cli::KEY_0);
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, "0", "", cli_Out, "0")) return false;
     cli_CmdLine.Put(cli_Out, cli::tk::String(10, "1"));
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, "01", "", cli_Out, "1")) return false;
@@ -176,10 +176,10 @@ static const bool TestCmdLineEdition(void)
     cli_CmdLine.Put(cli_Out, cli::tk::String(10, "01"));
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, "abc01", "de", cli_Out, "01de\b\b")) return false;
     cli_CmdLine.SetInsertMode(false);
-    cli_CmdLine.Put(cli_Out, '2');
+    cli_CmdLine.Put(cli_Out, cli::KEY_2);
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, "abc012", "e", cli_Out, "2")) return false;
     cli_CmdLine.SetInsertMode(true);
-    cli_CmdLine.Put(cli_Out, '3');
+    cli_CmdLine.Put(cli_Out, cli::KEY_3);
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, "abc0123", "e", cli_Out, "3e\b")) return false;
     cli_CmdLine.SetInsertMode(false);
     cli_CmdLine.Put(cli_Out, cli::tk::String(10, "45"));
@@ -203,7 +203,7 @@ static const bool TestCmdLineEdition(void)
     cli_CmdLine.MoveCursor(cli_Out, - (int) cli_CmdLine.GetPrevWord().GetLength());
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, "This is just a sample ", "sentence.", cli_Out, "\b\b\b\b\b\b")) return false;
         if (! CheckEditionWords(__CALL_INFO__, cli_CmdLine, "sample ", "sentence.")) return false;
-    cli_CmdLine.MoveCursor(cli_Out, - 1);
+    cli_CmdLine.MoveCursor(cli_Out, -1);
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, "This is just a sample", " sentence.", cli_Out, "\b")) return false;
         if (! CheckEditionWords(__CALL_INFO__, cli_CmdLine, "sample", " sentence.")) return false;
     cli_CmdLine.MoveCursor(cli_Out, - (int) cli_CmdLine.GetPrevWord().GetLength());
@@ -221,14 +221,14 @@ static const bool TestCmdLineEdition(void)
     cli::tk::String tk_Left(cli::MAX_CMD_LINE_LENGTH + 10);
     for (unsigned int ui = 0; ui < cli::MAX_CMD_LINE_LENGTH - 2; ui ++)
     {
-        cli_CmdLine.Put(cli_Out, '.');
+        cli_CmdLine.Put(cli_Out, cli::DOT);
         tk_Left.Append(".");
             if (! CheckEdition(__CALL_INFO__, cli_CmdLine, tk_Left, "", cli_Out, ".")) return false;
     }
     cli_CmdLine.Put(cli_Out, cli::tk::String(10, "abcde"));
     tk_Left.Append("ab");
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, tk_Left, "", cli_Out, "ab")) return false;
-    cli_CmdLine.Put(cli_Out, '.');
+    cli_CmdLine.Put(cli_Out, cli::DOT);
         if (! CheckEdition(__CALL_INFO__, cli_CmdLine, tk_Left, "", cli_Out, "")) return false;
 
     return true;

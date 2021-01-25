@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,19 +36,19 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Less__1_1Less(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Less__1_1Less(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef)
+        jlong I64_NativeParentContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Less.__Less(I_NativeParentContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
-    NativeObject::REF i_LessRef = 0;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Less.__Less(I64_NativeParentContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
+    NativeObject::REF i64_LessRef = 0;
     cli::ui::Less* pcli_Less = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_Less = new cli::ui::Less(*pcli_ParentContext, 0, 0); // UI_MaxLines & UI_MaxLineLength not taken in account by tk STL implementation
         }
@@ -60,25 +60,25 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Less__1_1Less(
     if (pcli_Less != NULL)
     {
         NativeObject::Use(*pcli_Less);
-        i_LessRef = NativeObject::GetNativeRef(*pcli_Less);
+        i64_LessRef = NativeObject::GetNativeRef(*pcli_Less);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Less.__Less()", i_LessRef) << cli::endl;
-    return i_LessRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Less.__Less()", i64_LessRef) << cli::endl;
+    return i64_LessRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Less__1_1getText(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Less__1_1getText(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeLessRef)
+        jlong I64_NativeLessRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Less.__getText(I_NativeLessRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeLessRef", I_NativeLessRef) << cli::endl;
-    NativeObject::REF i_TextRef = 0;
-    if (cli::ui::Less* const pcli_Less = NativeObject::GetNativeObject<cli::ui::Less*>(I_NativeLessRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Less.__getText(I64_NativeLessRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeLessRef", I64_NativeLessRef) << cli::endl;
+    NativeObject::REF i64_TextRef = 0;
+    if (cli::ui::Less* const pcli_Less = NativeObject::GetNativeObject<cli::ui::Less*>(I64_NativeLessRef))
     {
-        i_TextRef = NativeObject::GetNativeRef(pcli_Less->GetText());
+        i64_TextRef = NativeObject::GetNativeRef(pcli_Less->GetText());
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Less.__getText()", i_TextRef) << cli::endl;
-    return i_TextRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Less.__getText()", i64_TextRef) << cli::endl;
+    return i64_TextRef;
 }

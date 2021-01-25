@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -31,6 +31,7 @@ Makefile.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 # Tests
 check: PROJECTS =
+check clean: PROJECTS += pylint.mak
 check clean: PROJECTS += test_schema.mak
 check clean: PROJECTS += test_cli2cpp_const-ids.mak test_cli2cpp_xsl-py-diff.mak test_cli2cpp_errors.mak test_cli2cpp_perf.mak
 check clean: PROJECTS += test_cli2java_const-ids.mak test_cli2java_xsl-py-diff.mak test_cli2java_errors.mak test_cli2java_perf.mak

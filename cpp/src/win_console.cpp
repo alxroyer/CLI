@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -48,7 +48,7 @@ static const TraceClass& GetWinConsoleInTraceClass(void)
 {
     static const TraceClass cli_WinConsoleInTraceClass("CLI_WIN_CONSOLE_IN", Help()
         .AddHelp(Help::LANG_EN, "CLI Windows console input traces")
-        .AddHelp(Help::LANG_FR, "Traces d'entrées de la console Windows du CLI"));
+        .AddHelp(Help::LANG_FR, "Traces d'entrÃ©es de la console Windows du CLI"));
     return cli_WinConsoleInTraceClass;
 }
 //! @brief Windows console output trace class singleton redirection.
@@ -85,6 +85,18 @@ Console::~Console(void)
 
 const bool Console::OpenDevice(void)
 {
+    // Windows console Code Page management
+    // SetConsoleCP() => see https://docs.microsoft.com/en-us/windows/console/setconsolecp
+    // SetConsoleOutputCP() => see https://docs.microsoft.com/en-us/windows/console/setconsoleoutputcp
+    // Code Page Identifiers => see https://msdn.microsoft.com/library/windows/desktop/dd317756 or https://en.wikipedia.org/wiki/Code_page
+    // 850 = Latin-1
+    // 858 = Latin-1 with euro symbol
+    // 65001 = utf-8
+    // 28591 = iso-8859-1
+
+    // Ensure euro symbol management
+    SetConsoleCP(858);
+    SetConsoleOutputCP(858);
     return true;
 }
 
@@ -134,37 +146,73 @@ const KEY Console::GetKey(void) const
             case 4:     return LOGOUT;      // CTRL+D
             case 5:     return KEY_END;     // CTRL+E
             case 8:     return BACKSPACE;   // (CTRL+H)
+            case 9:     return TAB;
+            case 10:    return ENTER;
             case 12:    return CLS;         // CTRL+L
-            case 14:    return NEXT;        // CTRL+N
-            case 16:    return PREVIOUS;    // CTRL+P
+            case 13:    return ENTER;
+            case 14:    return NEXT;        // CTRL+N (additional character sequence)
+            case 16:    return PREVIOUS;    // CTRL+P (additional character sequence)
             case 25:    return REDO;        // CTRL+Y
             case 26:    return UNDO;        // CTRL+Z
             case 27:    return ESCAPE;
-            //case 63:    return EURO;        // CTRL+ALT+E, conflicts with '?'
-            case 96:    break;              // character always returned after `
-            case 126:   break;              // character always return after ~
-            case 160:   return KEY_aacute;
-            case 133:   return KEY_agrave;
-            case 132:   return KEY_auml;
-            case 131:   return KEY_acirc;
-            case 135:   return KEY_ccedil;
+            //case 33:      => EXCLAMATION
+            //case 34:      => DOUBLE_QUOTE
+            //case 35:      => SHARP
+            //case 36:      => DOLLAR
+            //case 37:      => PERCENT
+            //case 38:      => AMPERCENT
+            //case 39:      => QUOTE
+            //case 40:      => OPENING_BRACE
+            //case 41:      => CLOSING_BRACE
+            //case 42:      => STAR
+            //case 43:      => PLUS
+            //case 44:      => COMA
+            //case 45:      => MINUS
+            //case 46:      => DOT
+            //case 47:      => SLASH
+            //case 48-57:   => KEY_0 - KEY_9
+            //case 58:      => COLUMN
+            //case 59:      => SEMI_COLUMN
+            //case 60:      => LOWER_THAN
+            //case 61:      => EQUAL
+            //case 62:      => GREATER_THAN
+            //case 63:      => QUESTION
+            //case 64:      => AROBASE
+            //case 65-90:   => KEY_A - KEY_Z
+            //case 91:      => OPENING_BRACKET
+            //case 92:      => BACKSLASH
+            //case 93:      => CLOSING_BRACKET
+            //case 95:      => UNDERSCORE
+            case 96:    break;              // Additional character returned after '`'
+            //case 97-122:  => KEY_a - KEY_z
+            //case 123:     => OPENING_CURLY_BRACE
+            //case 124:     => PIPE
+            //case 125:     => CLOSING_CURLY_BRACE
+            case 126:   break;              // Additional character returned after '~'
+            case 129:   return KEY_uuml;
             case 130:   return KEY_eacute;
-            case 138:   return KEY_egrave;
-            case 137:   return KEY_euml;
+            case 131:   return KEY_acirc;
+            case 132:   return KEY_auml;
+            case 133:   return KEY_agrave;
+            case 135:   return KEY_ccedil;
             case 136:   return KEY_ecirc;
-            case 161:   return KEY_iacute;
-            case 141:   return KEY_igrave;
+            case 137:   return KEY_euml;
+            case 138:   return KEY_egrave;
             case 139:   return KEY_iuml;
             case 140:   return KEY_icirc;
-            case 156:   return POUND;
-            case 162:   return KEY_oacute;
-            case 149:   return KEY_ograve;
-            case 148:   return KEY_ouml;
+            case 141:   return KEY_igrave;
             case 147:   return KEY_ocirc;
-            case 163:   return KEY_uacute;
-            case 151:   return KEY_ugrave;
-            case 129:   return KEY_uuml;
+            case 148:   return KEY_ouml;
+            case 149:   return KEY_ograve;
             case 150:   return KEY_ucirc;
+            case 151:   return KEY_ugrave;
+            case 156:   return POUND;
+            case 160:   return KEY_aacute;
+            case 161:   return KEY_iacute;
+            case 162:   return KEY_oacute;
+            case 163:   return KEY_uacute;
+            case 184:   return COPYRIGHT;   // Does not work actually. To be checked...
+            case 213:   return EURO;
             case 224: // Escaped characters.
             {
                 const int i_Char2 = _getch(); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
@@ -188,18 +236,23 @@ const KEY Console::GetKey(void) const
                     case 141:   return PAGE_UP;     // CTRL+UP
                     case 145:   return PAGE_DOWN;   // CTRL+DOWN
                     case 146:   return COPY;        // CTRL+INS
+                    case 147:   return CUT;         // CTRL+SHIFT+DELETE
                 }
                 break;
             }
             case 230:   return MICRO;
             case 245:   return PARAGRAPH;
             case 248:   return DEGREE;
-            case 184:   return COPYRIGHT;
             case 253:   return SQUARE;
             default:
             {
-                const KEY e_Char = IODevice::GetKey(i_Char);
-                if (e_Char != NULL_KEY)
+                const KEY e_Char = IODevice::Char2Key(i_Char);
+                if (e_Char == FEED_MORE)
+                {
+                    // Let's loop again.
+                    //return GetKey();
+                }
+                else if (e_Char != NULL_KEY)
                 {
                     return e_Char;
                 }
@@ -212,95 +265,23 @@ void Console::PutString(const char* const STR_Out) const
 {
     if (STR_Out != NULL)
     {
-        // Create a buffer that will optimize display
-        const unsigned int ui_BufferSize = (GetScreenInfo().GetSafeWidth() + 1) * GetScreenInfo().GetSafeHeight();
-        tk::String tk_Out(ui_BufferSize);
-
-        for (   const char* pc_Out = STR_Out;
-                (pc_Out != NULL) && (*pc_Out != '\0');
-                pc_Out ++)
-        {
-            char c_Out = *pc_Out;
-            switch (*pc_Out)
-            {
-                case KEY_aacute:    c_Out = (char) -96;   break;
-                case KEY_agrave:    c_Out = (char) -123;  break;
-                case KEY_auml:      c_Out = (char) -124;  break;
-                case KEY_acirc:     c_Out = (char) -125;  break;
-                case KEY_ccedil:    c_Out = (char) -121;  break;
-                case KEY_eacute:    c_Out = (char) -126;  break;
-                case KEY_egrave:    c_Out = (char) -118;  break;
-                case KEY_euml:      c_Out = (char) -119;  break;
-                case KEY_ecirc:     c_Out = (char) -120;  break;
-                case KEY_iacute:    c_Out = (char) -95;   break;
-                case KEY_igrave:    c_Out = (char) -115;  break;
-                case KEY_iuml:      c_Out = (char) -117;  break;
-                case KEY_icirc:     c_Out = (char) -116;  break;
-                case KEY_oacute:    c_Out = (char) -94;   break;
-                case KEY_ograve:    c_Out = (char) -107;  break;
-                case KEY_ouml:      c_Out = (char) -108;  break;
-                case KEY_ocirc:     c_Out = (char) -109;  break;
-                case KEY_uacute:    c_Out = (char) -93;   break;
-                case KEY_ugrave:    c_Out = (char) -105;  break;
-                case KEY_uuml:      c_Out = (char) -127;  break;
-                case KEY_ucirc:     c_Out = (char) -106;  break;
-                case SQUARE:        c_Out = (char) -3;    break;
-                case EURO:          c_Out = (char) -79;   break;
-                case POUND:         c_Out = (char) -100;  break;
-                case MICRO:         c_Out = (char) -26;   break;
-                case PARAGRAPH:     c_Out = (char) -11;   break;
-                case DEGREE:        c_Out = (char) -8;    break;
-                case COPYRIGHT:     c_Out = (char) -72;   break;
-                case -61:
-                {
-                    // Ecaped characters (from Java for instance).
-                    pc_Out ++;
-                    if ((pc_Out != NULL) && (*pc_Out != '\0'))
-                    {
-                        switch (*pc_Out)
-                        {
-                            case -95:   c_Out = (char) -96;   break;  // KEY_aacute
-                            case -96:   c_Out = (char) -123;  break;  // KEY_agrave
-                            case -92:   c_Out = (char) -124;  break;  // KEY_auml
-                            case -94:   c_Out = (char) -125;  break;  // KEY_acirc
-                            case -89:   c_Out = (char) -121;  break;  // KEY_ccedil
-                            case -87:   c_Out = (char) -126;  break;  // KEY_eacute
-                            case -88:   c_Out = (char) -118;  break;  // KEY_egrave
-                            case -85:   c_Out = (char) -119;  break;  // KEY_euml
-                            case -86:   c_Out = (char) -120;  break;  // KEY_ecirc
-                            case -83:   c_Out = (char) -95;   break;  // KEY_iacute
-                            case -84:   c_Out = (char) -115;  break;  // KEY_igrave
-                            case -81:   c_Out = (char) -117;  break;  // KEY_iuml
-                            case -82:   c_Out = (char) -116;  break;  // KEY_icirc
-                            case -77:   c_Out = (char) -94;   break;  // KEY_oacute
-                            case -78:   c_Out = (char) -107;  break;  // KEY_ograve
-                            case -74:   c_Out = (char) -108;  break;  // KEY_ouml
-                            case -76:   c_Out = (char) -109;  break;  // KEY_ocirc
-                            case -70:   c_Out = (char) -93;   break;  // KEY_uacute
-                            case -71:   c_Out = (char) -105;  break;  // KEY_ugrave
-                            case -68:   c_Out = (char) -127;  break;  // KEY_uuml
-                            case -69:   c_Out = (char) -106;  break;  // KEY_ucirc
-                        }
-                    }
-                    break;
-                }
-            }
-
-            // Append the buffer.
-            if (tk_Out.GetLength() >= ui_BufferSize)
-            {
-                // If the buffer is full, display and reset before.
-                _cputs((const char*) tk_Out);
-                tk_Out.Reset();
-            }
-            tk_Out.Append(c_Out);
-
-            // Additional trace.
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "(" << (int) c_Out << ")";
+        // Windows console works better when unicode string is output.
+        // See https://msdn.microsoft.com/en-us/library/windows/desktop/dd319072(v=vs.85).aspx
+        int i_RequiredWideCharLen = MultiByteToWideChar(
+            CP_UTF8, 0, // CodePage, dwFlags
+            STR_Out, -1, // lpMultiByteStr
+            NULL, 0 // lpWideCharStr
+        );
+        if (i_RequiredWideCharLen > 0) {
+            LPWSTR str_Unicode = new WCHAR[i_RequiredWideCharLen];
+            MultiByteToWideChar(
+                CP_UTF8, 0, // CodePage, dwFlags
+                STR_Out, -1, // lpMultiByteStr
+                str_Unicode, i_RequiredWideCharLen // lpWideCharStr
+            );
+            _cputws(str_Unicode);
+            delete [] str_Unicode;
         }
-        // Final display of the buffer.
-        _cputs((const char*) tk_Out);
-        tk_Out.Reset();
 
         // Insure the cursor is visible (reposition in the same place).
         do
@@ -309,12 +290,12 @@ void Console::PutString(const char* const STR_Out) const
             CONSOLE_SCREEN_BUFFER_INFO t_ScreenBufferInfo;
             if (! ::GetConsoleScreenBufferInfo(h_Console, & t_ScreenBufferInfo))
             {
-                GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+                GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
                 break;
             }
             if (! ::SetConsoleCursorPosition(h_Console, t_ScreenBufferInfo.dwCursorPosition))
             {
-                GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+                GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
                 break;
             }
         } while(0);
@@ -337,7 +318,7 @@ void Console::CleanScreen(void) const
         CONSOLE_SCREEN_BUFFER_INFO t_ScreenBufferInfo;
         if (! ::GetConsoleScreenBufferInfo(h_Console, & t_ScreenBufferInfo))
         {
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
             break;
         }
         const DWORD dw_ConsoleSize = t_ScreenBufferInfo.dwSize.X * t_ScreenBufferInfo.dwSize.Y;
@@ -347,7 +328,7 @@ void Console::CleanScreen(void) const
         DWORD dw_CharsWritten = 0;
         if (! ::FillConsoleOutputCharacter(h_Console, (TCHAR) ' ', dw_ConsoleSize, t_ZeroCoord, & dw_CharsWritten))
         {
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "FillConsoleOutputCharacter(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "FillConsoleOutputCharacter(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
             break;
         }
 
@@ -356,14 +337,14 @@ void Console::CleanScreen(void) const
         // Get the current text attribute.
         if (! ::GetConsoleScreenBufferInfo(h_Console, & t_ScreenBufferInfo))
         {
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
             break;
         }
 
         // Now set the buffer's attributes accordingly.
         if (! ::FillConsoleOutputAttribute(h_Console, t_ScreenBufferInfo.wAttributes, dw_ConsoleSize, t_ZeroCoord, & dw_CharsWritten))
         {
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "FillConsoleOutputAttribute(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "FillConsoleOutputAttribute(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
             break;
         }
 // End of strange code
@@ -371,7 +352,7 @@ void Console::CleanScreen(void) const
         // Put the cursor at (0, 0).
         if (! ::SetConsoleCursorPosition(h_Console, t_ZeroCoord))
         {
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "SetConsoleCursorPosition(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "SetConsoleCursorPosition(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
             break;
         }
 
@@ -394,14 +375,14 @@ const OutputDevice::ScreenInfo Console::GetScreenInfo(void) const
         CONSOLE_SCREEN_BUFFER_INFO t_ScreenBufferInfo;
         if (! ::GetConsoleScreenBufferInfo(h_Console, & t_ScreenBufferInfo))
         {
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleScreenBufferInfo(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
             break;
         }
 
         DWORD dw_Mode = 0;
         if (! ::GetConsoleMode(h_Console, & dw_Mode))
         {
-            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleMode(line=" << __LINE__ << ") failed (" << ::GetLastError() << ")" << endl;
+            GetTraces().SafeTrace(CLI_WIN_CONSOLE_OUT, *this) << "GetConsoleMode(line=" << __LINE__ << ") failed (" << (uint64_t) ::GetLastError() << ")" << endl;
             break;
         }
 

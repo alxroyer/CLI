@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,6 +36,7 @@
 #include "cli/io_device.h"
 #include "cli/assert.h"
 #include "constraints.h"
+#include "utils.h"
 
 CLI_NS_USE(cli)
 
@@ -53,8 +54,8 @@ SyntaxTag::~SyntaxTag(void)
 const tk::String SyntaxTag::GetKeyword(void) const
 {
     static char str_Buffer[256];
-    memset(str_Buffer, '\0', sizeof(str_Buffer));
-    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "tag[%p]", this);
+    const int i_Res = snprintf(str_Buffer, sizeof(str_Buffer), "tag[%p]", this);
+    CheckSnprintfResult(str_Buffer, sizeof(str_Buffer), i_Res);
 
     tk::String str_Keyword(MAX_WORD_LENGTH);
     if (! str_Keyword.Set(str_Buffer))
@@ -83,8 +84,8 @@ SyntaxRef::~SyntaxRef(void)
 const tk::String SyntaxRef::GetKeyword(void) const
 {
     static char str_Buffer[256];
-    memset(str_Buffer, '\0', sizeof(str_Buffer));
-    snprintf(str_Buffer, sizeof(str_Buffer) - 1, "ref[%p]", this);
+    const int i_Res = snprintf(str_Buffer, sizeof(str_Buffer), "ref[%p]", this);
+    CheckSnprintfResult(str_Buffer, sizeof(str_Buffer), i_Res);
 
     tk::String str_Keyword(MAX_WORD_LENGTH);
     if (! str_Keyword.Set(str_Buffer))

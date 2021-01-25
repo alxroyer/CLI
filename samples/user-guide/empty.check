@@ -48,11 +48,11 @@ cli-config>help
   quit            Quit
   show            Show CLI information
 cli-config>show version
-CLI version 2.8
+CLI version 2.9
 cli-config>show author
-Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 cli-config>show license
-Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
 All rights reserved.
 
@@ -102,11 +102,11 @@ cli-config>lang
   english         English language
   french          French language
 cli-config>lang french 
-Langue française
+Langue franÃ§aise
 cli-config>help
   beep            Configuration du bip
-  cls             Nettoyage de l'écran
-  echo            Configuration de l'écho
+  cls             Nettoyage de l'Ã©cran
+  echo            Configuration de l'Ã©cho
   exit            Sortir du menu 'cli-config'
   help            Obtenir de l'aide
   lang            Modification de la langue
@@ -116,7 +116,7 @@ cli-config>help
 cli-config>exit
 myCLI>help
   cli-config      Menu de configuration du CLI
-  cls             Nettoyage de l'écran
+  cls             Nettoyage de l'Ã©cran
   exit            Sortir du menu 'myCLI'
   help            Obtenir de l'aide
   pwm             Affichage du menu courant
@@ -124,7 +124,7 @@ myCLI>help
 myCLI>cli-config
 cli-config>lang 
   english         Langue anglaise
-  french          Langue française
+  french          Langue franÃ§aise
 cli-config>lang english 
 English language
 cli-config>help

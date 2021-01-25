@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -38,19 +38,19 @@ public class StringDevice extends OutputDevice.Native {
     public StringDevice() {
         super(__StringDevice());
     }
-    private static final native int __StringDevice();
+    private static final native long __StringDevice();
 
     /** String accessor.
-        String output to the device. */
+        @return Output string. */
     public String getString() {
         return __getString(this.getNativeRef());
     }
-    private static final native String __getString(int I_NativeStringDeviceRef);
+    private static final native String __getString(long I64_NativeStringDeviceRef);
 
     /** Reset. */
     public void reset() {
         __reset(this.getNativeRef());
     }
-    private static final native void __reset(int I_NativeStringDeviceRef);
+    private static final native void __reset(long I64_NativeStringDeviceRef);
 
 }

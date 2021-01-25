@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -178,7 +178,7 @@ CLI_NS_BEGIN(cli)
 
     private:
         //! @brief Called when a printable character comes up from the input device.
-        void OnPrintableChar(const char C_KeyCode);
+        void OnPrintableChar(const KEY E_KeyCode);
         //! @brief Called when using the 'home'/'begin' key.
         void OnKeyBegin(void);
         //! @brief Called when using the 'end' key.

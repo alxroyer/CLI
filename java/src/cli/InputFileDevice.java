@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,13 +36,15 @@ public class InputFileDevice extends IODevice.Native {
     public InputFileDevice(String STR_FileName, OutputDevice.Interface CLI_Out) {
         super(__InputFileDevice(STR_FileName, CLI_Out.getNativeRef()));
     }
-    private static final native int __InputFileDevice(String STR_FileName, int I_NativeOutputDeviceRef);
+    private static final native long __InputFileDevice(String STR_FileName, long I64_NativeOutputDeviceRef);
 
-    /** Special characters enabling. */
+    /** Special characters enabling.
+        @param B_EnableSpecialCharacters true for enabling. false otherwise.
+        @return Same InputFileDevice instance reference. */
     public InputFileDevice enableSpecialCharacters(boolean B_EnableSpecialCharacters) {
         __enableSpecialCharacters(getNativeRef(), B_EnableSpecialCharacters);
         return this;
     }
-    private static final native void __enableSpecialCharacters(int I_NativeFileDeviceRef, boolean B_EnableSpecialCharacters);
+    private static final native void __enableSpecialCharacters(long I64_NativeFileDeviceRef, boolean B_EnableSpecialCharacters);
 
 }

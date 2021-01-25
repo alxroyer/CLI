@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -24,7 +24,7 @@
 
 
 # Default goal
-.DEFAULT_GOAL = build
+.DEFAULT_GOAL = install
 .PHONY: native.default
 native.default: $(.DEFAULT_GOAL) ;
 
@@ -38,44 +38,100 @@ PROJECT = native
 PRODUCT_TYPE = DYN_LIB
 PRODUCT = $(JAVA_DYN_LIB)
 PROJ_DEPS = jni.mak
+
+# Sources
 SRC_DIR = $(NATIVE_DIR)
+CPP_FILES += $(wildcard $(CLI_DIR)/cpp/src/*.cpp)
 ifeq ($(TARGET),Cygwin)
-CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CLI_DIR)/cpp/src/ncurses_console.cpp,$(wildcard $(CLI_DIR)/cpp/src/*.cpp))
-deps: CPP_FILES += $(CLI_DIR)/cpp/src/ncurses_console.cpp
+	CPP_FILES := $(filter-out $(CLI_DIR)/cpp/src/ncurses_console.cpp,$(CPP_FILES))
 endif
 ifeq ($(TARGET),Linux)
-CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(filter-out $(CLI_DIR)/cpp/src/win_console.cpp,$(wildcard $(CLI_DIR)/cpp/src/*.cpp))
-deps: CPP_FILES += $(CLI_DIR)/cpp/src/win_console.cpp
+	CPP_FILES := $(filter-out $(CLI_DIR)/cpp/src/win_console.cpp,$(CPP_FILES))
 endif
-AUTO_DEPS = yes
-INT_DIR = $(OUT_DIR)/$(TARGET)$(CXX)/__$(PROJECT)
-ifeq ($(TARGET),Linux)
-PROJ_LIBS = -lncurses
-endif
+CPP_FILES += $(wildcard $(SRC_DIR)/*.cpp)
+
+# Compilation flags
 ifeq ($(TARGET),Cygwin)
-PROJ_CPP_FLAGS = -mno-cygwin -DCLI_NO_REGEX -DCLI_WIN_NETWORK
+	# See https://stackoverflow.com/questions/6034390/compiling-with-cython-and-mingw-produces-gcc-error-unrecognized-command-line-o#6035864
+	# "It sounds like GCC 4.7.0 has finally removed the deprecated -mno-cygwin option"
+	#PROJ_CPP_FLAGS += -mno-cygwin
+	PROJ_CPP_FLAGS += -DCLI_NO_REGEX -DCLI_WIN_NETWORK
+	# See https://stackoverflow.com/questions/27891478/error-when-compiling-in-cygwin
+	#PROJ_CPP_FLAGS += -D__int64=int64_t
+	# See: https://stackoverflow.com/questions/8413290/using-java-jni-on-cygwin#47069933
+	# "I couldn't get JNI to work with Cygwin's g++ -- that induces a dependency on cygwin1.dll, which clashes with the JNI mechanism, causing a crash. The -mno-cygwin flag is no longer supported. But using /bin/x86_64-w64-mingw32-g++.exe fixed the problem for me."
+	CXX = x86_64-w64-mingw32-g++
+endif
 CPP_FLAGS = $(CPP_DEBUG_FLAG) $(CPP_OS_FLAGS) $(PROJ_CPP_FLAGS)
-PROJ_LIBS = -L/cygdrive/c/cygwin/lib/gcc/i686-pc-mingw32/3.4.4 -mno-cygwin -lwsock32
-endif
+
+# Include directories
+PROJ_INCLUDES += -I$(CLI_DIR)/cpp/include
 PROJ_INCLUDES += -isystem "$(JDK_DIR)/include"
 ifeq ($(TARGET),Cygwin)
-PROJ_INCLUDES += -isystem "$(JDK_DIR)/include/win32"
+	PROJ_INCLUDES += -isystem "$(JDK_DIR)/include/win32"
 deps: PROJ_INCLUDES += -isystem /usr/include
 endif
 ifeq ($(TARGET),Linux)
-PROJ_INCLUDES += -isystem "$(JDK_DIR)/include/linux"
+	PROJ_INCLUDES += -isystem "$(JDK_DIR)/include/linux"
 endif
-PROJ_INCLUDES += -I$(CLI_DIR)/cpp/include
 INCLUDES = $(PROJ_INCLUDES)
+
+# Linking
+ifeq ($(TARGET),Linux)
+	PROJ_LIBS = -lncurses
+endif
+ifeq ($(TARGET),Cygwin)
+	# See https://stackoverflow.com/questions/6034390/compiling-with-cython-and-mingw-produces-gcc-error-unrecognized-command-line-o/6035864#6035864
+	# "It sounds like GCC 4.7.0 has finally removed the deprecated -mno-cygwin option"
+	#PROJ_LIBS += -mno-cygwin -L/cygdrive/c/cygwin/lib/gcc/i686-pc-mingw32/3.4.4
+	PROJ_LIBS = -lwsock32
+endif
+
+# Other project variables
+AUTO_DEPS = yes
+INT_DIR = $(OUT_DIR)/$(TARGET)$(CXX)/__$(PROJECT)
 CLEAN_DIR = $(INT_DIR) $(OUT_DIR)/$(TARGET)$(CXX)
+
+# _build.mak inclusion
 include $(CLI_DIR)/cpp/build/make/_build.mak
+
+.PHONY: install
+install: build ;
+
+# Because of the compilation with x86_64-w64-mingw32-g++, the cli.dll library depends on a couple of mingw32 libs.
+# We choose to install these libraries next to the one generated in as much as you would like to deliver them as well with your final application.
+ifeq ($(TARGET),Cygwin)
+install: $(OUT_DIR)/libstdc++-6.dll
+install: $(OUT_DIR)/libgcc_s_seh-1.dll
+clean: clean.cygwin
+
+MINGW_BIN_DIR = /cygdrive/c/cygwin64/usr/x86_64-w64-mingw32/sys-root/mingw/bin
+
+$(OUT_DIR)/libstdc++-6.dll: $(MINGW_BIN_DIR)/libstdc++-6.dll
+	cp $< $@
+
+$(OUT_DIR)/libgcc_s_seh-1.dll: $(MINGW_BIN_DIR)/libgcc_s_seh-1.dll
+	cp $< $@
+
+.PHONY: clean.cygwin
+clean.cygwin:
+	rm -f $(OUT_DIR)/libstdc++-6.dll
+	rm -f $(OUT_DIR)/libgcc_s_seh-1.dll
+endif
+
+# Dependencies.
+deps: deps.pre
+# Ensure dependencies for filtered-out sources will be computed whatever
+ifeq ($(TARGET),Cygwin)
+deps: CPP_FILES += $(CLI_DIR)/cpp/src/ncurses_console.cpp
+endif
+ifeq ($(TARGET),Linux)
+deps: CPP_FILES += $(CLI_DIR)/cpp/src/win_console.cpp
+endif
 
 .PHONY: deps.pre
 deps.pre:
 	$(MAKE) -f libclijava.mak
 	$(MAKE) -f jni.mak
 
-# Dependencies.
 include $(AUTO_DEPS_FILE)
-
-deps: deps.pre

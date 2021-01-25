@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,22 +31,22 @@ package cli;
 public class SyntaxNode extends Element {
 
     /** Constructor.
-        @param I_NativeRef Native instance reference. */
-    protected SyntaxNode(int I_NativeRef) {
-        super(I_NativeRef);
+        @param I64_NativeRef Native instance reference. */
+    protected SyntaxNode(long I64_NativeRef) {
+        super(I64_NativeRef);
     }
 
     /** Adds a next element in the command lines decision tree after this node.
         @param CLI_Element Next element after this node.
-        @return The element added. null if an error occured. */
+        @return The element added. null if an error occurred. */
     public final Element addElement(Element CLI_Element) {
         Element cli_Element = CLI_Element;
-        int i_NativeElementRef = __addElement(this.getNativeRef(), CLI_Element.getNativeRef());
-        if (i_NativeElementRef != 0) {
-            cli_Element = (Element) NativeObject.getObject(i_NativeElementRef);
+        long i64_NativeElementRef = __addElement(this.getNativeRef(), CLI_Element.getNativeRef());
+        if (i64_NativeElementRef != 0) {
+            cli_Element = (Element) NativeObject.getObject(i64_NativeElementRef);
         }
         return cli_Element;
     }
-    private static final native int __addElement(int I_NativeSyntaxNodeRef, int I_NativeElementRef);
+    private static final native long __addElement(long I64_NativeSyntaxNodeRef, long I64_NativeElementRef);
 
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,23 +39,24 @@ public class ResourceString extends NativeObject
     public ResourceString(ResourceString CLI_String) {
         super(__ResourceString(CLI_String.getNativeRef()));
     }
-    private static final native int __ResourceString();
-    private static final native int __ResourceString(int I_NativeStringRef);
+    private static final native long __ResourceString();
+    private static final native long __ResourceString(long I64_NativeStringRef);
 
     /** Creation from native code.
         Useful for help members of other classes.
-        @param I_NativeStringRef Native instance reference. */
-    protected static void createFromNative(int I_NativeStringRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ResourceString.createFromNative(I_NativeStringRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeStringRef", new Integer(I_NativeStringRef).toString()));
+        @param I64_NativeStringRef Native instance reference. */
+    protected static void createFromNative(long I64_NativeStringRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ResourceString.createFromNative(I64_NativeStringRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeStringRef", new Long(I64_NativeStringRef).toString()));
 
-        NativeObject.createdFromNative(new ResourceString(I_NativeStringRef));
+        NativeObject.createdFromNative(new ResourceString(I64_NativeStringRef));
 
         Traces.trace(NativeTraces.CLASS, NativeTraces.end("ResourceString.createFromNative()"));
     }
-    /** Constructor for createFromNative() or child classes only. */
-    protected ResourceString(int I_NativeStringRef) {
-        super(I_NativeStringRef);
+    /** Constructor for createFromNative() or child classes only.
+        @param I64_NativeStringRef Native instance reference. */
+    protected ResourceString(long I64_NativeStringRef) {
+        super(I64_NativeStringRef);
     }
 
     /** English language constant. */
@@ -73,7 +74,7 @@ public class ResourceString extends NativeObject
         __setString(this.getNativeRef(), E_Lang, J_String);
         return this;
     }
-    private static final native boolean __setString(int I_NativeStringRef, int E_Lang, String J_String);
+    private static final native boolean __setString(long I64_NativeStringRef, int E_Lang, String J_String);
 
     /** States whether the resource string object has a resource for the given language.
         @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
@@ -81,7 +82,7 @@ public class ResourceString extends NativeObject
     public final boolean hasString(int E_Lang) {
         return __hasString(this.getNativeRef(), E_Lang);
     }
-    private static final native boolean __hasString(int I_NativeStringRef, int E_Lang);
+    private static final native boolean __hasString(long I64_NativeStringRef, int E_Lang);
 
     /** Retrieves the string attached for the given language.
         @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
@@ -89,5 +90,5 @@ public class ResourceString extends NativeObject
     public final String getString(int E_Lang) {
         return __getString(this.getNativeRef(), E_Lang);
     }
-    private static final native String __getString(int I_NativeStringRef, int E_Lang);
+    private static final native String __getString(long I64_NativeStringRef, int E_Lang);
 }

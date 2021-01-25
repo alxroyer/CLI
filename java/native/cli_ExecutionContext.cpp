@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,60 +39,60 @@
 
 // NonBlockingIODevice.Common implementation.
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ExecutionContext__1_1Common_1_1getInput(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ExecutionContext__1_1Common_1_1getInput(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef)
+        jlong I64_NativeContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getInput(I_NativeContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
-    NativeObject::REF i_InputRef = 0;
-    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I_NativeContextRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getInput(I64_NativeContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
+    NativeObject::REF i64_InputRef = 0;
+    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I64_NativeContextRef))
     {
         const cli::IODevice& cli_Input = pcli_Context->GetInput();
-        i_InputRef = NativeObject::GetNativeRef(cli_Input);
+        i64_InputRef = NativeObject::GetNativeRef(cli_Input);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ExecutionContext.Common.__getInput()", i_InputRef) << cli::endl;
-    return i_InputRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ExecutionContext.Common.__getInput()", i64_InputRef) << cli::endl;
+    return i64_InputRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ExecutionContext__1_1Common_1_1getStream(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ExecutionContext__1_1Common_1_1getStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef, jint E_StreamType)
+        jlong I64_NativeContextRef, jint E_StreamType)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getStream(I_NativeContextRef, E_StreamType)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getStream(I64_NativeContextRef, E_StreamType)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
-    NativeObject::REF i_StreamRef = 0;
-    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I_NativeContextRef))
+    NativeObject::REF i64_StreamRef = 0;
+    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I64_NativeContextRef))
     {
         const cli::OutputDevice& cli_Stream = pcli_Context->GetStream((cli::STREAM_TYPE) E_StreamType);
-        i_StreamRef = NativeObject::GetNativeRef(cli_Stream);
+        i64_StreamRef = NativeObject::GetNativeRef(cli_Stream);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ExecutionContext.Common.__getStream()", i_StreamRef) << cli::endl;
-    return i_StreamRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ExecutionContext.Common.__getStream()", i64_StreamRef) << cli::endl;
+    return i64_StreamRef;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1setStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef, jint E_StreamType, jint I_NativeDeviceRef)
+        jlong I64_NativeContextRef, jint E_StreamType, jlong I64_NativeDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__setStream(I_NativeContextRef, E_StreamType, I_NativeDeviceRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__setStream(I64_NativeContextRef, E_StreamType, I64_NativeDeviceRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeDeviceRef", I64_NativeDeviceRef) << cli::endl;
     bool b_Res = false;
-    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
     {
         if (((E_StreamType >= 0) && (E_StreamType < cli::STREAM_TYPES_COUNT))
             || (E_StreamType == cli::ALL_STREAMS))
         {
-            if (cli::OutputDevice* const pcli_Device = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeDeviceRef))
+            if (cli::OutputDevice* const pcli_Device = NativeObject::GetNativeObject<cli::OutputDevice*>(I64_NativeDeviceRef))
             {
                 b_Res = pcli_Context->SetStream((cli::STREAM_TYPE) E_StreamType, *pcli_Device);
             }
@@ -104,15 +104,15 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1se
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1streamEnabled(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef, jint E_StreamType)
+        jlong I64_NativeContextRef, jint E_StreamType)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__streamEnabled(I_NativeContextRef, E_StreamType)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__streamEnabled(I64_NativeContextRef, E_StreamType)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
     bool b_Res = false;
-    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I_NativeContextRef))
+    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I64_NativeContextRef))
     {
         b_Res = pcli_Context->StreamEnabled((cli::STREAM_TYPE) E_StreamType);
     }
@@ -122,16 +122,16 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1st
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1enableStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef, jint E_StreamType, jboolean B_Enable)
+        jlong I64_NativeContextRef, jint E_StreamType, jboolean B_Enable)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__enableStream(I_NativeContextRef, E_StreamType, B_Enable)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__enableStream(I64_NativeContextRef, E_StreamType, B_Enable)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_StreamType", E_StreamType) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_Enable", B_Enable) << cli::endl;
     bool b_Res = false;
-    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
     {
         b_Res = pcli_Context->EnableStream((cli::STREAM_TYPE) E_StreamType, B_Enable);
     }
@@ -141,14 +141,14 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1en
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionContext__1_1Common_1_1setLang(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef, jint E_Lang)
+        jlong I64_NativeContextRef, jint E_Lang)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__setLang(I_NativeContextRef, E_Lang)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__setLang(I64_NativeContextRef, E_Lang)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
-    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
     {
         if ((E_Lang >= 0) && (E_Lang < cli::ResourceString::LANG_COUNT))
         {
@@ -160,14 +160,14 @@ extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionContext__1_1Common_1_1setLan
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ExecutionContext__1_1Common_1_1getLang(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef)
+        jlong I64_NativeContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getLang(I_NativeContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getLang(I64_NativeContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     cli::ResourceString::LANG e_Lang = cli::ResourceString::LANG_DEFAULT;
-    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I_NativeContextRef))
+    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I64_NativeContextRef))
     {
         e_Lang = pcli_Context->GetLang();
     }
@@ -177,14 +177,14 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ExecutionContext__1_1Common_1_1getLan
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionContext__1_1Common_1_1setBeep(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef, jboolean B_Enable)
+        jlong I64_NativeContextRef, jboolean B_Enable)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__setBeep(I_NativeContextRef, B_Enable)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__setBeep(I64_NativeContextRef, B_Enable)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_Enable", B_Enable) << cli::endl;
-    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
     {
         pcli_Context->SetBeep(B_Enable);
     }
@@ -193,14 +193,14 @@ extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionContext__1_1Common_1_1setBee
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1getBeep(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef)
+        jlong I64_NativeContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getBeep(I_NativeContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__getBeep(I64_NativeContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     bool b_Beep = false;
-    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I_NativeContextRef))
+    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I64_NativeContextRef))
     {
         b_Beep = pcli_Context->GetBeep();
     }
@@ -210,17 +210,17 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1ge
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1run(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef, jint I_NativeIODeviceRef)
+        jlong I64_NativeContextRef, jlong I64_NativeIODeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__run(I_NativeContextRef, I_NativeIODeviceRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeIODeviceRef", I_NativeIODeviceRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__run(I64_NativeContextRef, I64_NativeIODeviceRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeIODeviceRef", I64_NativeIODeviceRef) << cli::endl;
     bool b_Res = false;
-    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
     {
-        if (cli::IODevice* const pcli_IODevice = NativeObject::GetNativeObject<cli::IODevice*>(I_NativeIODeviceRef))
+        if (cli::IODevice* const pcli_IODevice = NativeObject::GetNativeObject<cli::IODevice*>(I64_NativeIODeviceRef))
         {
             pcli_Context->Run(*pcli_IODevice);
             b_Res = true;
@@ -232,14 +232,14 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1ru
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1isRunning(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef)
+        jlong I64_NativeContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__isRunning(I_NativeContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__isRunning(I64_NativeContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
     bool b_IsRunning = false;
-    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I_NativeContextRef))
+    if (const cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<const cli::ExecutionContext*>(I64_NativeContextRef))
     {
         b_IsRunning = pcli_Context->IsRunning();
     }
@@ -249,13 +249,13 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_ExecutionContext__1_1Common_1_1is
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionContext__1_1Common_1_1stopExecution(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef)
+        jlong I64_NativeContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__stopExecution(I_NativeContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
-    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__stopExecution(I64_NativeContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
+    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
     {
         pcli_Context->StopExecution();
     }
@@ -264,13 +264,13 @@ extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionContext__1_1Common_1_1stopEx
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionContext__1_1Common_1_1stopAllExecutions(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeContextRef)
+        jlong I64_NativeContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__stopAllExecutions(I_NativeContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
-    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__stopAllExecutions(I64_NativeContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
+    if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
     {
         pcli_Context->StopAllExecutions();
     }
@@ -325,7 +325,7 @@ protected:
             if (const jclass pj_ContextClass = pj_Env->FindClass(NativeObject::GetJavaClassName(*this).c_str()))
             {
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_ContextClass", pj_ContextClass) << cli::endl;
-                if (const jmethodID pj_OnStartExecutionMethodID = pj_Env->GetMethodID(pj_ContextClass, "__onStartExecution", "()Z"))
+                if (const jmethodID pj_OnStartExecutionMethodID = pj_Env->GetMethodID(pj_ContextClass, "__onStartExecution", "()Z")) // 'Z' stands for 'boolean'.
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnStartExecutionMethodID", pj_OnStartExecutionMethodID) << cli::endl;
                     if (const jobject pj_Object = NativeObject::GetJavaObject(*this, true))
@@ -378,7 +378,7 @@ protected:
             if (const jclass pj_ContextClass = pj_Env->FindClass(NativeObject::GetJavaClassName(*this).c_str()))
             {
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_ContextClass", pj_ContextClass) << cli::endl;
-                if (const jmethodID pj_OnStopExecutionMethodID = pj_Env->GetMethodID(pj_ContextClass, "__onStopExecution", "()Z"))
+                if (const jmethodID pj_OnStopExecutionMethodID = pj_Env->GetMethodID(pj_ContextClass, "__onStopExecution", "()Z")) // 'Z' stands for 'boolean'.
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnStopExecutionMethodID", pj_OnStopExecutionMethodID) << cli::endl;
                     if (const jobject pj_Object = NativeObject::GetJavaObject(*this, true))
@@ -396,19 +396,19 @@ protected:
 };
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ExecutionContext__1_1Java_1_1ExecutionContext(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ExecutionContext__1_1Java_1_1ExecutionContext(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef)
+        jlong I64_NativeParentContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Java.__Execution(I_NativeParentContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
-    NativeObject::REF i_ContextRef = 0;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Java.__Execution(I64_NativeParentContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
+    NativeObject::REF i64_ContextRef = 0;
     cli::ExecutionContext* pcli_Context = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_Context = new NativeExecutionContext(*pcli_ParentContext);
         }
@@ -420,8 +420,8 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ExecutionContext__1_1Java_1_1Executio
     if (pcli_Context != NULL)
     {
         NativeObject::Use(*pcli_Context);
-        i_ContextRef = NativeObject::GetNativeRef(*pcli_Context);
+        i64_ContextRef = NativeObject::GetNativeRef(*pcli_Context);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ExecutionContext.Java.__Execution()", i_ContextRef) << cli::endl;
-    return i_ContextRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ExecutionContext.Java.__Execution()", i64_ContextRef) << cli::endl;
+    return i64_ContextRef;
 }

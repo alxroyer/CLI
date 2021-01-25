@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -23,7 +23,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-# This aim of this test is to check that cli2cpp transformation is a determinist operation.
+# This aim of this test is to check that cli2cpp transformation is a deterministic operation.
 
 # Default goal
 .DEFAULT_GOAL = check
@@ -58,10 +58,9 @@ $(CLI_CPP).lite: $(CLI_CPP)
 	| sed -e "s/;//" \
 	> $@
 
-$(CLI_CPP): $(CLI_XML_RES) $(CLI_DIR)/tools/cli2cpp.xsl
+$(CLI_CPP): $(CLI_XML_RES) $(CLI_DIR)/tools/cli2cpp.py
 	$(call CheckDir,$(dir $@))
-	xsltproc $(CLI_DIR)/tools/cli2cpp.xsl $< > $@.tmp
-	mv $@.tmp $@
+	python $(CLI_DIR)/tools/cli2cpp.py $< --output $@
 
 .PHONY: clean
 clean:

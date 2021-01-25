@@ -1,0 +1,4 @@
+51c51
+<         m_pcli_keyword_help_errors_a = dynamic_cast<cli::Keyword*>(& m_pcliOwnerCli->m_pcli_cli_a->AddElement(new cli::Keyword("help-errors", cli::Help().AddHelp(cli::Help::LANG_EN, "Bug(major)! " or \ characters in <help/> contents cause compilation errors").AddHelp(cli::Help::LANG_FR, "Qu'est-ce qui se passe si la chaîne se termine par un \"))));
+---
+>         m_pcli_keyword_help_errors_a = dynamic_cast<cli::Keyword*>(& m_pcliOwnerCli->m_pcli_cli_a->AddElement(new cli::Keyword("help-errors", cli::Help().AddHelp(cli::Help::LANG_EN, "Bug(major)! \" or \\ characters in <help/> contents cause compilation errors").AddHelp(cli::Help::LANG_FR, "Qu'est-ce qui se passe si la chaîne se termine par un \\"))));

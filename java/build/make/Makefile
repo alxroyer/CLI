@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -48,6 +48,7 @@ PROJECTS += hello.mak
 PROJECTS += clisample.mak
 # Tests
 check: PROJECTS =
+check clean: PROJECTS += test_native.mak
 check clean: PROJECTS += test_no_res.mak
 check clean: PROJECTS += test_ui.mak
 check clean: PROJECTS += test_io_device.mak

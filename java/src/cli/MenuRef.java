@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,6 +37,6 @@ public class MenuRef extends Element {
     public MenuRef(Menu CLI_Menu) {
         super(__MenuRef(CLI_Menu.getNativeRef()));
     }
-    private static final native int __MenuRef(int I_NativeMenuRef);
+    private static final native long __MenuRef(long I64_NativeMenuRef);
 
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,24 +37,24 @@
 #include "NativeObject.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Traces__1_1getStream(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Traces__1_1getStream(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     const cli::OutputDevice& cli_TraceStream = cli::GetTraces().GetStream();
-    const NativeObject::REF i_TraceStreamRef = NativeObject::GetNativeRef(cli_TraceStream);
-    return i_TraceStreamRef;
+    const NativeObject::REF i64_TraceStreamRef = NativeObject::GetNativeRef(cli_TraceStream);
+    return i64_TraceStreamRef;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_Traces__1_1setStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     bool b_Res = false;
-    if (cli::OutputDevice* const pcli_Stream = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (cli::OutputDevice* const pcli_Stream = NativeObject::GetNativeObject<cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
         b_Res = cli::GetTraces().SetStream(*pcli_Stream);
     }
@@ -63,12 +63,12 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Traces__1_1setStream(
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_Traces__1_1unsetStream(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     bool b_Res = false;
-    if (cli::OutputDevice* const pcli_Stream = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (cli::OutputDevice* const pcli_Stream = NativeObject::GetNativeObject<cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
         b_Res = cli::GetTraces().UnsetStream(*pcli_Stream);
     }
@@ -77,11 +77,11 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_Traces__1_1unsetStream(
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Traces__1_1setFilter(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeTraceClassRef, jboolean B_ShowTraces)
+        jlong I64_NativeTraceClassRef, jboolean B_ShowTraces)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I_NativeTraceClassRef))
+    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I64_NativeTraceClassRef))
     {
         cli::GetTraces().Declare(*pcli_TraceClass);
         cli::GetTraces().SetFilter(*pcli_TraceClass, B_ShowTraces);
@@ -99,11 +99,11 @@ extern "C" JNIEXPORT void JNICALL Java_cli_Traces__1_1setAllFilter(
 
 extern "C" JNIEXPORT void JNICALL Java_cli_Traces__1_1trace(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_TraceClassNativeRef, jstring PJ_Text)
+        jlong I64_TraceClassNativeRef, jstring PJ_Text)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I_TraceClassNativeRef))
+    if (const cli::TraceClass* const pcli_TraceClass = NativeObject::GetNativeObject<const cli::TraceClass*>(I64_TraceClassNativeRef))
     {
         cli::GetTraces().Trace(*pcli_TraceClass) << NativeExec::Java2Native(PJ_Text).c_str() << cli::endl;
     }

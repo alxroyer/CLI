@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,25 +35,26 @@ public abstract class ExecutionResult extends NativeObject {
     protected ExecutionResult() {
         super(__ExecutionResult());
     }
-    private static final native int __ExecutionResult();
+    private static final native long __ExecutionResult();
 
     /** Context execution result interface registration.
-        Note: Registration for each interface is discarded as soon as the end of execution is notified. */
+        Note: Registration for each interface is discarded as soon as the end of execution is notified.
+        @param CLI_Context Execution context to be watched. */
     public void watchResult(ExecutionContext.Interface CLI_Context) {
         __watchResult(this.getNativeRef(), CLI_Context.getNativeRef());
     }
-    private static final native void __watchResult(int I_NativeResultRef, int I_NativeContextRef);
+    private static final native void __watchResult(long I64_NativeResultRef, long I64_NativeContextRef);
 
     /** User interface result handler.
         @param CLI_Context Execution context which execution is done. */
     protected abstract void onResult(ExecutionContext.Interface CLI_Context);
-    private final void __onResult(int I_NativeContextRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ExecutionResult.__onResult(I_NativeContextRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeContextRef", new Integer(I_NativeContextRef).toString()));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.value("this", new Integer(this.getNativeRef()).toString()));
+    private final void __onResult(long I64_NativeContextRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ExecutionResult.__onResult(I64_NativeContextRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeContextRef", new Long(I64_NativeContextRef).toString()));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.value("this", new Long(this.getNativeRef()).toString()));
 
         try {
-            NativeObject cli_Context = NativeObject.getObject(I_NativeContextRef);
+            NativeObject cli_Context = NativeObject.getObject(I64_NativeContextRef);
             if (cli_Context != null) {
                 Traces.trace(NativeTraces.CLASS, NativeTraces.value("cli_Context", cli_Context.toString()));
                 if (cli_Context instanceof ExecutionContext.Interface) {
@@ -63,7 +64,7 @@ public abstract class ExecutionResult extends NativeObject {
                     //if (cli_Context != null) { NativeObject.forget(cli_Context); }
                 }
             } else {
-                OutputDevice.getStdErr().put("Could not find ExecutionContext reference " + new Integer(I_NativeContextRef)).endl();
+                OutputDevice.getStdErr().put("Could not find ExecutionContext reference " + new Long(I64_NativeContextRef)).endl();
             }
         } catch (Exception e) {
             OutputDevice.getStdErr().printStackTrace(e);

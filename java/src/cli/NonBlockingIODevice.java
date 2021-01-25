@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,15 +37,15 @@ public abstract class NonBlockingIODevice {
         public void onKey(int E_Key);
     }
 
-    private static final native int __Common__getExecutionContext(int I_NativeDeviceRef);
-    private static final native void __Common__onKey(int I_NativeDeviceRef, int E_Key);
+    private static final native long __Common__getExecutionContext(long I64_NativeDeviceRef);
+    private static final native void __Common__onKey(long I64_NativeDeviceRef, int E_Key);
 
     /** Native-implemented input/output devices. */
     public static abstract class Native extends IODevice.Native implements NonBlockingIODevice.Interface {
         /** Constructor.
-            @param I_NativeRef Native instance reference. */
-        public Native(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference. */
+        public Native(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
 
         /** Returns the current execution context.
@@ -95,6 +95,6 @@ public abstract class NonBlockingIODevice {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Native class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global NonBlockingIODevice class with a __Native prefix.
-    private static final native int __Java__Java(String STR_DbgName);
-    private static final native int __Java__getKey(int I_NativeDeviceRef);
+    private static final native long __Java__Java(String STR_DbgName);
+    private static final native int __Java__getKey(long I64_NativeDeviceRef);
 }

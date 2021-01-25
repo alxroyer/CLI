@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,21 +35,21 @@ public class ParamInt extends Param {
     public ParamInt(Help CLI_Help) {
         super(__ParamInt(CLI_Help.getNativeRef()));
     }
-    private static final native int __ParamInt(int I_NativeHelpRef);
+    private static final native long __ParamInt(long I64_NativeHelpRef);
 
     /** Creation from native code.
         Useful for cloned parameters created for a specific integer value given in a command line.
-        @param I_NativeParamRef Native instance reference. */
-    protected static void createFromNative(int I_NativeParamRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamInt.createFromNative(I_NativeParamRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeParamRef", new Integer(I_NativeParamRef).toString()));
+        @param I64_NativeParamRef Native instance reference. */
+    protected static void createFromNative(long I64_NativeParamRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamInt.createFromNative(I64_NativeParamRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeParamRef", new Long(I64_NativeParamRef).toString()));
 
-        NativeObject.createdFromNative(new ParamInt(I_NativeParamRef));
+        NativeObject.createdFromNative(new ParamInt(I64_NativeParamRef));
 
         Traces.trace(NativeTraces.CLASS, NativeTraces.end("ParamInt.createFromNative()"));
     }
-    private ParamInt(int I_NativeParamRef) {
-        super(I_NativeParamRef);
+    private ParamInt(long I64_NativeParamRef) {
+        super(I64_NativeParamRef);
     }
 
     /** Integer value accessor.
@@ -57,6 +57,6 @@ public class ParamInt extends Param {
     public final Integer getValue() {
         return new Integer(__getValue(this.getNativeRef()));
     }
-    private static final native int __getValue(int I_NativeParamRef);
+    private static final native int __getValue(long I64_NativeParamRef);
 
 }

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -35,13 +35,16 @@ else
 	RDX = Debug
 endif
 
+# Main Makefile
+THIS_MAKEFILE = $(firstword $(MAKEFILE_LIST))
+
 # Debug and help
 include $(CLI_DIR)/build/make/_help.mak
 
 .PHONY: $(CLI_DIR)/build/make/_vars.vars
 vars: $(CLI_DIR)/build/make/_vars.vars
 $(CLI_DIR)/build/make/_vars.vars:
-	$(call ShowVariables,CLI_DIR RDX)
+	$(call ShowVariables,CLI_DIR RDX THIS_MAKEFILE)
 
 
 endif

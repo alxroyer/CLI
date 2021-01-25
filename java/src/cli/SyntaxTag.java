@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -27,7 +27,7 @@
 package cli;
 
 
-/** A syntax tag does nothing from the execution point of view, and represents no keyword or parameter.
+/** A syntax tag does nothing from the execution point of view, and represents no keyword nor parameter.
     It may be referenced by SyntaxRef elements to make jumps in the command lines decision tree. */
 public class SyntaxTag extends SyntaxNode {
 
@@ -37,6 +37,6 @@ public class SyntaxTag extends SyntaxNode {
     public SyntaxTag(boolean B_HollowTag) {
         super(__SyntaxTag(B_HollowTag));
     }
-    private static final native int __SyntaxTag(boolean B_HollowTag);
+    private static final native long __SyntaxTag(boolean B_HollowTag);
 
 }

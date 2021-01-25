@@ -1,18 +1,18 @@
-<map id="G" name="G">
-<area shape="rect" id="node7" href="$classKeyword.html" title="Keyword element class." alt="" coords="105,237,177,267"/>
-<area shape="rect" id="node9" href="$classMenu.html" title="Menu definition." alt="" coords="201,237,255,267"/>
-<area shape="rect" id="node17" href="$classParam.html" title="Base parameter class." alt="" coords="376,237,435,267"/>
-<area shape="rect" id="node33" href="$classSyntaxTag.html" title="Syntax tag element class." alt="" coords="459,237,541,267"/>
-<area shape="rect" id="node2" href="$classElement.html" title="Generic CLI element." alt="" coords="281,83,351,112"/>
-<area shape="rect" id="node4" href="$classObject.html" title="Generic object." alt="" coords="287,5,345,35"/>
-<area shape="rect" id="node11" href="$classCli.html" title="CLI definition class." alt="" coords="5,315,43,344"/>
-<area shape="rect" id="node13" href="$classConfigMenu.html" title="CLI configuration menu definition." alt="" coords="67,315,157,344"/>
-<area shape="rect" id="node15" href="$classTracesMenu.html" title="Traces menu definition." alt="" coords="181,315,275,344"/>
-<area shape="rect" id="node19" href="$classParamString.html" title="String parameter element class." alt="" coords="299,315,392,344"/>
-<area shape="rect" id="node23" href="$classParamT.html" title="Template parameter class." alt="" coords="416,315,515,344"/>
-<area shape="rect" id="node25" href="$classParamT.html" title="ParamT\&lt; double \&gt;" alt="" coords="539,315,667,344"/>
-<area shape="rect" id="node29" href="$classParamT.html" title="ParamT\&lt; int \&gt;" alt="" coords="691,315,795,344"/>
-<area shape="rect" id="node21" href="$classParamHost.html" title="Host names, IP adresses parameter element class." alt="" coords="303,392,388,421"/>
-<area shape="rect" id="node27" href="$classParamFloat.html" title="Float parameter element class." alt="" coords="559,392,647,421"/>
-<area shape="rect" id="node31" href="$classParamInt.html" title="Integer parameter element class." alt="" coords="705,392,780,421"/>
+<map id="SyntaxNode" name="SyntaxNode">
+<area shape="rect" id="node4" href="$classKeyword.html" title="Keyword element class. " alt="" coords="106,229,178,256"/>
+<area shape="rect" id="node5" href="$classMenu.html" title="Menu definition. " alt="" coords="203,229,257,256"/>
+<area shape="rect" id="node9" href="$classParam.html" title="Base parameter class. " alt="" coords="379,229,439,256"/>
+<area shape="rect" id="node17" href="$classSyntaxTag.html" title="Syntax tag element class. " alt="" coords="463,229,547,256"/>
+<area shape="rect" id="node2" href="$classElement.html" title="Generic CLI element. " alt="" coords="284,80,355,107"/>
+<area shape="rect" id="node3" href="$classObject.html" title="Generic object. " alt="" coords="289,5,349,32"/>
+<area shape="rect" id="node6" href="$classCli.html" title="CLI definition class. " alt="" coords="5,304,44,331"/>
+<area shape="rect" id="node7" href="$classConfigMenu.html" title="CLI configuration menu definition. " alt="" coords="69,304,159,331"/>
+<area shape="rect" id="node8" href="$classTracesMenu.html" title="Traces menu definition. " alt="" coords="183,304,277,331"/>
+<area shape="rect" id="node10" href="$classParamString.html" title="String parameter element class. " alt="" coords="301,304,396,331"/>
+<area shape="rect" id="node12" href="$classParamT.html" title="Template parameter class. " alt="" coords="421,304,519,331"/>
+<area shape="rect" id="node13" href="$classParamT.html" title="ParamT\&lt; double \&gt;" alt="" coords="544,304,673,331"/>
+<area shape="rect" id="node15" href="$classParamT.html" title="ParamT\&lt; int \&gt;" alt="" coords="697,304,803,331"/>
+<area shape="rect" id="node11" href="$classParamHost.html" title="Host names, IP adresses parameter element class. " alt="" coords="305,379,392,405"/>
+<area shape="rect" id="node14" href="$classParamFloat.html" title="Float parameter element class. " alt="" coords="564,379,653,405"/>
+<area shape="rect" id="node16" href="$classParamInt.html" title="Integer parameter element class. " alt="" coords="713,379,787,405"/>
 </map>

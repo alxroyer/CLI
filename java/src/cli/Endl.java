@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,7 +35,7 @@ public class Endl extends Element {
     public Endl(Help CLI_Help) {
         super(__Endl(CLI_Help.getNativeRef()));
     }
-    private static final native int __Endl(int I_NativeHelpRef);
+    private static final native long __Endl(long I64_NativeHelpRef);
 
     /** Used when this command line gives access to a menu.
         @param CLI_MenuRef  Menu reference.
@@ -43,6 +43,6 @@ public class Endl extends Element {
     public final boolean setMenuRef(MenuRef CLI_MenuRef) {
         return __setMenuRef(this.getNativeRef(), CLI_MenuRef.getNativeRef());
     }
-    private static final native boolean __setMenuRef(int I_NativeEndlRef, int I_NativeMenuRefRef);
+    private static final native boolean __setMenuRef(long I64_NativeEndlRef, long I64_NativeMenuRefRef);
 
 }

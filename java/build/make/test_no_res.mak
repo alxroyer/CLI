@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -42,7 +42,7 @@ JAVAC_OPTS += -nowarn
 # Rules
 .PHONY: check
 check: build
-	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.TestNoRes
+	$(call RunJava,cli.test.TestNoRes)
 
 .PHONY: deps
 deps: ;

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -34,6 +34,11 @@
     Well, that's it for this user guide.
     I hope you enjoyed it.
     Don't hesitate contacting me for any remark or so.
+    </para>
+
+    <para>
+    Yours,<sbr/>
+    Alexis.
     </para>
 
 </section>

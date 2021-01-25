@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -43,7 +43,7 @@ const TraceClass& ExecutionContextManager::GetTraceClass(void)
 {
     static const TraceClass cli_ExecCtxTraceClass("CLI_EXEC_CTX", Help()
         .AddHelp(Help::LANG_EN, "Execution context traces")
-        .AddHelp(Help::LANG_FR, "Traces de contexte d'exécution"));
+        .AddHelp(Help::LANG_FR, "Traces de contexte d'exÃ©cution"));
     return cli_ExecCtxTraceClass;
 }
 

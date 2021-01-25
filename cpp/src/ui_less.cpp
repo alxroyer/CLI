@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -151,7 +151,7 @@ CLI_NS_BEGIN(cli)
             m_cliLessLine.Reset();
             GetStream(OUTPUT_STREAM).CleanScreen();
             GetStream(OUTPUT_STREAM) << cli_Out.GetString();
-            m_cliLessLine.Put(GetStream(OUTPUT_STREAM), tk::String(10, ":"));
+            m_cliLessLine.Put(GetStream(OUTPUT_STREAM), COLUMN);
         }
 
         void Less::Quit(void)

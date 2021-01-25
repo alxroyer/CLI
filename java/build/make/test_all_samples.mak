@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -39,6 +39,9 @@ XML_FILES = $(patsubst %.check,%.xml,$(CHECK_FILES))
 TEST_FILES = $(patsubst %.xml,%.test,$(XML_FILES))
 CHECK_FILES = $(shell find $(CLI_DIR)/samples -name "*.check")
 
+# Infinite cli2java generation for cross-tags.xml test sample.
+XML_FILES := $(filter-out $(CLI_DIR)/samples/tests/cross-tags.xml,$(XML_FILES))
+
 
 # Rules
 DoTestDefault = $(MAKE) -s --no-print-directory -f test_sample.mak CLI_XML_RES=$(1) check.xml
@@ -48,19 +51,20 @@ check:
 	$(call Map,DoTestDefault,$(XML_FILES))
 
 SRC_DIR = $(JAVA_SRC_DIR)
-JAVA_FILES = $(patsubst %.java,$(SRC_DIR)/cli/test/%.java,$(notdir $(JAVA_SAMPLE_FILES)))
+JAVA_FILES = $(patsubst %.java,$(SRC_DIR)/cli/test/samples/%.java,$(notdir $(JAVA_SAMPLE_FILES)))
 PROJ_CLEAN = $(JAVA_FILES)
 include _build.mak
 
 .PHONY: java
 java: $(JAVA_OBJS) ;
 
-$(JAVA_SRC_DIR)/cli/test/%.java: JAVA_SRC_FILE = $@
-$(JAVA_SRC_DIR)/cli/test/%.java: JAVA_SAMPLE_FILE = $(CLI_DIR)/samples/user-guide/$(notdir $@)
-$(JAVA_SRC_DIR)/cli/test/%.java: $(CLI_DIR)/samples/user-guide/%.java
+$(JAVA_SRC_DIR)/cli/test/samples/%.java: JAVA_SRC_FILE = $@
+$(JAVA_SRC_DIR)/cli/test/samples/%.java: JAVA_SAMPLE_FILE = $(CLI_DIR)/samples/user-guide/$(notdir $@)
+$(JAVA_SRC_DIR)/cli/test/samples/%.java: $(CLI_DIR)/samples/user-guide/%.java
+	$(call CheckDir,$(dir $(JAVA_SRC_FILE)))
 	rm -f $(JAVA_SRC_FILE)
 	echo "// Copy of 'samples/user-guide/$(notdir $@)'" >> $(JAVA_SRC_FILE)
-	echo "package cli.test;" >> $(JAVA_SRC_FILE)
+	echo "package cli.test.samples;" >> $(JAVA_SRC_FILE)
 	cat $(JAVA_SAMPLE_FILE) >> $(JAVA_SRC_FILE)
 
 DoTestClean = $(MAKE) -s --no-print-directory -f test_sample.mak CLI_XML_RES=$(1) clean

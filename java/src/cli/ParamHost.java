@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,21 +36,21 @@ public class ParamHost extends Param {
     public ParamHost(Help CLI_Help) {
         super(__ParamHost(CLI_Help.getNativeRef()));
     }
-    private static final native int __ParamHost(int I_NativeHelpRef);
+    private static final native long __ParamHost(long I64_NativeHelpRef);
 
     /** Creation from native code.
         Useful for cloned parameters created for a specific host value given in a command line.
-        @param I_NativeParamRef Native instance reference. */
-    protected static void createFromNative(int I_NativeParamRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamHost.createFromNative(I_NativeParamRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeParamRef", new Integer(I_NativeParamRef).toString()));
+        @param I64_NativeParamRef Native instance reference. */
+    protected static void createFromNative(long I64_NativeParamRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("ParamHost.createFromNative(I64_NativeParamRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeParamRef", new Long(I64_NativeParamRef).toString()));
 
-        NativeObject.createdFromNative(new ParamHost(I_NativeParamRef));
+        NativeObject.createdFromNative(new ParamHost(I64_NativeParamRef));
 
         Traces.trace(NativeTraces.CLASS, NativeTraces.end("ParamHost.createFromNative()"));
     }
-    private ParamHost(int I_NativeParamRef) {
-        super(I_NativeParamRef);
+    private ParamHost(long I64_NativeParamRef) {
+        super(I64_NativeParamRef);
     }
 
     /** Host value accessor.
@@ -58,6 +58,6 @@ public class ParamHost extends Param {
     public final String getValue() {
         return new String(__getValue(this.getNativeRef()));
     }
-    private static final native String __getValue(int I_NativeParamRef);
+    private static final native String __getValue(long I64_NativeParamRef);
 
 }

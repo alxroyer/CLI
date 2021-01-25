@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -136,7 +136,7 @@ public class TestUI {
             if (cli_YesNo.getYesNo() != false) { System.exit(-1); }
 
             cli_Shell.setLang(cli.ResourceString.LANG_FR);
-            cli_Device.put("Répondez [OUI/non] : ");
+            cli_Device.put("RÃ©pondez [OUI/non] : ");
             TestTools.Result cli_Result_FR = new TestTools.Result();
             cli_Result_FR.watchResult(cli_YesNo);
             cli_YesNo.run();
@@ -187,7 +187,7 @@ public class TestUI {
         // More
         if (true) {
             cli.ui.More cli_More = new cli.ui.More(cli_Shell);
-            cli.test.UISampleText.fillText(cli_More.getText(), 10);
+            cli.test.samples.UISampleText.fillText(cli_More.getText(), 10);
             TestTools.Result cli_Result = new TestTools.Result();
             cli_Result.watchResult(cli_More);
             cli_More.run();
@@ -200,7 +200,7 @@ public class TestUI {
         // Less
         if (true) {
             cli.ui.Less cli_Less = new cli.ui.Less(cli_Shell);
-            cli.test.UISampleText.fillText(cli_Less.getText(), 10);
+            cli.test.samples.UISampleText.fillText(cli_Less.getText(), 10);
             TestTools.Result cli_Result = new TestTools.Result();
             cli_Result.watchResult(cli_Less);
             cli_Less.run();

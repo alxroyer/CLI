@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -47,12 +47,12 @@ JAVAC_OPTS += -nowarn
 PROJ_CLEAN += $(CLI_JAVA) $(CLI_LOG)
 
 # Variables
-CLI_XSL = $(CLI_DIR)/tools/cli2java.xsl
-CLI_JAVA = $(patsubst %.xml,$(CLI_DIR)/java/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
-CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
+CLI_CLI2JAVA = $(CLI_DIR)/tools/cli2java.py
+CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.xml,%,$(notdir $(CLI_XML_RES))))
+CLI_JAVA = $(CLI_DIR)/java/src/cli/test/samples/$(CLI_JAVA_CLASS_NAME).java
 CLI_TEST_SAMPLE_JAVA = $(CLI_DIR)/java/src/cli/test/TestSample.java
 CLI_TEST = $(patsubst %.xml,%.test,$(CLI_XML_RES))
-CLI_LOG = $(OUT_DIR)/cli/test/$(CLI_JAVA_CLASS_NAME).log
+CLI_LOG = $(OUT_DIR)/cli/test/samples/$(patsubst %.xml,%,$(notdir $(CLI_XML_RES))).log
 CLI_CHECK = $(patsubst %.xml,%.check,$(CLI_XML_RES))
 
 # Rules
@@ -63,17 +63,15 @@ check check.xml: $(CLI_LOG) $(CLI_CHECK)
 
 .PHONY: log
 log: $(CLI_LOG) ;
-$(CLI_LOG): $(CLI_JAVA) build $(CLI_TEST) $(CLI_DIR)/samples/clean_outlog.sh
+$(CLI_LOG): $(CLI_JAVA) build $(CLI_TEST) $(CLI_DIR)/tools/clean_outlog.py
 	dos2unix $(CLI_TEST) 2> /dev/null
-	java $(JAVA_PATH) -Djava.library.path=$(OUT_DIR) cli.test.TestSample cli.test.$(CLI_JAVA_CLASS_NAME) $(CLI_TEST) $(CLI_LOG)
-	$(call CheckSh,$(CLI_DIR)/samples/clean_outlog.sh)
-	$(CLI_DIR)/samples/clean_outlog.sh $(CLI_LOG)
-	dos2unix $(CLI_LOG) 2> /dev/null
+	$(call RunJava,cli.test.TestSample cli.test.samples.$(CLI_JAVA_CLASS_NAME) $(CLI_TEST) $(CLI_LOG))
+	python $(CLI_DIR)/tools/clean_outlog.py $(CLI_LOG)
 
-$(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
+$(CLI_JAVA): $(CLI_XML_RES) $(CLI_CLI2JAVA)
 	$(call CheckDir,$(dir $@))
-	echo "package cli.test;" > $@
-	xsltproc --stringparam STR_CliClassName $(CLI_JAVA_CLASS_NAME) $(CLI_XSL) $(CLI_XML_RES) >> $@
+	python $(CLI_CLI2JAVA) --cli-class-name $(CLI_JAVA_CLASS_NAME) --cli-class-scope public $(CLI_XML_RES) --output $@
+	sed -e "1s/^/package cli.test.samples;\n/" -i $@
 
 .PHONY: deps
 deps: ;
@@ -91,7 +89,7 @@ $(CLI_DIR)/java/build/make/test.help:
 .PHONY: $(CLI_DIR)/java/build/make/test.vars
 vars: $(CLI_DIR)/java/build/make/test.vars
 $(CLI_DIR)/java/build/make/test.vars:
-	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_TEST_SAMPLE_JAVA CLI_TEST CLI_LOG CLI_CHECK)
+	$(call ShowVariables,CLI_XML_RES CLI_CLI2JAVA CLI_JAVA CLI_JAVA_CLASS_NAME CLI_TEST_SAMPLE_JAVA CLI_TEST CLI_LOG CLI_CHECK)
 
 # Dependencies
 build: $(JAVA_FILES)

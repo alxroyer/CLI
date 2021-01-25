@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -37,6 +37,9 @@ endif
 .PHONY: telnet.default
 telnet.default: $(.DEFAULT_GOAL) ;
 
+# Avoid parallel rules execution
+.NOTPARALLEL: ;
+
 # Variables
 CLI_DIR := ../../..
 SRC_DIR = $(CLI_DIR)/cpp/tests/telnet
@@ -49,7 +52,7 @@ ifeq ($(TELNET_GOAL),check)
 	SERVER_BINARY = $(TARGET)$(CXX)/$(RDX)/__test_telnet_server/$(BIN_PREFIX)test_telnet_server$(BIN_SUFFIX)
 	CLIENT_BINARY = $(TARGET)$(CXX)/$(RDX)/__test_telnet_client/$(BIN_PREFIX)test_telnet_client$(BIN_SUFFIX)
 	TELNET_PORT = 9012
-	TELNET_TEST = $(INT_DIR)/empty.test
+	TELNET_INPUT = $(INT_DIR)/empty.test
 	TELNET_LOG = $(INT_DIR)/empty.log
 	TELNET_CHECK = $(INT_DIR)/empty.check
 endif
@@ -85,31 +88,39 @@ endif
 # Rules
 ifeq ($(TELNET_GOAL),check)
 .PHONY: check
-check: $(TELNET_LOG) $(TELNET_CHECK)
-	dos2unix $(TELNET_LOG) 2> /dev/null
-	dos2unix $(TELNET_CHECK) 2> /dev/null
+check: start-server check.1 stop-server ;
+
+.PHONY: start-server
+start-server: $(SERVER_BINARY)
+	@echo "  === Starting server ==="
+	$(call CheckSh,test_telnet.kill.sh)
+	./test_telnet.kill.sh
+	$(SERVER_BINARY) $(TELNET_PORT) &
+	sleep 1
+
+.PHONY: stop-server
+stop-server:
+	@echo "  === Stopping server ==="
+	$(call CheckSh,test_telnet.kill.sh)
+	./test_telnet.kill.sh
+
+.PHONY: check.1
+check.1: $(TELNET_LOG) $(TELNET_CHECK)
+	@echo "  === Checking result ==="
 	diff $(TELNET_LOG) $(TELNET_CHECK)
 
-$(TELNET_TEST): $(CLI_DIR)/samples/user-guide/empty.test test_telnet.mak
+$(TELNET_INPUT): $(CLI_DIR)/samples/user-guide/empty.test test_telnet.mak
+	@echo "  === Builing $@ ==="
 	rm -f $@
 	$(call CheckDir,$(dir $@))
 	echo "" >> $@
 	echo "bad" >> $@
 	echo "hello" >> $@
 	cat $< >> $@
-
-$(TELNET_LOG): $(SERVER_BINARY) $(CLIENT_BINARY) $(TELNET_TEST) $(CLI_DIR)/samples/clean_outlog.sh
-	dos2unix $(TELNET_TEST) 2> /dev/null
-	$(SERVER_BINARY) $(TELNET_PORT) &
-	sleep 1
-	$(call CheckDir,$(dir $(TELNET_LOG)))
-	$(CLIENT_BINARY) $(TELNET_PORT) $(TELNET_TEST) > $(TELNET_LOG)
-	$(call CheckSh,$(CLI_DIR)/samples/clean_outlog.sh)
-	$(CLI_DIR)/samples/clean_outlog.sh $(TELNET_LOG)
-	$(call CheckSh,test_telnet.kill.sh)
-	./test_telnet.kill.sh
+	dos2unix $@ 2> /dev/null
 
 $(TELNET_CHECK): $(CLI_DIR)/samples/user-guide/empty.check test_telnet.mak
+	@echo "  === Builing $@ ==="
 	rm -f $@
 	$(call CheckDir,$(dir $@))
 	echo "Enter password: " >> $@
@@ -118,14 +129,22 @@ $(TELNET_CHECK): $(CLI_DIR)/samples/user-guide/empty.check test_telnet.mak
 	echo "Enter password: *****" >> $@
 	cat $< | sed -e "s/[^>]*: Syntax error next to /Syntax error next to /" >> $@
 
+$(TELNET_LOG): $(SERVER_BINARY) $(CLIENT_BINARY) $(TELNET_INPUT) $(CLI_DIR)/tools/clean_outlog.py
+	@echo "  === Builing $@ ==="
+	$(call CheckDir,$(dir $(TELNET_LOG)))
+	$(CLIENT_BINARY) $(TELNET_PORT) $(TELNET_INPUT) > $@
+	python $(CLI_DIR)/tools/clean_outlog.py $@
+
 .PHONY: server $(SERVER_BINARY)
 server: $(SERVER_BINARY)
 $(SERVER_BINARY):
+	@echo "  === Builing server ==="
 	$(MAKE) -f test_telnet.mak TELNET_GOAL=server
 
 .PHONY: client $(CLIENT_BINARY)
 client: $(CLIENT_BINARY)
 $(CLIENT_BINARY):
+	@echo "  === Builing client ==="
 	$(MAKE) -f test_telnet.mak TELNET_GOAL=client
 
 .PHONY: deps
@@ -137,7 +156,7 @@ deps:
 clean:
 	$(MAKE) -C $(CLI_DIR)/cpp/build/make -f test_telnet.mak TELNET_GOAL=server clean
 	$(MAKE) -C $(CLI_DIR)/cpp/build/make -f test_telnet.mak TELNET_GOAL=client clean
-	rm -f $(TELNET_TEST) $(TELNET_LOG) $(TELNET_CHECK)
+	rm -f $(TELNET_INPUT) $(TELNET_LOG) $(TELNET_CHECK)
 	$(call RemoveDir,$(INT_DIR))
 endif
 
@@ -146,8 +165,7 @@ ifeq ($(TELNET_GOAL),server)
 server: build ;
 
 $(CLI_H): $(CLI_XML)
-	xsltproc --stringparam STR_CliClassName "EmptyCli" ../../../tools/cli2cpp.xsl $< > $@.tmp
-	mv $@.tmp $@
+	python $(CLI_DIR)/tools/cli2cpp.py --cli-class-name "EmptyCli" $< --output $@
 endif
 
 ifeq ($(TELNET_GOAL),client)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,7 +35,7 @@ public class IOMux extends IODevice.Native {
     public IOMux() {
         super(__IOMux());
     }
-    private static final native int __IOMux();
+    private static final native long __IOMux();
 
     /** Device addition in the list.
         @param CLI_Device Input / output device.
@@ -43,7 +43,7 @@ public class IOMux extends IODevice.Native {
     public boolean addDevice(IODevice.Interface CLI_Device) {
         return __addDevice(this.getNativeRef(), CLI_Device.getNativeRef());
     }
-    private static final native boolean __addDevice(int I_NativeIOMuxRef, int I_NativeDeviceRef);
+    private static final native boolean __addDevice(long I64_NativeIOMuxRef, long I64_NativeDeviceRef);
 
     /** Current device accessor.
         @return Current device. */
@@ -55,7 +55,7 @@ public class IOMux extends IODevice.Native {
             return null;
         }
     }
-    private static final native int __getCurrentDevice(int I_NativeIOMuxRef);
+    private static final native long __getCurrentDevice(long I64_NativeIOMuxRef);
 
     /** Switch to next device.
         @return Next device if success, null otherwise. */
@@ -67,12 +67,12 @@ public class IOMux extends IODevice.Native {
             return null;
         }
     }
-    private static final native int __switchNextDevice(int I_NativeIOMuxRef);
+    private static final native long __switchNextDevice(long I64_NativeIOMuxRef);
 
     //! @brief Reset device list.
     //! @return true for success, false otherwise.
     boolean resetDeviceList() {
         return __resetDeviceList(this.getNativeRef());
     }
-    private static final native boolean __resetDeviceList(int I_NativeIOMuxRef);
+    private static final native boolean __resetDeviceList(long I64_NativeIOMuxRef);
 }

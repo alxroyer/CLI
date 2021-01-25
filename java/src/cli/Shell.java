@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -62,49 +62,49 @@ public class Shell extends ExecutionContext.Native {
     public Shell(ExecutionContext.Interface CLI_ParentContext, Cli CLI_Cli) {
         super(__Shell(CLI_ParentContext.getNativeRef(), CLI_Cli.getNativeRef()));
     }
-    private static final native int __Shell(int I_NativeParentContextRef, int I_NativeCliRef);
+    private static final native long __Shell(long I64_NativeParentContextRef, long I64_NativeCliRef);
 
     /** Cli accessor.
         @return The CLI instance the shell is running with. */
     public final Cli getCli() {
         return (Cli) NativeObject.getObject(__getCli(this.getNativeRef()));
     }
-    private static final native int __getCli(int I_NativeShellRef);
+    private static final native long __getCli(long I64_NativeShellRef);
 
     /** Welcome message setting.
         @param CLI_WelcomeMessage Welcome message. When an empty string is given, the default welcome message is restored. */
     public final void setWelcomeMessage(ResourceString CLI_WelcomeMessage) {
         __setWelcomeMessage(this.getNativeRef(), CLI_WelcomeMessage.getNativeRef());
     }
-    private static final native void __setWelcomeMessage(int I_NativeShellRef, int I_NativeWelcomeMessageRef);
+    private static final native void __setWelcomeMessage(long I64_NativeShellRef, long I64_NativeWelcomeMessageRef);
 
     /** Bye message setting.
         @param CLI_ByeMessage Bye message. When an empty string is given, the default bye message is restored. */
     public final void setByeMessage(ResourceString CLI_ByeMessage) {
         __setByeMessage(this.getNativeRef(), CLI_ByeMessage.getNativeRef());
     }
-    private static final native void __setByeMessage(int I_NativeShellRef, int I_NativeByeMessageRef);
+    private static final native void __setByeMessage(long I64_NativeShellRef, long I64_NativeByeMessageRef);
 
     /** Prompt message positionning.
         @param CLI_Prompt Prompt string. When an empty string is given, the default prompt (depending on the current menu) is restored. */
     public final void setPrompt(ResourceString CLI_Prompt) {
         __setPrompt(this.getNativeRef(), CLI_Prompt.getNativeRef());
     }
-    private static final native void __setPrompt(int I_NativeShellRef, int I_NativePromptRef);
+    private static final native void __setPrompt(long I64_NativeShellRef, long I64_NativePromptRef);
 
     /** Help margin accessor.
         @return Number of spaces for the help margin. */
     public final int getHelpMargin() {
         return __getHelpMargin(this.getNativeRef());
     }
-    private static final native int __getHelpMargin(int I_NativeShellRef);
+    private static final native int __getHelpMargin(long I64_NativeShellRef);
 
     /** Help offset accessor.
         @return Number of spaces for the help offset. */
     public final int getHelpOffset() {
         return __getHelpOffset(this.getNativeRef());
     }
-    private static final native int __getHelpOffset(int I_NativeShellRef);
+    private static final native int __getHelpOffset(long I64_NativeShellRef);
 
     /** Current menu retrieval.
         @param I_MenuIndex Index of the menu in the stack.
@@ -116,46 +116,55 @@ public class Shell extends ExecutionContext.Native {
     public Menu getCurrentMenu(int I_MenuIndex) {
         return (Menu) NativeObject.getObject(__getCurrentMenu(this.getNativeRef(), I_MenuIndex));
     }
-    private static final native int __getCurrentMenu(int I_NativeShellRef, int I_MenuIndex);
+    private static final native long __getCurrentMenu(long I64_NativeShellRef, int I_MenuIndex);
 
     /** Enter a menu.
-        @param CLI_Menu Menu to enter. */
+        @param CLI_Menu Menu to enter.
+        @param B_PromptMenu true if the menu should be (re)prompted.
+                            Basically false when executed within the context of a command processing,
+                            true when executed from other contexts. */
     public final void enterMenu(Menu CLI_Menu, boolean B_PromptMenu) {
         if (CLI_Menu != null) {
             __enterMenu(this.getNativeRef(), CLI_Menu.getNativeRef(), B_PromptMenu);
         }
     }
-    private static final native void __enterMenu(int I_NativeShellRef, int I_NativeMenuRef, boolean B_PromptMenu);
+    private static final native void __enterMenu(long I64_NativeShellRef, long I64_NativeMenuRef, boolean B_PromptMenu);
 
-    /** Exits the current menu. */
+    /** Exits the current menu.
+        @param B_PromptMenu true if the menu should be (re)prompted.
+                            Basically false when executed within the context of a command processing,
+                            true when executed from other contexts. */
     public final void exitMenu(boolean B_PromptMenu) {
         __exitMenu(this.getNativeRef(), B_PromptMenu);
     }
-    private static final native void __exitMenu(int I_NativeShellRef, boolean B_PromptMenu);
+    private static final native void __exitMenu(long I64_NativeShellRef, boolean B_PromptMenu);
 
     /** Terminates the shell.
         Caution! Not thread safe. Call quitThreadSafe() to do so. */
     public final void quit() {
         __quit(this.getNativeRef());
     }
-    private static final native void __quit(int I_NativeShellRef);
+    private static final native void __quit(long I64_NativeShellRef);
 
     /** Displays help depending on the context of the current line. */
     public final void displayHelp() {
         __displayHelp(this.getNativeRef());
     }
-    private static final native void __displayHelp(int I_NativeShellRef);
+    private static final native void __displayHelp(long I64_NativeShellRef);
 
     /** Prints the working menu. */
     public final void printWorkingMenu() {
         __printWorkingMenu(this.getNativeRef());
     }
-    private static final native void __printWorkingMenu(int I_NativeShellRef);
+    private static final native void __printWorkingMenu(long I64_NativeShellRef);
 
-    /** Cleans the screen. */
+    /** Cleans the screen.
+        @param B_PromptMenu true if the menu should be (re)prompted.
+                            Basically false when executed within the context of a command processing,
+                            true when executed from other contexts. */
     public final void cleanScreen(boolean B_PromptMenu) {
         __cleanScreen(this.getNativeRef(), B_PromptMenu);
     }
-    private static final native void __cleanScreen(int I_NativeShellRef, boolean B_PromptMenu);
+    private static final native void __cleanScreen(long I64_NativeShellRef, boolean B_PromptMenu);
 
 }

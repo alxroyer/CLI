@@ -1,6 +1,6 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -27,75 +27,90 @@
 
 """ Module logger package. """
 
-class LogLevel:
+class LogLevel(object):
     """ Log level object. """
-    
+
     def __init__(self, string, depth):
         """ Constructor.
             @param string (str) String representation of the log class.
             @param depth (int) Visibility depth: the lowest the most visible. """
         self._string = string
         self._depth = depth
-    
+
     def string(self):
         """ String representation accessor.
             @return (str) String representation. """
         return self._string
-    
+
     def depth(self):
         """ Visibility depth accessor: the lowest the most visible.
             @return (int) Visibility depth. """
         return self._depth
 
 # Regular log levels
-FATAL_ERROR = LogLevel("FATAL ERROR",   10)
-ERROR       = LogLevel("ERROR",         100)
-WARNING     = LogLevel("WARNING",       1000)
-INFO        = LogLevel("INFO",          10000)
-TRACE       = LogLevel("TRACE",         100000)
-DEBUG       = LogLevel("DEBUG",         1000000)
+FATAL_ERROR = LogLevel("FATAL ERROR",   10)         # pylint: disable=bad-whitespace
+ERROR       = LogLevel("ERROR",         100)        # pylint: disable=bad-whitespace
+WARNING     = LogLevel("WARNING",       1000)       # pylint: disable=bad-whitespace
+INFO        = LogLevel("INFO",          10000)      # pylint: disable=bad-whitespace
+TRACE       = LogLevel("TRACE",         100000)     # pylint: disable=bad-whitespace
+DEBUG       = LogLevel("DEBUG",         1000000)    # pylint: disable=bad-whitespace
 
-class Engine:
+class Engine(object):
     """ Log engine: receives logs and filter them out depending on a filter. """
-    
+
     def __init__(self):
         """ Constructor. """
         self._filter = {}
-    
+
     def set_filter(self, module, level):
         """ Configure the filter for the current module.
             @param module (str) Log module name.
             @param level (LogLevel) Maximum log level to display. """
         self._filter[module] = level
-    
+
     def remove_filter(self, module):
         """ Filter removal.
             @param module (str) Log module name. """
         del self._filter[module]
-    
+
+    def is_enabled(self, module, level):
+        """ Checks whether logging is enabled for the given module and level.
+            @param module (str) Log module name.
+            @param level (LogLevel) Log level being tested.
+            @return (bool) True if logging is enabled, False otherwise. """
+        return self._filter.has_key(module) and (level.depth() <= self._filter[module].depth())
+
     def log(self, module, level, message):
         """ Prints out a log message. If the level if an error, a warning or a regular info, it is directly printed out.
             @param module (str) Log class.
             @param level (LogLevel) Log level: FATAL_ERROR, ERROR, WARNING, INFO, TRACE, DEBUG
-            @param message (str) Log message. """
-        # Unicode processing before output : unicode strings when output through file redirection raise UnicodeEncodeError exceptions.
-        if (message.__class__ == unicode):
-            # Automatically encode in UTF-8
-            import codecs
-            message = codecs.lookup("UTF-8").encode(message)[0]
-        # Direct printing
-        import sys
-        if (level.depth() < ERROR.depth()):
-            sys.stderr.write("Fatal error! %s\n" % message)
-        elif (level.depth() < WARNING.depth()):
-            sys.stderr.write("Error! %s\n" % message)
-        elif (level.depth() < INFO.depth()):
-            sys.stderr.write("Warning! %s\n" % message)
-        elif (level.depth() < TRACE.depth()):
-            sys.stderr.write("Info! %s\n" % message)
-        # Log filtering
-        if (self._filter.has_key(module) and (level.depth() <= self._filter[module].depth())):
-            sys.stderr.write("<%s|%s> %s\n" % (module, level.string(), message))
+            @param message (str|Exception) Log message or exception. """
+        if isinstance(message, Exception):
+            # In case message is actually an exception, print out the stack trace
+            _exception = message
+            if self.is_enabled(module, level):
+                import traceback
+                traceback.print_exc(_exception)
+        else:
+            # Unicode processing before output : unicode strings when output through file redirection raise UnicodeEncodeError exceptions.
+            if isinstance(message, unicode):
+                # Automatically encode in utf-8
+                import codecs
+                message = codecs.lookup("utf-8").encode(message)[0]
+            # Direct printing
+            import sys
+            if level.depth() < ERROR.depth():
+                sys.stderr.write("Fatal error! %s\n" % message)
+            elif level.depth() < WARNING.depth():
+                sys.stderr.write("Error! %s\n" % message)
+            elif level.depth() < INFO.depth():
+                sys.stderr.write("Warning! %s\n" % message)
+            elif level.depth() < TRACE.depth():
+                sys.stderr.write("Info! %s\n" % message)
+            # Log filtering
+            if self.is_enabled(module, level):
+                if level.depth() > INFO.depth():
+                    sys.stderr.write("<%s|%s> %s\n" % (module, level.string(), message))
 
 _ENGINE = Engine()
 def engine():

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -32,7 +32,7 @@ public class GoCliSample {
     public static void main(String ARJ_Args[]) {
         TestTools.Args cli_Args = new TestTools.Args();
         if (cli_Args.parseArgs("GoCliSample", ARJ_Args)) {
-            cli.Cli cli_Cli = new cli.test.clisample();
+            cli.Cli cli_Cli = new cli.samples.clisample();
             cli.Shell cli_Shell = new cli.Shell(cli_Cli);
             cli_Args.execute(cli_Shell);
         }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,6 +36,6 @@ public class SingleCommand extends IODevice.Native {
     public SingleCommand(String STR_CommandLine, OutputDevice.Interface CLI_Out) {
         super(__SingleCommand(STR_CommandLine, CLI_Out.getNativeRef()));
     }
-    private static final native int __SingleCommand(String STR_CommandLine, int I_NativeOutputDeviceRef);
+    private static final native long __SingleCommand(String STR_CommandLine, long I64_NativeOutputDeviceRef);
 
 }

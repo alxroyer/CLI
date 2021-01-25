@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -45,6 +45,7 @@ CPP_FILES += $(CLI_DIR)/cpp/src/command_line_history.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/config_menu.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/debug.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/element.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/encoding.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/endl.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/exec_context.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/exec_context_manager.cpp
@@ -58,12 +59,14 @@ CPP_FILES += $(CLI_DIR)/cpp/src/param.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/param_string.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/resource_string.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/shell.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/single_command.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/string_device.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/syntax_node.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/syntax_tag.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/tk.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/traces.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/traces_menu.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/utils.cpp
 
 PROJ_CPP_FLAGS += -DCLI_NO_STL
 PROJ_CPP_FLAGS += -DCLI_MAX_CMD_LINE_LENGTH=256

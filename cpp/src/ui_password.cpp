@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -109,9 +109,11 @@ CLI_NS_BEGIN(cli)
                 {
                     m_cliLine.MoveCursor(ECHO, -1);
                 }
-                else if (m_bDisplayStars)
+                else
                 {
-                    Beep();
+                    if (m_bDisplayStars) {
+                        Beep();
+                    }
                 }
                 break;
             case KEY_RIGHT:
@@ -120,9 +122,12 @@ CLI_NS_BEGIN(cli)
                 {
                     m_cliLine.MoveCursor(ECHO, 1);
                 }
-                else if (m_bDisplayStars)
+                else
                 {
-                    Beep();
+                    if (m_bDisplayStars)
+                    {
+                        Beep();
+                    }
                 }
                 break;
             case BACKSPACE:
@@ -131,9 +136,12 @@ CLI_NS_BEGIN(cli)
                 {
                     m_cliLine.Delete(ECHO, -1);
                 }
-                else if (m_bDisplayStars)
+                else
                 {
-                    Beep();
+                    if (m_bDisplayStars)
+                    {
+                        Beep();
+                    }
                 }
                 break;
             case DELETE:
@@ -142,9 +150,12 @@ CLI_NS_BEGIN(cli)
                 {
                     m_cliLine.Delete(ECHO, 1);
                 }
-                else if (m_bDisplayStars)
+                else
                 {
-                    Beep();
+                    if (m_bDisplayStars)
+                    {
+                        Beep();
+                    }
                 }
                 break;
             case ENTER:
@@ -239,9 +250,12 @@ CLI_NS_BEGIN(cli)
                         m_cliLine.Put(ECHO, STAR);
                     }
                 }
-                else if (m_bDisplayStars)
+                else
                 {
-                    Beep();
+                    if (m_bDisplayStars)
+                    {
+                        Beep();
+                    }
                 }
                 break;
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,7 +41,7 @@ public class More extends UI {
         super(__More(CLI_ParentContext.getNativeRef()));
         __MoreBody();
     }
-    private static final native int __More(int I_NativeParentContextRef);
+    private static final native long __More(long I64_NativeParentContextRef);
     private final void __MoreBody() {
         // Create a member inner device right away.
         m_cliInnerDevice = new InnerDevice(__getText(this.getNativeRef()));
@@ -54,14 +54,14 @@ public class More extends UI {
     public cli.OutputDevice.Interface getText() {
         return m_cliInnerDevice;
     }
-    private static final native int __getText(int I_NativeLessRef);
+    private static final native long __getText(long I64_NativeLessRef);
 
     /** Console input/output device. */
     private static class InnerDevice extends cli.OutputDevice.Native
     {
         /** Constructor. */
-        public InnerDevice(int I_NativeDeviceRef) {
-            super(I_NativeDeviceRef);
+        public InnerDevice(long I64_NativeDeviceRef) {
+            super(I64_NativeDeviceRef);
         }
     }
 

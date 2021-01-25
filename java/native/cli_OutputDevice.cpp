@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,74 +39,70 @@
 
 // OutputDevice.Common implementation.
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Common__1_1putInteger(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Common_1_1putInteger(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef, jint I_Integer)
+        jlong I64_NativeOutputDeviceRef, jint I_Integer)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__putInteger(I_NativeOutputDeviceRef, I_Integer)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__putInteger(I64_NativeOutputDeviceRef, I_Integer)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_Integer", I_Integer) << cli::endl;
 
-        pcli_OutputDevice->operator<<(I_Integer);
+        pcli_OutputDevice->operator<<((int) I_Integer);
 
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndVoid("OutputDevice.Common.__putInteger()") << cli::endl;
     }
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Common__1_1putFloat(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Common_1_1putFloat(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef, jfloat F_Float)
+        jlong I64_NativeOutputDeviceRef, jfloat F_Float)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__putFloat(I_NativeOutputDeviceRef, F_Float)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__putFloat(I64_NativeOutputDeviceRef, F_Float)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamFloat("F_Float", F_Float) << cli::endl;
 
-        pcli_OutputDevice->operator<<(F_Float);
+        pcli_OutputDevice->operator<<((float) F_Float);
 
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndVoid("OutputDevice.Common.__putFloat()") << cli::endl;
     }
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Common__1_1putDouble(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Common_1_1putDouble(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef, jdouble D_Double)
+        jlong I64_NativeOutputDeviceRef, jdouble D_Double)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__putDouble(I_NativeOutputDeviceRef, D_Double)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__putDouble(I64_NativeOutputDeviceRef, D_Double)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamFloat("D_Double", D_Double) << cli::endl;
 
-        pcli_OutputDevice->operator<<(D_Double);
+        pcli_OutputDevice->operator<<((double) D_Double);
 
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndVoid("OutputDevice.Common.__putDouble()") << cli::endl;
     }
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Common__1_1endl(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Common_1_1endl(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__endl(I_NativeOutputDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Common.__endl(I64_NativeOutputDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
 
         pcli_OutputDevice->operator<<(cli::endl);
 
@@ -117,18 +113,17 @@ extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Common_1_1endl(
 
 // OutputDevice.Native implementation.
 
-//extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice_Native__1_1openDevice(
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1openDevice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     bool b_Res = false;
-    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__openDevice(I_NativeOutputDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__openDevice(I64_NativeOutputDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
 
         b_Res = pcli_OutputDevice->OpenUp(__CALL_INFO__);
 
@@ -137,18 +132,17 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1openDe
     return b_Res;
 }
 
-//extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice_Native__1_1closeDevice(
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1closeDevice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     bool b_Res = false;
-    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__closeDevice(I_NativeOutputDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__closeDevice(I64_NativeOutputDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
 
         b_Res = pcli_OutputDevice->CloseDown(__CALL_INFO__);
 
@@ -157,17 +151,16 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1closeD
     return b_Res;
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Native__1_1putString(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Native_1_1putString(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef, jstring PJ_Text)
+        jlong I64_NativeOutputDeviceRef, jstring PJ_Text)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__putString(I_NativeOutputDeviceRef, PJ_Text)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__putString(I64_NativeOutputDeviceRef, PJ_Text)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
         cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamStr("PJ_Text", NativeExec::Java2Native(PJ_Text).c_str()) << cli::endl;
 
         pcli_OutputDevice->operator<<(NativeExec::Java2Native(PJ_Text).c_str());
@@ -176,17 +169,16 @@ extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Native_1_1putString(
     }
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Native__1_1beep(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Native_1_1beep(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__beep(I_NativeOutputDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__beep(I64_NativeOutputDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
 
         pcli_OutputDevice->Beep();
 
@@ -194,17 +186,16 @@ extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Native_1_1beep(
     }
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Native__1_1cleanScreen(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Native_1_1cleanScreen(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__cleanScreen(I_NativeOutputDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__cleanScreen(I64_NativeOutputDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
 
         pcli_OutputDevice->CleanScreen();
 
@@ -212,42 +203,40 @@ extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1Native_1_1cleanScree
     }
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_Native__1_1getScreenInfo(
-extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1Native_1_1getScreenInfo(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_OutputDevice__1_1Native_1_1getScreenInfo(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef)
+        jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    NativeObject::REF i_ScreenInfoRef = 0;
-    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    NativeObject::REF i64_ScreenInfoRef = 0;
+    if (const cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__getScreenInfo(I_NativeOutputDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::Begin("OutputDevice.Native.__getScreenInfo(I64_NativeOutputDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
 
         if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = new cli::OutputDevice::ScreenInfo(pcli_OutputDevice->GetScreenInfo()))
         {
             NativeObject::CreateFromNative(*pcli_ScreenInfo);
-            i_ScreenInfoRef = NativeObject::GetNativeRef(*pcli_ScreenInfo);
+            i64_ScreenInfoRef = NativeObject::GetNativeRef(*pcli_ScreenInfo);
         }
 
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndInt("OutputDevice.Native.__getScreenInfo()", i_ScreenInfoRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_OutputDevice) << NativeTraces::EndInt64("OutputDevice.Native.__getScreenInfo()", i64_ScreenInfoRef) << cli::endl;
     }
-    return i_ScreenInfoRef;
+    return i64_ScreenInfoRef;
 }
 
-//extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice_Native_1_1wouldOutput(
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1wouldOutput(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeOutputDeviceRef, jint I_NativeOutputDevice2Ref)
+        jlong I64_NativeOutputDeviceRef, jlong I64_NativeOutputDevice2Ref)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     // Do not trace! for consistency reasons.
     bool b_Res = false;
-    if (const cli::OutputDevice* const pcli_OutputDevice1 = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    if (const cli::OutputDevice* const pcli_OutputDevice1 = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
-        if (const cli::OutputDevice* const pcli_OutputDevice2 = NativeObject::GetNativeObject<const cli::OutputDevice*>(I_NativeOutputDevice2Ref))
+        if (const cli::OutputDevice* const pcli_OutputDevice2 = NativeObject::GetNativeObject<const cli::OutputDevice*>(I64_NativeOutputDevice2Ref))
         {
             b_Res = pcli_OutputDevice1->WouldOutput(*pcli_OutputDevice2);
         }
@@ -258,8 +247,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1Native_1_1wouldO
 
 // OutputDevice.Java implementation.
 
-//extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice_Java__1_1Java(
-extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1Java_1_1Java(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_OutputDevice__1_1Java_1_1Java(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jstring PJ_DbgName)
 {
@@ -268,70 +256,82 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1Java_1_1Java(
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.Java.__Java(PJ_DbgName)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_DbgName", NativeExec::Java2Native(PJ_DbgName).c_str()) << cli::endl;
 
-    NativeObject::REF i_OutputDeviceRef = 0;
+    NativeObject::REF i64_OutputDeviceRef = 0;
     if (cli::OutputDevice* const pcli_OutputDevice = new NativeDevice<cli::OutputDevice>(NativeExec::Java2Native(PJ_DbgName).c_str()))
     {
         NativeObject::Use(*pcli_OutputDevice);
-        i_OutputDeviceRef = NativeObject::GetNativeRef(*pcli_OutputDevice);
+        i64_OutputDeviceRef = NativeObject::GetNativeRef(*pcli_OutputDevice);
     }
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.Java.__Java()", i_OutputDeviceRef) << cli::endl;
-    return i_OutputDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("OutputDevice.Java.__Java()", i64_OutputDeviceRef) << cli::endl;
+    return i64_OutputDeviceRef;
 }
 
 
 // OutputDevice static methods implementation.
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1getNullDevice(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_OutputDevice__1_1getNullDevice(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.__getNullDevice()") << cli::endl;
 
-    const cli::OutputDevice& cli_NullDevice = cli::OutputDevice::GetNullDevice();
-    const NativeObject::REF i_NullDeviceRef = NativeObject::GetNativeRef(cli_NullDevice);
+    static NativeObject::REF i64_NullDeviceRef = 0;
+    if (i64_NullDeviceRef == 0)
+    {
+        const cli::OutputDevice& cli_NullDevice = cli::OutputDevice::GetNullDevice();
+        i64_NullDeviceRef = NativeObject::GetNativeRef(cli_NullDevice);
 
-    // Note: Java should call this JNI interface once only for OutputDevice.m_cliNullDevice static member initialization.
-    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
-    const_cast<cli::OutputDevice&>(cli_NullDevice).UseInstance(__CALL_INFO__);
+        // Note: Java should call this JNI interface once only for OutputDevice.m_cliNullDevice static member initialization.
+        // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+        const_cast<cli::OutputDevice&>(cli_NullDevice).UseInstance(__CALL_INFO__);
+    }
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.__getNullDevice()", i_NullDeviceRef) << cli::endl;
-    return i_NullDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("OutputDevice.__getNullDevice()", i64_NullDeviceRef) << cli::endl;
+    return i64_NullDeviceRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1getStdOut(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_OutputDevice__1_1getStdOut(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.__getStdOut()") << cli::endl;
 
-    const cli::OutputDevice& cli_StdOutDevice = cli::OutputDevice::GetStdOut();
-    const NativeObject::REF i_StdOutDeviceRef = NativeObject::GetNativeRef(cli_StdOutDevice);
+    static NativeObject::REF i64_StdOutDeviceRef = 0;
+    if (i64_StdOutDeviceRef == 0)
+    {
+        const cli::OutputDevice& cli_StdOutDevice = cli::OutputDevice::GetStdOut();
+        i64_StdOutDeviceRef = NativeObject::GetNativeRef(cli_StdOutDevice);
 
-    // Note: Java should call this JNI interface once only for OutputDevice.m_cliStdOut static member initialization.
-    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
-    const_cast<cli::OutputDevice&>(cli_StdOutDevice).UseInstance(__CALL_INFO__);
+        // Note: Java should call this JNI interface once only for OutputDevice.m_cliStdOut static member initialization.
+        // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+        const_cast<cli::OutputDevice&>(cli_StdOutDevice).UseInstance(__CALL_INFO__);
+    }
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.__getStdOut()", i_StdOutDeviceRef) << cli::endl;
-    return i_StdOutDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("OutputDevice.__getStdOut()", i64_StdOutDeviceRef) << cli::endl;
+    return i64_StdOutDeviceRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1getStdErr(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_OutputDevice__1_1getStdErr(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.__getStdErr()") << cli::endl;
 
-    const cli::OutputDevice& cli_StdErrDevice = cli::OutputDevice::GetStdErr();
-    const NativeObject::REF i_StdErrDeviceRef = NativeObject::GetNativeRef(cli_StdErrDevice);
+    static NativeObject::REF i64_StdErrDeviceRef = 0;
+    if (i64_StdErrDeviceRef == 0)
+    {
+        const cli::OutputDevice& cli_StdErrDevice = cli::OutputDevice::GetStdErr();
+        i64_StdErrDeviceRef = NativeObject::GetNativeRef(cli_StdErrDevice);
 
-    // Note: Java should call this JNI interface once only for OutputDevice.m_cliStdErr static member initialization.
-    // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
-    const_cast<cli::OutputDevice&>(cli_StdErrDevice).UseInstance(__CALL_INFO__);
+        // Note: Java should call this JNI interface once only for OutputDevice.m_cliStdErr static member initialization.
+        // Ensure one more token there so that System.runFinalizersOnExit(true) does not cause a crash on the Java OutputDevice object finalization.
+        const_cast<cli::OutputDevice&>(cli_StdErrDevice).UseInstance(__CALL_INFO__);
+    }
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.__getStdErr()", i_StdErrDeviceRef) << cli::endl;
-    return i_StdErrDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("OutputDevice.__getStdErr()", i64_StdErrDeviceRef) << cli::endl;
+    return i64_StdErrDeviceRef;
 }

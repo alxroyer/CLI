@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -89,18 +89,33 @@ const KEY SingleCommand::GetKey(void) const
     {
         const char c_Char = m_strCommand[m_iPosition];
         m_iPosition ++;
-        return IODevice::GetKey(c_Char);
+        const KEY e_Key = Char2Key(c_Char);
+        if (e_Key == NULL_KEY)
+        {
+            // Do nothing, just ignore.
+            // Recursive call.
+            return GetKey();
+        }
+        else if (e_Key == FEED_MORE)
+        {
+            // Recursive call.
+            return GetKey();
+        }
+        else
+        {
+            return e_Key;
+        }
     }
     else if (m_iPosition == (signed) m_strCommand.GetLength())
     {
         m_iPosition ++;
-        return IODevice::GetKey('\n');
+        return ENTER;
     }
     else
     {
         m_cliLastError
             .SetString(ResourceString::LANG_EN, "No more characters in command line")
-            .SetString(ResourceString::LANG_FR, "Il n'y a plus de caractères dans la ligne de commande");
+            .SetString(ResourceString::LANG_FR, "Il n'y a plus de caractÃ¨res dans la ligne de commande");
         return NULL_KEY;
     }
 }

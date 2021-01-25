@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,7 +37,7 @@ CLI_NS_BEGIN(cli)
     CLI_NS_BEGIN(ui)
 
         //! @brief Choice to string conversion.
-        //! @return Resource string at the given position in the list. Empty string when an error occured.
+        //! @return Resource string at the given position in the list. Empty string when an error occurred.
         static const ResourceString Choice2Str(
                 const int I_Choice,                             //!< Choice index to convert.
                 const tk::Queue<ResourceString>& TK_Choices     //!< Choice list.

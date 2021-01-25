@@ -1,0 +1,9 @@
+cli-config
+lang en
+exit
+help
+cli-config
+lang fr
+exit
+help
+exit

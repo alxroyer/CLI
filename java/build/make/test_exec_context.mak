@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -34,23 +34,23 @@ include _vars.mak
 PRODUCT = test_exec_context
 SRC_DIR = $(CLI_DIR)/java/src/cli/test
 JAVA_FILES += $(CLI_DIR)/java/src/cli/test/TestExecContext.java
-JAVA_FILES += $(CLI_DIR)/java/src/cli/test/PwdShellContext.java
+JAVA_FILES += $(CLI_DIR)/java/src/cli/test/samples/PwdShellContext.java
 JAVA_FILES += $(CLI_DIR)/java/src/cli/test/TestTools.java
 PROJECT_DEPS = libclijava.mak jni.mak native.mak
 include _build.mak
 JAVAC_OPTS += -nowarn
-PROJ_CLEAN += $(CLI_DIR)/java/src/cli/test/PwdShellContext.java
+PROJ_CLEAN += $(CLI_DIR)/java/src/cli/test/samples/PwdShellContext.java
 
 # Rules
 .PHONY: check
 check: build
-	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.TestExecContext
+	$(call RunJava,cli.test.TestExecContext)
 
 .PHONY: ShellAbort ShellUI ShellUINonBlocking PwdShell
 ShellAbort ShellUI ShellUINonBlocking PwdShell: build
-	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.TestExecContext $@
+	$(call RunJava,cli.test.TestExecContext $@)
 
-$(CLI_DIR)/java/src/cli/test/PwdShellContext.java: $(CLI_DIR)/samples/user-guide/PwdShellContext.java
+$(CLI_DIR)/java/src/cli/test/samples/PwdShellContext.java: $(CLI_DIR)/samples/user-guide/PwdShellContext.java
 	$(MAKE) -f test_all_samples.mak $@
 
 .PHONY: deps

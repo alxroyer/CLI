@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,6 +35,7 @@
 #include "cli/namespace.h"
 #include "cli/object.h"
 #include "cli/tk.h"
+#include "cli/io_device.h"
 
 
 CLI_NS_BEGIN(cli)
@@ -48,6 +49,8 @@ CLI_NS_BEGIN(cli)
     {
     public:
         //! @brief Copy constructor.
+        //!
+        //! Useful so that CmdLineEdition objects can stored in a tk::Queue<CmdLineEdition> member in CmdLineHistory.
         CmdLineEdition(const CmdLineEdition&);
 
         //! @brief Default constructor.
@@ -87,13 +90,20 @@ CLI_NS_BEGIN(cli)
         //! @brief Character addition.
         void Put(
             const OutputDevice& CLI_OutputDevice,   //!< Output device.
-            const char C_Char                       //!< Character to add.
+            const KEY E_Char                        //!< Character to add.
             );
 
         //! @brief String addition.
         void Put(
             const OutputDevice& CLI_OutputDevice,   //!< Output device.
             const tk::String& TK_String             //!< String to add.
+            );
+
+    private:
+        //! @brief KEY list addition. Inner implementation.
+        void Put(
+            const OutputDevice& CLI_OutputDevice,   //!< Output device.
+            const tk::Queue<KEY>& TK_Keys           //!< KEY list.
             );
 
     public:
@@ -169,10 +179,10 @@ CLI_NS_BEGIN(cli)
 
     private:
         //! Left part of the command line.
-        tk::String m_tkLeft;
+        tk::Queue<KEY> m_tkLeft;
 
         //! Right part of the command line.
-        tk::String m_tkRight;
+        tk::Queue<KEY> m_tkRight;
 
         //! Insert mode. Default is true.
         bool m_bInsertMode;

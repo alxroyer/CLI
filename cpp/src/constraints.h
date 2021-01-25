@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -69,6 +69,13 @@ CLI_NS_BEGIN(cli)
     static const unsigned int MAX_WORDS_PER_NODE = CLI_MAX_WORDS_PER_NODE;
     #endif
 
+    //! Maximum number of comment patterns.
+    #ifndef CLI_MAX_COMMENT_PATTERNS_PER_CLI
+    static const unsigned int MAX_COMMENT_PATTERNS_PER_CLI = 256;
+    #else
+    static const unsigned int MAX_COMMENT_PATTERNS_PER_CLI = CLI_MAX_COMMENT_PATTERNS_PER_CLI;
+    #endif
+
     // Command lines.
 
     //! Maximum string length for command lines.
@@ -85,7 +92,7 @@ CLI_NS_BEGIN(cli)
     static const unsigned int MAX_CMD_LINE_WORD_COUNT = CLI_MAX_CMD_LINE_WORD_COUNT;
     #endif
 
-    //! Maximum length for each word in a command line.
+    //! Maximum length for each word in a command line. Used for comment patterns as well.
     #ifndef CLI_MAX_WORD_LENGTH
     static const unsigned int MAX_WORD_LENGTH = 256;
     #else

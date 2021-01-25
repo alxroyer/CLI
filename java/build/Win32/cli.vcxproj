@@ -1,0 +1,311 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{36626612-879D-49C4-8C3E-FD726011CFDA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>cli</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <CLRSupport>OldSyntax</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+    <CLRSupport>OldSyntax</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>.\cli\Debug</OutDir>
+    <IntDir>.\cli\Debug</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>.\cli\Release</OutDir>
+    <IntDir>.\cli\Release</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CLI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\extra-src;..\..\..\cpp\include;D:\APP\Oracle\Java\JDK-7u40x86\include;D:\APP\Oracle\Java\JDK-7u40x86\include\win32</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CLI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\extra-src;..\..\..\cpp\include;D:\APP\Oracle\Java\JDK-7u40x86\include;D:\APP\Oracle\Java\JDK-7u40x86\include\win32</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\cpp\src\cli.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\command_line.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\command_line_edition.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\command_line_history.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\config_menu.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\consistency.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\debug.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\element.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\endl.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\exec_context.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\exec_context_manager.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\file_device.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\help.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\io_device.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\io_mux.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\keyword.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\menu.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\non_blocking_io_device.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\object.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\param.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\param_float.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\param_host.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\param_int.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\param_string.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\resource_string.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\shell.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\single_command.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\string_device.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\syntax_node.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\syntax_tag.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\telnet.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\tk.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\traces.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\traces_menu.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_choice.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_float.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_int.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_less.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_line.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_more.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_password.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_text.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\ui_yesno.cpp" />
+    <ClCompile Include="..\..\..\cpp\src\win_console.cpp" />
+    <ClCompile Include="..\..\native\cli_Cli.cpp" />
+    <ClCompile Include="..\..\native\cli_CommandLine.cpp" />
+    <ClCompile Include="..\..\native\cli_Console.cpp" />
+    <ClCompile Include="..\..\native\cli_Element.cpp" />
+    <ClCompile Include="..\..\native\cli_Endl.cpp" />
+    <ClCompile Include="..\..\native\cli_ExecutionContext.cpp" />
+    <ClCompile Include="..\..\native\cli_ExecutionResult.cpp" />
+    <ClCompile Include="..\..\native\cli_Help.cpp" />
+    <ClCompile Include="..\..\native\cli_InputFileDevice.cpp" />
+    <ClCompile Include="..\..\native\cli_IODevice.cpp" />
+    <ClCompile Include="..\..\native\cli_IOMux.cpp" />
+    <ClCompile Include="..\..\native\cli_Keyword.cpp" />
+    <ClCompile Include="..\..\native\cli_Menu.cpp" />
+    <ClCompile Include="..\..\native\cli_MenuRef.cpp" />
+    <ClCompile Include="..\..\native\cli_NativeObject.cpp" />
+    <ClCompile Include="..\..\native\cli_NativeTraces.cpp" />
+    <ClCompile Include="..\..\native\cli_NonBlockingIODevice.cpp" />
+    <ClCompile Include="..\..\native\cli_OutputDevice.cpp" />
+    <ClCompile Include="..\..\native\cli_OutputDevice_ScreenInfo.cpp" />
+    <ClCompile Include="..\..\native\cli_OutputFileDevice.cpp" />
+    <ClCompile Include="..\..\native\cli_Param.cpp" />
+    <ClCompile Include="..\..\native\cli_ParamFloat.cpp" />
+    <ClCompile Include="..\..\native\cli_ParamHost.cpp" />
+    <ClCompile Include="..\..\native\cli_ParamInt.cpp" />
+    <ClCompile Include="..\..\native\cli_ParamString.cpp" />
+    <ClCompile Include="..\..\native\cli_ResourceString.cpp" />
+    <ClCompile Include="..\..\native\cli_Shell.cpp" />
+    <ClCompile Include="..\..\native\cli_SingleCommand.cpp" />
+    <ClCompile Include="..\..\native\cli_StringDevice.cpp" />
+    <ClCompile Include="..\..\native\cli_SyntaxNode.cpp" />
+    <ClCompile Include="..\..\native\cli_SyntaxRef.cpp" />
+    <ClCompile Include="..\..\native\cli_SyntaxTag.cpp" />
+    <ClCompile Include="..\..\native\cli_TelnetConnection.cpp" />
+    <ClCompile Include="..\..\native\cli_TelnetServer.cpp" />
+    <ClCompile Include="..\..\native\cli_TraceClass.cpp" />
+    <ClCompile Include="..\..\native\cli_Traces.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_Choice.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_Float.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_Int.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_Less.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_Line.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_More.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_Password.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_UI.cpp" />
+    <ClCompile Include="..\..\native\cli_ui_YesNo.cpp" />
+    <ClCompile Include="..\..\native\NativeDevice.cpp" />
+    <ClCompile Include="..\..\native\NativeExec.cpp" />
+    <ClCompile Include="..\..\native\NativeMenu.cpp" />
+    <ClCompile Include="..\..\native\NativeObject.cpp" />
+    <ClCompile Include="..\..\native\NativeTraces.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\cpp\include\cli\assert.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\cli.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\command_line.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\common.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\console.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\debug.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\element.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\endl.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\exec_context.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\file_device.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\help.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\io_device.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\io_mux.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\keyword.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\lib_info.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\menu.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\namespace.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\non_blocking_io_device.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\object.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\param.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\param_float.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\param_host.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\param_int.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\param_string.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\preprocessing.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\resource_string.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\shell.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\single_command.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\string_device.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\syntax_node.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\syntax_tag.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\telnet.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\tk.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\tk_inner.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\tk_stl.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\traces.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_choice.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_float.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_int.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_less.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_line.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_more.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_password.h" />
+    <ClInclude Include="..\..\..\cpp\include\cli\ui_yesno.h" />
+    <ClInclude Include="..\..\..\cpp\src\command_line_edition.h" />
+    <ClInclude Include="..\..\..\cpp\src\command_line_history.h" />
+    <ClInclude Include="..\..\..\cpp\src\config_menu.h" />
+    <ClInclude Include="..\..\..\cpp\src\consistency.h" />
+    <ClInclude Include="..\..\..\cpp\src\constraints.h" />
+    <ClInclude Include="..\..\..\cpp\src\exec_context_manager.h" />
+    <ClInclude Include="..\..\..\cpp\src\traces_menu.h" />
+    <ClInclude Include="..\..\..\cpp\src\ui_text.h" />
+    <ClInclude Include="..\..\native\cli_Cli.h" />
+    <ClInclude Include="..\..\native\cli_CommandLine.h" />
+    <ClInclude Include="..\..\native\cli_Console.h" />
+    <ClInclude Include="..\..\native\cli_Element.h" />
+    <ClInclude Include="..\..\native\cli_Endl.h" />
+    <ClInclude Include="..\..\native\cli_ExecutionContext.h" />
+    <ClInclude Include="..\..\native\cli_ExecutionContext_Common.h" />
+    <ClInclude Include="..\..\native\cli_ExecutionContext_Interface.h" />
+    <ClInclude Include="..\..\native\cli_ExecutionContext_Java.h" />
+    <ClInclude Include="..\..\native\cli_ExecutionContext_Native.h" />
+    <ClInclude Include="..\..\native\cli_ExecutionResult.h" />
+    <ClInclude Include="..\..\native\cli_Help.h" />
+    <ClInclude Include="..\..\native\cli_InputFileDevice.h" />
+    <ClInclude Include="..\..\native\cli_IODevice.h" />
+    <ClInclude Include="..\..\native\cli_IODevice_Interface.h" />
+    <ClInclude Include="..\..\native\cli_IODevice_Java.h" />
+    <ClInclude Include="..\..\native\cli_IODevice_Native.h" />
+    <ClInclude Include="..\..\native\cli_IOMux.h" />
+    <ClInclude Include="..\..\native\cli_Keyword.h" />
+    <ClInclude Include="..\..\native\cli_Menu.h" />
+    <ClInclude Include="..\..\native\cli_MenuRef.h" />
+    <ClInclude Include="..\..\native\cli_NativeObject.h" />
+    <ClInclude Include="..\..\native\cli_NativeTraces.h" />
+    <ClInclude Include="..\..\native\cli_NonBlockingIODevice.h" />
+    <ClInclude Include="..\..\native\cli_NonBlockingIODevice_Interface.h" />
+    <ClInclude Include="..\..\native\cli_NonBlockingIODevice_Java.h" />
+    <ClInclude Include="..\..\native\cli_NonBlockingIODevice_Native.h" />
+    <ClInclude Include="..\..\native\cli_OutputDevice.h" />
+    <ClInclude Include="..\..\native\cli_OutputDevice_Common.h" />
+    <ClInclude Include="..\..\native\cli_OutputDevice_Interface.h" />
+    <ClInclude Include="..\..\native\cli_OutputDevice_Java.h" />
+    <ClInclude Include="..\..\native\cli_OutputDevice_Native.h" />
+    <ClInclude Include="..\..\native\cli_OutputDevice_OutputStream.h" />
+    <ClInclude Include="..\..\native\cli_OutputDevice_ScreenInfo.h" />
+    <ClInclude Include="..\..\native\cli_OutputFileDevice.h" />
+    <ClInclude Include="..\..\native\cli_Param.h" />
+    <ClInclude Include="..\..\native\cli_ParamFloat.h" />
+    <ClInclude Include="..\..\native\cli_ParamHost.h" />
+    <ClInclude Include="..\..\native\cli_ParamInt.h" />
+    <ClInclude Include="..\..\native\cli_ParamString.h" />
+    <ClInclude Include="..\..\native\cli_ResourceString.h" />
+    <ClInclude Include="..\..\native\cli_Shell.h" />
+    <ClInclude Include="..\..\native\cli_SingleCommand.h" />
+    <ClInclude Include="..\..\native\cli_StringDevice.h" />
+    <ClInclude Include="..\..\native\cli_SyntaxNode.h" />
+    <ClInclude Include="..\..\native\cli_SyntaxRef.h" />
+    <ClInclude Include="..\..\native\cli_SyntaxTag.h" />
+    <ClInclude Include="..\..\native\cli_TelnetConnection.h" />
+    <ClInclude Include="..\..\native\cli_TelnetServer.h" />
+    <ClInclude Include="..\..\native\cli_TraceClass.h" />
+    <ClInclude Include="..\..\native\cli_Traces.h" />
+    <ClInclude Include="..\..\native\cli_ui_Choice.h" />
+    <ClInclude Include="..\..\native\cli_ui_Float.h" />
+    <ClInclude Include="..\..\native\cli_ui_Int.h" />
+    <ClInclude Include="..\..\native\cli_ui_Less.h" />
+    <ClInclude Include="..\..\native\cli_ui_Less_InnerDevice.h" />
+    <ClInclude Include="..\..\native\cli_ui_Line.h" />
+    <ClInclude Include="..\..\native\cli_ui_More.h" />
+    <ClInclude Include="..\..\native\cli_ui_More_InnerDevice.h" />
+    <ClInclude Include="..\..\native\cli_ui_Password.h" />
+    <ClInclude Include="..\..\native\cli_ui_UI.h" />
+    <ClInclude Include="..\..\native\cli_ui_YesNo.h" />
+    <ClInclude Include="..\..\native\NativeDevice.h" />
+    <ClInclude Include="..\..\native\NativeExec.h" />
+    <ClInclude Include="..\..\native\NativeMenu.h" />
+    <ClInclude Include="..\..\native\NativeObject.h" />
+    <ClInclude Include="..\..\native\NativeTraces.h" />
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

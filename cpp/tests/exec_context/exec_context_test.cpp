@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -141,7 +141,8 @@ static const bool Test_Shell_UI_NonBlocking(void)
                 if (! cli_Elements.StepIt()) return false;
                 if (dynamic_cast<const cli::Endl*>(*cli_Elements) != NULL) {
                     GetShell().GetStream(cli::PROMPT_STREAM) << "Enter line: ";
-                    if (m_pcliLine = new cli::ui::Line(GetShell(), cli::tk::String(10, ""), 0, 20)) {
+                    m_pcliLine = new cli::ui::Line(GetShell(), cli::tk::String(10, ""), 0, 20);
+                    if (m_pcliLine != NULL) {
                         const_cast<_TestCli*>(this)->WatchResult(*m_pcliLine);
                         m_pcliLine->Run();
                     }

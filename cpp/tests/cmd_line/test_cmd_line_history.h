@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -135,7 +135,7 @@ static const bool TestCmdLineHistory(void)
     {
         const cli::StringDevice cli_Content(20, false);
         cli_Content << "history " << i;
-        (cli_Line[i]).Set(cli_Content.GetString(), cli::tk::String(20));
+        cli_Line[i].Set(cli_Content.GetString(), cli::tk::String(20));
     }
 
     // Initial state.

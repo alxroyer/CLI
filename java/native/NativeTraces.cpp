@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -71,6 +71,12 @@ const cli::tk::String NativeTraces::ParamInt(const char* const STR_ParamName, co
     cli_Param << GetIndent() << " " << STR_ParamName << " = " << I_Value;
     return cli_Param.GetString();
 }
+const cli::tk::String NativeTraces::ParamInt64(const char* const STR_ParamName, const int64_t I64_Value)
+{
+    cli::StringDevice cli_Param(0, false);
+    cli_Param << GetIndent() << " " << STR_ParamName << " = " << I64_Value;
+    return cli_Param.GetString();
+}
 const cli::tk::String NativeTraces::ParamBool(const char* const STR_ParamName, const bool B_Value)
 {
     cli::StringDevice cli_Param(0, false);
@@ -100,6 +106,12 @@ const cli::tk::String NativeTraces::ValueInt(const char* const STR_ValueName, co
 {
     cli::StringDevice cli_Value(0, false);
     cli_Value << GetIndent() << "  -> " << STR_ValueName << " = " << I_Value;
+    return cli_Value.GetString();
+}
+const cli::tk::String NativeTraces::ValueInt64(const char* const STR_ValueName, const int64_t I64_Value)
+{
+    cli::StringDevice cli_Value(0, false);
+    cli_Value << GetIndent() << "  -> " << STR_ValueName << " = " << I64_Value;
     return cli_Value.GetString();
 }
 const cli::tk::String NativeTraces::ValueBool(const char* const STR_ValueName, const bool B_Value)
@@ -143,6 +155,13 @@ const cli::tk::String NativeTraces::EndInt(const char* const STR_Method, const i
     m_iJniStackSize --;
     return cli_End.GetString();
 }
+const cli::tk::String NativeTraces::EndInt64(const char* const STR_Method, const int64_t I64_Value)
+{
+    cli::StringDevice cli_End(0, false);
+    cli_End << GetIndent() << "<< " << STR_Method << " : " << I64_Value;
+    m_iJniStackSize --;
+    return cli_End.GetString();
+}
 const cli::tk::String NativeTraces::EndBool(const char* const STR_Method, const bool B_Value)
 {
     cli::StringDevice cli_End(0, false);
@@ -158,11 +177,11 @@ const cli::tk::String NativeTraces::EndFloat(const char* const STR_Method, const
     return cli_End.GetString();
 }
 
-const cli::tk::String NativeTraces::Instance(const int I_NativeObjectRef, const int I_Tokens, const bool B_AutoDelete)
+const cli::tk::String NativeTraces::Instance(const NativeObject::REF I64_NativeObjectRef, const int I_Tokens, const bool B_AutoDelete)
 {
     cli::StringDevice cli_Trace(0, false);
     cli_Trace << GetIndent();
-    cli_Trace << "[object " << I_NativeObjectRef << "] ";
+    cli_Trace << "[object " << I64_NativeObjectRef << "] ";
     cli_Trace << "tokens = " << I_Tokens << ", ";
     cli_Trace << "auto-delete: " << (B_AutoDelete ? "yes" : "no");
     if ((I_Tokens <= 0) && (B_AutoDelete))
@@ -176,7 +195,7 @@ const cli::TraceClass& NativeTraces::GetTraceClass(void)
 {
     static const cli::TraceClass cli_JniTraceClass("CLI_JNI", cli::Help()
         .AddHelp(cli::Help::LANG_EN, "CLI JNI traces")
-        .AddHelp(cli::Help::LANG_FR, "Traces CLI d'exécution JNI"));
+        .AddHelp(cli::Help::LANG_FR, "Traces CLI d'exÃ©cution JNI"));
     return cli_JniTraceClass;
 }
 

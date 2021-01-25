@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,35 +36,35 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Choice__1_1beginChoiceList(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Choice__1_1beginChoiceList(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__beginChoiceList()") << cli::endl;
-    NativeObject::REF i_ChoiceListRef = 0;
+    NativeObject::REF i64_ChoiceListRef = 0;
     // Make a dynamic allocation at this point.
     // It should be deleted in __Choice() below.
     if (cli::tk::Queue<cli::ResourceString>* const ptk_ChoiceList = new cli::tk::Queue<cli::ResourceString>(0)) // UI_MaxCount not taken in account by STL implementation
     {
-        i_ChoiceListRef = NativeObject::GetNativeRef(*ptk_ChoiceList);
+        i64_ChoiceListRef = NativeObject::GetNativeRef(*ptk_ChoiceList);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Choice.__beginChoiceList()", i_ChoiceListRef) << cli::endl;
-    return i_ChoiceListRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Choice.__beginChoiceList()", i64_ChoiceListRef) << cli::endl;
+    return i64_ChoiceListRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ui_Choice__1_1addChoice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeChoiceListRef, jint I_NativeResourceStringRef)
+        jlong I64_NativeChoiceListRef, jlong I64_NativeResourceStringRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__addChoice(I_NativeChoiceListRef, I_NativeResourceStringRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeChoiceListRef", I_NativeChoiceListRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeResourceStringRef", I_NativeResourceStringRef) << cli::endl;
-    if (cli::tk::Queue<cli::ResourceString>* const ptk_ChoiceList = NativeObject::GetNativeObject<cli::tk::Queue<cli::ResourceString>*>(I_NativeChoiceListRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__addChoice(I64_NativeChoiceListRef, I64_NativeResourceStringRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeChoiceListRef", I64_NativeChoiceListRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeResourceStringRef", I64_NativeResourceStringRef) << cli::endl;
+    if (cli::tk::Queue<cli::ResourceString>* const ptk_ChoiceList = NativeObject::GetNativeObject<cli::tk::Queue<cli::ResourceString>*>(I64_NativeChoiceListRef))
     {
-        if (const cli::ResourceString* const pcli_ResourceString = NativeObject::GetNativeObject<const cli::ResourceString*>(I_NativeResourceStringRef))
+        if (const cli::ResourceString* const pcli_ResourceString = NativeObject::GetNativeObject<const cli::ResourceString*>(I64_NativeResourceStringRef))
         {
             ptk_ChoiceList->AddTail(*pcli_ResourceString);
         }
@@ -72,23 +72,23 @@ extern "C" JNIEXPORT void JNICALL Java_cli_ui_Choice__1_1addChoice(
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("ui.Choice.__addChoice()") << cli::endl;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Choice__1_1Choice(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Choice__1_1Choice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef, jint I_DefaultChoice, jint I_NativeChoiceListRef)
+        jlong I64_NativeParentContextRef, jint I_DefaultChoice, jlong I64_NativeChoiceListRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__Choice(I_NativeParentContextRef, I_DefaultChoice, I_NativeChoiceListRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__Choice(I64_NativeParentContextRef, I_DefaultChoice, I64_NativeChoiceListRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_DefaultChoice", I_DefaultChoice) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeChoiceListRef", I_NativeChoiceListRef) << cli::endl;
-    NativeObject::REF i_ChoiceRef = 0;
-    if (const cli::tk::Queue<cli::ResourceString>* const ptk_ChoiceList = NativeObject::GetNativeObject<const cli::tk::Queue<cli::ResourceString>*>(I_NativeChoiceListRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeChoiceListRef", I64_NativeChoiceListRef) << cli::endl;
+    NativeObject::REF i64_ChoiceRef = 0;
+    if (const cli::tk::Queue<cli::ResourceString>* const ptk_ChoiceList = NativeObject::GetNativeObject<const cli::tk::Queue<cli::ResourceString>*>(I64_NativeChoiceListRef))
     {
         cli::ui::Choice* pcli_Choice = NULL;
-        if (I_NativeParentContextRef != 0)
+        if (I64_NativeParentContextRef != 0)
         {
-            if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+            if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
             {
                 pcli_Choice = new cli::ui::Choice(*pcli_ParentContext, I_DefaultChoice, *ptk_ChoiceList);
             }
@@ -100,25 +100,25 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Choice__1_1Choice(
         if (pcli_Choice != NULL)
         {
             NativeObject::Use(*pcli_Choice);
-            i_ChoiceRef = NativeObject::GetNativeRef(*pcli_Choice);
+            i64_ChoiceRef = NativeObject::GetNativeRef(*pcli_Choice);
         }
         // Delete the list previously allocated in __beginChoiceList().
         delete ptk_ChoiceList;
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Choice.__Choice()", i_ChoiceRef) << cli::endl;
-    return i_ChoiceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Choice.__Choice()", i64_ChoiceRef) << cli::endl;
+    return i64_ChoiceRef;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Choice__1_1getChoice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeChoiceRef)
+        jlong I64_NativeChoiceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__getChoice(I_NativeChoiceRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeChoiceRef", I_NativeChoiceRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__getChoice(I64_NativeChoiceRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeChoiceRef", I64_NativeChoiceRef) << cli::endl;
     int i_Choice = 0;
-    if (const cli::ui::Choice* const pcli_Choice = NativeObject::GetNativeObject<const cli::ui::Choice*>(I_NativeChoiceRef))
+    if (const cli::ui::Choice* const pcli_Choice = NativeObject::GetNativeObject<const cli::ui::Choice*>(I64_NativeChoiceRef))
     {
         i_Choice = pcli_Choice->GetChoice();
     }
@@ -128,15 +128,15 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Choice__1_1getChoice(
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_ui_Choice__1_1getstrChoice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeChoiceRef, jint E_Lang)
+        jlong I64_NativeChoiceRef, jint E_Lang)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__getstrChoice(I_NativeChoiceRef, E_Lang)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeChoiceRef", I_NativeChoiceRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Choice.__getstrChoice(I64_NativeChoiceRef, E_Lang)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeChoiceRef", I64_NativeChoiceRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("E_Lang", E_Lang) << cli::endl;
     std::string str_Choice;
-    if (const cli::ui::Choice* const pcli_Choice = NativeObject::GetNativeObject<const cli::ui::Choice*>(I_NativeChoiceRef))
+    if (const cli::ui::Choice* const pcli_Choice = NativeObject::GetNativeObject<const cli::ui::Choice*>(I64_NativeChoiceRef))
     {
         str_Choice = (const char*) pcli_Choice->GetstrChoice().GetString((cli::ResourceString::LANG) E_Lang);
     }

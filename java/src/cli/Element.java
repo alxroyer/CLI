@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,9 +31,9 @@ package cli;
 public abstract class Element extends NativeObject
 {
     /** Constructor.
-        @param I_NativeRef  Native object reference. */
-    protected Element(int I_NativeRef) {
-        super(I_NativeRef);
+        @param I64_NativeRef  Native instance reference. */
+    protected Element(long I64_NativeRef) {
+        super(I64_NativeRef);
     }
 
     /** Element name accessor.
@@ -41,7 +41,7 @@ public abstract class Element extends NativeObject
     public final String getKeyword() {
         return __getKeyword(this.getNativeRef());
     }
-    private static final native String __getKeyword(int I_NativeElementRef);
+    private static final native String __getKeyword(long I64_NativeElementRef);
 
     /** Element help accessor.
         @return Element help. */
@@ -51,33 +51,33 @@ public abstract class Element extends NativeObject
         NativeObject.forget(cli_Help);
         return cli_Help;
     }
-    private static final native int __getHelp(int I_NativeElementRef);
+    private static final native long __getHelp(long I64_NativeElementRef);
 
     /** Owner CLI accessor.
         @return Owner CLI. */
     public final Cli getCli() {
         return (Cli) NativeObject.getObject(__getCli(this.getNativeRef()));
     }
-    private static final native int __getCli(int I_NativeElementRef);
+    private static final native long __getCli(long I64_NativeElementRef);
 
     /** Running shell accessor.
         @return Running shell. */
     public final Shell getShell() {
         return (Shell) NativeObject.getObject(__getShell(this.getNativeRef()));
     }
-    private static final native int __getShell(int I_NativeElementRef);
+    private static final native long __getShell(long I64_NativeElementRef);
 
     /** Current output stream accessor.
         @return Current output stream. */
     public final OutputDevice.Interface getOutputStream() {
         return (OutputDevice.Interface) NativeObject.getObject(__getOutputStream(this.getNativeRef()));
     }
-    private static final native int __getOutputStream(int I_NativeElementRef);
+    private static final native long __getOutputStream(long I64_NativeElementRef);
 
     /** Current error stream accessor.
         @return Current error stream. */
     public final OutputDevice.Interface getErrorStream() {
         return (OutputDevice.Interface) NativeObject.getObject(__getErrorStream(this.getNativeRef()));
     }
-    private static final native int __getErrorStream(int I_NativeElementRef);
+    private static final native long __getErrorStream(long I64_NativeElementRef);
 }

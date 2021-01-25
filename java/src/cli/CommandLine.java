@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -38,29 +38,29 @@ public final class CommandLine extends NativeObject {
     public CommandLine() {
         super(__CommandLine());
     }
-    private static final native int __CommandLine();
+    private static final native long __CommandLine();
 
     /** Create a new command line from native instance.
-        @param I_NativeCmdLineRef   Native object reference. */
-    private static final void createFromNative(int I_NativeCmdLineRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("CommandLine.createFromNative(I_NativeCmdLineRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString()));
+        @param I64_NativeCmdLineRef   Native object reference. */
+    private static final void createFromNative(long I64_NativeCmdLineRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("CommandLine.createFromNative(I64_NativeCmdLineRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeCmdLineRef", new Long(I64_NativeCmdLineRef).toString()));
 
-        NativeObject.createdFromNative(new CommandLine(I_NativeCmdLineRef));
+        NativeObject.createdFromNative(new CommandLine(I64_NativeCmdLineRef));
 
         Traces.trace(NativeTraces.CLASS, NativeTraces.end("CommandLine.createFromNative()"));
     }
     /** Create a command line from its native reference.
-        @param I_NativeCmdLineRef   Native object reference. */
-    private CommandLine(int I_NativeCmdLineRef) {
+        @param I64_NativeCmdLineRef   Native object reference. */
+    private CommandLine(long I64_NativeCmdLineRef) {
         // Register the native reference.
-        super(I_NativeCmdLineRef);
+        super(I64_NativeCmdLineRef);
 
         // Then fill in element references.
         m_jElements = new Vector<Element>();
-        final int i_Count = __getElementCount(I_NativeCmdLineRef);
+        final int i_Count = __getElementCount(I64_NativeCmdLineRef);
         for (int i=0; i<i_Count; i++) {
-            NativeObject cli_Object = NativeObject.getObject(__getElementAt(I_NativeCmdLineRef, i));
+            NativeObject cli_Object = NativeObject.getObject(__getElementAt(I64_NativeCmdLineRef, i));
             if (cli_Object instanceof Element) {
                 Element cli_Element = (Element) cli_Object;
                 Traces.trace(NativeTraces.CLASS, NativeTraces.value("cli_Element", cli_Element.getKeyword()));
@@ -74,8 +74,8 @@ public final class CommandLine extends NativeObject {
     public Iterator<Element> iterator() {
         return m_jElements.iterator();
     }
-    private static final native int __getElementCount(int I_NativeCmdLineRef);
-    private static final native int __getElementAt(int I_NativeCmdLineRef, int I_Position);
+    private static final native int __getElementCount(long I64_NativeCmdLineRef);
+    private static final native long __getElementAt(long I64_NativeCmdLineRef, int I_Position);
 
     private Vector<Element> m_jElements;
 }

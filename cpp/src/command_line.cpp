@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -60,7 +60,7 @@ static const TraceClass& GetCmdLineSplitTraceClass(void)
 {
     static const TraceClass cli_CmdLineSplitTraceClass("CLI_CMD_LINE_SPLIT", Help()
         .AddHelp(Help::LANG_EN, "Split of command lines")
-        .AddHelp(Help::LANG_FR, "Césure de mots sur analyse de lignes de commande"));
+        .AddHelp(Help::LANG_FR, "CÃ©sure de mots sur analyse de lignes de commande"));
     return cli_CmdLineSplitTraceClass;
 }
 
@@ -163,7 +163,7 @@ const bool CommandLine::Parse(
                     // Incomplete command
                     m_cliError
                         .SetString(ResourceString::LANG_EN, "Incomplete command")
-                        .SetString(ResourceString::LANG_FR, "Command incomplète");
+                        .SetString(ResourceString::LANG_FR, "Commande incomplÃ¨te");
                     GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
                     return false;
                 }
@@ -174,7 +174,7 @@ const bool CommandLine::Parse(
                 // Syntax error.
                 m_cliError
                     .SetString(ResourceString::LANG_EN, ResourceString::Concat("Syntax error next to '", vstr_Words.GetAt(it), "'"))
-                    .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de syntaxe près de '", vstr_Words.GetAt(it), "'"));
+                    .SetString(ResourceString::LANG_FR, ResourceString::Concat("Erreur de syntaxe prÃ¨s de '", vstr_Words.GetAt(it), "'"));
                 GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
                 return false;
             }
@@ -185,7 +185,7 @@ const bool CommandLine::Parse(
             // Ambiguous syntax
             m_cliError
                 .SetString(ResourceString::LANG_EN, ResourceString::Concat("Ambiguous syntax next to '", vstr_Words.GetAt(it), "'"))
-                .SetString(ResourceString::LANG_FR, ResourceString::Concat("Ambiguïté de syntaxe près de '", vstr_Words.GetAt(it), "'"));
+                .SetString(ResourceString::LANG_FR, ResourceString::Concat("AmbiguÃ¯tÃ© de syntaxe prÃ¨s de '", vstr_Words.GetAt(it), "'"));
             GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
             return false;
         }
@@ -215,11 +215,11 @@ const bool CommandLine::Parse(
 
     // Check for final endl element.
     if (B_Execution && (i_WordCount > 0)
-        && (! dynamic_cast<const Endl*>(& GetLastElement())))
+        && (dynamic_cast<const Endl*>(& GetLastElement()) == NULL))
     {
         m_cliError
             .SetString(ResourceString::LANG_EN, "Incomplete command")
-            .SetString(ResourceString::LANG_FR, "Commande incomplète");
+            .SetString(ResourceString::LANG_FR, "Commande incomplÃ¨te");
         GetTraces().Trace(TRACE_CMD_LINE) << m_cliError.GetString(ResourceString::LANG_EN) << endl;
         return false;
     }
@@ -310,7 +310,7 @@ const bool CommandLine::Split(
             {
                 m_cliError
                     .SetString(ResourceString::LANG_EN, "Unterminated escape sequence")
-                    .SetString(ResourceString::LANG_FR, "Séquence d'échappement incomplète");
+                    .SetString(ResourceString::LANG_FR, "SÃ©quence d'Ã©chappement incomplÃ¨te");
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on \\n" << endl;
                 return false;
             }
@@ -318,7 +318,7 @@ const bool CommandLine::Split(
             {
                 m_cliError
                     .SetString(ResourceString::LANG_EN, "Unterminated quoted string")
-                    .SetString(ResourceString::LANG_FR, "Guillemets non fermés");
+                    .SetString(ResourceString::LANG_FR, "Guillemets non fermÃ©s");
                 GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on \\n" << endl;
                 return false;
             }
@@ -439,7 +439,7 @@ const bool CommandLine::Split(
     {
         m_cliError
             .SetString(ResourceString::LANG_EN, "Unterminated escape sequence")
-            .SetString(ResourceString::LANG_FR, "Séquence d'échappement incomplète");
+            .SetString(ResourceString::LANG_FR, "SÃ©quence d'Ã©chappement incomplÃ¨te");
         GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << m_cliError.GetString(ResourceString::LANG_EN) << " on end of line" << endl;
         return false;
     }
@@ -447,7 +447,7 @@ const bool CommandLine::Split(
     {
         m_cliError
             .SetString(ResourceString::LANG_EN, "Unterminated quoted string")
-            .SetString(ResourceString::LANG_FR, "Guillemets non fermés");
+            .SetString(ResourceString::LANG_FR, "Guillemets non fermÃ©s");
         GetTraces().Trace(TRACE_CMD_LINE_SPLIT) << "Unterminated quoted string on end of line" << endl;
         return false;
     }
@@ -456,9 +456,9 @@ const bool CommandLine::Split(
 
 CommandLine& CommandLine::AddElement(const Element* const PCLI_Element)
 {
-    if (const Param* pcli_Param = dynamic_cast<const Param*>(PCLI_Element))
+    if (const Param* const pcli_Param = dynamic_cast<const Param*>(PCLI_Element))
     {
-        const Param* pcli_Clone = pcli_Param->Clone();
+        const Param* const pcli_Clone = pcli_Param->Clone();
         if (! m_cliElements.AddTail(pcli_Clone))
         {
             CLI_ASSERT(false);

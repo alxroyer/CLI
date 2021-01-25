@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,18 +36,18 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Console__1_1Console(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Console__1_1Console(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Console.__Console()") << cli::endl;
-    NativeObject::REF i_ConsoleRef = 0;
+    NativeObject::REF i64_ConsoleRef = 0;
     if (cli::Console* const pcli_Console = new cli::Console(true))
     {
         NativeObject::Use(*pcli_Console);
-        i_ConsoleRef = NativeObject::GetNativeRef(*pcli_Console);
+        i64_ConsoleRef = NativeObject::GetNativeRef(*pcli_Console);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Console.__Console()", i_ConsoleRef) << cli::endl;
-    return i_ConsoleRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Console.__Console()", i64_ConsoleRef) << cli::endl;
+    return i64_ConsoleRef;
 }

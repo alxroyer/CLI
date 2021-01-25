@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -40,7 +40,7 @@
                 <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>   <tag ref="welcome-string"/>
             </keyword>
             <keyword string="fr">                           <help lang="en">Welcome message modification in French</help>
-                                                            <help lang="fr">Modification du message de bienvenue en Français</help>
+                                                            <help lang="fr">Modification du message de bienvenue en FranÃ§ais</help>
                 <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>   <tag ref="welcome-string"/>
             </keyword>
             <tag id="welcome-string" hollow="yes">
@@ -68,7 +68,7 @@
                 <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>   <tag ref="bye-string"/>
             </keyword>
             <keyword string="fr">                           <help lang="en">Bye message modification in French</help>
-                                                            <help lang="fr">Modification du message de fin en Français</help>
+                                                            <help lang="fr">Modification du message de fin en FranÃ§ais</help>
                 <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>   <tag ref="bye-string"/>
             </keyword>
             <tag id="bye-string" hollow="yes">
@@ -96,7 +96,7 @@
                 <cpp>e_Lang = cli::ResourceString::LANG_EN;</cpp>   <tag ref="prompt-string"/>
             </keyword>
             <keyword string="fr">                           <help lang="en">Prompt modification in French</help>
-                                                            <help lang="fr">Modification de l'invite de commande en Français</help>
+                                                            <help lang="fr">Modification de l'invite de commande en FranÃ§ais</help>
                 <cpp>e_Lang = cli::ResourceString::LANG_FR;</cpp>   <tag ref="prompt-string"/>
             </keyword>
             <tag id="prompt-string" hollow="yes">
@@ -114,18 +114,18 @@
     </keyword>
 
     <keyword string="language">                             <help lang="en">Select language</help>
-                                                            <help lang="fr">Sélection de la langue</help>
+                                                            <help lang="fr">SÃ©lection de la langue</help>
         <keyword string="english">                          <help lang="en">Select English language</help>
-                                                            <help lang="fr">Sélection de la langue Anglaise</help>
+                                                            <help lang="fr">SÃ©lection de la langue Anglaise</help>
             <endl>                                          <help lang="en">Select English language</help>
-                                                            <help lang="fr">Sélection de la langue Anglaise</help>
+                                                            <help lang="fr">SÃ©lection de la langue Anglaise</help>
                 <cpp>TuneLang(cli::ResourceString::LANG_EN);</cpp>
             </endl>
         </keyword>
         <keyword string="french">                           <help lang="en">Select French language</help>
-                                                            <help lang="fr">Sélection de la langue Française</help>
+                                                            <help lang="fr">SÃ©lection de la langue FranÃ§aise</help>
             <endl>                                          <help lang="en">Select French language</help>
-                                                            <help lang="fr">Sélection de la langue Française</help>
+                                                            <help lang="fr">SÃ©lection de la langue FranÃ§aise</help>
                 <cpp>TuneLang(cli::ResourceString::LANG_FR);</cpp>
             </endl>
         </keyword>
@@ -141,9 +141,9 @@
             </endl>
         </keyword>
         <keyword string="off">                              <help lang="en">Beep disabling</help>
-                                                            <help lang="fr">Désactivation du bip</help>
+                                                            <help lang="fr">DÃ©sactivation du bip</help>
             <endl>                                          <help lang="en">Beep disabling</help>
-                                                            <help lang="fr">Désactivation du bip</help>
+                                                            <help lang="fr">DÃ©sactivation du bip</help>
                 <cpp>TuneBeep(false);</cpp>
             </endl>
         </keyword>
@@ -159,9 +159,9 @@
             </endl>
         </keyword>
         <keyword string="off">                              <help lang="en">Configuration menu disabling</help>
-                                                            <help lang="fr">Désactivation du menu de configuration</help>
+                                                            <help lang="fr">DÃ©sactivation du menu de configuration</help>
             <endl>                                          <help lang="en">Configuration menu disabling</help>
-                                                            <help lang="fr">Désactivation du menu de configuration</help>
+                                                            <help lang="fr">DÃ©sactivation du menu de configuration</help>
                 <cpp>TuneConfigMenu(false);</cpp>
             </endl>
         </keyword>

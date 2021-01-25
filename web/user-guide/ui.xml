@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,6 +41,14 @@
         <caption id="fig.ui.classes.title">UI controls: class hierarchy</caption>
         </mediaobject>
     </informalfigure>
+
+    <para>
+    <emphasis>Please note!</emphasis>
+    The examples in this section are given in the context of a blocking execution integration.
+    If you integrate the CLI library in the <link linkend="adv.non-blocking">non-blocking execution mode</link>,
+    such as the <link linkend="adv.telnet"><classname>TelnetServer</classname></link> class provided with the library does,
+    you should read through the <link linkend="eg.non-blocking-ui" endterm="eg.non-blocking-ui.title"/> example.
+    </para>
 
     <section id="ui.line"><title id="ui.line.title"><classname>Line</classname></title>
 
@@ -389,10 +397,10 @@ UI>
         <note>
         Please note that <classname>Less</classname> display also depends on the implementation of the "clean screen" feature.
         If cleaning the screen is nothing but the default implementation (a couple of blank lines printed out),
-        a simple <classname>More</classname> display may be preferrable then.
-        Therefore, it might be a good idea to check the "has true cls" screen characteristic
-        (see <ulink url="../doxygen/html/classOutputDevice_1_1ScreenInfo.html#85446e0c4d94e4d8aeb75722d0c2b26d">doxygen</ulink>
-         or <ulink url="../javadoc/html/cli/OutputDevice.ScreenInfo.html#hasTrueCls()">javadoc</ulink>)
+        a simple <classname>More</classname> display may be preferable then.
+        Therefore, it might be a good idea to check the screen implements a "true" "clean screen" feature
+        (see <ulink url="../doxygen/html/classOutputDevice_1_1ScreenInfo.html#a3c49dbeabaa5399578de13f7642ba620">doxygen</ulink>
+         or <ulink url="../javadoc/html/cli/OutputDevice.ScreenInfo.html#getbTrueCls--">javadoc</ulink>)
         before using a <classname>Less</classname> object.
         If the current output device does not implement an efficient "clean screen" feature, then you shall use a <classname>More</classname> object instead.
         </note>

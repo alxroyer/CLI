@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -30,7 +30,7 @@ CLI_XML_RES ?= $(CLI_DIR)/samples/clisample/clisample.xml
 CLI_DIR := ../../..
 PROJECT = $(patsubst %.xml,%,$(notdir $(CLI_XML_RES)))
 CLI_MAIN_CPP = $(CLI_DIR)/cpp/tests/testsample.cpp
-CLI_XSLT_OPTS = --param STR_ClassPrefix "'Ccli'"
+CLI_CLI2CPP_OPTS = --class-prefix "Ccli"
 INT_DIR = $(TARGET)$(CXX)/$(RDX)/__test_sample
 OUT_DIR = $(TARGET)$(CXX)/$(RDX)/__test_sample
 include _check.mak

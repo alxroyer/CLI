@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -170,7 +170,7 @@ CLI_NS_BEGIN(cli)
                 }
             }
 
-            // If the input text is done (or something wrong occured), terminate the UI execution.
+            // If the input text is done (or something wrong occurred), terminate the UI execution.
             Quit();
         }
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,6 +37,6 @@ public class Keyword extends SyntaxNode {
     public Keyword(String J_Keyword, Help CLI_Help) {
         super(__Keyword(J_Keyword, CLI_Help.getNativeRef()));
     }
-    private static final native int __Keyword(String J_Keyword, int I_NativeHelpRef);
+    private static final native long __Keyword(String J_Keyword, long I64_NativeHelpRef);
 
 }

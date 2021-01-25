@@ -1,8 +1,8 @@
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -50,26 +50,28 @@
     </script>
 </head>
 <body onload="onLoad();">
-<div id="last-update"><p class="note">Last updated on July, 15th 2013</p></div>
+<div id="last-update"><p class="note">Last updated on March, 15th 2018</p></div>
 
     <h1>CLI toolkit</h1>
 
 <div id="news" class="section"><a name="news"/>
     <h2>Latest news</h2>
     <table class="news">
-    <tr><td class="date">July, 15th 2013</td>   <td>Version 2.8:
-                                                    It took me a while to finalize new major improvements.<br/>
-                                                    Execution contexts and faster python transformation tools.<br/>
+    <tr><td class="date">March, 14th 2018</td>   <td>Version 2.9:
+                                                    A couple of years I had not been back to this project.<br/>
+                                                    What I thought would be a minor update eventually came to be a major release :-)<br/>
+                                                    Various contributions, comment line patterns, 64bits port for Java...<br/>
                                                     &gt;&gt;&gt;
                                                     <a href="#history">[changes]</a>
                                                     <a href="#download">[download]</a>
                                                     &lt;&lt;&lt;</td></tr>
+    <tr><td class="date">July, 15th 2013</td>   <td>Version 2.8:
+                                                    Major improvements.<br/>
+                                                    Execution contexts and faster python transformation tools.</td></tr>
     <tr><td class="date">Dec, 9th 2011</td>     <td>Version 2.7:
                                                     You guys start contributing and that's GREAT!<br/>
-                                                    <!--Bug detection and fixes, feature proposal, question &amp; answers...
-                                                    all that good job makes it a major version.<br/>-->
                                                     Text edition facilities, and many other improvements (non blocking execution, telnet...)</td></tr>
-    <tr><td class="date">Dec, 15th 2010</td>    <td>Version 2.6 release.</td></tr>
+    <!--<tr><td class="date">Dec, 15th 2010</td>    <td>Version 2.6 release.</td></tr>-->
     <!--<tr><td class="date">Sep, 30th 2010</td>    <td>Version 2.5 release.</td></tr>-->
     <tr><td class="date">...</td>               <td></td></tr>
     <tr><td class="date">Oct, 1st 2009</td>     <td>Sourceforge registration
@@ -222,16 +224,6 @@
             making by that way compilers of simple syntaxes.</li>
     </ul>
     </p>
-
-    <!--<p>
-    If you find any other interest in this project,
-    please <script type="text/javascript">
-        mailTo("let me know");
-    </script><noscript>
-        <a href="http://w2.syronex.com/jmr/safemailto/#noscript" target="_blank">let me know</a>
-        <span class="note">(guarded by anti-spam solution)</span>
-    </noscript>.
-    </p>-->
 </div>
 
 
@@ -266,6 +258,57 @@
                                 <li></li></ul></div>
                 </div>
             </div>-->
+            <h4><a href="#">cli 2.9</a></h4>
+            <div>
+                <table> <tr><td class="keyword">Description:</td>   <td>Comment line pattern management, 64bits port for Java, utf-8 encoding</td></tr>
+                        <tr><td class="keyword">Date:</td>          <td>March, 14th 2018</td></tr>
+                        <tr><td class="keyword">Download:</td>      <td><p class="download ui-state-default">
+                                                                        <span class="ui-icon ui-icon-arrowthickstop-1-s" style="float: left;"></span>
+                                                                        <a href="/download.php?url=/CLI/cli-2.9.tgz" target="_blank">Download cli 2.9</a>
+                                                                        </p></td></tr></table>
+                <div class="version-details">
+                    <h5><a href="#">Major modifications</a></h5>
+                    <div>   <ul><li>Comment line pattern management</li>
+                                <li>Java 64bits compatibility:
+                                    <ul><li>Native object references changed from int to long</li>
+                                        <li>OutputDevice::operator<<(int64_t/uint64_t) addition, refactoring of io_device.h for a better support of the different architectures</li>
+                                        <li></li></ul></li>
+                                <li>Contributions: Dinesh Balasubramaniam: TelnetServer multiple clients bug fix</li>
+                                <li>File encodings: Basic encoding changed from iso-8859-1 to utf-8 encoding</li></ul></div>
+                    <h5><a href="#">Miscellaneous</a></h5>
+                    <div>   <ul><li>Better output for 'double' numbers</li>
+                                <li>Python tools:
+                                    <ul><li>XSLT stylesheets deprecated in favor of python tools</li>
+                                        <li>Checked and restyled with pylint 1.3.1 &amp; 1.5.2, pylint checkings now optional with pylint.mak</li>
+                                        <li>'--output' option addition: prevents bad partial generations for a more robust integration with Makefiles instead of standard output redirections</li>
+                                        <li>Better error display for malformed XML inputs</li>
+                                        <li>Debug log improvement</li></ul></li>
+                                <li>Security improvements:
+                                    <ul><li>Code quality review</li>
+                                        <li>Compilation warning removal</li>
+                                        <li>Better control of snprintf return values</li></ul></li>
+                                <li>Makefiles:
+                                    <ul><li>C++: dependencies computation ensured in a deterministic order (for configuration tracking concerns)</li>
+                                        <li>Java: path modification for generated sample & test source files</li>
+                                        <li>Tools: better pylint/no pylint integration</li></ul></li></ul></div>
+                    <h5><a href="#">Bug corrections</a></h5>
+                    <div>   <ul><li>Bug(major)! Java cli.dll does not compile anymore with g++ (GCC) 4.7.3 (-mno-cyygwin unknown option)</li>
+                                <li>Bug(major)! TelnetServer: TelnetServer lost clients were not correctly unregistered (Dinesh Balasubramaniam's contribution)<br/>
+                                        This caused frenzy loops on select() calls with tk_stl implementation<br/>
+                                        TelnetServer could even accept no more clients with tk_inner implementation once the max number of concurrent clients has been reached</li>
+                                <li>Bug(major)! cli2cpp.py --static bad generation</li>
+                                <li>Bug(major)! " or \ characters in &lt;help/&gt; contents cause compilation errors</li>
+                                <li>Bug(major)! cli2java.py: infinite generation for backward tag[@ref] within tag[@id/@hollow].</li>
+                                <li>Bug(minor)! Crash in CmdLineEdition::GetNextWord()/GetPrevWord() (only used in tests).</li>
+                                <li>Bug(minor)! Left and right parts inversion in CmdLineEdition copy constructor (no impact on the final behaviour).</li>
+                                <li>Bug(minor)! Java: UnsatisfiedLinkError for cli.OutputDevice.__ScreenInfo__getbTrueCls()</li>
+                                <li>Bug(minor)! C++: Incomplete ncurses implementation of cli::Console. Missing: CONTROL+arrows, '€' (input and output), '©'</li>
+                                <li>Bug(minor)! C++: Incomplete Windows implementation of cli::Console. Missing: 'á', 'í', 'ì', 'ó', 'ò', 'ú', '€'</li>
+                                <li>Bug(minor)! French: spelling "Command[+e] incomplète"</li>
+                                <li>Bug(minor)! Rejected! cli2java.xsl: bad generation for backward tag[@ref] within tag[@id/@hollow].<br/>
+                                        cli2help.xsl, deprecated in CLI 2.9, will remain unfixed. Please use cli2help.py instead.</li></ul></div>
+                </div>
+            </div>
             <h4><a href="#">cli 2.8</a></h4>
             <div>
                 <table> <tr><td class="keyword">Description:</td>   <td>New major improvements: execution contexts and faster python transformation tools.</td></tr>
@@ -331,8 +374,8 @@
                                 <li>Bug(minor)! cli2help.xsl: Forward tag commands do not appear in documentation (T_Recursion|CHECK_MENU fix)</li>
                                 <li>Bug(minor)! cli2help.xsl: Wrong default description for forward tag options.</li>
                                 <li>Bug(minor)! cli2help.xsl: Space missing in command names (due to xsltproc limitation?)</li>
-                                <li>Bug(minor)! cli2help.xsl: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.<br/>
-                                    Work around: cli2help.xsl still unfixed, but cli2help.py provides a fix.</li></ul></div>
+                                <li>Bug(minor)! Rejected! cli2help.xsl: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.<br/>
+                                    cli2help.xsl, deprecated in CLI 2.9, will remain unfixed. Please use cli2help.py instead.</li></ul></div>
                 </div>
             </div>
             <h4><a href="#">cli 2.7</a></h4>
@@ -676,7 +719,7 @@
         </div>
 
         <p>
-        The following charts gives the evolution of the number of code lines throughout the time:<br/>
+        The following chart gives the evolution of the number of code lines throughout the time:<br/>
         <img src="count-lines.png"/>
         </p>
     </div>
@@ -697,11 +740,13 @@
         </p>
 
         <p>
-        Coming next:
+        May come with next releases:
         <ul>
         <li><span class="keyword">Other target languages:</span>
             Supported languages are C++ and Java at present.
             Next ones could be Perl or python...</li>
+        <li><span class="keyword">Enum parameter:</span>
+            Implement an easier way to let the user enter predefined string values as a parameter, rather than using forward tags.</li>
         <li><span class="keyword">Memory pools:</span>
             Implement memory pools in order to provide better memory management with embedded integration contexts.</li>
         <li>...</li>
@@ -714,13 +759,13 @@
     <h2>Download</h2>
 
     <p>
-    Latest version of the CLI toolkit is 2.8.
+    Latest version of the CLI toolkit is 2.9.
     Please refer to <a href="#history">history section</a> for previous downloads.
     </p>
 
     <p class="download ui-state-default">
         <span class="ui-icon ui-icon-arrowthickstop-1-s" style="float: left;"></span>
-        <a href="/download.php?url=/CLI/cli-2.8.tgz" target="_blank">Download cli 2.8 now!</a>
+        <a href="/download.php?url=/CLI/cli-2.9.tgz" target="_blank">Download cli 2.9 now!</a>
     </p>
 
     <p>

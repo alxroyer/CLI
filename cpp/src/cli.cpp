@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -72,6 +72,7 @@ Cli::Cli(const char* const STR_Name, const Help& CLI_Help)
   : Menu(STR_Name, CLI_Help),
     m_pcliShell(NULL),
     m_qMenus(MAX_MENU_PER_CLI),
+    m_qCommentLinePatterns(MAX_COMMENT_PATTERNS_PER_CLI),
     m_pcliConfigMenu(NULL), m_pcliConfigMenuNode(NULL)
     #ifdef _DEBUG
     , m_pcliTracesMenu(NULL), m_pcliTracesMenuNode(NULL)
@@ -81,7 +82,7 @@ Cli::Cli(const char* const STR_Name, const Help& CLI_Help)
     EnsureTraces();
 
     // Set the CLI reference to oneself.
-    SetCli(*this);
+    Cli::SetCli(*this); // Do not rely on the virtual call.
 
     // Register this new CLI in the global CLI list.
     if (GetCliRegistry().AddTail(this))
@@ -213,6 +214,39 @@ const Menu* const Cli::GetMenu(const char* const STR_MenuName) const
     return NULL;
 }
 
+const bool Cli::AddCommentLinePattern(const char* const STR_Start)
+{
+    for (   tk::Queue<tk::String>::Iterator it = m_qCommentLinePatterns.GetIterator();
+            m_qCommentLinePatterns.IsValid(it);
+            m_qCommentLinePatterns.MoveNext(it))
+    {
+        if (m_qCommentLinePatterns.GetAt(it) == STR_Start)
+        {
+            return false;
+        }
+    }
+    return m_qCommentLinePatterns.AddTail(tk::String(MAX_WORD_LENGTH, STR_Start));
+}
+
+const bool Cli::RemoveCommentLinePattern(const char* const STR_Start)
+{
+    for (   tk::Queue<tk::String>::Iterator it = m_qCommentLinePatterns.GetIterator();
+            m_qCommentLinePatterns.IsValid(it);
+            m_qCommentLinePatterns.MoveNext(it))
+    {
+        if (m_qCommentLinePatterns.GetAt(it) == STR_Start)
+        {
+            return m_qCommentLinePatterns.Remove(it);
+        }
+    }
+    return false;
+}
+
+const tk::Queue<tk::String>& Cli::GetCommentLinePatterns(void) const
+{
+    return m_qCommentLinePatterns;
+}
+
 void Cli::SetShell(Shell& CLI_Shell) const
 {
     m_pcliShell = & CLI_Shell;
@@ -229,6 +263,73 @@ Shell& Cli::GetShell(void) const
         static Shell cli_Shell(*this);
         return cli_Shell;
     }
+}
+
+void Cli::SetCli(Cli& CLI_Cli)
+{
+    Menu::SetCli(CLI_Cli);
+
+    if (m_pcliConfigMenu == NULL)
+    {
+        m_pcliConfigMenu = dynamic_cast<ConfigMenu*>(& AddMenu(new ConfigMenu()));
+        Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "CLI configuration menu")
+            .AddHelp(Help::LANG_FR, "Menu de configuration du CLI"));
+        m_pcliConfigMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("cli-config", cli_Help)));
+        Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliConfigMenuNode->AddElement(new Endl(cli_Help)));
+        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliConfigMenu));
+    }
+    #ifdef _DEBUG
+    if (m_pcliTracesMenu == NULL)
+    {
+        m_pcliTracesMenu = dynamic_cast<TracesMenu*>(& AddMenu(new TracesMenu()));
+        Help cli_Help(Help()
+            .AddHelp(Help::LANG_EN, "Traces menu")
+            .AddHelp(Help::LANG_FR, "Menu de configuration de traces"));
+        m_pcliTracesMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("traces", cli_Help)));
+        Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliTracesMenuNode->AddElement(new Endl(cli_Help)));
+        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliTracesMenu));
+    }
+    #endif
+}
+
+const bool Cli::ExecuteReserved(const CommandLine& CLI_CommandLine) const
+{
+    CommandLineIterator it(CLI_CommandLine);
+
+    if (! it.StepIt()) { return false; }
+    else if (it == GetConfigMenuNode())
+    {
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
+        {
+            // Do nothing but return true so that an execution error is not detected.
+            return true;
+        }
+    }
+    #ifdef _DEBUG
+    else if (it == GetTracesMenuNode())
+    {
+        if (! it.StepIt()) { return false; }
+        if (dynamic_cast<const Endl*>(*it))
+        {
+            // Do nothing but return true so that an execution error is not detected.
+            return true;
+        }
+    }
+    #endif
+
+    return Menu::ExecuteReserved(CLI_CommandLine);
+}
+
+const bool Cli::OnError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
+{
+    // Default return is true, in order to have the shell display the error.
+    return true;
+}
+
+void Cli::OnExit(void) const
+{
 }
 
 ConfigMenu& Cli::GetConfigMenu(void)
@@ -303,70 +404,3 @@ const Keyword& Cli::GetTracesMenuNode(void) const
     return *m_pcliTracesMenuNode;
 }
 #endif
-
-void Cli::SetCli(Cli& CLI_Cli)
-{
-    Menu::SetCli(CLI_Cli);
-
-    if (m_pcliConfigMenu == NULL)
-    {
-        m_pcliConfigMenu = dynamic_cast<ConfigMenu*>(& AddMenu(new ConfigMenu()));
-        Help cli_Help(Help()
-            .AddHelp(Help::LANG_EN, "CLI configuration menu")
-            .AddHelp(Help::LANG_FR, "Menu de configuration du CLI"));
-        m_pcliConfigMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("cli-config", cli_Help)));
-        Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliConfigMenuNode->AddElement(new Endl(cli_Help)));
-        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliConfigMenu));
-    }
-    #ifdef _DEBUG
-    if (m_pcliTracesMenu == NULL)
-    {
-        m_pcliTracesMenu = dynamic_cast<TracesMenu*>(& AddMenu(new TracesMenu()));
-        Help cli_Help(Help()
-            .AddHelp(Help::LANG_EN, "Traces menu")
-            .AddHelp(Help::LANG_FR, "Menu de configuration de traces"));
-        m_pcliTracesMenuNode = dynamic_cast<Keyword*>(& AddElement(new Keyword("traces", cli_Help)));
-        Endl* const pcli_Endl = dynamic_cast<Endl*>(& m_pcliTracesMenuNode->AddElement(new Endl(cli_Help)));
-        pcli_Endl->SetMenuRef(new MenuRef(*m_pcliTracesMenu));
-    }
-    #endif
-}
-
-const bool Cli::ExecuteReserved(const CommandLine& CLI_CommandLine) const
-{
-    CommandLineIterator it(CLI_CommandLine);
-
-    if (! it.StepIt()) { return false; }
-    else if (it == GetConfigMenuNode())
-    {
-        if (! it.StepIt()) { return false; }
-        if (dynamic_cast<const Endl*>(*it))
-        {
-            // Do nothing but return true so that an execution error is not detected.
-            return true;
-        }
-    }
-    #ifdef _DEBUG
-    else if (it == GetTracesMenuNode())
-    {
-        if (! it.StepIt()) { return false; }
-        if (dynamic_cast<const Endl*>(*it))
-        {
-            // Do nothing but return true so that an execution error is not detected.
-            return true;
-        }
-    }
-    #endif
-
-    return Menu::ExecuteReserved(CLI_CommandLine);
-}
-
-const bool Cli::OnError(const ResourceString& CLI_Location, const ResourceString& CLI_ErrorMessage) const
-{
-    // Default return is true, in order to have the shell display the error.
-    return true;
-}
-
-void Cli::OnExit(void) const
-{
-}

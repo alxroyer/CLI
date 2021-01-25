@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -41,11 +41,11 @@ include _build.mak
 # Rules
 .PHONY: check
 check: build
-	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.TestTelnet
+	$(call RunJava,cli.test.TestTelnet)
 
 .PHONY: TestSimple TestUI MultiConnection StopServer
 TestSimple TestUI MultiConnection StopServer: build
-	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.TestTelnet $@
+	$(call RunJava,cli.test.TestTelnet $@)
 
 .PHONY: deps
 deps: ;

@@ -1,5 +1,5 @@
 /** Authentication for a shell access. */
-class PwdShellContext extends cli.ExecutionContext.Java
+public class PwdShellContext extends cli.ExecutionContext.Java
 {
     /** Constructor. */
     public PwdShellContext(cli.Cli CLI_Cli, String J_Pwd) {

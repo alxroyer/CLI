@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -45,7 +45,7 @@ public abstract class OutputDevice {
     /** Logout (Ctrl+D). */
     public static final int LOGOUT = 4;
     /** Enter. */
-    public static final int ENTER = 13;
+    public static final int ENTER = 10;
     /** Escape. */
     public static final int ESCAPE = 27;
     /** Space. */
@@ -71,47 +71,68 @@ public abstract class OutputDevice {
     public static final int KEY_8 = '8';
     public static final int KEY_9 = '9';
     public static final int KEY_a = 'a';
-    public static final int KEY_aacute = 'á';
-    public static final int KEY_agrave = 'à';
-    public static final int KEY_auml = 'ä';
-    public static final int KEY_acirc = 'â';
+    /** Based on utf-8 encoding for 'Ã¡' */
+    public static final int KEY_aacute = 0xc3a1;
+    /** Based on utf-8 encoding for 'Ã ' */
+    public static final int KEY_agrave = 0xc3a0;
+    /** Based on utf-8 encoding for 'Ã¤' */
+    public static final int KEY_auml = 0xc3a4;
+    /** Based on utf-8 encoding for 'Ã¢' */
+    public static final int KEY_acirc = 0xc3a2;
     public static final int KEY_b = 'b';
     public static final int KEY_c = 'c';
-    public static final int KEY_ccedil = 'ç';
+    /** Based on utf-8 encoding for 'Ã§' */
+    public static final int KEY_ccedil = 0xc3a7;
     public static final int KEY_d = 'd';
     public static final int KEY_e = 'e';
-    public static final int KEY_eacute = 'é';
-    public static final int KEY_egrave = 'è';
-    public static final int KEY_euml = 'ë';
-    public static final int KEY_ecirc = 'ê';
+    /** Based on utf-8 encoding for 'Ã©' */
+    public static final int KEY_eacute = 0xc3a9;
+    /** Based on utf-8 encoding for 'Ã¨' */
+    public static final int KEY_egrave = 0xc3a8;
+    /** Based on utf-8 encoding for 'Ã«' */
+    public static final int KEY_euml = 0xc3ab;
+    /** Based on utf-8 encoding for 'Ãª' */
+    public static final int KEY_ecirc = 0xc3aa;
     public static final int KEY_f = 'f';
     public static final int KEY_g = 'g';
     public static final int KEY_h = 'h';
     public static final int KEY_i = 'i';
-    public static final int KEY_iacute = 'í';
-    public static final int KEY_igrave = 'ì';
-    public static final int KEY_iuml = 'ï';
-    public static final int KEY_icirc = 'î';
+    /** Based on utf-8 encoding for 'Ã­' */
+    public static final int KEY_iacute = 0xc3ad;
+    /** Based on utf-8 encoding for 'Ã¬' */
+    public static final int KEY_igrave = 0xc3ac;
+    /** Based on utf-8 encoding for 'Ã¯' */
+    public static final int KEY_iuml = 0xc3af;
+    /** Based on utf-8 encoding for 'Ã®' */
+    public static final int KEY_icirc = 0xc3ae;
     public static final int KEY_j = 'j';
     public static final int KEY_k = 'k';
     public static final int KEY_l = 'l';
     public static final int KEY_m = 'm';
     public static final int KEY_n = 'n';
     public static final int KEY_o = 'o';
-    public static final int KEY_oacute = 'ó';
-    public static final int KEY_ograve = 'ò';
-    public static final int KEY_ouml = 'ö';
-    public static final int KEY_ocirc = 'ô';
+    /** Based on utf-8 encoding for 'Ã³' */
+    public static final int KEY_oacute = 0xc3b3;
+    /** Based on utf-8 encoding for 'Ã²' */
+    public static final int KEY_ograve = 0xc3b2;
+    /** Based on utf-8 encoding for 'Ã¶' */
+    public static final int KEY_ouml = 0xc3b6;
+    /** Based on utf-8 encoding for 'Ã´' */
+    public static final int KEY_ocirc = 0xc3b4;
     public static final int KEY_p = 'p';
     public static final int KEY_q = 'q';
     public static final int KEY_r = 'r';
     public static final int KEY_s = 's';
     public static final int KEY_t = 't';
     public static final int KEY_u = 'u';
-    public static final int KEY_uacute = 'ú';
-    public static final int KEY_ugrave = 'ù';
-    public static final int KEY_uuml = 'ü';
-    public static final int KEY_ucirc = 'û';
+    /** Based on utf-8 encoding for 'Ãº' */
+    public static final int KEY_uacute = 0xc3ba;
+    /** Based on utf-8 encoding for 'Ã¹' */
+    public static final int KEY_ugrave = 0xc3b9;
+    /** Based on utf-8 encoding for 'Ã¼' */
+    public static final int KEY_uuml = 0xc3bc;
+    /**  Based on utf-8 encoding for 'Ã»' */
+    public static final int KEY_ucirc = 0xc3bb;
     public static final int KEY_v = 'v';
     public static final int KEY_w = 'w';
     public static final int KEY_x = 'x';
@@ -162,13 +183,20 @@ public abstract class OutputDevice {
     public static final int BACKSLASH = '\\';
     public static final int PIPE = '|';
     public static final int TILDE = '~';
-    public static final int SQUARE = '²';
-    public static final int EURO = '€';
-    public static final int POUND = '£';
-    public static final int MICRO = 'µ';
-    public static final int PARAGRAPH = '§';
-    public static final int DEGREE = '°';
-    public static final int COPYRIGHT = '©';
+    /** Based on utf-8 encoding for 'Â²' */
+    public static final int SQUARE = 0xc2b2;
+    /** Based on utf-8 encoding for 'â‚¬' */
+    public static final int EURO = 0xe282ac;
+    /** Based on utf-8 encoding for 'Â£' */
+    public static final int POUND = 0xc2a3;
+    /** Based on utf-8 encoding for 'Âµ' */
+    public static final int MICRO = 0xc2b5;
+    /** Based on utf-8 encoding for 'Â§' */
+    public static final int PARAGRAPH = 0xc2a7;
+    /** Based on utf-8 encoding for 'Â°' */
+    public static final int DEGREE = 0xc2b0;
+    /** Based on utf-8 encoding for 'Â©' */
+    public static final int COPYRIGHT = 0xc2a9;
 
     public static final int QUESTION = '?';
     public static final int EXCLAMATION = '!';
@@ -299,7 +327,7 @@ public abstract class OutputDevice {
 
         /** Native object interface compliance.
             @return The native reference of the instance. */
-        public int getNativeRef();
+        public long getNativeRef();
     }
 
     /** Screen information. */
@@ -323,18 +351,19 @@ public abstract class OutputDevice {
 
         /** Creation from native code.
             Useful for help members of other classes.
-            @param I_NativeScreenInfoRef Native instance reference. */
-        protected static void createFromNative(int I_NativeScreenInfoRef) {
-            Traces.trace(NativeTraces.CLASS, NativeTraces.begin("OutputDevice.ScreenInfo.createFromNative(I_NativeScreenInfoRef)"));
-            Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeScreenInfoRef", new Integer(I_NativeScreenInfoRef).toString()));
+            @param I64_NativeScreenInfoRef Native instance reference. */
+        protected static void createFromNative(long I64_NativeScreenInfoRef) {
+            Traces.trace(NativeTraces.CLASS, NativeTraces.begin("OutputDevice.ScreenInfo.createFromNative(I64_NativeScreenInfoRef)"));
+            Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeScreenInfoRef", new Long(I64_NativeScreenInfoRef).toString()));
 
-            NativeObject.createdFromNative(new ScreenInfo(I_NativeScreenInfoRef));
+            NativeObject.createdFromNative(new ScreenInfo(I64_NativeScreenInfoRef));
 
             Traces.trace(NativeTraces.CLASS, NativeTraces.end("OutputDevice.ScreenInfo.createFromNative()"));
         }
-        /** Constructor for createFromNative(). */
-        protected ScreenInfo(int I_NativeScreenInfoRef) {
-            super(I_NativeScreenInfoRef);
+        /** Constructor for createFromNative().
+            @param I64_NativeScreenInfoRef Native instance reference. */
+        protected ScreenInfo(long I64_NativeScreenInfoRef) {
+            super(I64_NativeScreenInfoRef);
         }
 
         /** Assignment method.
@@ -383,21 +412,21 @@ public abstract class OutputDevice {
     };
     // JNI seems to have trouble at linking following methods when they are embedded in the nested ScreenInfo class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global OutputDevice class with a __ScreenInfo prefix.
-    private static final native int __ScreenInfo__ScreenInfo(int I_Width, int I_Height, boolean B_TrueCls, boolean B_WrapLines);
-    private static final native void __ScreenInfo__copy(int I_NativeScreenInfoRef1, int I_NativeScreenInfoRef2);
-    private static final native int __ScreenInfo__getWidth(int I_NativeScreenInfoRef);
-    private static final native int __ScreenInfo__getSafeWidth(int I_NativeScreenInfoRef);
-    private static final native int __ScreenInfo__getHeight(int I_NativeScreenInfoRef);
-    private static final native int __ScreenInfo__getSafeHeight(int I_NativeScreenInfoRef);
-    private static final native boolean __ScreenInfo__getbTrueCls(int I_NativeScreenInfoRef);
-    private static final native boolean __ScreenInfo__getbWrapLines(int I_NativeScreenInfoRef);
+    private static final native long __ScreenInfo__ScreenInfo(int I_Width, int I_Height, boolean B_TrueCls, boolean B_WrapLines);
+    private static final native void __ScreenInfo__copy(long I64_NativeScreenInfoRef1, long I64_NativeScreenInfoRef2);
+    private static final native int __ScreenInfo__getWidth(long I64_NativeScreenInfoRef);
+    private static final native int __ScreenInfo__getSafeWidth(long I64_NativeScreenInfoRef);
+    private static final native int __ScreenInfo__getHeight(long I64_NativeScreenInfoRef);
+    private static final native int __ScreenInfo__getSafeHeight(long I64_NativeScreenInfoRef);
+    private static final native boolean __ScreenInfo__getbTrueCls(long I64_NativeScreenInfoRef);
+    private static final native boolean __ScreenInfo__getbWrapLines(long I64_NativeScreenInfoRef);
 
     /** Class containing all common behaviours of output devices, whatever their location of implementation. */
     public static abstract class Common extends NativeObject {
         /** Constructor.
-            @param I_NativeRef Native instance reference. */
-        protected Common(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference. */
+        protected Common(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
 
         // OutputDevice.Interface.put common output device implementations.
@@ -433,17 +462,17 @@ public abstract class OutputDevice {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Common class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global OutputDevice class with a __Common prefix.
-    private static final native void __Common__putInteger(int I_NativeOutputDeviceRef, int I_Integer);
-    private static final native void __Common__putFloat(int I_NativeOutputDeviceRef, float F_Float);
-    private static final native void __Common__putDouble(int I_NativeOutputDeviceRef, double D_Double);
-    private static final native void __Common__endl(int I_NativeOutputDeviceRef);
+    private static final native void __Common__putInteger(long I64_NativeOutputDeviceRef, int I_Integer);
+    private static final native void __Common__putFloat(long I64_NativeOutputDeviceRef, float F_Float);
+    private static final native void __Common__putDouble(long I64_NativeOutputDeviceRef, double D_Double);
+    private static final native void __Common__endl(long I64_NativeOutputDeviceRef);
 
     /** Native-implemented output devices. */
     public static abstract class Native extends Common implements OutputDevice.Interface {
         /** Constructor.
-            @param I_NativeRef Native instance reference. */
-        protected Native(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference. */
+        protected Native(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
 
         // OutputDevice.Interface native output device implementation.
@@ -470,8 +499,8 @@ public abstract class OutputDevice {
         }
 
         public final ScreenInfo getScreenInfo() {
-            int i_ScreenInfoRef = OutputDevice.__Native__getScreenInfo(this.getNativeRef());
-            NativeObject cli_ScreenInfo = NativeObject.getObject(i_ScreenInfoRef);
+            long i64_ScreenInfoRef = OutputDevice.__Native__getScreenInfo(this.getNativeRef());
+            NativeObject cli_ScreenInfo = NativeObject.getObject(i64_ScreenInfoRef);
             if (cli_ScreenInfo instanceof ScreenInfo) {
                 return (ScreenInfo) cli_ScreenInfo;
             }
@@ -484,13 +513,13 @@ public abstract class OutputDevice {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Native class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global OutputDevice class with a __Native prefix.
-    private static final native boolean __Native__openDevice(int I_NativeOutputDeviceRef);
-    private static final native boolean __Native__closeDevice(int I_NativeOutputDeviceRef);
-    private static final native void __Native__putString(int I_NativeOutputDeviceRef, String J_Text);
-    private static final native void __Native__beep(int I_NativeOutputDeviceRef);
-    private static final native void __Native__cleanScreen(int I_NativeOutputDeviceRef);
-    private static final native int __Native__getScreenInfo(int I_NativeOutputDeviceRef);
-    private static final native boolean __Native__wouldOutput(int I_NativeOutputDeviceRef, int I_NativeOutputDevice2Ref);
+    private static final native boolean __Native__openDevice(long I64_NativeOutputDeviceRef);
+    private static final native boolean __Native__closeDevice(long I64_NativeOutputDeviceRef);
+    private static final native void __Native__putString(long I64_NativeOutputDeviceRef, String J_Text);
+    private static final native void __Native__beep(long I64_NativeOutputDeviceRef);
+    private static final native void __Native__cleanScreen(long I64_NativeOutputDeviceRef);
+    private static final native long __Native__getScreenInfo(long I64_NativeOutputDeviceRef);
+    private static final native boolean __Native__wouldOutput(long I64_NativeOutputDeviceRef, long I64_NativeOutputDevice2Ref);
 
     /** Java-implemented output devices. */
     public static abstract class Java extends Common implements OutputDevice.Interface {
@@ -501,9 +530,9 @@ public abstract class OutputDevice {
         }
 
         /** Constructor for IODevice.Java classes only.
-            @param I_NativeRef Native instance reference. */
-        protected Java(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference. */
+        protected Java(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
 
         // OutputDevice.Interface Java output device implementation.
@@ -547,10 +576,10 @@ public abstract class OutputDevice {
         }
 
         public abstract ScreenInfo getScreenInfo();
-        private final void __getScreenInfo(int I_NativeScreenInfoRef) {
+        private final void __getScreenInfo(long I64_NativeScreenInfoRef) {
             ScreenInfo cli_ScreenInfo = getScreenInfo();
             if (cli_ScreenInfo != null) {
-                NativeObject cli_ScreenInfoOut = NativeObject.getObject(I_NativeScreenInfoRef);
+                NativeObject cli_ScreenInfoOut = NativeObject.getObject(I64_NativeScreenInfoRef);
                 if (cli_ScreenInfoOut instanceof ScreenInfo) {
                     ((ScreenInfo) cli_ScreenInfoOut).copy(cli_ScreenInfo);
                 }
@@ -560,12 +589,12 @@ public abstract class OutputDevice {
         public boolean wouldOutput(OutputDevice.Interface CLI_Device) {
             return (CLI_Device == this);
         }
-        private final boolean __wouldOutput(int I_NativeDeviceRef) {
+        private final boolean __wouldOutput(long I64_NativeDeviceRef) {
             // Do not trace! for consistency reasons.
             //Traces.safeTrace(NativeTraces.CLASS, this, NativeTraces.begin("OutputDevice.Java.__wouldOutput(CLI_Device)"));
             boolean b_Res = false;
             try {
-                OutputDevice.Interface cli_Device = (OutputDevice.Interface) NativeObject.getObject(I_NativeDeviceRef);
+                OutputDevice.Interface cli_Device = (OutputDevice.Interface) NativeObject.getObject(I64_NativeDeviceRef);
                 if (cli_Device != null) {
                     b_Res = wouldOutput(cli_Device);
                 }
@@ -577,7 +606,7 @@ public abstract class OutputDevice {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Java class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global OutputDevice class with a __Java prefix.
-    private static final native int __Java__Java(String J_DbgName);
+    private static final native long __Java__Java(String J_DbgName);
 
 
     // General static output device features.
@@ -595,7 +624,7 @@ public abstract class OutputDevice {
         }
         return m_cliNullDevice;
     }
-    private static final native int __getNullDevice();
+    private static final native long __getNullDevice();
     private static OutputDevice.Interface m_cliNullDevice = null;
 
     /** Standard output device singleton.
@@ -611,7 +640,7 @@ public abstract class OutputDevice {
         }
         return m_cliStdOut;
     }
-    private static final native int __getStdOut();
+    private static final native long __getStdOut();
     private static OutputDevice.Interface m_cliStdOut = null;
 
     /** Standard error device singleton.
@@ -627,7 +656,7 @@ public abstract class OutputDevice {
         }
         return m_cliStdErr;
     }
-    private static final native int __getStdErr();
+    private static final native long __getStdErr();
     private static OutputDevice.Interface m_cliStdErr = null;
 
 

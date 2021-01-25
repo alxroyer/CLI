@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -97,6 +97,8 @@ function UserGuideMenu() {
                         var p_NewItem = userGuideMenu.menu.createItem(ar_TocItems[i_HeaderLevel - 2], str_Title, "#" + str_Anchor);
                         if (/Frequently Asked Questions/.exec(str_Title)) {
                             p_NewItem.setId("faq-menu");
+                        }
+                        if (/faq\..*/.exec(str_Anchor)) {
                             p_NewItem.setChildWidth("600");
                         }
                         ar_TocItems[i_HeaderLevel - 1] = p_NewItem;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,24 +36,24 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Keyword__1_1Keyword(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Keyword__1_1Keyword(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jstring PJ_Keyword, jint I_NativeHelpRef)
+        jstring PJ_Keyword, jlong I64_NativeHelpRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Keyword.__Keyword(PJ_Keyword, I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Keyword.__Keyword(PJ_Keyword, I64_NativeHelpRef)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_Keyword", NativeExec::Java2Native(PJ_Keyword).c_str()) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
-    NativeObject::REF i_KeywordRef = 0;
-    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeHelpRef", I64_NativeHelpRef) << cli::endl;
+    NativeObject::REF i64_KeywordRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I64_NativeHelpRef))
     {
         if (cli::Keyword* const pcli_Keyword = new cli::Keyword(NativeExec::Java2Native(PJ_Keyword).c_str(), *pcli_Help))
         {
             NativeObject::Use(*pcli_Keyword);
-            i_KeywordRef = NativeObject::GetNativeRef(*pcli_Keyword);
+            i64_KeywordRef = NativeObject::GetNativeRef(*pcli_Keyword);
         }
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Keyword.__Keyword()", i_KeywordRef) << cli::endl;
-    return i_KeywordRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Keyword.__Keyword()", i64_KeywordRef) << cli::endl;
+    return i64_KeywordRef;
 }

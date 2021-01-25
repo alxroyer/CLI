@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,12 +35,13 @@ public class Less extends UI {
         super(__Less(0));
         __LessBody();
     }
-    /** Child execution context constructor. */
+    /** Child execution context constructor.
+        @param CLI_ParentContext Parent execution context. */
     public Less(cli.ExecutionContext.Interface CLI_ParentContext) {
         super(__Less(CLI_ParentContext.getNativeRef()));
         __LessBody();
     }
-    private static final native int __Less(int I_NativeParentContextRef);
+    private static final native long __Less(long I64_NativeParentContextRef);
     private final void __LessBody() {
         // Create a member inner device right away.
         m_cliInnerDevice = new InnerDevice(__getText(this.getNativeRef()));
@@ -53,14 +54,14 @@ public class Less extends UI {
     public cli.OutputDevice.Interface getText() {
         return m_cliInnerDevice;
     }
-    private static final native int __getText(int I_NativeLessRef);
+    private static final native long __getText(long I64_NativeLessRef);
 
     /** Console input/output device. */
     private static class InnerDevice extends cli.OutputDevice.Native
     {
         /** Constructor. */
-        public InnerDevice(int I_NativeDeviceRef) {
-            super(I_NativeDeviceRef);
+        public InnerDevice(long I64_NativeDeviceRef) {
+            super(I64_NativeDeviceRef);
         }
     }
 

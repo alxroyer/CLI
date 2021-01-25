@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -35,6 +35,7 @@ PROJECT = test_ui
 PROJECT_DEPS = $(CLI_DIR)/cpp/build/make/libclicpp.mak
 SRC_DIR = $(CLI_DIR)/cpp/tests/ui
 PROJ_INCLUDES += -I$(CLI_DIR)/cpp/include
+PROJ_INCLUDES += -I$(CLI_DIR)/cpp/src
 PROJ_INCLUDES += -I$(CLI_DIR)/cpp/tests/include
 PROJ_LIBS = -L$(dir $(CLI_CPP_LIB)) -lclicpp -lncurses
 AUTO_DEPS = yes

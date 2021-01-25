@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -113,9 +113,9 @@ CLI_NS_BEGIN(cli)
             ) const;
 
         //! @brief Clone initialization.
-        //! @return CLI_Param reference.
+        //! @return CLI_CloneParam reference.
         const Param* const InitClone(
-            Param& CLI_Param                //!< Clone parameter to initialize.
+            Param& CLI_CloneParam           //!< Clone parameter to initialize.
             ) const;
 
         //! @brief Cloned parameter reference setting.

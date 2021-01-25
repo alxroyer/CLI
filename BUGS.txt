@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,27 +25,46 @@
 -------------------------------------------------------------------------------
 
 KNOWN ISSUES
-    * Bug(major)! cli2help: 'No help available' lines generated in options because of tag[@hollow=yes]/tag[@ref=backward] structures (to be checked with cli2help.py)
-    * Bug(major)! " in characters <help/> contents causes compilation errors
     * Bug(minor)! C++: Incomplete ncurses implementation of cli::Console. Missing:
-            CTRL+INSER, SHIFT+SUPPR, SHIFT+INSER,
-            CONTROL+arrows, 
-            '€' (input and output), '©'
+            CTRL+INSER, SHIFT+INSER
     * Bug(minor)! C++: Incomplete Windows implementation of cli::Console. Missing:
             ALT+C/X/V/Z/Y,
             SHIFT+INS, SHIFT+SUPPR,
-            'á', 'í', 'ì', 'ó', 'ò', 'ú', '€', '©'
+            'Â©'
     * Bug(minor)! C++: Incomplete Telnet implementation. Missing:
             CTRL+arrows,
             ALT+C/X/V/Z/Y
             CTRL+INS, SHIFT+INS, SHIFT+SUPPR
-            bad output for '€'
-            input -93 conflicts between '£' and 'ú' (when 'ú' is copied from the output itself)
-    * Bug(minor)! XSL: xsltproc infinite loop with interleaved tags.
-            <tag id="tag1">...<tag ref="tag2"/>...</tag>
-            <tag id="tag2">...<tag ref="tag1"/>...</tag>
-            Seems non-sens however.
+            bad output for 'â‚¬'
+            input -93 conflicts between 'Â£' and 'Ãº' (when 'Ãº' is copied from the output itself)
+    * Bug(minor)! cli2java.xsl/cli2java.py: infinite generation with interleaved tags.
+                <tag id="tag1">...<tag ref="tag2"/>...</tag>
+                <tag id="tag2">...<tag ref="tag1"/>...</tag>
+            cli2cpp.xsl/.py and cli2help.xsl/.py behave correctly.
+            'xsltproc cli2java.xsl' loops infinitely.
+            'python cli2java.py' ends with the following error message: 'Fatal error! maximum recursion depth exceeded'
+            Seems hard to fix due to the impossibility to make jumps in Java code.
+    * Bug(minor)! cross-tags.xml: cli2help.py fails while cli2help.xsl works
 
+
+FIXED in 2.9
+(March, 14th 2018)
+    * Bug(major)! Java cli.dll does not compile anymore with g++ (GCC) 4.7.3 (-mno-cyygwin unknown option)
+    * Bug(major)! TelnetServer: TelnetServer lost clients were not correctly unregistered (Dinesh Balasubramaniam's contribution)
+            This caused frenzy loops on select() calls with tk_stl implementation
+            TelnetServer could even accept no more clients with tk_inner implementation once the max number of concurrent clients has been reached
+    * Bug(major)! cli2cpp.py --static bad generation
+    * Bug(major)! " or \ characters in <help/> contents cause compilation errors
+    * Bug(major)! cli2java.py: infinite generation for backward tag[@ref] within tag[@id/@hollow].
+    * Bug(minor)! Crash in CmdLineEdition::GetNextWord()/GetPrevWord() (only used in tests).
+    * Bug(minor)! Left and right parts inversion in CmdLineEdition copy constructor (no impact on the final behaviour).
+    * Bug(minor)! Java: UnsatisfiedLinkError for cli.OutputDevice.__ScreenInfo__getbTrueCls()
+    * Bug(minor)! C++: Incomplete ncurses implementation of cli::Console. Missing: CONTROL+arrows, 'â‚¬' (input and output), 'Â©'
+    * Bug(minor)! C++: Incomplete Windows implementation of cli::Console. Missing: 'Ã¡', 'Ã­', 'Ã¬', 'Ã³', 'Ã²', 'Ãº', 'â‚¬'
+    * Bug(minor)! French: spelling "Command[+e] incomplÃ¨te"
+REJECTED in 2.9
+    * Bug(minor)! cli2java.xsl: bad generation for backward tag[@ref] within tag[@id/@hollow].
+                  cli2help.xsl, deprecated in CLI 2.9, will remain unfixed. Please use cli2help.py instead.
 
 FIXED in 2.8
 (July, 15th 2013)
@@ -75,7 +94,7 @@ FIXED in 2.8
     * Bug(minor)! cli2help.xsl: Space missing in command names (due to xsltproc limitation?)
 REJECTED in 2.8
     * Bug(minor)! cli2help.xsl: wrong number of options generated for (a|b)+ patterns while (a|b)* works fine.
-            Work around: cli2help.xsl still unfixed, but cli2help.py provides a fix.
+                  cli2help.xsl, deprecated in CLI 2.9, will remain unfixed. Please use cli2help.py instead.
 
 FIXED in 2.7
 (Dec, 9th 2011)

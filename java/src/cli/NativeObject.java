@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -47,9 +47,9 @@ public abstract class NativeObject {
     }
 
     /** Constructor.
-        @param I_NativeRef Native instance referenced corresponding to this Java instance. */
-    protected NativeObject(int I_NativeRef) {
-        m_iNativeRef = I_NativeRef;
+        @param I64_NativeRef Native instance reference corresponding to this Java instance. */
+    protected NativeObject(long I64_NativeRef) {
+        m_i64NativeRef = I64_NativeRef;
         m_bDoFinalize = true;
         m_bForgotten = false;
         NativeObject.remember(this);
@@ -58,7 +58,8 @@ public abstract class NativeObject {
     /** To be called by native created objects.
         @param CLI_Object Object created. */
     protected static final void createdFromNative(NativeObject CLI_Object) {
-        // Object already remembered from the NativeObject constructor (above).
+        // Object already remembered from the NativeObject constructor (just above).
+        // No need to do it twice.
         //  if (CLI_Object != null) {
         //      NativeObject.remember(CLI_Object);
         //  }
@@ -82,17 +83,17 @@ public abstract class NativeObject {
         if (b_SafeTrace) { Traces.trace(NativeTraces.CLASS, NativeTraces.end("NativeObject.finalize()")); }
         else { String j_LostTrace = NativeTraces.end("NativeObject.finalize()"); } // Make the call even if not used, for traces indentation.
     }
-    private static final native void __finalize(int I_NativeRef);
+    private static final native void __finalize(long I64_NativeRef);
 
     /** Let the native library notify java when native objects are not used anymore.
         See createdFromNative().
-        @param I_NativeRef  Native object reference. */
-    private static final void deleteFromNative(int I_NativeRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("NativeObject.deleteFromNative(I_NativeRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeRef", new Integer(I_NativeRef).toString()));
+        @param I64_NativeRef  Native instance reference. */
+    private static final void deleteFromNative(long I64_NativeRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("NativeObject.deleteFromNative(I64_NativeRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeRef", new Long(I64_NativeRef).toString()));
 
         // Forget the command line references.
-        NativeObject cli_Object = NativeObject.getObject(I_NativeRef);
+        NativeObject cli_Object = NativeObject.getObject(I64_NativeRef);
         if (cli_Object != null) {
             Traces.trace(NativeTraces.CLASS, NativeTraces.value("cli_Object", cli_Object.toString()));
             // Do not finalize native-deleted objects.
@@ -106,8 +107,8 @@ public abstract class NativeObject {
 
     /** Native reference accessor.
         @return The native reference of the instance. */
-    public final int getNativeRef() {
-        return m_iNativeRef;
+    public final long getNativeRef() {
+        return m_i64NativeRef;
     }
 
     /** Accessor to be used in order to know whether the native instance instance should be destroyed or not.
@@ -121,7 +122,7 @@ public abstract class NativeObject {
         m_bDoFinalize = false;
     }
 
-    private final int m_iNativeRef;
+    private final long m_i64NativeRef;
     private boolean m_bDoFinalize;
     private boolean m_bForgotten;
 
@@ -160,11 +161,11 @@ public abstract class NativeObject {
     }
 
     /** Find the Java instance from its native instance reference.
-        @param I_NativeRef Native reference corresponding to the searched Java instance.
+        @param I64_NativeRef Native instance reference corresponding to the searched Java instance.
         @return The corresponding native instance if found, null otherwise. */
-    public static NativeObject getObject(int I_NativeRef) {
-        return m_jObjMap.get(new Integer(I_NativeRef));
+    public static NativeObject getObject(long I64_NativeRef) {
+        return m_jObjMap.get(new Long(I64_NativeRef));
     }
 
-    private static final Map<Integer, NativeObject> m_jObjMap = new Hashtable<Integer, NativeObject>();
+    private static final Map<Long, NativeObject> m_jObjMap = new Hashtable<Long, NativeObject>();
 }

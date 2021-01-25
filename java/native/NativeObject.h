@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,6 +29,8 @@
 
 #include <string>
 #include <map>
+#include <jni.h>
+#include <sys/types.h>
 
 #include "cli/object.h"
 #include "cli/io_device.h"
@@ -39,7 +41,8 @@ class NativeObject
 {
 public:
     //! Object reference type.
-    typedef int REF;
+    //! Moved from 'int' to 'jlong' in CLI 2.9 for 64 bits architecture compliance.
+    typedef jlong REF;
 
     //! @brief Object to reference conversion.
     //! @return Reference of the native object if found.
@@ -48,18 +51,18 @@ public:
         );
 
     //! @brief Reference to object conversion.
-    //! @return Pointer to the object referenced. NULL if an error occured.
+    //! @return Pointer to the object referenced. NULL if an error occurred.
     static cli::Object* const GetNativeObject(
-        const REF I_NativeObjectRef     //!< Native object reference.
+        const REF I64_NativeObjectRef   //!< Native object reference.
         );
 
     //! @brief Reference to object conversion (template version).
-    //! @return Pointer to the object referenced. NULL if an error occured.
+    //! @return Pointer to the object referenced. NULL if an error occurred.
     template <class T> static T GetNativeObject(
-        const REF I_NativeObjectRef     //!< Native object reference.
+        const REF I64_NativeObjectRef   //!< Native object reference.
         )
     {
-        return dynamic_cast<T>(GetNativeObject(I_NativeObjectRef));
+        return dynamic_cast<T>(GetNativeObject(I64_NativeObjectRef));
     }
 
     //! @brief Retrieves the Java object reference from its native reference.
@@ -115,25 +118,25 @@ public:
 
     //! @brief Tells Java an object has been deleted from the native side.
     static const bool DeleteFromNative(
-        const REF I_ObjectRef               //!< CLI element reference to delete from native source.
+        const REF I64_ObjectRef             //!< CLI element reference to delete from native source.
         );
 
 private:
     //! @brief Declares the given object to be used from Java.
     static void Use(
-        const REF I_ObjectRef               //!< Object in use.
+        const REF I64_ObjectRef             //!< Object in use.
         );
 
     //! @brief Declares the given object to be not used anymore from Java.
     //! @return true if the object should be deleted.
     static const bool Free(
-        const REF I_ObjectRef               //!< Object which reference is released.
+        const REF I64_ObjectRef             //!< Object which reference is released.
         );
 
     //! @brief Declares a given object's destruction to be delegated to another one's destruction.
     static void Delegate(
-        const REF I_WhatRef,                //!< Object which deletion is now delegeted.
-        const REF I_WhoRef                  //!< Object the deletion of the previous object is delegated to.
+        const REF I64_WhatRef,              //!< Object which deletion is now delegeted.
+        const REF I64_WhoRef                //!< Object the deletion of the previous object is delegated to.
         );
 
 public:

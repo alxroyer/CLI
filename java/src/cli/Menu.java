@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,9 +35,9 @@ package cli;
 public abstract class Menu extends SyntaxNode {
 
     /** Constructor from native instance.
-        @param I_NativeRef Native instance reference. */
-    protected Menu(int I_NativeRef) {
-        super(I_NativeRef);
+        @param I64_NativeRef Native instance reference. */
+    protected Menu(long I64_NativeRef) {
+        super(I64_NativeRef);
     }
     /** Constructor from Java.
         @param J_Name Name of the menu.
@@ -45,7 +45,7 @@ public abstract class Menu extends SyntaxNode {
     public Menu(String J_Name, Help CLI_Help) {
         super(__Menu(J_Name, CLI_Help.getNativeRef()));
     }
-    private static final native int __Menu(String J_Help, int I_NativeHelpRef);
+    private static final native long __Menu(String J_Help, long I64_NativeHelpRef);
 
     /** Menu name access.
         @return Name of the menu. */
@@ -59,25 +59,25 @@ public abstract class Menu extends SyntaxNode {
     public abstract void populate();
 
     /** Command line execution.
-        This method should be overriden by final menu classes.
+        This method should be overridden by final menu classes.
         @param CLI_CmdLine Command line to execute.
         @return true if the command line has been executed successfully (syntactically speaking),
                 false otherwise. */
     public abstract boolean execute(CommandLine CLI_CmdLine);
-    private final boolean __execute(int I_NativeCmdLineRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Menu.__execute(I_NativeCmdLineRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeCmdLineRef", new Integer(I_NativeCmdLineRef).toString()));
+    private final boolean __execute(long I64_NativeCmdLineRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Menu.__execute(I64_NativeCmdLineRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeCmdLineRef", new Long(I64_NativeCmdLineRef).toString()));
 
         boolean b_Res = false;
         try {
-            NativeObject cli_CommandLine = NativeObject.getObject(I_NativeCmdLineRef);
+            NativeObject cli_CommandLine = NativeObject.getObject(I64_NativeCmdLineRef);
             if (cli_CommandLine != null) {
                 Traces.trace(NativeTraces.CLASS, NativeTraces.value("cli_CommandLine", cli_CommandLine.toString()));
                 if (cli_CommandLine instanceof CommandLine) {
                     b_Res = execute((CommandLine) cli_CommandLine);
                 }
             } else {
-                getErrorStream().put("Could not find CommandLine reference " + new Integer(I_NativeCmdLineRef)).endl();
+                getErrorStream().put("Could not find CommandLine reference " + new Long(I64_NativeCmdLineRef)).endl();
             }
         } catch (Exception e) {
             getErrorStream().printStackTrace(e);
@@ -88,7 +88,7 @@ public abstract class Menu extends SyntaxNode {
     }
 
     /** Handler called when the menu exits.
-        This method may be overriden by final menu classes. */
+        This method may be overridden by final menu classes. */
     public void onExit() {
     }
     private final void __onExit() {

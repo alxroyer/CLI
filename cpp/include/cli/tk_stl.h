@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -119,6 +119,7 @@ CLI_NS_BEGIN(cli)
             explicit String(
                     const unsigned int UI_MaxLen    //!< Maximum string length.
                     )
+              : Object(), m_stlString()
             {
                 UnusedParameter(UI_MaxLen); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
             }
@@ -130,7 +131,7 @@ CLI_NS_BEGIN(cli)
                     const unsigned int UI_MaxLen,   //!< Maximum string length.
                     const char* const STR_String    //!< Initial value.
                     )
-              : m_stlString(STR_String)
+              : Object(), m_stlString(STR_String)
             {
                 UnusedParameter(UI_MaxLen); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
             }
@@ -139,7 +140,7 @@ CLI_NS_BEGIN(cli)
             String(
                     const String& TK_String //!< Source object.
                     )
-              : m_stlString((const char* const) TK_String)
+              : Object(), m_stlString((const char* const) TK_String)
             {
             }
 
@@ -322,6 +323,7 @@ CLI_NS_BEGIN(cli)
             explicit Queue(
                     const unsigned int UI_MaxCount  //!< Maximum item count.
                     )
+              : Object(), m_stlQueue()
             {
                 UnusedParameter(UI_MaxCount); // [contrib: Oleg Smolsky, 2010, based on CLI 2.5]
             }
@@ -330,7 +332,7 @@ CLI_NS_BEGIN(cli)
             Queue(
                     const Queue<T>& TK_Queue    //!< Source queue object.
                     )
-              : m_stlQueue(TK_Queue.m_stlQueue)
+              : Object(), m_stlQueue(TK_Queue.m_stlQueue)
             {
             }
 
@@ -621,6 +623,7 @@ CLI_NS_BEGIN(cli)
             explicit Map(
                     const unsigned int UI_MaxCount  //!< Maximum item count.
                     )
+              : Object(), m_stlMap()
             {
             }
 
@@ -628,7 +631,7 @@ CLI_NS_BEGIN(cli)
             Map(
                     const Map<K,T>& TK_Map      //!< Source map object.
                     )
-              : m_stlMap(TK_Map.m_stlMap)
+              : Object(), m_stlMap(TK_Map.m_stlMap)
             {
             }
 
@@ -698,7 +701,7 @@ CLI_NS_BEGIN(cli)
                     const K& K_Key      //!< Key to check.
                     ) const
             {
-                return (m_stlMap.count(K_Key) ? true : false);
+                return (m_stlMap.count(K_Key) > 0);
             }
 
             //! @brief Element accessor.

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -25,11 +25,10 @@
 */
 
 /**
- * Additional user-interface tools.
+ * <p>Additional user-interface tools.</p>
  *
- * <p>
- * This packages gathers additional user-interface tools:
- *  <ul><li>Question / answers / challenge:
+ * <p>This packages gathers additional user-interface tools:</p>
+ *  <ul><li>Question / answer / challenge:
  *          <ul><li>YesNo: let the user answer "yes" or "no",</li>
  *              <li>Choice: let the user choose between a list of possibilities,</li>
  *              <li>Password: let the user enter a password,</li></ul></li>
@@ -40,6 +39,5 @@
  *      <li>Display:
  *          <ul><li>More: page by page display,</li>
  *              <li>Less: forward and backward page display.</li></ul></li></ul>
- * </p>
  */
 package cli.ui;

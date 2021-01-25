@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,6 +28,55 @@
 
 
 <revhistory>
+    <revision><revnumber>2.9</revnumber><date>March, 14th 2018</date>
+        <revremark>
+            <variablelist>
+                <varlistentry><term>New features:</term>
+                    <listitem>
+                        <itemizedlist>
+                            <listitem><link linkend="xmlres.comment" endterm="xmlres.comment.title"/> section addition.</listitem>
+                        </itemizedlist>
+                    </listitem>
+                </varlistentry>
+                <varlistentry><term>Deprecations:</term>
+                    <listitem>
+                        <itemizedlist>
+                            <listitem>XSLT stylesheets deprecated in favor of python tools,</listitem>
+                            <listitem>transformation output redirection deprecated in favor of the new --output python tools option.</listitem>
+                            <listitem>thread-safe termination definitely removed,
+                                        FAQ <link linkend="faq.Q750">#750</link> created instead,</listitem>
+                            <listitem><function>NonBlockingIODevice::WaitForKeys</function> definitely removed from documentation,</listitem>
+                        </itemizedlist>
+                    </listitem>
+                </varlistentry>
+                <varlistentry><term>Documentation improvements:</term>
+                    <listitem>
+                        <itemizedlist>
+                            <listitem><command>make _DEBUG=</command> fixed in <command>make _DEBUG=1</command> in <link linkend="build" endterm="build.title"/> section,</listitem>
+                            <listitem>fixes in <link linkend="prerequisite" endterm="prerequisite.title"/> section,</listitem>
+                            <listitem>better explanation for using UI controls in the context of non-blocking execution integrations:
+                                        cross-references added between
+                                            <link linkend="ui" endterm="ui.title"/>,
+                                            <link linkend="adv.telnet" endterm="adv.telnet.title"/>,
+                                            and <link linkend="adv.non-blocking" endterm="adv.non-blocking.title"/>
+                                            sections,
+                                        warning comments added in
+                                            <link linkend="eg.ui.line" endterm="eg.ui.line.title"/>,
+                                            <link linkend="eg.ui.password" endterm="eg.ui.password.title"/>,
+                                            <link linkend="eg.ui.int" endterm="eg.ui.int.title"/>,
+                                            <link linkend="eg.ui.float" endterm="eg.ui.float.title"/>,
+                                            <link linkend="eg.ui.yesno" endterm="eg.ui.yesno.title"/>,
+                                            and <link linkend="eg.ui.choice" endterm="eg.ui.choice.title"/>
+                                            examples,</listitem>
+                            <listitem>FAQ:
+                                        <link linkend="faq.Q650">#650</link> improvement,
+                                        <link linkend="faq.Q750">#750</link> and <link linkend="faq.Q800">#800</link> addition.</listitem>
+                        </itemizedlist>
+                    </listitem>
+                </varlistentry>
+            </variablelist>
+        </revremark>
+    </revision>
     <revision><revnumber>2.8</revnumber><date>July, 15th 2013</date>
         <revremark>
             <variablelist>
@@ -36,7 +85,7 @@
                         <itemizedlist>
                             <listitem><link linkend="adv.exec-ctx" endterm="adv.exec-ctx.title"/>,
                                         (<link linkend="adv.telnet" endterm="adv.telnet.title"/> section revision consequently),</listitem>
-                            <listitem>python tools for <link linkend="xslt" endterm="xslt.title"/>
+                            <listitem>python tools for <link linkend="transformation" endterm="transformation.title"/>
                                         and <link linkend="xmlres.cli2help" endterm="xmlres.cli2help.title"/>.</listitem>
                         </itemizedlist>
                     </listitem>
@@ -77,7 +126,7 @@
                 <varlistentry><term>Deprecations:</term>
                     <listitem>
                         <itemizedlist>
-                            <listitem><link linkend="adv.quit"><classname>Shell</classname> thread-safe termination</link>,</listitem>
+                            <listitem><classname>Shell</classname> thread-safe termination,</listitem>
                             <listitem><function>NonBlockingIODevice::WaitForKeys</function> due to <link linkend="adv.exec-ctx">execution contexts</link> improvements.</listitem>
                         </itemizedlist>
                     </listitem>
@@ -127,7 +176,7 @@
                 <varlistentry><term>Improvements:</term>
                     <listitem>
                         <itemizedlist>
-                            <listitem>Dynamic menus implementation (including table of content, example list, figure list, table list, change list),</listitem>
+                            <listitem>dynamic menus implementation (including table of content, example list, figure list, table list, change list),</listitem>
                             <listitem>dynamic notes and tips,</listitem>
                             <listitem>example titles improvement,</listitem>
                             <listitem>numbers and named anchor for all titles and examples.</listitem>
@@ -204,8 +253,8 @@
                 <varlistentry><term>New features:</term>
                     <listitem>
                         <itemizedlist>
-                            <listitem><link linkend="adv.quit">Thread-safe termination</link>,</listitem>
-                            <listitem><link linkend="adv.non-blocking">Mono-Thread execution</link>.</listitem>
+                            <listitem>thread-safe termination,</listitem>
+                            <listitem><link linkend="adv.non-blocking">mono-thread execution</link>.</listitem>
                         </itemizedlist>
                     </listitem>
                 </varlistentry>
@@ -221,7 +270,7 @@
                     <listitem>
                         <itemizedlist>
                             <listitem><link linkend="adv.iodevices" endterm="adv.iodevices.title"/>,</listitem>
-                            <listitem><link linkend="xslt">XSL generation</link> note addition.</listitem>
+                            <listitem>XSL generation note addition.</listitem>
                         </itemizedlist>
                     </listitem>
                 </varlistentry>
@@ -243,7 +292,7 @@
                     </listitem>
                 </varlistentry>
                 <varlistentry><term>Improvements:</term>
-                    <listitem>Minor corrections.</listitem>
+                    <listitem>minor corrections.</listitem>
                 </varlistentry>
             </variablelist>
         </revremark>

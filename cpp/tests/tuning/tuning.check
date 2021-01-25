@@ -28,13 +28,13 @@ Veuillez saisir une ligne de commande : welcome
 ---------------------------------------------------
 Veuillez saisir une ligne de commande : 
 Veuillez saisir une ligne de commande : lang en
-Please enter a command line: bye en "See you soon!" fr "A bientôt !"
+Please enter a command line: bye en "See you soon!" fr "A bientÃ´t !"
 See you soon!
 Please enter a command line: bye
 Bye!
 Please enter a command line: lang fr
-Veuillez saisir une ligne de commande : bye en "See you soon!" fr "A bientôt !"
-A bientôt !
+Veuillez saisir une ligne de commande : bye en "See you soon!" fr "A bientÃ´t !"
+A bientÃ´t !
 Veuillez saisir une ligne de commande : bye
 Bye!
 Veuillez saisir une ligne de commande : 

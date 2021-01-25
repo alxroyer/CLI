@@ -20,31 +20,50 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
-</head><body onload="onLoad();" onscroll="onScroll();"  bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h1 class="title"><a name="idp2848"></a>CLI library user guide</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Royer</span> <span class="surname">Alexis</span></h3></div></div><div><p class="pubdate">Jul, 15th 2013</p></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 2.8</td><td align="left">July, 15th 2013</td></tr><tr><td align="left" colspan="2">
-            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">Execution contexts</a>,
-                                        (<a class="link" href="#adv.telnet" title="6.1. Telnet">Telnet</a> section revision consequently),</li><li class="listitem">python tools for <a class="link" href="#xslt" title="3.1. Transformation">Transformation</a>
-                                        and <a class="link" href="#xmlres.cli2help" title="4.9. Automatic documentation generation">Automatic documentation generation</a>.</li></ul></div></dd><dt><span class="term">New examples, figures &amp; FAQ:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Examples:
-                                        <a class="link" href="#eg.non-blocking-ui" title="Example 36. Non blocking execution and UI controls">Non blocking execution and UI controls</a>,
-                                        <a class="link" href="#eg.exec-ctx.pwd-shell" title="Example 37. PwdShellContext execution context"><code class="classname">PwdShellContext</code> execution context</a>,</li><li class="listitem">Figures:
+</head><body onload="onLoad();" onscroll="onScroll();"  bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article"><div class="titlepage"><div><div><h1 class="title"><a name="idp8701560592"></a>CLI library user guide</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Royer</span> <span class="surname">Alexis</span></h3></div></div><div><p class="pubdate">March, 14th 2018</p></div><div><div class="revhistory"><table style="border-style:solid; width:100%;" summary="Revision History"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision 2.9</td><td align="left">March, 14th 2018</td></tr><tr><td align="left" colspan="2">
+            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#xmlres.comment" title="4.8. comment - Define comment line patterns"><code class="sgmltag-element">comment</code>
+                - Define comment line patterns</a> section addition.</li></ul></div></dd><dt><span class="term">Deprecations:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">XSLT stylesheets deprecated in favor of python tools,</li><li class="listitem">transformation output redirection deprecated in favor of the new --output python tools option.</li><li class="listitem">thread-safe termination definitely removed,
+                                        FAQ <a class="link" href="#faq.Q750" title="7.3.4. How can I handle thread programming troubles?">#750</a> created instead,</li><li class="listitem"><code class="function">NonBlockingIODevice::WaitForKeys</code> definitely removed from documentation,</li></ul></div></dd><dt><span class="term">Documentation improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><span class="command"><strong>make _DEBUG=</strong></span> fixed in <span class="command"><strong>make _DEBUG=1</strong></span> in <a class="link" href="#build" title="2.3. Build">Build</a> section,</li><li class="listitem">fixes in <a class="link" href="#prerequisite" title="2.2. Prerequisite">Prerequisite</a> section,</li><li class="listitem">better explanation for using UI controls in the context of non-blocking execution integrations:
+                                        cross-references added between
+                                            <a class="link" href="#ui" title="5. UI controls">UI controls</a>,
+                                            <a class="link" href="#adv.telnet" title="6.1. Telnet">Telnet</a>,
+                                            and <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">Non-blocking execution</a>
+                                            sections,
+                                        warning comments added in
+                                            <a class="link" href="#eg.ui.line" title="Example 25. UI controls - ui.Line">UI controls - <code class="classname">ui.Line</code></a>,
+                                            <a class="link" href="#eg.ui.password" title="Example 26. UI controls - ui.Password">UI controls - <code class="classname">ui.Password</code></a>,
+                                            <a class="link" href="#eg.ui.int" title="Example 27. UI controls - ui.Int">UI controls - <code class="classname">ui.Int</code></a>,
+                                            <a class="link" href="#eg.ui.float" title="Example 28. UI controls - ui.Float">UI controls - <code class="classname">ui.Float</code></a>,
+                                            <a class="link" href="#eg.ui.yesno" title="Example 29. UI controls - ui.YesNo">UI controls - <code class="classname">ui.YesNo</code></a>,
+                                            and <a class="link" href="#eg.ui.choice" title="Example 30. UI controls - ui.Choice">UI controls - <code class="classname">ui.Choice</code></a>
+                                            examples,</li><li class="listitem">FAQ:
+                                        <a class="link" href="#faq.Q650" title="7.3.2. The Java integration sample gets stuck when executed under Cygwin!">#650</a> improvement,
+                                        <a class="link" href="#faq.Q750" title="7.3.4. How can I handle thread programming troubles?">#750</a> and <a class="link" href="#faq.Q800" title="7.4.2. Telnet unit tests fail">#800</a> addition.</li></ul></div></dd></dl></div>
+        </td></tr><tr><td align="left">Revision 2.8</td><td align="left">July, 15th 2013</td></tr><tr><td align="left" colspan="2">
+            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.exec-ctx" title="6.8. Execution contexts">Execution contexts</a>,
+                                        (<a class="link" href="#adv.telnet" title="6.1. Telnet">Telnet</a> section revision consequently),</li><li class="listitem">python tools for <a class="link" href="#transformation" title="3.1. Transformation">Transformation</a>
+                                        and <a class="link" href="#xmlres.cli2help" title="4.10. Automatic documentation generation">Automatic documentation generation</a>.</li></ul></div></dd><dt><span class="term">New examples, figures &amp; FAQ:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Examples:
+                                        <a class="link" href="#eg.non-blocking-ui" title="Example 37. Non-blocking execution and UI controls">Non-blocking execution and UI controls</a>,
+                                        <a class="link" href="#eg.exec-ctx.pwd-shell" title="Example 38. PwdShellContext execution context"><code class="classname">PwdShellContext</code> execution context</a>,</li><li class="listitem">Figures:
                                         <a class="link" href="#fig.ui.classes">UI controls: class hierarchy</a>,
                                         <a class="link" href="#fig.exec-ctx.blocking-call">Execution contexts: blocking call execution flow chart</a>,
-                                        <a class="link" href="#fig.exec-ctx.non-blocking-call">Execution contexts: non blocking call execution flow chart</a>,</li><li class="listitem">FAQ:
-                                        <a class="link" href="#faq.Q020" title="7.1. I need to repeat a same set of commands. How can I do?">Q020</a>,
-                                        <a class="link" href="#faq.Q050" title="7.2. Why the Shell doesn't come with a timeout for automatic log off?">Q050</a>,
-                                        <a class="link" href="#faq.Q350" title="7.6. I get a 'curses.h : No such file or directory' while compiling ncurses_console.cpp!">Q350</a>,
-                                        <a class="link" href="#faq.Q650" title="7.9. The Java integration sample gets stuck when executed under cygwin!">Q650</a>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#build" title="2.3. Build">Build</a> and <a class="link" href="#howto" title="3. How to use it">How to use it</a> details,
-                                        plus <span class="command"><strong>make check</strong></span> addition,</li><li class="listitem">list of required utilities addition in <a class="link" href="#prerequisite" title="2.2. Prerequisite">Prerequisite</a> section,</li><li class="listitem">pragma code correction in FAQ <a class="link" href="#faq.Q400" title="7.7. CLI auto-generated source files cause thousands of compilation warnings!">Q400</a>,</li><li class="listitem">"UI package" renamed into <a class="link" href="#ui" title="5. UI controls">UI controls</a>,</li><li class="listitem"><a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">Non blocking execution</a>
-                                        motivation and UI controls management addition,</li><li class="listitem">numbers and named anchor for all figures and tables,</li><li class="listitem">dynamic menus and mobile device compatibility.</li></ul></div></dd><dt><span class="term">Deprecations:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.quit" title="6.7. Thread-safe termination (deprecated)"><code class="classname">Shell</code> thread-safe termination</a>,</li><li class="listitem"><code class="function">NonBlockingIODevice::WaitForKeys</code> due to <a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">execution contexts</a> improvements.</li></ul></div></dd></dl></div>
+                                        <a class="link" href="#fig.exec-ctx.non-blocking-call">Execution contexts: non-blocking call execution flow chart</a>,</li><li class="listitem">FAQ:
+                                        <a class="link" href="#faq.Q020" title="7.1.1. I need to repeat a same set of commands. How can I do?">Q020</a>,
+                                        <a class="link" href="#faq.Q050" title="7.1.2. Why the Shell doesn't come with a timeout for automatic log off?">Q050</a>,
+                                        <a class="link" href="#faq.Q350" title="7.2.3. I get a 'curses.h : No such file or directory' while compiling ncurses_console.cpp!">Q350</a>,
+                                        <a class="link" href="#faq.Q650" title="7.3.2. The Java integration sample gets stuck when executed under Cygwin!">Q650</a>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#build" title="2.3. Build">Build</a> and <a class="link" href="#howto" title="3. How to use it">How to use it</a> details,
+                                        plus <span class="command"><strong>make check</strong></span> addition,</li><li class="listitem">list of required utilities addition in <a class="link" href="#prerequisite" title="2.2. Prerequisite">Prerequisite</a> section,</li><li class="listitem">pragma code correction in FAQ <a class="link" href="#faq.Q400" title="7.2.4. CLI auto-generated source files cause thousands of compilation warnings!">Q400</a>,</li><li class="listitem">"UI package" renamed into <a class="link" href="#ui" title="5. UI controls">UI controls</a>,</li><li class="listitem"><a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">Non-blocking execution</a>
+                                        motivation and UI controls management addition,</li><li class="listitem">numbers and named anchor for all figures and tables,</li><li class="listitem">dynamic menus and mobile device compatibility.</li></ul></div></dd><dt><span class="term">Deprecations:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="classname">Shell</code> thread-safe termination,</li><li class="listitem"><code class="function">NonBlockingIODevice::WaitForKeys</code> due to <a class="link" href="#adv.exec-ctx" title="6.8. Execution contexts">execution contexts</a> improvements.</li></ul></div></dd></dl></div>
         </td></tr><tr><td align="left">Revision 2.7</td><td align="left">Dec, 7th 2011</td></tr><tr><td align="left" colspan="2">
-            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New sections:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#ui" title="5. UI controls">UI package</a>,</li><li class="listitem"><a class="link" href="#adv.telnet" title="6.1. Telnet">Telnet</a>,</li><li class="listitem">"Mono-thread execution" renamed into <a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">Non blocking execution</a>,</li><li class="listitem"><a class="link" href="#adv.iodevices" title="6.5. Define your own input/output device">Define your own input/output device</a> split in two sub-sections,</li><li class="listitem"><a class="link" href="#adv.pch" title="6.11. Pre-compiled headers">Pre-compiled headers</a>,</li><li class="listitem"><a class="link" href="#faq" title="7. Frequently Asked Questions">Frequently Asked Questions</a>.</li></ul></div></dd><dt><span class="term">New examples:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#eg.non-blocking" title="Example 35. Non blocking execution">Non blocking execution</a>,</li><li class="listitem"><a class="link" href="#ui" title="5. UI controls">UI Package</a> section examples.</li></ul></div></dd><dt><span class="term">New tables:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#table.OutputDevice" title="Table 2. Output device handlers">Output device handlers</a>,</li><li class="listitem"><a class="link" href="#table.IODevice" title="Table 3. Input device handlers">Input device handlers</a>,</li><li class="listitem"><a class="link" href="#table.NonBlockingIODevice" title="Table 4. Non blocking device handlers">Non blocking device handlers</a>.</li></ul></div></dd><dt><span class="term">Other additions:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="function">Shell::CleanScreen</code>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Dynamic menus implementation (including table of content, example list, figure list, table list, change list),</li><li class="listitem">dynamic notes and tips,</li><li class="listitem">example titles improvement,</li><li class="listitem">numbers and named anchor for all titles and examples.</li></ul></div></dd><dt><span class="term">Deprecations:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">"C++ integration - static instantiation + @cpp attribute" example.</li></ul></div></dd></dl></div>
+            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New sections:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#ui" title="5. UI controls">UI package</a>,</li><li class="listitem"><a class="link" href="#adv.telnet" title="6.1. Telnet">Telnet</a>,</li><li class="listitem">"Mono-thread execution" renamed into <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">Non-blocking execution</a>,</li><li class="listitem"><a class="link" href="#adv.iodevices" title="6.5. Define your own input/output device">Define your own input/output device</a> split in two sub-sections,</li><li class="listitem"><a class="link" href="#adv.pch" title="6.10. Pre-compiled headers">Pre-compiled headers</a>,</li><li class="listitem"><a class="link" href="#faq" title="7. Frequently Asked Questions">Frequently Asked Questions</a>.</li></ul></div></dd><dt><span class="term">New examples:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#eg.non-blocking" title="Example 36. Non-blocking execution">Non-blocking execution</a>,</li><li class="listitem"><a class="link" href="#ui" title="5. UI controls">UI Package</a> section examples.</li></ul></div></dd><dt><span class="term">New tables:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#table.OutputDevice" title="Table 2. Output device handlers">Output device handlers</a>,</li><li class="listitem"><a class="link" href="#table.IODevice" title="Table 3. Input device handlers">Input device handlers</a>,</li><li class="listitem"><a class="link" href="#table.NonBlockingIODevice" title="Table 4. Non-blocking device handlers">Non-blocking device handlers</a>.</li></ul></div></dd><dt><span class="term">Other additions:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="function">Shell::CleanScreen</code>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">dynamic menus implementation (including table of content, example list, figure list, table list, change list),</li><li class="listitem">dynamic notes and tips,</li><li class="listitem">example titles improvement,</li><li class="listitem">numbers and named anchor for all titles and examples.</li></ul></div></dd><dt><span class="term">Deprecations:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">"C++ integration - static instantiation + @cpp attribute" example.</li></ul></div></dd></dl></div>
         </td></tr><tr><td align="left">Revision 2.6</td><td align="left">Dec, 15th 2010</td></tr><tr><td align="left" colspan="2">
             <div class="variablelist"><dl class="variablelist"><dt><span class="term">Deprecations:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="function">Shell::SetErrorFormatting</code> / <code class="function">Shell.setErrorFormatting</code>.</li></ul></div></dd><dt><span class="term">Additions:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="function">Shell::GetCurrentMenu</code> / <code class="function">Shell.getCurrentMenu</code>.</li></ul></div></dd></dl></div>
         </td></tr><tr><td align="left">Revision 2.5</td><td align="left">Sep, 8th 2010</td></tr><tr><td align="left" colspan="2">
-            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#xmlres.schema" title="4.8. Schema checking">schemas</a>,</li><li class="listitem"><a class="link" href="#xmlres.native" title="4.4. cpp, java - Insert target language directly in the resource file">"member" and "constructor" sections</a>,</li><li class="listitem"><a class="link" href="#adv.menus.handlers" title="6.2.1. handler - menu elements special features">"prompt" handler</a>,</li><li class="listitem"><a class="link" href="#xmlres.cli2help" title="4.9. Automatic documentation generation">automatic help document generation</a>.</li></ul></div></dd><dt><span class="term">New sections:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.menus" title="6.2. Advanced menu management">Advanced menu management</a>,</li><li class="listitem"><a class="link" href="#adv.shellfeatures" title="6.3. Shell advanced features"><code class="classname">Shell</code> advanced features</a>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#eg.tag.a-b-plus" title="Example 17. Syntax tags - (a|b)+ patterns">(a|b)+</a> and <a class="link" href="#eg.tag.a-b-star" title="Example 16. Syntax tags - (a|b)* patterns">(a|b)*</a> samples.</li></ul></div></dd></dl></div>
+            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#xmlres.schema" title="4.9. Schema checking">schemas</a>,</li><li class="listitem"><a class="link" href="#xmlres.native" title="4.4. cpp, java - Insert target language directly in the resource file">"member" and "constructor" sections</a>,</li><li class="listitem"><a class="link" href="#adv.menus.handlers" title="6.2.1. handler - menu elements special features">"prompt" handler</a>,</li><li class="listitem"><a class="link" href="#xmlres.cli2help" title="4.10. Automatic documentation generation">automatic help document generation</a>.</li></ul></div></dd><dt><span class="term">New sections:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.menus" title="6.2. Advanced menu management">Advanced menu management</a>,</li><li class="listitem"><a class="link" href="#adv.shellfeatures" title="6.3. Shell advanced features"><code class="classname">Shell</code> advanced features</a>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#eg.tag.a-b-plus" title="Example 17. Syntax tags - (a|b)+ patterns">(a|b)+</a> and <a class="link" href="#eg.tag.a-b-star" title="Example 16. Syntax tags - (a|b)* patterns">(a|b)*</a> samples.</li></ul></div></dd></dl></div>
         </td></tr><tr><td align="left">Revision 2.4</td><td align="left">Oct, 1st 2009</td></tr><tr><td align="left" colspan="2">Minor corrections according to miscellaneous changes.</td></tr><tr><td align="left">Revision 2.3</td><td align="left">May, 14th 2009</td></tr><tr><td align="left" colspan="2">
-            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.quit" title="6.7. Thread-safe termination (deprecated)">Thread-safe termination</a>,</li><li class="listitem"><a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">Mono-Thread execution</a>.</li></ul></div></dd><dt><span class="term">New sections:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.dimension" title="6.10. Embedded integration and memory management">Embedded integration and memory management</a>,</li><li class="listitem"><a class="link" href="#adv.compilers" title="6.12. Making compilers">Making compilers</a>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.iodevices" title="6.5. Define your own input/output device">Define your own input/output device</a>,</li><li class="listitem"><a class="link" href="#xslt" title="3.1. Transformation">XSL generation</a> note addition.</li></ul></div></dd></dl></div>
+            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">thread-safe termination,</li><li class="listitem"><a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">mono-thread execution</a>.</li></ul></div></dd><dt><span class="term">New sections:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.dimension" title="6.9. Embedded integration and memory management">Embedded integration and memory management</a>,</li><li class="listitem"><a class="link" href="#adv.compilers" title="6.11. Making compilers">Making compilers</a>.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><a class="link" href="#adv.iodevices" title="6.5. Define your own input/output device">Define your own input/output device</a>,</li><li class="listitem">XSL generation note addition.</li></ul></div></dd></dl></div>
         </td></tr><tr><td align="left">Revision 2.2</td><td align="left">Sep, 21st 2008</td></tr><tr><td align="left" colspan="2">Minor corrections according bug fixes and miscellaneous changes.</td></tr><tr><td align="left">Revision 2.1</td><td align="left">Oct, 31st 2007</td></tr><tr><td align="left" colspan="2">
-            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Java addition,</li><li class="listitem">French language support.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd>Minor corrections.</dd></dl></div>
+            <div class="variablelist"><dl class="variablelist"><dt><span class="term">New features:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Java addition,</li><li class="listitem">French language support.</li></ul></div></dd><dt><span class="term">Improvements:</span></dt><dd>minor corrections.</dd></dl></div>
         </td></tr><tr><td align="left">Revision 2.0</td><td align="left">Sep, 27th 2007</td></tr><tr><td align="left" colspan="2">License modification: minor changes.</td></tr><tr><td align="left">Revision 1.0</td><td align="left">June, 1st 2006</td></tr><tr><td align="left" colspan="2">First release of the user guide.</td></tr></table></div></div></div><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="intro"></a>1. Introduction</h2></div></div></div><p>
     CLI is a library and a set of tools
     that allow you to easily develop text-based user interfaces.
@@ -62,32 +81,38 @@
         in the form of gzipped archives.
         </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="prerequisite"></a>2.2. Prerequisite</h3></div></div></div><p>
         Regular Linux installs usually have everything needed to have the CLI library compile.
-        If you compile on Windows, you may install cygwin.
+        If you compile on Windows, you may install Cygwin.
         </p><p>
         Here is a list of required utilities:
-        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">make</li><li class="listitem">xsltproc</li><li class="listitem">dos2unix and unix2dos</li><li class="listitem">g++</li><li class="listitem">ncurses devel (Linux only)</li></ul></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">make</li><li class="listitem">python 2.7</li><li class="listitem">dos2unix and unix2dos</li><li class="listitem">g++</li><li class="listitem">ncurses devel (Linux and Cygwin only)</li></ul></div><p>
         Plus, for Java users:
-        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">JDK (optional)</li></ul></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">JDK (optional)</li><li class="listitem">x86_64-w64-mingw32-g++ (optional, Cygwin only)</li></ul></div><p>
         </p><p>
         Plus, optionally, for unit tests (<span class="command"><strong>make check</strong></span>):
-        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">xmllint (optional)</li><li class="listitem">gawk (optional)</li><li class="listitem">python and pylint (optional)</li></ul></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">xmllint (optional)</li><li class="listitem">xsltproc (optional)</li><li class="listitem">gawk (optional)</li><li class="listitem">pylint (optional)</li></ul></div><p>
+            </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
+            Make sure your antivirus will not block network operations for binaries generated and executed for unit-tests.
+            If so, configure antivirus exceptions.
+            </div><p>
         or documentation generation (<span class="command"><strong>make doc</strong></span>):
-        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">doxygen (optional)</li><li class="listitem">docbook_xsl (optional)</li></ul></div><p>
+        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">doxygen (optional)</li><li class="listitem">xsltproc and docbook_xsl (optional)</li><li class="listitem">dot (optional)</li><li class="listitem">mscgen (optional)</li></ul></div><p>
         </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="build"></a>2.3. Build</h3></div></div></div><p>
         Once you have downloaded the archive, unpack it on your disk:
         </p><pre class="programlisting">tar xvfz cli-X.Y.tgz</pre><p>
         and declare a <code class="varname">CLI_DIR</code> environment variable that points to directory just extracted:
         </p><pre class="programlisting">export CLI_DIR=$(pwd)/cli-X.Y</pre><p>
         </p><p>
-        Optionally, set the <code class="varname">JAVA_HOME</code> environment variable:
+        Optionally, if you want to use Java set the <code class="varname">JAVA_HOME</code> environment variable:
             </p><pre class="programlisting">export JAVA_HOME="$(dirname "$(dirname "$(which javac)")")"</pre><p>
-        </p><p>
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+        In as much as the Java CLI library is based on the JNI technology, a full JDK needs to be used.
+        </div><p>
         Go to <code class="filename">build/make</code>:
             </p><pre class="programlisting">cd ${CLI_DIR}/build/make</pre><p>
         and build:
             </p><pre class="programlisting">make</pre><p>
         or (debug version):
-            </p><pre class="programlisting">make _DEBUG=</pre><p>
+            </p><pre class="programlisting">make _DEBUG=1</pre><p>
         This compilation will run over C++ and Java (depending on <code class="varname">JAVA_HOME</code> value) library compilations.
         </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
             You may also execute the library unit tests with the following command:
@@ -103,20 +128,16 @@
     </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">Creation of an XML resource file;</li><li class="listitem">Transformation of the XML resource file into target language code;</li><li class="listitem">Integration.</li></ol></div><p>
     The content of the XML resource file will be presented
     in the <a class="link" href="#xmlres" title="4. XML resource file">next section</a>.
-    The <a class="link" href="#xslt" title="3.1. Transformation">transformation</a>
+    The <a class="link" href="#transformation" title="3.1. Transformation">transformation</a>
     and <a class="link" href="#integ" title="3.2. Integration">integration</a> steps are discussed here.
-    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="xslt"></a>3.1. Transformation</h3></div></div></div><p>
+    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="transformation"></a>3.1. Transformation</h3></div></div></div><p>
         The transformation of the XML resource file into target language code is very easy.
         It is nothing but a simple transformation.
-        </p><p>
-        You may use either the original XSL transformation stylesheets <code class="filename">cli2cpp.xsl</code> and <code class="filename">cli2java.xsl</code>,
-        or their python tools equivalents <code class="filename">cli2cpp.py</code> and <code class="filename">cli2java.py</code>.
-        Even though python tools, added in version 2.8, run faster than XSL stylesheets, both techologies are still provided for backward compatibility reasons.
         </p><div class="example"><a name="eg.transformation"></a><p class="title"><b>Example 1. Transformation of an XML resource file</b></p><div class="example-contents"><p>
             Try it out!
             Here is a sample CLI resource file:
                 
-</p><pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+</p><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="myCLI"&gt;
 &lt;/cli&gt;
 </pre><p>
@@ -124,50 +145,28 @@
             Copy the stuff into a new <code class="filename">empty.xml</code> file.
             </p><p>
             Let's say we want to have C++.
-            Using <code class="filename">cli2cpp.xsl</code>, launch the XSL transformation
-            thanks to a command line XSLT processor.
-            I usually use  <span class="command"><strong>xsltproc</strong></span>:
-                </p><pre class="programlisting">xsltproc ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty.cpp</pre><p>
-            Or, since version 2.8, the python tools that do the same:
-                </p><pre class="programlisting">python ${CLI_DIR}/tools/cli2cpp.py empty.xml &gt; empty.cpp</pre><p>
+            Launch the transformation from XML to C++ using the <code class="filename">cli2cpp.py</code> python script:
+                </p><pre class="programlisting">python ${CLI_DIR}/tools/cli2cpp.py empty.xml --output empty.cpp</pre><p>
             That's all folks!
             Have a look at the <a class="ulink" href="misc/empty.cpp" target="_top">generated C++ file</a> if you want.
             </p><p>
-            And it works with java also!
-                </p><pre class="programlisting">xsltproc --stringparam STR_CliClassName "Empty" ${CLI_DIR}/tools/cli2java.xsl empty.xml &gt; Empty.java</pre><p>
-            or:
-                </p><pre class="programlisting">python ${CLI_DIR}/tools/cli2java.py --cli-class-name "Empty" empty.xml &gt; Empty.java</pre><p>
+            And it works with java as well!
+                </p><pre class="programlisting">python ${CLI_DIR}/tools/cli2java.py --cli-class-name "Empty" empty.xml --output Empty.java</pre><p>
             Have a look at the <a class="ulink" href="misc/Empty.java" target="_top">generated Java file</a>.
             </p><p>
             You're now ready to compile.
-            </p></div></div><br class="example-break"><p>
-        The XSL transformation stylesheets have several parameters:
-        </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">C++:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="varname">B_CliStaticCreation</code>:
-                            CLI static creation. Default is 0 (false) since version 2.7.
-                            When set to 1, a static instance of the CLI you defined is automatically defined in the source code generated.
-                            When set to 0, the CLI instance is not created by the XSL transformation,
-                            so that you can do the dynamic instantiation at the appropriate time
-                            (inherited from Java experience).</li><li class="listitem"><code class="varname">STR_VarPrefix</code>:
-                            Variables prefix. Default is <code class="constant">m_pcli_</code>.</li><li class="listitem"><code class="varname">STR_ClassPrefix</code>:
-                            Classes prefix. Default is empty.</li><li class="listitem"><code class="varname">STR_Indent</code>:
-                            Basic indentation. Default is four spaces.</li><li class="listitem"><code class="varname">STR_UserIndent</code>:
-                            User code indentation. Makes the generated code more readable when debugging. Default is <code class="code">/* &gt; */ </code>.</li><li class="listitem"><code class="varname">STR_CliClassName</code>:
-                            CLI class name. Default is a derivate from the CLI name.</li></ul></div></dd><dt><span class="term">Java:</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="varname">STR_CliClassScope</code>:
-                            CLI class scope. Default is empty, which means private.</li><li class="listitem"><code class="varname">STR_VarPrefix</code>:
-                            Variables prefix. Default is <code class="code">m_cli</code>.</li><li class="listitem"><code class="varname">STR_ClassPrefix</code>:
-                            Classes prefix. Default is empty.</li><li class="listitem"><code class="varname">STR_Indent</code>:
-                            Basic indentation. Default is four spaces.</li><li class="listitem"><code class="varname">STR_UserIndent</code>:
-                            User code indentation. Makes the generated code more readable when debugging. Default is <code class="code">/* &gt; */ </code>.</li><li class="listitem"><code class="varname">STR_CliClassName</code>:
-                            CLI class name. Default is a derivate from the CLI name.
-                            It is highly recommended you override this parameter for integration considerations.</li></ul></div></dd></dl></div><p>
-        </p><p>
-        The python tools come with <code class="option">--help</code> options:
+            </p></div></div><br class="example-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+        This code generation was originally processed thanks to <code class="filename">cli2cpp.xsl</code> and <code class="filename">cli2java.xsl</code> XSLT stylesheets.
+        However, in as much as the python script equivalents introduced in version 2.8 work better and faster,
+        these original stylesheets are still provided within the <code class="filename">${CLI_DIR}/tools/</code> directory, but are now declared deprecated since version 2.9.
+        </div><p>
+        The <code class="filename">cli2cpp.py</code> and <code class="filename">cli2java.py</code> python scripts come with <code class="option">--help</code> options:
 </p><pre class="programlisting">
 $ python ${CLI_DIR}/tools/cli2cpp.py --help
 usage: cli2cpp [-h] [--version] [--cli-class-name CLI_CLASS_NAME]
                [--cli-class-scope CLI_CLASS_SCOPE] [--static | --no-static]
                [--class-prefix CLASS_PREFIX] [--var-prefix VAR_PREFIX]
-               [--indent INDENT] [--user-indent USER_INDENT]
+               [--indent INDENT] [--user-indent USER_INDENT] [--output OUTPUT]
                xml-res
 
 positional arguments:
@@ -177,8 +176,8 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   --cli-class-name CLI_CLASS_NAME
-                        Main CLI class name (default is based on &lt;class-
-                        prefix&gt; and @name attribute).
+                        Main CLI class name (default is based on CLASS_PREFIX
+                        and @name attribute).
   --cli-class-scope CLI_CLASS_SCOPE
                         Main CLI class scope (default is empty).
   --static              Static instance creation
@@ -190,6 +189,8 @@ optional arguments:
   --indent INDENT       Indentation pattern (default is 4 spaces).
   --user-indent USER_INDENT
                         User-code indentation pattern (default is '/* &gt; */ ').
+  --output OUTPUT       Output file (by default the result is printed out in
+                        the standard output)
 </pre><p>
 </p><pre class="programlisting">
 $ python ${CLI_DIR}/tools/cli2java.py --help
@@ -197,6 +198,7 @@ usage: cli2java [-h] [--version] [--cli-class-name CLI_CLASS_NAME]
                 [--cli-class-scope CLI_CLASS_SCOPE]
                 [--class-prefix CLASS_PREFIX] [--var-prefix VAR_PREFIX]
                 [--indent INDENT] [--user-indent USER_INDENT]
+                [--output OUTPUT]
                 xml-res
 
 positional arguments:
@@ -206,8 +208,8 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   --cli-class-name CLI_CLASS_NAME
-                        Main CLI class name (default is based on &lt;class-
-                        prefix&gt; and @name attribute).
+                        Main CLI class name (default is based on CLASS_PREFIX
+                        and @name attribute).
   --cli-class-scope CLI_CLASS_SCOPE
                         Main CLI class scope (default is empty).
   --class-prefix CLASS_PREFIX
@@ -217,15 +219,17 @@ optional arguments:
   --indent INDENT       Indentation pattern (default is 4 spaces).
   --user-indent USER_INDENT
                         User-code indentation pattern (default is '/* &gt; */ ').
+  --output OUTPUT       Output file (by default the result is printed out in
+                        the standard output)
 </pre><p>
-        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
-            If you have a look at the output source code, the complexity of this generated code may disturb you.
-            As a matter of fact, since it is some managed code, you are not supposed to get into it,
-            and even less supposed to modify it.
-            But, you may however also figure out that it is nevertheless quite well presented:
-            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Indentation is respected;</li><li class="listitem">User-code is highlighted thanks to the <code class="varname">STR_UserIndent</code> pattern at the beginning of the lines;</li><li class="listitem">The current word sequence in analysis is presented in comments throughout the code.</li></ul></div><p>
-            I hope these measures could help you when something goes wrong at compile or at debug time.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="integ"></a>3.2. Integration</h3></div></div></div><p>
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+        If you have a look at the output source code, the complexity of this generated code may disturb you.
+        As a matter of fact, since it is some managed code, you are not supposed to get into it,
+        and even less supposed to modify it.
+        But, you may however also figure out that it is nevertheless quite well presented:
+        <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Indentation is respected;</li><li class="listitem">User-code is highlighted thanks to the <code class="varname">STR_UserIndent</code> pattern at the beginning of the lines;</li><li class="listitem">The current word sequence in analysis is presented in comments throughout the code.</li></ul></div>
+        I hope these measures could help you when something goes wrong at compile or at debug time.
+        </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="integ"></a>3.2. Integration</h3></div></div></div><p>
         Now that you have your target language file,
         you want to have a CLI program running don't you?
         </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="integ.cpp"></a>3.2.1. C++ integration</h4></div></div></div><p>
@@ -249,8 +253,8 @@ optional arguments:
                       in the XML resource file
                       (definitely deprecated, this method has been undocumented);</li></ul></div><p>
             </p><div class="example"><a name="eg.cpp.init1"></a><p class="title"><b>Example 2. C++ integration - instantiation from user code</b></p><div class="example-contents"><p>
-                Use <code class="filename">cli2cpp.xsl</code> parameters to give an explicit name to CLI class generated:
-                    </p><pre class="programlisting">xsltproc --param STR_CliClassName "'EmptyCli'" ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty_cli.h</pre><p>
+                Use <code class="filename">cli2cpp.py</code> parameters to give an explicit name to CLI class generated:
+                    </p><pre class="programlisting">python ${CLI_DIR}/tools/cli2cpp.py --cli-class-name "EmptyCli" empty.xml --output empty_cli.h</pre><p>
                 Create a <code class="filename">goempty.cpp</code> file that simply includes <code class="filename">empty_cli.h</code> and make the instantiation at the appropriate time:
 </p><pre class="programlisting">
 #include "cli/common.h"
@@ -274,8 +278,8 @@ g++ -o empty goempty.o -L${CLI_DIR}/cpp/build/make/Cygwing++/Release -lclicpp -l
                     </p><pre class="programlisting">./empty</pre><p>
                 Great for an empty stuff, ain't it?
                 </p></div></div><br class="example-break"><div class="example"><a name="eg.cpp.init2"></a><p class="title"><b>Example 3. C++ integration - static instantiation</b></p><div class="example-contents"><p>
-                Use <code class="filename">cli2cpp.xsl</code> parameters to activate static CLI creation:
-                    </p><pre class="programlisting">xsltproc --param B_CliStaticCreation 1 ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty_cli.cpp</pre><p>
+                Use <code class="filename">cli2cpp.py</code> parameters to activate static CLI creation:
+                    </p><pre class="programlisting">python ${CLI_DIR}/tools/cli2cpp.py --static empty.xml --output empty_cli.cpp</pre><p>
                 Then the file <code class="filename">goempty2.cpp</code> below looks for CLI instances that had been created thanks to a regular expression on their names:
 </p><pre class="programlisting">
 #include "cli/common.h"
@@ -314,7 +318,7 @@ g++ -o empty2 empty_cli.o goempty2.o -L${CLI_DIR}/cpp/build/make/${TARGET}${CXX}
             That's what is presented in the example below.
             </p><div class="example"><a name="eg.java.init"></a><p class="title"><b>Example 4. Java integration</b></p><div class="example-contents"><p>
                 Considering you have generated a <code class="filename">Empty.java</code> file
-                as described in <a class="link" href="#xslt" title="3.1. Transformation">XSLT transformation section</a>,
+                as described in the <a class="link" href="#transformation" title="3.1. Transformation">Transformation</a> section,
                 you may just compile this file with <span class="command"><strong>javac</strong></span>,
                 and another source file <code class="filename">GoEmpty.java</code> loading the <code class="classname">Empty</code> class:
 </p><pre class="programlisting">
@@ -348,7 +352,7 @@ class GoEmpty {
                 Finally run:
                 </p><pre class="programlisting">java -classpath "${CLI_JAVA_DIR}/cli.jar;." -Djava.library.path=${CLI_JAVA_DIR} GoEmpty</pre><p>
                     </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-                    If you get stuck at this point, please read the <a class="link" href="#faq.Q650" title="7.9. The Java integration sample gets stuck when executed under cygwin!">dedicated FAQ</a>.
+                    If you get stuck at this point, please read the <a class="link" href="#faq.Q650" title="7.3.2. The Java integration sample gets stuck when executed under Cygwin!">dedicated FAQ</a>.
                     </div><p>
                 The <code class="option">-classpath</code> option let the Java Virtual Machine know were to find the CLI Java objects.
                 The <code class="option">-Djava.library.path=</code> option tells the Java Virtual Machine where to load the CLI native library from.
@@ -384,7 +388,7 @@ class GoEmpty {
             Here is an XML resource file <code class="filename">hello.xml</code>
             implementing the command line:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"&gt;
  &lt;keyword string="say"&gt;
   &lt;keyword string="hello"&gt;
@@ -397,7 +401,7 @@ class GoEmpty {
             If you want to add another command line <span class="command"><strong>shout hello</strong></span>,
             here is how your <code class="filename">hello.xml</code> file should look like:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"&gt;
  &lt;keyword string="say"&gt;
   &lt;keyword string="hello"&gt;
@@ -416,7 +420,7 @@ class GoEmpty {
             and <span class="command"><strong>shout bye</strong></span>,
             have a look at the corresponding XML resource file:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"&gt;
  &lt;keyword string="say"&gt;
   &lt;keyword string="hello"&gt;
@@ -466,7 +470,7 @@ class GoEmpty {
         </p><div class="example"><a name="eg.help"></a><p class="title"><b>Example 6. Put help everywhere</b></p><div class="example-contents">
             Here is how you could document a <code class="filename">hello.xml</code> file:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"&gt;&lt;help lang="en"&gt;Hello menu&lt;/help&gt;&lt;help lang="fr"&gt;Menu Hello&lt;/help&gt;
  &lt;keyword string="say"&gt;&lt;help lang="en"&gt;Say something.&lt;/help&gt;&lt;help lang="fr"&gt;Dire quelque chose.&lt;/help&gt;
   &lt;keyword string="hello"&gt;&lt;help lang="en"&gt;Say hello.&lt;/help&gt;&lt;help lang="fr"&gt;Dire bonjour.&lt;/help&gt;
@@ -489,7 +493,7 @@ class GoEmpty {
         Any suggestion?
         </blockquote></div><p>
         For sure, automatic documentation generation will help you.
-        This feature is described in a <a class="link" href="#xmlres.cli2help" title="4.9. Automatic documentation generation">later section</a>.
+        This feature is described in a <a class="link" href="#xmlres.cli2help" title="4.10. Automatic documentation generation">later section</a>.
         </p><div class="blockquote"><blockquote class="blockquote">
         Good! Now, how do I execute stuff from the command lines?
         </blockquote></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="xmlres.native"></a>4.4. <code class="sgmltag-element">cpp</code>, <code class="sgmltag-element">java</code>
@@ -508,7 +512,7 @@ class GoEmpty {
             and you would like those to be called when the user types <span class="command"><strong>say hello</strong></span>.
             This is how you would do it:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"&gt;
  &lt;keyword string="say"&gt;
   &lt;keyword string="hello"&gt;
@@ -525,10 +529,10 @@ class GoEmpty {
             Since <code class="function">helloWorld</code> is not declared, the output does not compile.
             The trick is to use special sections as below:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"&gt;
  &lt;cpp option="include"&gt;#include "hello_api.h"&lt;/cpp&gt;
- &lt;java option="import"&gt;import cli.test.HelloApi;&lt;/java&gt;
+ &lt;java option="import"&gt;import cli.test.samples.HelloApi;&lt;/java&gt;
  &lt;keyword string="say"&gt;
   &lt;keyword string="hello"&gt;
    &lt;endl&gt;
@@ -567,7 +571,7 @@ class GoEmpty {
         </p><div class="example"><a name="eg.output"></a><p class="title"><b>Example 8. Output</b></p><div class="example-contents">
             Here is an example of output for C++:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Hello"&gt;
  &lt;keyword string="say"&gt;
   &lt;keyword string="hello"&gt;
@@ -621,7 +625,7 @@ class GoEmpty {
             The following example illustrates how to use
             <code class="sgmltag-element">param</code> elements:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Params"&gt;
  &lt;keyword string="enter"&gt;
   &lt;keyword string="string"&gt;
@@ -701,7 +705,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="a*"&gt;
  &lt;tag id="my-tag"&gt;
   &lt;endl&gt;&lt;/endl&gt;
@@ -726,7 +730,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="a+"&gt;
  &lt;tag id="my-tag"&gt;
   &lt;keyword string="a"&gt;
@@ -753,7 +757,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="(ab)*"&gt;
  &lt;tag id="my-tag"&gt;
   &lt;endl&gt;&lt;/endl&gt;
@@ -782,7 +786,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="(ab)+"&gt;
  &lt;tag id="my-tag"&gt;
   &lt;keyword string="a"&gt;
@@ -820,7 +824,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="a(b1|b2|)c"&gt;
  &lt;keyword string="a"&gt;
   &lt;keyword string="b1"&gt;
@@ -864,7 +868,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="a(b1|b2)c"&gt;
  &lt;keyword string="a"&gt;
   &lt;keyword string="b1"&gt;
@@ -904,7 +908,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="(a|b)*"&gt;
  &lt;tag id="my-tag1"&gt;
   &lt;endl&gt;&lt;/endl&gt;
@@ -941,7 +945,7 @@ class GoEmpty {
 </pre>
             </td><td></td><td valign="top">
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="(a|b)+"&gt;
  &lt;tag id="my-tag1"&gt;
   &lt;keyword string="a"&gt;
@@ -961,7 +965,7 @@ class GoEmpty {
             </td></tr></tbody></table></div></div></div><br class="example-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
         This user guide has formerly proposed other directions for <span class="command"><strong>(a|b)+</strong></span> and <span class="command"><strong>(a|b)*</strong></span> patterns.
         Since version 2.5, you are now advised to proceed as described above,
-        so that automatic documentation generation works better (see <a class="link" href="#xmlres.cli2help" title="4.9. Automatic documentation generation">Automatic documentation generation</a>).
+        so that automatic documentation generation works better (see <a class="link" href="#xmlres.cli2help" title="4.10. Automatic documentation generation">Automatic documentation generation</a>).
         </div><p>
         In lesser theoretical words, <code class="sgmltag-element">tag</code> elements allow you to define command lines with options.
         </p><div class="example"><a name="eg.tag.circle1"></a><p class="title"><b>Example 18. Syntax tags - An optional command line</b></p><div class="example-contents"><p>
@@ -1048,7 +1052,7 @@ void Draw(const Circle&amp; C) {}
 </pre>
                 </td><td></td><td valign="top">
                         
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Circle"&gt;
  &lt;cpp option="include"&gt;#include "circle.h"&lt;/cpp&gt;
  &lt;keyword string="add"&gt;
@@ -1182,7 +1186,7 @@ add circle x_position -1 y_position -1 radius 3
 </pre>
                 </td><td></td><td valign="top">
                         
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Circle"&gt;
  &lt;cpp option="include"&gt;#include "circle.h"&lt;/cpp&gt;
  &lt;keyword string="add"&gt;
@@ -1272,7 +1276,7 @@ add circle green
             </p></div></div><br class="example-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
         The <code class="sgmltag-attribute">max</code> attribute of <code class="sgmltag-element">tag</code> elements have been introduced in version 2.5.
         The CLI library does not implement it at present.
-        It is only managed by the automatic documentation generation (see <a class="link" href="#xmlres.cli2help" title="4.9. Automatic documentation generation">Automatic documentation generation</a>),
+        It is only managed by the automatic documentation generation (see <a class="link" href="#xmlres.cli2help" title="4.10. Automatic documentation generation">Automatic documentation generation</a>),
         and should be implemented for real in latter versions of the library.
         This attribute may receive the <code class="sgmltag-attvalue">1</code> or the <code class="sgmltag-attvalue">unbounded</code> value.
         It indicates the maximum number of times this <code class="sgmltag-element">tag</code> link can be followed syntaxically speaking.
@@ -1327,7 +1331,7 @@ add circle green
                 The <span class="command"><strong>quit</strong></span> command directly quits the CLI.</li></ol></div><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 
                     
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="my-config"&gt;
  &lt;keyword string="show"&gt;
   &lt;keyword string="ip"&gt;
@@ -1407,9 +1411,58 @@ add circle green
         Advanced menu features are discussed in the advanced section.
         Please refer to the <a class="link" href="#adv.menus" title="6.2. Advanced menu management">Advanced menu management</a> section for more information.
         </div><div class="blockquote"><blockquote class="blockquote">
+        I can define my own command lines, organize them in menus.
+        Pretty well!
+        Now, how can I handle comment lines?
+        Should I define something like a dummy command line for that?
+        </blockquote></div><p>
+        Could be, but a dedicated comment line pattern feature has been designed for that purpose,
+        which makes it easier and smarter by the way.
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="xmlres.comment"></a>4.8. <code class="sgmltag-element">comment</code>
+                - Define comment line patterns</h3></div></div></div><p>
+        In addition to regular command lines, defined as sequences of keywords and parameters,
+        the XML resource file provides a way to easily define comment line patterns.
+        </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+        This feature has been added in the version 2.9 of the CLI toolkit.
+        </div><div class="example"><a name="eg.comment"></a><p class="title"><b>Example 21. Define comment line patterns</b></p><div class="example-contents"><p>
+            Comment line patterns are defined through <code class="sgmltag-element">comment</code> elements directly within the <code class="sgmltag-element">cli</code> root node.
+            </p><p>
+            This example defines three comment line patterns:
+            lines starting with '#', '//' or '--' will be interpreted as comment lines.
+            </p><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="Comments"&gt;
+ &lt;!-- Comment line patterns --&gt;
+ &lt;comment start="#"/&gt;
+ &lt;comment start="//"/&gt;
+ &lt;comment start="--"/&gt;
+ &lt;!-- Regular command lines --&gt;
+ &lt;keyword string="hello"&gt;&lt;help lang="en"&gt;Say hello to somebody&lt;/help&gt;
+  &lt;param type="string" id="who"&gt;&lt;help lang="en"&gt;Somebody's name&lt;/help&gt;
+   &lt;endl&gt;&lt;/endl&gt;
+  &lt;/param&gt;
+ &lt;/keyword&gt;
+&lt;/cli&gt;
+</pre><p>
+            In as much as these patterns are applicable to all the menus and sub-menus of the CLI,
+            they are reminded to the user in the beginning of the help message of any menu:
+            </p><pre class="programlisting">
+Comments&gt;help
+  Start with '#', '//' or '--' for a comment line
+  cls             Clean screen
+  exit            Exit menu 'Comments'
+  hello           Say hello to somebody
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+Comments&gt;
+</pre></div></div><br class="example-break"><p>
+        Comment line patterns apply before the syntax analysis of the command line:
+        if the command line is recognized as a comment, the syntax analysis is not executed.
+        The comment line appears in the history the same as regular command lines do.
+        </p><div class="blockquote"><blockquote class="blockquote">
         Thank you for this detailed documentation.
         Do you provide a schema in order to check automatically this XML resource syntax?
-        </blockquote></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="xmlres.schema"></a>4.8. Schema checking</h3></div></div></div><p>
+        </blockquote></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="xmlres.schema"></a>4.9. Schema checking</h3></div></div></div><p>
         This toolkit is provided with two schema files: <code class="filename">cli.xsd</code> and <code class="filename">cli.rng</code>.
         </p><p>
         <code class="filename">cli.xsd</code> is a regular W3C Xml Schema 1.0 file.
@@ -1417,45 +1470,34 @@ add circle green
         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="sgmltag-element">menu[@name]</code> / <code class="sgmltag-element">menu[@ref]</code>
             and <code class="sgmltag-element">tag[@id]</code> / <code class="sgmltag-element">tag[@ref]</code> elements distinction,</li><li class="listitem"><code class="sgmltag-element">menu</code> and <code class="sgmltag-element">tag</code> foreign key constraints.</li></ul></div><p>
         However <code class="filename">cli.xsd</code> can be used in order to have a first level of syntax checking.
-        </p><div class="example"><a name="eg.xsd"></a><p class="title"><b>Example 21. Xml Schema validation</b></p><div class="example-contents"><pre class="programlisting">$ xmllint --schema ${CLI_DIR}/tools/cli.xsd --noout my-cli.xml
+        </p><div class="example"><a name="eg.xsd"></a><p class="title"><b>Example 22. Xml Schema validation</b></p><div class="example-contents"><pre class="programlisting">$ xmllint --schema ${CLI_DIR}/tools/cli.xsd --noout my-cli.xml
 my-cli.xml validates</pre></div></div><br class="example-break"><p>
         <code class="filename">cli.rng</code> is a Relax NG schema.
         Relax NG permits the description of elements having the same name but different attributes,
         however it still does not cover all the constraints that should be checked:
         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="sgmltag-element">menu</code> names and <code class="sgmltag-element">tag</code> identifiers unicity,</li><li class="listitem"><code class="sgmltag-element">menu</code> and <code class="sgmltag-element">tag</code> foreign key constraints.</li></ul></div><p>
         But once again, <code class="filename">cli.rng</code> can be used in order to have a first level of syntax checking.
-        </p><div class="example"><a name="eg.rng"></a><p class="title"><b>Example 22. Relax NG validation</b></p><div class="example-contents"><pre class="programlisting">$ xmllint --relaxng ${CLI_DIR}/tools/cli.rng --noout --noout my-cli.xml
+        </p><div class="example"><a name="eg.rng"></a><p class="title"><b>Example 23. Relax NG validation</b></p><div class="example-contents"><pre class="programlisting">$ xmllint --relaxng ${CLI_DIR}/tools/cli.rng --noout --noout my-cli.xml
 my-cli.xml validates</pre></div></div><br class="example-break"><div class="blockquote"><blockquote class="blockquote">
         Great!
         Now I just have to document the CLI for my users.
         </blockquote></div><p>
         Automatic documentation generation may do part of the job for you then.
-        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="xmlres.cli2help"></a>4.9. Automatic documentation generation</h3></div></div></div><p>
-        Since version 2.5, the CLI toolkit is provided with a <code class="filename">cli2help.xsl</code> XSL stylesheet.
-        And since version 2.8, a python tool equivalent <code class="filename">cli2help.py</code> is also provided.
-        These tools generate CLI documentation automatically.
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="xmlres.cli2help"></a>4.10. Automatic documentation generation</h3></div></div></div><p>
+        Since version 2.5, the CLI toolkit is provided with scripts that generate CLI documentation automatically.
         </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-        As discussed in the <a class="link" href="#xslt" title="3.1. Transformation">Transformation</a> section
-        for <code class="filename">cli2cpp.py</code> and <code class="filename">cli2java.py</code>,
-        the python tool works better than the XSL stylesheets,
-        but both technologies are still provided for backward compatibility reasons.
-        </div><div class="example"><a name="eg.cli2help"></a><p class="title"><b>Example 23. <code class="filename">cli2help.xsl</code> / <code class="filename">cli2help.py</code> automatic documentation generation</b></p><div class="example-contents">
+        This documentation generation was originally processed thanks to a <code class="filename">cli2help.xsl</code> XSLT stylesheet.
+        However, in as much as the python script equivalent introduced in version 2.8 works better and faster,
+        this original XSLT stylesheet is still provided within the <code class="filename">${CLI_DIR}/tools/</code> directory, but is now declared deprecated since version 2.9.
+        </div><div class="example"><a name="eg.cli2help"></a><p class="title"><b>Example 24. <code class="filename">cli2help.py</code> automatic documentation generation</b></p><div class="example-contents">
             Based on the following sample <a class="ulink" href="misc/clisample.xml" target="_top">clisample.xml</a> CLI XML resource file,
-            the XSL transformation below automatically generates the given documentation <a class="ulink" href="misc/clisample.html" target="_top">clisample.html</a>.
-            <pre class="programlisting">xsltproc ${CLI_DIR}/tools/cli2help.xsl clisample.xml &gt; clisample.html</pre>
-            or:
-            <pre class="programlisting">python ${CLI_DIR}/tools/cli2help.py clisample.xml &gt; clisample.html</pre></div></div><br class="example-break"><p>
-        The XSL transformation stylesheet has several parameters:
-        </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><code class="varname">STR_Lang</code>:
-                    Documentation language. May be either 'en' or 'fr'. Default is 'en'.</li><li class="listitem"><code class="varname">B_GenerateToc</code>:
-                    Table of content generation. 1 to enable. O to disable. Default is 1.</li><li class="listitem"><code class="varname">B_NumberTitles</code>:
-                    Set chapter numbers to titles. 1 to enable. 0 to disable. Default is 1.</li></ul></div><p>
-        </p><p>
+            the transformation below automatically generates the given documentation <a class="ulink" href="misc/clisample.html" target="_top">clisample.html</a>:
+                <pre class="programlisting">python ${CLI_DIR}/tools/cli2help.py clisample.xml --output clisample.html</pre></div></div><br class="example-break"><p>
         The python tool comes with a <code class="option">--help</code> option:
 </p><pre class="programlisting">
 $ python ${CLI_DIR}/tools/cli2help.py --help
 usage: cli2help [-h] [--version] [--lang LANG] [--toc | --no-toc]
-                [--title-numbers | --no-title-numbers]
+                [--title-numbers | --no-title-numbers] [--output OUTPUT]
                 xml-res
 
 positional arguments:
@@ -1469,6 +1511,8 @@ optional arguments:
   --no-toc            Do not generate table of content.
   --title-numbers     Generate titles with their number.
   --no-title-numbers  Generate titles with no number.
+  --output OUTPUT     Output file (by default the result is printed out in the
+                      standard output)
 </pre><p>
         </p><p>
         This documentation generation is not as clever as a human being,
@@ -1502,7 +1546,13 @@ optional arguments:
     </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ui"></a>5. UI controls</h2></div></div></div><p>
     The CLI library also provides a set of classes that helps displaying long texts or making the user enter additional data.
     These classes are scoped in a <span class="package">ui</span> namespace.
-    </p><div class="informalfigure"><a name="fig.ui.classes"></a><div class="mediaobject"><img src="../doxygen/html/classUI__inherit__graph.png" alt="UI controls: class hierarchy"><div class="caption">UI controls: class hierarchy</div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ui.line"></a>5.1. <code class="classname">Line</code></h3></div></div></div><p>
+    </p><div class="informalfigure"><a name="fig.ui.classes"></a><div class="mediaobject"><img src="../doxygen/html/classUI__inherit__graph.png" alt="UI controls: class hierarchy"><div class="caption">UI controls: class hierarchy</div></div></div><p>
+    <span class="emphasis"><em>Please note!</em></span>
+    The examples in this section are given in the context of a blocking execution integration.
+    If you integrate the CLI library in the <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">non-blocking execution mode</a>,
+    such as the <a class="link" href="#adv.telnet" title="6.1. Telnet"><code class="classname">TelnetServer</code></a> class provided with the library does,
+    you should read through the <a class="link" href="#eg.non-blocking-ui" title="Example 37. Non-blocking execution and UI controls">Non-blocking execution and UI controls</a> example.
+    </p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="ui.line"></a>5.1. <code class="classname">Line</code></h3></div></div></div><p>
         Make the user enter a single text line on request,
         with regular text edition facilities:
             </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">left and right arrows,</li><li class="listitem">HOME and END keys,</li><li class="listitem">backward and forward deletion,</li><li class="listitem">insert and replace modes,</li></ul></div><p>
@@ -1512,12 +1562,13 @@ optional arguments:
         Check <a class="ulink" href="../doxygen/html/classLine.html" target="_top"><code class="classname">C++ doxygen</code></a>
         or <a class="ulink" href="../javadoc/html/cli/ui/Line.html" target="_top"><code class="classname">javadoc</code></a> documentations
         for details on programming interfaces.
-        </p><div class="example"><a name="eg.ui.line"></a><p class="title"><b>Example 24. UI controls - <code class="classname">ui.Line</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+        </p><div class="example"><a name="eg.ui.line"></a><p class="title"><b>Example 25. UI controls - <code class="classname">ui.Line</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_line.h"&lt;/cpp&gt;
  &lt;keyword string="enter"&gt;
   &lt;keyword string="line"&gt;
    &lt;endl&gt;
+    &lt;!-- Note: blocking execution integration only! --&gt;
     &lt;!-- C++ implementation --&gt;
     &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Enter line: ";&lt;/cpp&gt;
     &lt;cpp&gt;cli::ui::Line ui_Line(GetShell(), cli::tk::String(10, ""), 0, 1024);&lt;/cpp&gt;
@@ -1546,12 +1597,13 @@ UI&gt;
         Check <a class="ulink" href="../doxygen/html/classPassword.html" target="_top"><code class="classname">C++ doxygen</code></a>
         or <a class="ulink" href="../javadoc/html/cli/ui/Password.html" target="_top"><code class="classname">javadoc</code></a> documentations
         for details on programming interfaces.
-        </p><div class="example"><a name="eg.ui.password"></a><p class="title"><b>Example 25. UI controls - <code class="classname">ui.Password</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+        </p><div class="example"><a name="eg.ui.password"></a><p class="title"><b>Example 26. UI controls - <code class="classname">ui.Password</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_password.h"&lt;/cpp&gt;
  &lt;keyword string="enter"&gt;
   &lt;keyword string="password"&gt;
    &lt;endl&gt;
+    &lt;!-- Note: blocking execution integration only! --&gt;
     &lt;!-- C++ implementation --&gt;
     &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Enter password: ";&lt;/cpp&gt;
     &lt;cpp&gt;cli::ui::Password ui_Password(GetShell(), true, 0, 1024);&lt;/cpp&gt;
@@ -1581,12 +1633,13 @@ UI&gt;
         Check <a class="ulink" href="../doxygen/html/classInt.html" target="_top"><code class="classname">C++ doxygen</code></a>
         or <a class="ulink" href="../javadoc/html/cli/ui/Int.html" target="_top"><code class="classname">javadoc</code></a> documentations
         for details on programming interfaces.
-        </p><div class="example"><a name="eg.ui.int"></a><p class="title"><b>Example 26. UI controls - <code class="classname">ui.Int</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+        </p><div class="example"><a name="eg.ui.int"></a><p class="title"><b>Example 27. UI controls - <code class="classname">ui.Int</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_int.h"&lt;/cpp&gt;
  &lt;keyword string="enter"&gt;
   &lt;keyword string="int"&gt;
    &lt;endl&gt;
+    &lt;!-- Note: blocking execution integration only! --&gt;
     &lt;!-- C++ implementation --&gt;
     &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Enter integer number: ";&lt;/cpp&gt;
     &lt;cpp&gt;cli::ui::Int ui_Int(GetShell(), 0, -1000, 1000);&lt;/cpp&gt;
@@ -1616,12 +1669,13 @@ UI&gt;
         Check <a class="ulink" href="../doxygen/html/classFloat.html" target="_top"><code class="classname">C++ doxygen</code></a>
         or <a class="ulink" href="../javadoc/html/cli/ui/Float.html" target="_top"><code class="classname">javadoc</code></a> documentations
         for details on programming interfaces.
-        </p><div class="example"><a name="eg.ui.float"></a><p class="title"><b>Example 27. UI controls - <code class="classname">ui.Float</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+        </p><div class="example"><a name="eg.ui.float"></a><p class="title"><b>Example 28. UI controls - <code class="classname">ui.Float</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_float.h"&lt;/cpp&gt;
  &lt;keyword string="enter"&gt;
   &lt;keyword string="float"&gt;
    &lt;endl&gt;
+    &lt;!-- Note: blocking execution integration only! --&gt;
     &lt;!-- C++ implementation --&gt;
     &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Enter floating point number: ";&lt;/cpp&gt;
     &lt;cpp&gt;cli::ui::Float ui_Float(GetShell(), 0, - 1000.0, 1000.0);&lt;/cpp&gt;
@@ -1651,12 +1705,13 @@ UI&gt;
         Check <a class="ulink" href="../doxygen/html/classYesNo.html" target="_top"><code class="classname">C++ doxygen</code></a>
         or <a class="ulink" href="../javadoc/html/cli/ui/YesNo.html" target="_top"><code class="classname">javadoc</code></a> documentations
         for details on programming interfaces.
-        </p><div class="example"><a name="eg.ui.yesno"></a><p class="title"><b>Example 28. UI controls - <code class="classname">ui.YesNo</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+        </p><div class="example"><a name="eg.ui.yesno"></a><p class="title"><b>Example 29. UI controls - <code class="classname">ui.YesNo</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_yesno.h"&lt;/cpp&gt;
  &lt;keyword string="enter"&gt;
   &lt;keyword string="yesno"&gt;
    &lt;endl&gt;
+    &lt;!-- Note: blocking execution integration only! --&gt;
     &lt;!-- C++ implementation --&gt;
     &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Please select [YES/no]: ";&lt;/cpp&gt;
     &lt;cpp&gt;cli::ui::YesNo ui_YesNo(GetShell(), true);&lt;/cpp&gt;
@@ -1687,7 +1742,7 @@ UI&gt;
         Check <a class="ulink" href="../doxygen/html/classChoice.html" target="_top"><code class="classname">C++ doxygen</code></a>
         or <a class="ulink" href="../javadoc/html/cli/ui/Choice.html" target="_top"><code class="classname">javadoc</code></a> documentations
         for details on programming interfaces.
-        </p><div class="example"><a name="eg.ui.choice"></a><p class="title"><b>Example 29. UI controls - <code class="classname">ui.Choice</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+        </p><div class="example"><a name="eg.ui.choice"></a><p class="title"><b>Example 30. UI controls - <code class="classname">ui.Choice</code></b></p><div class="example-contents"><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_choice.h"&lt;/cpp&gt;
  &lt;cpp option="include"&gt;#include "cli/string_device.h"&lt;/cpp&gt;
@@ -1695,6 +1750,7 @@ UI&gt;
   &lt;keyword string="choice"&gt;
    &lt;param type="int" id="count"&gt;
     &lt;endl&gt;
+     &lt;!-- Note: blocking execution integration only! --&gt;
      &lt;!-- C++ implementation --&gt;
      &lt;cpp&gt;&lt;out/&gt; &lt;&lt; "Select choice: ";&lt;/cpp&gt;
      &lt;cpp&gt;cli::tk::Queue&lt;cli::ResourceString&gt; tk_Choices(&lt;value-of param="count"/&gt;);&lt;/cpp&gt;
@@ -1736,7 +1792,7 @@ UI&gt;
         for details on programming interfaces.
         Basically, the text is prepared in the <code class="classname">OutputDevice</code> text member,
         then the <code class="classname">More</code> execution is invoked for text display.
-        </p><div class="example"><a name="eg.ui.more"></a><p class="title"><b>Example 30. UI controls - <code class="classname">ui.More</code></b></p><div class="example-contents">
+        </p><div class="example"><a name="eg.ui.more"></a><p class="title"><b>Example 31. UI controls - <code class="classname">ui.More</code></b></p><div class="example-contents">
             C++ code:
                 <pre class="programlisting">static void FillText(const cli::OutputDevice&amp; CLI_UI, const unsigned int UI_Count) {
     for (unsigned int i=1; (i&lt;=UI_Count) &amp;&amp; (i&lt;1024); i++) {
@@ -1759,7 +1815,7 @@ UI&gt;
 </pre>
             CLI XML resource file:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_more.h"&lt;/cpp&gt;
  &lt;cpp option="include"&gt;#include "ui_sample_text.h"&lt;/cpp&gt;
@@ -1850,10 +1906,10 @@ UI&gt;
         or <a class="ulink" href="../javadoc/html/cli/ui/Less.html" target="_top"><code class="classname">javadoc</code></a> documentations
         for details on programming interfaces.
         A <code class="classname">Less</code> object is prepared the same as a <code class="classname">More</code> object (see <a class="link" href="#ui.more" title="5.7. More">previous section</a>).
-        </p><div class="example"><a name="eg.ui.less"></a><p class="title"><b>Example 31. UI controls - <code class="classname">ui.Less</code></b></p><div class="example-contents">
+        </p><div class="example"><a name="eg.ui.less"></a><p class="title"><b>Example 32. UI controls - <code class="classname">ui.Less</code></b></p><div class="example-contents">
             CLI XML resource file:
                 
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="UI"&gt;
  &lt;cpp option="include"&gt;#include "cli/ui_less.h"&lt;/cpp&gt;
  &lt;cpp option="include"&gt;#include "ui_sample_text.h"&lt;/cpp&gt;
@@ -1929,10 +1985,10 @@ UI&gt;
         </div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
         Please note that <code class="classname">Less</code> display also depends on the implementation of the "clean screen" feature.
         If cleaning the screen is nothing but the default implementation (a couple of blank lines printed out),
-        a simple <code class="classname">More</code> display may be preferrable then.
-        Therefore, it might be a good idea to check the "has true cls" screen characteristic
-        (see <a class="ulink" href="../doxygen/html/classOutputDevice_1_1ScreenInfo.html#85446e0c4d94e4d8aeb75722d0c2b26d" target="_top">doxygen</a>
-         or <a class="ulink" href="../javadoc/html/cli/OutputDevice.ScreenInfo.html#hasTrueCls()" target="_top">javadoc</a>)
+        a simple <code class="classname">More</code> display may be preferable then.
+        Therefore, it might be a good idea to check the screen implements a "true" "clean screen" feature
+        (see <a class="ulink" href="../doxygen/html/classOutputDevice_1_1ScreenInfo.html#a3c49dbeabaa5399578de13f7642ba620" target="_top">doxygen</a>
+         or <a class="ulink" href="../javadoc/html/cli/OutputDevice.ScreenInfo.html#getbTrueCls--" target="_top">javadoc</a>)
         before using a <code class="classname">Less</code> object.
         If the current output device does not implement an efficient "clean screen" feature, then you shall use a <code class="classname">More</code> object instead.
         </div></div><div class="blockquote"><blockquote class="blockquote">
@@ -1952,7 +2008,7 @@ UI&gt;
         Let's start with telnet implementation.
         The CLI library provides <code class="classname">TelnetServer</code> and <code class="classname">TelnetConnection</code> classes.
         These classes allow you to easily make your CLI run with network connections.
-        </p><div class="example"><a name="eg.telnet"></a><p class="title"><b>Example 32. Simple telnet server</b></p><div class="example-contents"><p>
+        </p><div class="example"><a name="eg.telnet"></a><p class="title"><b>Example 33. Simple telnet server</b></p><div class="example-contents"><p>
             First of all, inherit from <code class="classname">TelnetServer</code>.
             All you have to do is to override
             <code class="function">onNewConnection</code> to allocate resources for new network connections,
@@ -1985,16 +2041,19 @@ cli_Server.startServer(); // Blocking call
             The <code class="classname">TelnetServer</code> and <code class="classname">TelnetConnection</code> interfaces have been modified in 2.7 and 2.8 consequent versions.
             Sorry if those changes disturb integrations of some of your software with prior versions of the library,
             but note that the motivation for those modifications is real improvements:
-            </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">CLI 2.7 improvements</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Redesign of <code class="classname">TelnetConnection</code>, made as <a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">non blocking</a>
+            </p><div class="variablelist"><dl class="variablelist"><dt><span class="term">CLI 2.7 improvements</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Redesign of <code class="classname">TelnetConnection</code>, made as <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">non-blocking</a>
                         for a better management of parallel connections.</li><li class="listitem">Redesign of <code class="classname">TelnetServer</code>, made virtual,
-                        so that the user software can create as many shells and clis for each connection.</li></ul></div></dd><dt><span class="term">CLI 2.8 improvements</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Redesign again of <code class="classname">TelnetServer</code>, due to <a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">execution contexts improvements </a>,
+                        so that the user software can create as many shells and clis for each connection.</li></ul></div></dd><dt><span class="term">CLI 2.8 improvements</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Redesign again of <code class="classname">TelnetServer</code>, due to <a class="link" href="#adv.exec-ctx" title="6.8. Execution contexts">execution contexts improvements </a>,
                         so that the user software can create shells and clis, but also any other kind of execution contexts.</li></ul></div></dd></dl></div><p>
             </p></div><p>
             Start your server, and connect to it thanks to <span class="application">teraterm</span> for instance:
                 </p><div class="informalfigure"><a name="fig.telnet.teraterm"></a><div class="mediaobject"><img src="misc/tterm-telnet.png" alt="teraterm telnet settings."><div class="caption"><span class="application">teraterm</span> telnet settings</div></div></div><p>
             </p></div></div><br class="example-break"><p>
-        If you need the server not to be blocking for your application,
-        up to you to thread the thing.
+        <span class="emphasis"><em>Please note!</em></span>
+        Even though the <code class="function">TelnetServer.startServer</code> call is a blocking call,
+        the <code class="classname">TelnetConnection</code> class implies a <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">non-blocking execution integration</a>.
+        Should you be using <a class="link" href="#ui" title="5. UI controls">UI controls</a>,
+        please read through the <a class="link" href="#eg.non-blocking-ui" title="Example 37. Non-blocking execution and UI controls">Non-blocking execution and UI controls</a> example.
         </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.menus"></a>6.2. Advanced menu management</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="adv.menus.handlers"></a>6.2.1. <code class="sgmltag-element">handler</code>
                     - <code class="sgmltag-element">menu</code> elements special features</h4></div></div></div><p>
             <code class="sgmltag-element">menu</code> elements may be provided with <code class="sgmltag-element">handler</code> elements.
@@ -2014,7 +2073,7 @@ cli_Server.startServer(); // Blocking call
                     Instead of copy/paste the menu, just changing the name of it, for each item,
                     you may use the same menu with a <code class="sgmltag-attvalue">prompt</code> handler.
                 </dd></dl></div><p>
-            </p><div class="example"><a name="eg.menus.handlers"></a><p class="title"><b>Example 33. Menu handlers</b></p><div class="example-contents">
+            </p><div class="example"><a name="eg.menus.handlers"></a><p class="title"><b>Example 34. Menu handlers</b></p><div class="example-contents">
                 The example below contains one main menu and a sub-menu:
                 <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">The main menu contains a <code class="sgmltag-attvalue">error</code> handler.
                         The code attached is called each time the CLI displays an error.
@@ -2025,7 +2084,7 @@ cli_Server.startServer(); // Blocking call
                         depending on the <code class="sgmltag-attvalue">menu-id</code> parameter value set previously.</li></ol></div><div class="informaltable"><table border="0"><colgroup><col><col></colgroup><tbody><tr><td valign="top">
 
                         
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="menu-handler"&gt;
  &lt;cpp option="include"&gt;#include "cli/string_device.h"&lt;/cpp&gt;
  &lt;cpp option="head"&gt;static int MenuId = 0;&lt;/cpp&gt;
@@ -2142,7 +2201,7 @@ cli_Server.startServer(); // Blocking call
             we would rather expect the application to print out an error message and <span class="emphasis"><em>not</em></span> enter the configuration menu.
             </p><p>
             The example below explains how to implement such behaviour:
-            </p><div class="example"><a name="eg.menus.cpp"></a><p class="title"><b>Example 34. Menu management from native code</b></p><div class="example-contents">
+            </p><div class="example"><a name="eg.menus.cpp"></a><p class="title"><b>Example 35. Menu management from native code</b></p><div class="example-contents">
                 The example below contains one main menu and a sub-menu,
                 however the sub-menu is not directly accessed thanks to a <code class="sgmltag-element">menu</code> element.
                 Native code methods are used instead:
@@ -2169,7 +2228,7 @@ cli_Server.startServer(); // Blocking call
                     </td><td></td><td valign="top">
 
                         
-<pre class="programlisting">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+<pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="menu-cpp"&gt;
  &lt;keyword string="menu"&gt;
   &lt;param id="menu-id" type="int"&gt;
@@ -2210,12 +2269,12 @@ cli_Server.startServer(); // Blocking call
                     </td></tr></tbody></table></div></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.shellfeatures"></a>6.3. <code class="classname">Shell</code> advanced features</h3></div></div></div><p>
         The features described in the table below are available from native code.
         Please refer to <span class="productname">doxygen</span> or <span class="productname">javadoc</span> documentation for additional information.
-        </p><div class="table"><a name="table.shellfeatures"></a><p class="title"><b>Table 1. <code class="classname">Shell</code> advanced features</b></p><div class="table-contents"><table summary="Shell advanced features" border="1"><colgroup><col align="left" class="description"><col align="left" class="cpp"><col align="left" class="java"></colgroup><thead><tr><th align="left">Description</th><th align="left">C++</th><th align="left">Java</th></tr></thead><tbody><tr><td colspan="3" align="left">Input / output management</td></tr><tr><td align="left">Input stream access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#add8486199a73f2bb56830ed003dcb321" target="_top"><code class="function">ExecutionContext::GetInput</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getInput()" target="_top"><code class="function">ExecutionContext.Interface.getInput</code></a></td></tr><tr><td align="left">Output stream access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a6fd7a732424cb3fd253079bbf704ebef" target="_top"><code class="function">ExecutionContext::GetStream</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getStream(int)" target="_top"><code class="function">ExecutionContext.Interface.getStream</code></a></td></tr><tr><td align="left">Output stream positioning</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#aaf750f141101e90f2c78cb35fe825605" target="_top"><code class="function">ExecutionContext::SetStream</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#setStream(int,%20cli.OutputDevice.Interface)" target="_top"><code class="function">ExecutionContext.Interface.setStream</code></a></td></tr><tr><td align="left">Enabled/disabled stream accessor</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a5cd3152dd5d07393cb4ff775f8c337cb" target="_top"><code class="function">ExecutionContext::StreamEnabled</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#streamEnabled(int)" target="_top"><code class="function">ExecutionContext.Interface.streamEnabled</code></a></td></tr><tr><td align="left">Enable/disable stream</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#aef973dee56940366895986e63f276f81" target="_top"><code class="function">ExecutionContext::EnableStream</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#enableStream(int,%20boolean)" target="_top"><code class="function">ExecutionContext.Interface.enableStream</code></a></td></tr><tr><td colspan="3" align="left">Presentation</td></tr><tr><td align="left">Welcome message setting</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a8778b8def7fbd6df15c9e615530097d4" target="_top"><code class="function">Shell::SetWelcomeMessage</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#setWelcomeMessage(cli.ResourceString)" target="_top"><code class="function">Shell.setWelcomeMessage</code></a></td></tr><tr><td align="left">Bye message setting</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#ae80179cef20af1e277ccec1d78d6b775" target="_top"><code class="function">Shell::SetByeMessage</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#setByeMessage(cli.ResourceString)" target="_top"><code class="function">Shell.setByeMessage</code></a></td></tr><tr><td align="left">Prompt message positioning</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#af4e5a2eaa80d146926bcde65351a3e4d" target="_top"><code class="function">Shell::SetPrompt</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#setPrompt(cli.ResourceString)" target="_top"><code class="function">Shell.setPrompt</code></a></td></tr><tr><td align="left">Error formatting</td><td colspan="2" align="left">Deprecated since version 2.6, use <a class="link" href="#adv.menus.handlers" title="6.2.1. handler - menu elements special features">error handlers</a> instead.</td></tr><tr><td align="left">Help margin accessor</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a88ecb7b84507a6a0a328bbad2f7dc546" target="_top"><code class="function">Shell::GetHelpMargin</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#getHelpMargin()" target="_top"><code class="function">Shell.getHelpMargin</code></a></td></tr><tr><td align="left">Help offset accessor</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#ab634fad29d7130768a0d035b4b84fa5c" target="_top"><code class="function">Shell::GetHelpOffset</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#getHelpOffset()" target="_top"><code class="function">Shell.getHelpOffset</code></a></td></tr><tr><td colspan="3" align="left">Language settings</td></tr><tr><td align="left">Language setting</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a3af7157b8ee0980415614fe68a84fe5c" target="_top"><code class="function">ExecutionContext::SetLang</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#setLang(int)" target="_top"><code class="function">ExecutionContext.Interface.setLang</code></a></td></tr><tr><td align="left">Language access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a17c4b76a71977d05f72b6e8b54dfb5a1" target="_top"><code class="function">ExecutionContext::GetLang</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getLang()" target="_top"><code class="function">ExecutionContext.Interface.getLang</code></a></td></tr><tr><td colspan="3" align="left">Beep settings</td></tr><tr><td align="left">Beep configuration setting</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a254d057dcc0dfe1a2373bdb2b9e0bb2f" target="_top"><code class="function">ExecutionContext::SetBeep</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#setBeep(boolean)" target="_top"><code class="function">ExecutionContext.Interface.setBeep</code></a></td></tr><tr><td align="left">Beep configuration access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#af30a9621e3b3aaf3a4c11d2283697a38" target="_top"><code class="function">ExecutionContext::GetBeep</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getBeep()" target="_top"><code class="function">ExecutionContext.Interface.getBeep</code></a></td></tr><tr><td colspan="3" align="left">Execution</td></tr><tr><td align="left">Retrieves the current menu (or one of those in the current menu stack)</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#acd89663e4920f82781e067924ebb0d0c" target="_top"><code class="function">Shell::GetCurrentMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#getCurrentMenu(int)" target="_top"><code class="function">Shell.getCurrentMenu</code></a></td></tr><tr><td align="left">Enters a menu</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#afc960160c73e316a462e3dafa76c083e" target="_top"><code class="function">Shell::EnterMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#enterMenu(cli.Menu,%20boolean)" target="_top"><code class="function">Shell.enterMenu</code></a></td></tr><tr><td align="left">Exits the current menu</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#ac155dd1bbf445626efb288e3305d7bcb" target="_top"><code class="function">Shell::ExitMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#exitMenu(boolean)" target="_top"><code class="function">Shell.exitMenu</code></a></td></tr><tr><td align="left">Terminates the shell</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a3d082082d4a4ee56c6d4e82564ae868b" target="_top"><code class="function">Shell::Quit</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#quit()" target="_top"><code class="function">Shell.quit</code></a></td></tr><tr><td colspan="3" align="left">Basic command access</td></tr><tr><td align="left">Displays help depending on the context of the current line</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a10d22c619c06ef903ffde6153cf7ec1e" target="_top"><code class="function">Shell::DisplayHelp</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#displayHelp()" target="_top"><code class="function">Shell.displayHelp</code></a></td></tr><tr><td align="left">Prints the working menu</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a9e18d5399d3855c50f1d54015e09bc86" target="_top"><code class="function">Shell::PrintWorkingMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#printWorkingMenu()" target="_top"><code class="function">Shell.printWorkingMenu</code></a></td></tr><tr><td align="left">Cleans the screen</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a6b6751262f2ee8f36302902747ed56a2" target="_top"><code class="function">Shell::CleanScreen</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#cleanScreen(boolean)" target="_top"><code class="function">Shell.cleanScreen</code></a></td></tr><tr><td colspan="3" align="left">Debug</td></tr><tr><td align="left">Configuration menu enabling</td><td align="left"><a class="ulink" href="../doxygen/html/classCli.html#afcef4a4232b6a21d8a6262adb51b8b49" target="_top"><code class="function">Cli::EnableConfigMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Cli.html#enableConfigMenu(boolean)" target="_top"><code class="function">Cli.enableConfigMenu</code></a></td></tr><tr><td align="left">Configuration menu enabled status</td><td align="left"><a class="ulink" href="../doxygen/html/classCli.html#a2dba8bf5e11a92c68324cf77c59413a2" target="_top"><code class="function">Cli::IsConfigMenuEnabled</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Cli.html#isConfigMenuEnabled()" target="_top"><code class="function">Cli.isConfigMenuEnabled</code></a></td></tr></tbody></table></div></div><br class="table-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+        </p><div class="table"><a name="table.shellfeatures"></a><p class="title"><b>Table 1. <code class="classname">Shell</code> advanced features</b></p><div class="table-contents"><table summary="Shell advanced features" border="1"><colgroup><col align="left" class="description"><col align="left" class="cpp"><col align="left" class="java"></colgroup><thead><tr><th align="left">Description</th><th align="left">C++</th><th align="left">Java</th></tr></thead><tbody><tr><td colspan="3" align="left">Input / output management</td></tr><tr><td align="left">Input stream access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#adb907488f8925f3ed1c2035d173bc3fd" target="_top"><code class="function">ExecutionContext::GetInput</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getInput--" target="_top"><code class="function">ExecutionContext.Interface.getInput</code></a></td></tr><tr><td align="left">Output stream access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a13eaf42554eef03a721972a47186f21e" target="_top"><code class="function">ExecutionContext::GetStream</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getStream-int-" target="_top"><code class="function">ExecutionContext.Interface.getStream</code></a></td></tr><tr><td align="left">Output stream positioning</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#aaf750f141101e90f2c78cb35fe825605" target="_top"><code class="function">ExecutionContext::SetStream</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#setStream-int-cli.OutputDevice.Interface-" target="_top"><code class="function">ExecutionContext.Interface.setStream</code></a></td></tr><tr><td align="left">Enabled/disabled stream accessor</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#aeb117be647bbdad7393b5b1e39d58ede" target="_top"><code class="function">ExecutionContext::StreamEnabled</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#streamEnabled-int-" target="_top"><code class="function">ExecutionContext.Interface.streamEnabled</code></a></td></tr><tr><td align="left">Enable/disable stream</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#aef973dee56940366895986e63f276f81" target="_top"><code class="function">ExecutionContext::EnableStream</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#enableStream-int-boolean-" target="_top"><code class="function">ExecutionContext.Interface.enableStream</code></a></td></tr><tr><td colspan="3" align="left">Presentation</td></tr><tr><td align="left">Welcome message setting</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a8778b8def7fbd6df15c9e615530097d4" target="_top"><code class="function">Shell::SetWelcomeMessage</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#setWelcomeMessage-cli.ResourceString-" target="_top"><code class="function">Shell.setWelcomeMessage</code></a></td></tr><tr><td align="left">Bye message setting</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#ae80179cef20af1e277ccec1d78d6b775" target="_top"><code class="function">Shell::SetByeMessage</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#setByeMessage-cli.ResourceString-" target="_top"><code class="function">Shell.setByeMessage</code></a></td></tr><tr><td align="left">Prompt message positioning</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#af4e5a2eaa80d146926bcde65351a3e4d" target="_top"><code class="function">Shell::SetPrompt</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#setPrompt-cli.ResourceString-" target="_top"><code class="function">Shell.setPrompt</code></a></td></tr><tr><td align="left">Error formatting</td><td colspan="2" align="left">Deprecated since version 2.6, use <a class="link" href="#adv.menus.handlers" title="6.2.1. handler - menu elements special features">error handlers</a> instead.</td></tr><tr><td align="left">Help margin accessor</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a919e7f28ceb3f3ff4ecd191d926ace65" target="_top"><code class="function">Shell::GetHelpMargin</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#getHelpMargin--" target="_top"><code class="function">Shell.getHelpMargin</code></a></td></tr><tr><td align="left">Help offset accessor</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a1db4057c254faa3290f4b05ed01ad7ca" target="_top"><code class="function">Shell::GetHelpOffset</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#getHelpOffset--" target="_top"><code class="function">Shell.getHelpOffset</code></a></td></tr><tr><td colspan="3" align="left">Language settings</td></tr><tr><td align="left">Language setting</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a3af7157b8ee0980415614fe68a84fe5c" target="_top"><code class="function">ExecutionContext::SetLang</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#setLang-int-" target="_top"><code class="function">ExecutionContext.Interface.setLang</code></a></td></tr><tr><td align="left">Language access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#abcf2b0beab1d4efc4b65de3289c5f3f2" target="_top"><code class="function">ExecutionContext::GetLang</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getLang--" target="_top"><code class="function">ExecutionContext.Interface.getLang</code></a></td></tr><tr><td colspan="3" align="left">Beep settings</td></tr><tr><td align="left">Beep configuration setting</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a254d057dcc0dfe1a2373bdb2b9e0bb2f" target="_top"><code class="function">ExecutionContext::SetBeep</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#setBeep-boolean-" target="_top"><code class="function">ExecutionContext.Interface.setBeep</code></a></td></tr><tr><td align="left">Beep configuration access</td><td align="left"><a class="ulink" href="../doxygen/html/classExecutionContext.html#a4b531a30f8abab0b6ece37eff5b5f798" target="_top"><code class="function">ExecutionContext::GetBeep</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/ExecutionContext.Interface.html#getBeep--" target="_top"><code class="function">ExecutionContext.Interface.getBeep</code></a></td></tr><tr><td colspan="3" align="left">Execution</td></tr><tr><td align="left">Retrieves the current menu (or one of those in the current menu stack)</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a2a2d05ec7a5c7302d548dd6d064be127" target="_top"><code class="function">Shell::GetCurrentMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#getCurrentMenu-int-" target="_top"><code class="function">Shell.getCurrentMenu</code></a></td></tr><tr><td align="left">Enters a menu</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#afc960160c73e316a462e3dafa76c083e" target="_top"><code class="function">Shell::EnterMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#enterMenu-cli.Menu-boolean-" target="_top"><code class="function">Shell.enterMenu</code></a></td></tr><tr><td align="left">Exits the current menu</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#ac155dd1bbf445626efb288e3305d7bcb" target="_top"><code class="function">Shell::ExitMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#exitMenu-boolean-" target="_top"><code class="function">Shell.exitMenu</code></a></td></tr><tr><td align="left">Terminates the shell</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a3d082082d4a4ee56c6d4e82564ae868b" target="_top"><code class="function">Shell::Quit</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#quit--" target="_top"><code class="function">Shell.quit</code></a></td></tr><tr><td colspan="3" align="left">Basic command access</td></tr><tr><td align="left">Displays help depending on the context of the current line</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a10d22c619c06ef903ffde6153cf7ec1e" target="_top"><code class="function">Shell::DisplayHelp</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#displayHelp--" target="_top"><code class="function">Shell.displayHelp</code></a></td></tr><tr><td align="left">Prints the working menu</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a9e18d5399d3855c50f1d54015e09bc86" target="_top"><code class="function">Shell::PrintWorkingMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#printWorkingMenu--" target="_top"><code class="function">Shell.printWorkingMenu</code></a></td></tr><tr><td align="left">Cleans the screen</td><td align="left"><a class="ulink" href="../doxygen/html/classShell.html#a6b6751262f2ee8f36302902747ed56a2" target="_top"><code class="function">Shell::CleanScreen</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Shell.html#cleanScreen-boolean-" target="_top"><code class="function">Shell.cleanScreen</code></a></td></tr><tr><td colspan="3" align="left">Debug</td></tr><tr><td align="left">Configuration menu enabling</td><td align="left"><a class="ulink" href="../doxygen/html/classCli.html#afcef4a4232b6a21d8a6262adb51b8b49" target="_top"><code class="function">Cli::EnableConfigMenu</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Cli.html#enableConfigMenu-boolean-" target="_top"><code class="function">Cli.enableConfigMenu</code></a></td></tr><tr><td align="left">Configuration menu enabled status</td><td align="left"><a class="ulink" href="../doxygen/html/classCli.html#a44d7207178aeeaed14fb26ba6fe10556" target="_top"><code class="function">Cli::IsConfigMenuEnabled</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/Cli.html#isConfigMenuEnabled--" target="_top"><code class="function">Cli.isConfigMenuEnabled</code></a></td></tr></tbody></table></div></div><br class="table-break"><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
         You may notice that a couple of the features above are directly available from the base <code class="classname">ExecutionContext</code>,
         and not only from the <code class="classname">Shell</code> class.
         Indeed, the generic <code class="classname">ExecutionContext</code> class, new in version 2.8,
         gathers many useful features, that were implemented in the <code class="classname">Shell</code> class in former versions,
-        but for any kind of <a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">execution context</a> now.
+        but for any kind of <a class="link" href="#adv.exec-ctx" title="6.8. Execution contexts">execution context</a> now.
         </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.traces"></a>6.4. Traces</h3></div></div></div><p>
         The CLI library has an internal traces system.
         All traces are attached to a class of traces.
@@ -2266,17 +2325,17 @@ cli_Server.startServer(); // Blocking call
                 </p><div class="table"><a name="table.OutputDevice"></a><p class="title"><b>Table 2. Output device handlers</b></p><div class="table-contents"><p>
                     See <a class="ulink" href="../doxygen/html/classOutputDevice.html" target="_top"><code class="classname">cli::OutputDevice</code></a> for C++,
                     <a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html" target="_top"><code class="classname">cli.OutputDevice.Java</code></a> for Java.
-                    </p><table summary="Output device handlers" border="1"><colgroup><col align="left" class="cpp"><col align="left" class="java"><col align="left" class="mandatory"><col align="left" class="description"></colgroup><thead><tr><th align="left">C++</th><th align="left">Java</th><th align="left"> </th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#0c933e5b3de0d0e48dcbd4ba56b7f147" target="_top"><code class="function">OpenDevice</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#openDevice()" target="_top"><code class="function">openDevice</code></a></td><td align="left">Mandatory</td><td align="left">
+                    </p><table summary="Output device handlers" border="1"><colgroup><col align="left" class="cpp"><col align="left" class="java"><col align="left" class="mandatory"><col align="left" class="description"></colgroup><thead><tr><th align="left">C++</th><th align="left">Java</th><th align="left"> </th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a0c933e5b3de0d0e48dcbd4ba56b7f147" target="_top"><code class="function">OpenDevice</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#openDevice--" target="_top"><code class="function">openDevice</code></a></td><td align="left">Mandatory</td><td align="left">
                                 <p>
                                 Device opening handler.
                                 This is the place for device initializations.
                                 </p>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#4a3680bb550c7cb6b08f1cef6124f3c2" target="_top"><code class="function">CloseDevice</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#closeDevice()" target="_top"><code class="function">closeDevice</code></a></td><td align="left">Mandatory</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a4a3680bb550c7cb6b08f1cef6124f3c2" target="_top"><code class="function">CloseDevice</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#closeDevice--" target="_top"><code class="function">closeDevice</code></a></td><td align="left">Mandatory</td><td align="left">
                                 <p>
                                 Device closure handler.
                                 Free resources allocated in <code class="function">OpenDevice</code>.
                                 </p>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a4653710e8f6f3d9bd53cdfec4fe253d" target="_top"><code class="function">PutString</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#put(java.lang.String)" target="_top"><code class="function">put</code></a></td><td align="left">Mandatory</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a06882998b716d570cf0e798f09bf01ca" target="_top"><code class="function">PutString</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#put-java.lang.String-" target="_top"><code class="function">put</code></a></td><td align="left">Mandatory</td><td align="left">
                                 <p>
                                 Character output handler.
                                 </p>
@@ -2292,17 +2351,17 @@ cli_Server.startServer(); // Blocking call
                                 It is up to the sub-classes to trap <code class="code">'\n'</code> characters in the <code class="function">PutString</code> handler,
                                 and do the appropriate stuff at this time.
                                 </div>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#4b4cc34728972042f3a79e5e63178b7b" target="_top"><code class="function">Beep</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#beep()" target="_top"><code class="function">beep</code></a></td><td align="left">Optional</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a9d9ff77cf230b187cad12b360e874fee" target="_top"><code class="function">Beep</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#beep--" target="_top"><code class="function">beep</code></a></td><td align="left">Optional</td><td align="left">
                                 <p>
                                 Beep handler.
                                 Default implementation outputs a '\a' character.
                                 </p>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#04c4210231e603e0d398698885a9c5de" target="_top"><code class="function">CleanScreen</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#cleanScreen()" target="_top"><code class="function">cleanScreen</code></a></td><td align="left">Optional</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a7f102a70559db29475aacbc42ba2ae44" target="_top"><code class="function">CleanScreen</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#cleanScreen--" target="_top"><code class="function">cleanScreen</code></a></td><td align="left">Optional</td><td align="left">
                                 <p>
                                 Clean screen handler.
                                 Default implementation prints out 50 blank lines.
                                 </p>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#3cec03b49e12d20ee63f5ca9037f67da" target="_top"><code class="function">GetScreenInfo</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#getScreenInfo()" target="_top"><code class="function">getScreenInfo</code></a></td><td align="left">Optional</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a9955f362fc6ac8a9808bbb52bbf46313" target="_top"><code class="function">GetScreenInfo</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#getScreenInfo--" target="_top"><code class="function">getScreenInfo</code></a></td><td align="left">Optional</td><td align="left">
                                 <p>
                                 Screen information:
                                 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Dimensions: width and height,</li><li class="listitem">True cls characteristic:
@@ -2315,7 +2374,7 @@ cli_Server.startServer(); // Blocking call
                                 Thus, overriding this handler is optional, but you'd better do it,
                                 especially if you intend to use <code class="classname">ui::More</code> or <code class="classname">ui::Less</code> objects.
                                 </p>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#3be4874ce99500243bfaeada5091f3f4" target="_top"><code class="function">WouldOutput</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#wouldOutput(cli.OutputDevice.Interface)" target="_top"><code class="function">wouldOutput</code></a></td><td align="left">Optional</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classOutputDevice.html#a3be4874ce99500243bfaeada5091f3f4" target="_top"><code class="function">WouldOutput</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/OutputDevice.Java.html#wouldOutput-cli.OutputDevice.Interface-" target="_top"><code class="function">wouldOutput</code></a></td><td align="left">Optional</td><td align="left">
                                 <p>
                                 Stack overflow protection.
                                 Determines whether the current device would output the given device in any way.
@@ -2333,7 +2392,7 @@ cli_Server.startServer(); // Blocking call
                 </p><div class="table"><a name="table.IODevice"></a><p class="title"><b>Table 3. Input device handlers</b></p><div class="table-contents"><p>
                     See <a class="ulink" href="../doxygen/html/classIODevice.html" target="_top"><code class="classname">cli::IODevice</code></a> for C++,
                     <a class="ulink" href="../javadoc/html/cli/IODevice.Java.html" target="_top"><code class="classname">cli.IODevice</code></a> for Java.
-                    </p><table summary="Input device handlers" border="1"><colgroup><col align="left" class="cpp"><col align="left" class="java"><col align="left" class="mandatory"><col align="left" class="description"></colgroup><thead><tr><th align="left">C++</th><th align="left">Java</th><th align="left"> </th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><a class="ulink" href="../doxygen/html/classIODevice.html#7bafac5c500746f742aa289f33e38feb" target="_top"><code class="function">GetKey</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/IODevice.Java.html#getKey()" target="_top"><code class="function">getKey</code></a></td><td align="left">Mandatory</td><td align="left">
+                    </p><table summary="Input device handlers" border="1"><colgroup><col align="left" class="cpp"><col align="left" class="java"><col align="left" class="mandatory"><col align="left" class="description"></colgroup><thead><tr><th align="left">C++</th><th align="left">Java</th><th align="left"> </th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><a class="ulink" href="../doxygen/html/classIODevice.html#a7bafac5c500746f742aa289f33e38feb" target="_top"><code class="function">GetKey</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/IODevice.Java.html#getKey--" target="_top"><code class="function">getKey</code></a></td><td align="left">Mandatory</td><td align="left">
                                 <p>
                                 Input key capture handler (blocking call).
                                 Base implementation provides regular conversions from <span class="type">char</span> to <span class="type">cli::KEY</span> types.
@@ -2345,13 +2404,13 @@ cli_Server.startServer(); // Blocking call
                                 This routine, with the use of traces (see <a class="link" href="#adv.traces" title="6.4. Traces">Traces</a>),
                                 may help you to integrate your input device implementation.
                                 </div>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classIODevice.html#803bd02bf68fcbb8b40b50548b1cfb8b" target="_top"><code class="function">GetLocation</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/IODevice.Java.html#getLocation()" target="_top"><code class="function">getLocation</code></a></td><td align="left">Optional</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classIODevice.html#acd3e7d746abcdd1da63c4a6ca36f1aa0" target="_top"><code class="function">GetLocation</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/IODevice.Java.html#getLocation--" target="_top"><code class="function">getLocation</code></a></td><td align="left">Optional</td><td align="left">
                                 <p>
                                 Input location.
                                 Return a text indicating where the location of the last character input.
                                 Useful when developing compiler applications.
                                 </p>
-                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classIODevice.html#d03f2900ba78cac1f7e7ba53633ec607" target="_top"><code class="function">WouldInput</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/IODevice.Java.html#wouldInput(cli.IODevice.Interface)" target="_top"><code class="function">wouldInput</code></a></td><td align="left">Optional</td><td align="left">
+                            </td></tr><tr><td align="left"><a class="ulink" href="../doxygen/html/classIODevice.html#ad03f2900ba78cac1f7e7ba53633ec607" target="_top"><code class="function">WouldInput</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/IODevice.Java.html#wouldInput-cli.IODevice.Interface-" target="_top"><code class="function">wouldInput</code></a></td><td align="left">Optional</td><td align="left">
                                 <p>
                                 Stack overflow protection.
                                 Determines whether the current device would input the given device in any way.
@@ -2366,28 +2425,15 @@ cli_Server.startServer(); // Blocking call
                                 </p>
                             </td></tr></tbody></table></div></div><p><br class="table-break">
 
-                </p><div class="table"><a name="table.NonBlockingIODevice"></a><p class="title"><b>Table 4. Non blocking device handlers</b></p><div class="table-contents"><p>
+                </p><div class="table"><a name="table.NonBlockingIODevice"></a><p class="title"><b>Table 4. Non-blocking device handlers</b></p><div class="table-contents"><p>
                     See <a class="ulink" href="../doxygen/html/classNonBlockingIODevice.html" target="_top"><code class="classname">cli::NonBlockingIODevice</code></a> for C++,
                     <a class="ulink" href="../javadoc/html/cli/NonBlockingIODevice.Java.html" target="_top"><code class="classname">cli.NonBlockingIODevice</code></a> for Java.
-                    See also <a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">Non blocking execution</a> section for a specific explanation of non blocking devices.
-                    </p><table summary="Non blocking device handlers" border="1"><colgroup><col align="left" class="cpp"><col align="left" class="java"><col align="left" class="mandatory"><col align="left" class="description"></colgroup><thead><tr><th align="left">C++</th><th align="left">Java</th><th align="left"> </th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><a class="ulink" href="../doxygen/html/classNonBlockingIODevice.html#e7f95aa8e13de4a2b4a271da01b19db2" target="_top"><code class="function">OnKey</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/NonBlockingIODevice.Java.html#onKey(int)" target="_top"><code class="function">onKey</code></a></td><td align="left">Optional</td><td align="left">
-                                
+                    See also <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">Non-blocking execution</a> section for a specific explanation of non-blocking devices.
+                    </p><table summary="Non-blocking device handlers" border="1"><colgroup><col align="left" class="cpp"><col align="left" class="java"><col align="left" class="mandatory"><col align="left" class="description"></colgroup><thead><tr><th align="left">C++</th><th align="left">Java</th><th align="left"> </th><th align="left">Description</th></tr></thead><tbody><tr><td align="left"><a class="ulink" href="../doxygen/html/classNonBlockingIODevice.html#ae7f95aa8e13de4a2b4a271da01b19db2" target="_top"><code class="function">OnKey</code></a></td><td align="left"><a class="ulink" href="../javadoc/html/cli/NonBlockingIODevice.Java.html#onKey-int-" target="_top"><code class="function">onKey</code></a></td><td align="left">Optional</td><td align="left">
                                 <p>
-                                Handler to call in order to push non blocking keys for processing.
+                                Handler to call in order to push non-blocking keys for processing.
                                 </p>
                             </td></tr></tbody></table></div></div><p><br class="table-break">
-
-                </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
-                <code class="function">NonBlockingIODevice::WaitForKeys</code> is deprecated since version 2.8.
-                </p><p>
-                UI controls were added in version 2.7, but they did not fully support non blocking executions at first,
-                that's the reason why a <code class="function">NonBlockingIODevice::WaitForKeys</code> method had been added then.
-                </p><p>
-                Thanks to the creation of the <a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">execution context classes</a> classes in version 2.8,
-                shells and <a class="link" href="#ui" title="5. UI controls">UI controls</a> now behave the same.
-                There was no more reason for the <code class="function">NonBlockingIODevice::WaitForKeys</code> method to be,
-                that's the reason why it has been removed and has no existence out of version 2.7.
-                </p></div><p>
             </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.IOMux"></a>6.6. Input / output multiplexer device</h3></div></div></div><p>
         Considering the input device could be not the same all along CLI execution,
         I have created an input / output multiplexer device.
@@ -2395,15 +2441,8 @@ cli_Server.startServer(); // Blocking call
         and redirect outputs to other devices.
         </p><p>
         This device may seem complex at first.
-        It can be useful however to create simple compilers as described in the <a class="link" href="#adv.compilers" title="6.12. Making compilers">section after</a>.
-        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.quit"></a>6.7. Thread-safe termination (deprecated)</h3></div></div></div><p>
-        Thanks to real improvements of <a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">non blocking executions</a>
-        with the addition of <a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">execution contexts</a>,
-        the <code class="function">cli::Shell::QuitThreadSafe</code> method has been deprecated and even removed in version 2.8.
-        Indeed, if you need to terminate a CLI execution from external events,
-        it is far much better to make it work in a non blocking mode.
-        This way, it can remain in a single main thread, without the threat of threading border effects.
-        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.non-blocking"></a>6.8. Non blocking execution</h3></div></div></div><p>
+        It can be useful however to create simple compilers as described in the <a class="link" href="#adv.compilers" title="6.11. Making compilers">section after</a>.
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.non-blocking"></a>6.7. Non-blocking execution</h3></div></div></div><p>
         The basic integration of the CLI is to have the shell running its main loop in the main thread,
         waiting for the input device to return characters, thanks to the blocking call <code class="function">cli::IODevice::GetKey</code>.
         </p><p>
@@ -2418,19 +2457,19 @@ cli_Server.startServer(); // Blocking call
             and made something special for that,
             pretty sure the CLI will be blocked waiting for a single character when you actually need to stop it.
         </li></ul></div><p>
-        That's the reason why a "non blocking" execution mode has been developed.
+        That's the reason why a "non-blocking" execution mode has been developed.
         </p><p>
         It is available by simply giving a <code class="classname">cli::NonBlockingIODevice</code> input device to the shell for its execution.
         It is up to you to:
         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">Inherit from this abstract class (see <a class="link" href="#adv.iodevices" title="6.5. Define your own input/output device">Define your own input/output device</a>),</li><li class="listitem">Have your characters being trapped by the application,</li><li class="listitem">Push them to the shell thanks to the <code class="function">cli::NonBlockingIODevice::OnKey</code> method.</li></ul></div><p>
-        </p><div class="example"><a name="eg.non-blocking"></a><p class="title"><b>Example 35. Non blocking execution</b></p><div class="example-contents">
-            The following Java example illustrates the use case when using a non blocking device:
+        </p><div class="example"><a name="eg.non-blocking"></a><p class="title"><b>Example 36. Non-blocking execution</b></p><div class="example-contents">
+            The following Java example illustrates the use case when using a non-blocking device:
 <pre class="programlisting">
 cli.Cli cli_Cli = new MyCli();
 cli.Shell cli_Shell = new cli.Shell(cli_Cli);
 MyNonBlockingIODevice cli_Device = new MyNonBlockingIODevice(); // extends cli.NonBlockingIODevice
 
-// Since cli_Device is a non blocking device, the following call does not block the execution thread.
+// Since cli_Device is a non-blocking device, the following call does not block the execution thread.
 cli_Shell.run(cli_Device);
 // cli_Shell is still running at this point!
 
@@ -2443,11 +2482,11 @@ cli_Device.onKey(cli.OutputDevice.ENTER);
 // Since the 'quit' command has been pushed, cli_Shell is not running anymore at this point!
 </pre></div></div><br class="example-break"><p>
         Regarding <a class="link" href="#ui" title="5. UI controls">UI controls</a>,
-        in non blocking mode, you have to rely on the <code class="classname">ExecutionResult</code> interface in order to be notified when their execution is done
-        (see <a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">Execution contexts</a>).
-        </p><div class="example"><a name="eg.non-blocking-ui"></a><p class="title"><b>Example 36. Non blocking execution and UI controls</b></p><div class="example-contents">
-            Non blocking execution Java code illustration below,
-            same as <a class="link" href="#eg.non-blocking" title="Example 35. Non blocking execution">previous example</a>,
+        in non-blocking mode, you have to rely on the <code class="classname">ExecutionResult</code> interface in order to be notified when their execution is done
+        (see <a class="link" href="#adv.exec-ctx" title="6.8. Execution contexts">Execution contexts</a>).
+        </p><div class="example"><a name="eg.non-blocking-ui"></a><p class="title"><b>Example 37. Non-blocking execution and UI controls</b></p><div class="example-contents">
+            Non-blocking execution Java code illustration below,
+            same as <a class="link" href="#eg.non-blocking" title="Example 36. Non-blocking execution">previous example</a>,
             but for UI controls:
 <pre class="programlisting">
 final MyNonBlockingIODevice cli_Device = new MyNonBlockingIODevice(); // extends cli.NonBlockingIODevice
@@ -2469,28 +2508,28 @@ cli_Device.onKey(cli.OutputDevice.KEY_l);
 cli_Device.onKey(cli.OutputDevice.KEY_o);
 cli_Device.onKey(cli.OutputDevice.ENTER);
 // "End of execution: hello" printed out there
-</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.exec-ctx"></a>6.9. Execution contexts</h3></div></div></div><p>
+</pre></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.exec-ctx"></a>6.8. Execution contexts</h3></div></div></div><p>
         Generic execution contexts have been added in version 2.8.
         They consist in something that manages:
         </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">a set of input/output devices,</li><li class="listitem">settings: language, beep...,</li><li class="listitem">input character processing.</li></ul></div><p>
         It basically corresponds to what the <code class="classname">Shell</code> does, but also <a class="link" href="#ui" title="5. UI controls">UI controls</a>,
         and possibly something you could define for your own needs.
         This feature is basically implemented with the <code class="classname">ExecutionContext</code> and <code class="classname">ExecutionResult</code> classes.
-        </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="adv.exec-ctx.input-char"></a>6.9.1. Input character processing</h4></div></div></div><p>
+        </p><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="adv.exec-ctx.input-char"></a>6.8.1. Input character processing</h4></div></div></div><p>
             Input character processing is implemented through the <code class="function">ExecutionContext::Run</code> method.
-            It may be either a blocking or a non blocking call depending on the type of input/output device given.
+            It may be either a blocking or a non-blocking call depending on the type of input/output device given.
             </p><p>
             The following flow chart illustrates how it works for a regular blocking call execution,
             (i.e. when the input/output device is a direct <code class="classname">IODevice</code>-derived class):
-                </p><div class="informalfigure"><a name="fig.exec-ctx.blocking-call"></a><div class="mediaobject"><img src="../doxygen/html/inline_mscgraph_1.png" alt="Execution contexts: blocking call executions flow chart."><div class="caption">Execution contexts: blocking call execution flow chart</div></div></div><p>
+                </p><div class="informalfigure"><a name="fig.exec-ctx.blocking-call"></a><div class="mediaobject"><img src="../doxygen/html/msc_inline_mscgraph_1.png" alt="Execution contexts: blocking call executions flow chart."><div class="caption">Execution contexts: blocking call execution flow chart</div></div></div><p>
             </p><p>
-            As discussed in the <a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">Non blocking execution</a> section, it also supports non blocking call executions
+            As discussed in the <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">Non-blocking execution</a> section, it also supports non-blocking call executions
             (i.e. when the input/output device is a <code class="classname">NonBlockingIODevice</code>).
             In that case, the <code class="classname">ExecutionResult</code> allows one to retrieve execution results of <code class="classname">ExecutionContext</code> once they are done,
-            as shown in the <a class="link" href="#eg.non-blocking-ui" title="Example 36. Non blocking execution and UI controls">Non blocking execution and UI controls</a> example.
-            The following flow chart illustrates a non blocking call execution:
-                </p><div class="informalfigure"><a name="fig.exec-ctx.non-blocking-call"></a><div class="mediaobject"><img src="../doxygen/html/inline_mscgraph_2.png" alt="Execution contexts: non blocking call executions flow chart."><div class="caption">Execution contexts: non blocking call execution flow chart</div></div></div><p>
-            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="adv.exec-ctx.top-child"></a>6.9.2. Top and child execution contexts</h4></div></div></div><p>
+            as shown in the <a class="link" href="#eg.non-blocking-ui" title="Example 37. Non-blocking execution and UI controls">Non-blocking execution and UI controls</a> example.
+            The following flow chart illustrates a non-blocking call execution:
+                </p><div class="informalfigure"><a name="fig.exec-ctx.non-blocking-call"></a><div class="mediaobject"><img src="../doxygen/html/msc_inline_mscgraph_2.png" alt="Execution contexts: non-blocking call executions flow chart."><div class="caption">Execution contexts: non-blocking call execution flow chart</div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="adv.exec-ctx.top-child"></a>6.8.2. Top and child execution contexts</h4></div></div></div><p>
             Execution contexts can be launched within the execution of another execution context.
             <a class="link" href="#ui" title="5. UI controls">UI controls</a> basically run within the context of a <code class="classname">Shell</code> for example.
             That's why we talk about top and child execution contexts.
@@ -2499,7 +2538,7 @@ cli_Device.onKey(cli.OutputDevice.ENTER);
             When no <code class="classname">ExecutionContext</code> reference is given for construction, this is a top execution context.
             When a reference is given, this is a child execution context.
             See the example below for a practical use case.
-            </p><div class="example"><a name="eg.exec-ctx.pwd-shell"></a><p class="title"><b>Example 37. <code class="classname">PwdShellContext</code> execution context</b></p><div class="example-contents"><p>
+            </p><div class="example"><a name="eg.exec-ctx.pwd-shell"></a><p class="title"><b>Example 38. <code class="classname">PwdShellContext</code> execution context</b></p><div class="example-contents"><p>
                 The CLI library does not intend to provide a fortified implementation for authentications.
                 That's the reason why no password is managed with the <code class="classname">Shell</code> class.
                 </p><p>
@@ -2591,7 +2630,7 @@ private:
                 Same thing in Java:
                 </p><pre class="programlisting">
 /** Authentication for a shell access. */
-class PwdShellContext extends cli.ExecutionContext.Java
+public class PwdShellContext extends cli.ExecutionContext.Java
 {
     /** Constructor. */
     public PwdShellContext(cli.Cli CLI_Cli, String J_Pwd) {
@@ -2664,7 +2703,7 @@ class PwdShellContext extends cli.ExecutionContext.Java
     private int m_iPwdAttempsLeft;
 }
 
-</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.dimension"></a>6.10. Embedded integration and memory management</h3></div></div></div><p>
+</pre></div></div><br class="example-break"></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.dimension"></a>6.9. Embedded integration and memory management</h3></div></div></div><p>
         When integrating the CLI in an embedded context, memory considerations become a critical point.
         </p><p>
         The library basically uses the STL library for strings, queues and maps basic objects.
@@ -2675,7 +2714,7 @@ class PwdShellContext extends cli.ExecutionContext.Java
         </p><p>
         Eventually, you may also have a look at the header file <code class="filename">constraints.h</code>.
         This header defines a set of constants that are overridable at compile time.
-        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.pch"></a>6.11. Pre-compiled headers</h3></div></div></div><p>
+        </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.pch"></a>6.10. Pre-compiled headers</h3></div></div></div><p>
         C++ CLI is ready for pre-compiled headers.
         Every CLI source starts its inclusions with:
             </p><pre class="programlisting">#include "cli/pch.h"</pre><p>
@@ -2689,7 +2728,7 @@ class PwdShellContext extends cli.ExecutionContext.Java
         Then include <code class="filename">cli/pch.h</code> in your pre-compiled source object to finalize pre-compilation settings.
         </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
         As far as the CLI library in its default configuration uses the Standard Library headers, pre-compiled headers really fastens your builds.
-        </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.compilers"></a>6.12. Making compilers</h3></div></div></div><p>
+        </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.compilers"></a>6.11. Making compilers</h3></div></div></div><p>
         The CLI library can be used to make out compilers of simple syntaxes.
         I'm used to combine the <code class="classname">cli::InputFileDevice</code> class to read from files,
         and the <code class="classname">cli::IOMux</code> class to read from a set of files one after the other.
@@ -2700,7 +2739,7 @@ class PwdShellContext extends cli.ExecutionContext.Java
                 which is more convenient for a compiler implementation.</dd><dt><span class="term"><code class="function">GetLocation</code></span></dt><dd>When an error occurs, this method can be called to retrieve the current position of reading in the input file.</dd></dl></div><p>
         </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
         The <a class="ulink" href="http://alexis.royer.free.fr/Watch" target="_top">Watch project</a> does implement such kind of design.
-        </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.noxmlres"></a>6.13. Without the XML resource file</h3></div></div></div><p>
+        </div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="adv.noxmlres"></a>6.12. Without the XML resource file</h3></div></div></div><p>
         Some of you could find the library interesting for what it already implements,
         but not the XML resource file, too limitative maybe.
         </p><p>
@@ -2709,18 +2748,18 @@ class PwdShellContext extends cli.ExecutionContext.Java
         and maybe inherit from them in order to improve the stuff.
         </p><p>
         Well... Up to you!
-        </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="faq"></a>7. Frequently Asked Questions</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q020"></a>7.1. I need to repeat a same set of commands. How can I do?</h3></div></div></div><p>
+        </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="faq"></a>7. Frequently Asked Questions</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.features"></a>7.1. Features</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q020"></a>7.1.1. I need to repeat a same set of commands. How can I do?</h4></div></div></div><p>
             <a class="link" href="#xmlres.tag" title="4.6. tag - How to make jumps in the syntax tree"><code class="sgmltag-element">tag</code> elements</a> allow you to reuse command line patterns within in a same command line,
             but they do not work across different menus.
             </p><p>
             By the way, repeating a same set of commands in different menus is a regular expectation.
             You can use XML inclusions for that.
-            </p><div class="example"><a name="eg.include.entity"></a><p class="title"><b>Example 38. XML inclusions: external entities</b></p><div class="example-contents"><p>
+            </p><div class="example"><a name="eg.include.entity"></a><p class="title"><b>Example 39. XML inclusions: external entities</b></p><div class="example-contents"><p>
                 This example shows how to implement XML inclusions with external entities.
                 </p><p>
                 Define a <code class="filename">top.xml</code> cli XML file like this:
 </p><pre class="programlisting">
-&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;!DOCTYPE cli [
  &lt;!ENTITY child SYSTEM "child.xml"&gt;
 ]&gt;
@@ -2744,7 +2783,7 @@ class PwdShellContext extends cli.ExecutionContext.Java
                 </p><p>
                 Define a <code class="filename">child.xml</code> cli XML file like this:
 </p><pre class="programlisting">
-&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;keyword string="k1"&gt;
  &lt;endl&gt;&lt;/endl&gt;
 &lt;/keyword&gt;
@@ -2752,12 +2791,12 @@ class PwdShellContext extends cli.ExecutionContext.Java
                 </p><p>
                 Then build the full XML file with the following command:
                 </p><pre class="programlisting">xmllint --dropdtd --noent top.xml &gt; full.xml</pre><p>
-                </p></div></div><br class="example-break"><div class="example"><a name="eg.include.xinclude"></a><p class="title"><b>Example 39. XML inclusions: <a class="ulink" href="http://www.w3.org/TR/xinclude/" target="_top">XInclude</a></b></p><div class="example-contents"><p>
+                </p></div></div><br class="example-break"><div class="example"><a name="eg.include.xinclude"></a><p class="title"><b>Example 40. XML inclusions: <a class="ulink" href="http://www.w3.org/TR/xinclude/" target="_top">XInclude</a></b></p><div class="example-contents"><p>
                 This example shows how to implement XML inclusions with <a class="ulink" href="http://www.w3.org/TR/xinclude/" target="_top">XInclude</a>.
                 </p><p>
                 Define a <code class="filename">top2.xml</code> cli XML file like this:
 </p><pre class="programlisting">
-&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="top"&gt;
  &lt;keyword string="menu1"&gt;
   &lt;endl&gt;
@@ -2776,10 +2815,10 @@ class PwdShellContext extends cli.ExecutionContext.Java
 &lt;/cli&gt;
 </pre><p>
                 </p><p>
-                Keep the same <code class="filename">child.xml</code> as for the <a class="link" href="#eg.include.entity" title="Example 38. XML inclusions: external entities">previous example</a>.
+                Keep the same <code class="filename">child.xml</code> as for the <a class="link" href="#eg.include.entity" title="Example 39. XML inclusions: external entities">previous example</a>.
                 Then build the full XML file with the following command:
                 </p><pre class="programlisting">xmllint --xinclude top2.xml &gt; full2.xml</pre><p>
-                </p></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q050"></a>7.2. Why the <code class="classname">Shell</code> doesn't come with a timeout for automatic log off?</h3></div></div></div><p>
+                </p></div></div><br class="example-break"></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q050"></a>7.1.2. Why the <code class="classname">Shell</code> doesn't come with a timeout for automatic log off?</h4></div></div></div><p>
             The aim of this software is to ease the development of command line interfaces,
             not to provided a high-security shell implementation.
             That's the reason why the <code class="classname">Shell</code> class
@@ -2787,19 +2826,19 @@ class PwdShellContext extends cli.ExecutionContext.Java
             nor a timeout feature.
             </p><p>
             It is up to you to implement such kind of functions, depending on your security requirements.
-            By the way, I advise you to read through the <a class="link" href="#adv.exec-ctx" title="6.9. Execution contexts">Execution contexts</a> section,
-            and its <a class="link" href="#eg.exec-ctx.pwd-shell" title="Example 37. PwdShellContext execution context"><code class="classname">PwdShellContext</code> execution context</a> example.
-            Also have a look at non blocking devices,
-            in the <a class="link" href="#adv.non-blocking" title="6.8. Non blocking execution">Non blocking execution</a> section,
+            By the way, I advise you to read through the <a class="link" href="#adv.exec-ctx" title="6.8. Execution contexts">Execution contexts</a> section,
+            and its <a class="link" href="#eg.exec-ctx.pwd-shell" title="Example 38. PwdShellContext execution context"><code class="classname">PwdShellContext</code> execution context</a> example.
+            Also have a look at non-blocking devices,
+            in the <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">Non-blocking execution</a> section,
             which are more suitable to implement timeout aspects.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q100"></a>7.3. Why ain't there a possibility to set a context reference with <code class="classname">Cli</code> objects?</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q100"></a>7.1.3. Why ain't there a possibility to set a context reference with <code class="classname">Cli</code> objects?</h4></div></div></div><p>
             If I had provided a general member for a context reference in <code class="classname">Cli</code> objects,
             it would have been an opaque pointer of type <span class="type">void*</span>, which I definitely dislike.
             I prefer when objects are accessed through full type accessors, such as singletons, or register databases.
             Or even better, you could make use of member code generation as described in the <a class="link" href="#xmlres.native" title="4.4. cpp, java - Insert target language directly in the resource file"><code class="sgmltag-element">cpp</code>, <code class="sgmltag-element">java</code>
                 - Insert target language directly in the resource file</a> section
             in order to declare your own context reference, with getters and setters.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q200"></a>7.4. I can't compile for a 64 bit architecture!</h3></div></div></div><p>
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.compile"></a>7.2. Compile time troubles</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q200"></a>7.2.1. I can't compile for a 64 bit architecture!</h4></div></div></div><p>
 	    Please note at first that a bug around formatting pointer values has been fixed in version 2.8 in <code class="filename">io_device.cpp</code>.
 	    </p><p>
             Then, it seems there may be troubles around Java.
@@ -2810,17 +2849,17 @@ class PwdShellContext extends cli.ExecutionContext.Java
                             This actually caused me a problem because OpenJDK was installed on the box and jar was being used from that distribution.</blockquote></div><p>
             </p><p>
             Now, if you, guys, have some more info, please let me know.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q300"></a>7.5. I can't compile due to the <code class="varname">DELETE</code> symbol with VC++!</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q300"></a>7.2.2. I can't compile due to the <code class="varname">DELETE</code> symbol with VC++!</h4></div></div></div><p>
             Has far as CLI symbols are all scoped in a <span class="package">cli</span> namespace, I have not specified them with redundant prefixes.
             To my point of view, this is a smart way of organizing C++ code.
             Therefore, the <code class="varname">DELETE</code> symbol is defined as an enum value in the scope of the <span class="package">cli</span> namespace.
             </p><p>
             The compilation error with Visual C++ comes with an abusive VC++ <code class="varname">DELETE</code> define directive in Windows headers.
             This define is useless in CLI sources, therefore I advise to use a <code class="filename">cli/pch.h</code> file
-            as described in the <a class="link" href="#adv.pch" title="6.11. Pre-compiled headers">Pre-compiled headers</a> section,
+            as described in the <a class="link" href="#adv.pch" title="6.10. Pre-compiled headers">Pre-compiled headers</a> section,
             and undefine the <code class="varname">DELETE</code> symbol in it, after Windows inclusions:
                 </p><pre class="programlisting">#undef DELETE</pre><p>
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q350"></a>7.6. I get a 'curses.h : No such file or directory' while compiling <code class="filename">ncurses_console.cpp</code>!</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q350"></a>7.2.3. I get a 'curses.h : No such file or directory' while compiling <code class="filename">ncurses_console.cpp</code>!</h4></div></div></div><p>
             First check you have installed the ncurses devel tools as described in section <a class="link" href="#prerequisite" title="2.2. Prerequisite">Prerequisite</a>.
             </p><p>
             If you have already installed the ncurses devel tools, and still have the error,
@@ -2831,7 +2870,7 @@ class PwdShellContext extends cli.ExecutionContext.Java
             as below for example:
             </p><pre class="programlisting">export CPLUS_INCLUDE_PATH=/usr/include/ncurses</pre><p>
             Then try to rebuild.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q400"></a>7.7. CLI auto-generated source files cause thousands of compilation warnings!</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q400"></a>7.2.4. CLI auto-generated source files cause thousands of compilation warnings!</h4></div></div></div><p>
             Indeed, C++ CLI auto-generated source files contain lots of labels and gotos.
             Not all of the labels defined are used with goto statements, which causes all those warnings with most of compilers.
             </p><p>
@@ -2840,10 +2879,10 @@ class PwdShellContext extends cli.ExecutionContext.Java
             </p><p>
             With VC++, you shall use the following pragma instruction:
                 </p><pre class="programlisting">#pragma warning(disable:4102)</pre><p>
-            either by putting it in a <code class="filename">cli/pch.h</code> as described in the <a class="link" href="#adv.pch" title="6.11. Pre-compiled headers">Pre-compiled headers</a> section,
+            either by putting it in a <code class="filename">cli/pch.h</code> as described in the <a class="link" href="#adv.pch" title="6.10. Pre-compiled headers">Pre-compiled headers</a> section,
             or by using generated code sections as described in the <a class="link" href="#xmlres.native" title="4.4. cpp, java - Insert target language directly in the resource file"><code class="sgmltag-element">cpp</code>, <code class="sgmltag-element">java</code>
                 - Insert target language directly in the resource file</a> section.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q600"></a>7.8. I am coming across problems while trying to print onto the CLI console: unwanted indenting, interleaved text...</h3></div></div></div><p>
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.run"></a>7.3. Runtime troubles</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q600"></a>7.3.1. I am coming across problems while trying to print onto the CLI console: unwanted indenting, interleaved text...</h4></div></div></div><p>
             The problem must be because you are using standard outputs (<code class="function">printf</code>, <code class="varname">std::cout</code>...),
             while the cli is ran with a <code class="classname">cli::Console</code> device which relies on the ncurses library on Linux platforms.
             Mixing standard and ncurses outputs does not behave correctly.
@@ -2883,26 +2922,51 @@ void runShellWithFiles()
     cli_Shell.Run(cli_InFile);
 }
 </pre><p>
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q650"></a>7.9. The <a class="link" href="#eg.java.init" title="Example 4. Java integration">Java integration</a> sample gets stuck when executed under cygwin!</h3></div></div></div><p>
-            The Java implementation relies on a native dynamic library
-            which device console is based on <code class="filename">win_console.cpp</code> under cygwin.
-            This choice makes your Java programs work without a dependency on <code class="filename">cygwin1.dll</code>,
-            which is convenient for applications running in a <span class="application">Windows</span> environment.
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q650"></a>7.3.2. The <a class="link" href="#eg.java.init" title="Example 4. Java integration">Java integration</a> sample gets stuck when executed under Cygwin!</h4></div></div></div><p>
+            The very short answer to this issue is:
+            please do not use the default Cygwin <span class="application">mintty</span> terminal for CLI Java programs, use <span class="application">cmd.exe</span> instead.
             </p><p>
-            Latest Cygwin distributions propose the <span class="application">mintty</span> console,
-            which works correctly with <code class="filename">ncurses_console.cpp</code>
-            but unfortunatley not with <code class="filename">win_console.cpp</code> implementation.
-            By the way, if you run the given <span class="command"><strong>java</strong></span> command line in a regular <span class="application">cmd.exe</span> console,
-            it works as expected.
-                </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
-                Make sure you execute the Java program with a <span class="command"><strong>java</strong></span> version compatible with the one of the <span class="command"><strong>javac</strong></span> you used to compile,
-                otherwise you may get "Unsupported major.minor version" errors.
-                </div><p>
+            Here is the explanation below.
             </p><p>
-            If you want to compile Java programs under cygwin and execute them in the same console as well (devel configuration for example),
-            you may launch a <span class="application">cmd.exe</span> console and run the <code class="filename">Cygwin.bat</code> script provided in your cygwin install directory.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q700"></a>7.10. My Console device does not behave nicely!</h3></div></div></div><p>
-            I had once noticed strange behaviours with my WinConsole device, through Java execution under cygwin:
+            On the one hand,
+            regarding the Java implementation of the CLI library,
+            you should first be aware that it relies on the use of the JNI technology.
+            This choice of design basically comes from the will not to multiply development efforts between the various programming languages supported,
+            and keep the core of it in the C++ implementation only.
+            But regardless of the operating system, the use of JNI is mandatory:
+            the Java side alone cannot catch input keys typed in a console,
+            and a native library needs to be called anyway.
+            </p><p>
+            On the other hand,
+            in as much as this CLI toolkit is provided with a toolchain based on Linux commands and makefiles,
+            Cygwin is one of the straight forward candidates as a development environment.
+            </p><p>
+            Unfortunately, the JNI technology integrates poorly in a Cygwin environment.
+            Please read through the <a class="ulink" href="https://stackoverflow.com/questions/8413290/using-java-jni-on-cygwin#47069933" target="_top">"Using Java / JNI on Cygwin" Stack Overflow question page</a>,
+            and particularly this following answer:
+                </p><div class="blockquote"><blockquote class="blockquote">
+                I couldn't get JNI to work with Cygwin's <span class="command"><strong>g++</strong></span> -- that induces a dependency on <code class="filename">cygwin1.dll</code>,
+                which clashes with the JNI mechanism, causing a crash.
+                The <code class="option">-mno-cygwin</code> flag is no longer supported.
+                But using <span class="command"><strong>/bin/x86_64-w64-mingw32-g++.exe</strong></span> fixed the problem for me.
+                </blockquote></div><p>
+            That's the reason why the Java implementation is compiled and linked with <span class="command"><strong>mingw</strong></span> compilation and linkage.
+            By the way, the regular Cygwin/Linux <code class="filename">ncurses_console.cpp</code> input/output device cannot be used anymore,
+            and we have to rely on the native Windows <code class="filename">win_console.cpp</code>.
+            </p><p>
+            Eventually, the CLI Java programs compile and link correctly with a Cygwin environment,
+            but still do not run correctly in the <span class="application">mintty</span> terminal that comes by default with Cygwin.
+            Nevertheless, if you try to run the given <span class="command"><strong>java</strong></span> command line in a regular <span class="application">cmd.exe</span> console, it works as expected.
+            </p><p>
+            At the end of it, here are some workarounds we could suggest.
+            </p><p>If you want to use Cygwin as your development environment (for compilation, linkage as well as execution and debugging):
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">launch a launch a <span class="application">cmd.exe</span> console,</li><li class="listitem">and run the <code class="filename">Cygwin.bat</code> script provided in your Cygwin install directory (eg: <code class="filename">C:\cygwin64\Cygwin.bat</code>).</li></ul></div><p>
+            In a console configured such a way, you may compile CLI programs and execute them as well.
+            </p><p>
+            Another option remains:
+            </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">you still can build the CLI library with a regular <span class="application">mintty</span> Cygwin terminal as usual,</li><li class="listitem">then develop and debug your full application in another development environment (Eclipse or any other Java IDE).</li></ul></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q700"></a>7.3.3. My console device does not behave nicely!</h4></div></div></div><p>
+            I had once noticed strange behaviours with my WinConsole device, through Java execution under Cygwin:
             </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">could not ensure the visibility of the cursor when moving it left or right,</li><li class="listitem">could not get the Windows optimized clean screen feature running, but had many blank lines printed out instead,</li><li class="listitem">...</li></ul></div><p>
             I then figured out that it was because I was executing the CLI within the context of a Makefile, launched through <span class="command"><strong>colormake</strong></span>,
             which uses output redirection.
@@ -2910,7 +2974,16 @@ void runShellWithFiles()
             </p><p>
             As a matter of fact, if you face non optimal behaviours with <code class="classname">Console</code> devices, please make sure no output redirection is used,
             otherwise console primitives will operate on the pipe and not the console anymore.
-            </p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.Q500"></a>7.11. Why ain't there regular VC++ memory leak macros in CLI source files?</h3></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q750"></a>7.3.4. How can I handle thread programming troubles?</h4></div></div></div><p>
+            Using a blocking execution integration, in a full application, may require the creation of a dedicated thread.
+            By the way, thread programming implies common risks such as dead-locks or bad memory management.
+            </p><p>
+            Please consider using the <a class="link" href="#adv.non-blocking" title="6.7. Non-blocking execution">non-blocking execution integration</a> mode.
+            Thanks to the real improvement of this feature in CLI 2.8,
+            with the addition of <a class="link" href="#adv.exec-ctx" title="6.8. Execution contexts">execution context management</a>,
+            you shall now let the CLI execution take place directly within your regular execution context,
+            without the need to thread it anymore which is a generally safer strategy.
+            </p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="faq.devel"></a>7.4. Developpers</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q500"></a>7.4.1. Why ain't there regular VC++ memory leak macros in CLI source files?</h4></div></div></div><p>
             The CLI library does not intend to be VC++ specific code, nor Eclipse specific, nor CodeWarrior...
             I do not intend neither to "pollute" the CLI sources with various compiler specific macros.
             That's the reason why regular VC++ memory leak macros are not set in the CLI sources, even guarded by pre-compilation switches.
@@ -2920,8 +2993,19 @@ void runShellWithFiles()
             Now if you figure out that leaks still remain, up to you to set your macros in the CLI sources for investigations,
             depending on the tool you use: VC++, valgrind...
             I'll be glad to integrate your fixes if you have any.
-            </p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="outro"></a>8. Conclusion</h2></div></div></div><p>
+            </p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a name="faq.Q800"></a>7.4.2. Telnet unit tests fail</h4></div></div></div><p>
+            Hopefully, unit tests provided are expected to work :-)
+            However, in as much as telnet unit tests generate and execute binaries that open server sockets and others with client sockets, those binaries could be blocked by your antivirus.
+            </p><p>
+            If so, configuring antivirus exceptions for binaries generated in your CLI directory should solve the problem.
+            </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+            For instance, Avast says: "If you are a developer go to autosandbox expert settings and disable autosandboxing files with a low reputation."
+            (see <a class="ulink" href="https://blog.avast.com/2012/03/20/autosandbox-why-are-you-annoying-me/" target="_top">https://blog.avast.com/2012/03/20/autosandbox-why-are-you-annoying-me/</a>).
+            </div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="outro"></a>8. Conclusion</h2></div></div></div><p>
     Well, that's it for this user guide.
     I hope you enjoyed it.
     Don't hesitate contacting me for any remark or so.
+    </p><p>
+    Yours,<br>
+    Alexis.
     </p></div></div></body></html>

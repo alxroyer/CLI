@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -46,13 +46,13 @@ public class Password extends UI {
     public Password(cli.ExecutionContext.Interface CLI_ParentContext, boolean B_DisplayStars, int I_MinPasswordLength, int I_MaxPasswordLength) {
         super(__Password(CLI_ParentContext.getNativeRef(), B_DisplayStars, I_MinPasswordLength, I_MaxPasswordLength));
     }
-    private static final native int __Password(int I_NativeParentContextRef, boolean B_DisplayStars, int I_MinPasswordLength, int I_MaxPasswordLength);
+    private static final native long __Password(long I64_NativeParentContextRef, boolean B_DisplayStars, int I_MinPasswordLength, int I_MaxPasswordLength);
 
     /** Password retrieval.
         @return Password entered by the user. */
     public String getPassword() {
         return __getPassword(this.getNativeRef());
     }
-    private static final native String __getPassword(int I_NativePasswordRef);
+    private static final native String __getPassword(long I64_NativePasswordRef);
 
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -46,7 +46,7 @@ static const TraceClass& GetIOMuxTraceClass(void)
 {
     static const TraceClass cli_IOMuxTraceClass("CLI_IOMUX", Help()
         .AddHelp(Help::LANG_EN, "Input/output multiplexer traces")
-        .AddHelp(Help::LANG_FR, "Traces de multiplexage d'entrées/sorties"));
+        .AddHelp(Help::LANG_FR, "Traces de multiplexage d'entrÃ©es/sorties"));
     return cli_IOMuxTraceClass;
 }
 
@@ -189,7 +189,7 @@ const KEY IOMux::GetKey(void) const
     {
         m_cliLastError
             .SetString(ResourceString::LANG_EN, "IOMux: No valid input device")
-            .SetString(ResourceString::LANG_FR, "IOMux: Entrée de caractère invalide");
+            .SetString(ResourceString::LANG_FR, "IOMux: EntrÃ©e de caractÃ¨re invalide");
     }
     return cli::NULL_KEY;
 }
@@ -244,14 +244,14 @@ const bool IOMux::AddDevice(IODevice* const PCLI_Device)
         {
             m_cliLastError
                 .SetString(ResourceString::LANG_EN, "IOMux: Cannot add device to the device list")
-                .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée / sortie à la liste");
+                .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un pÃ©riphÃ©rique d'entrÃ©e / sortie Ã  la liste");
         }
     }
     else
     {
         m_cliLastError
             .SetString(ResourceString::LANG_EN, "IOMux: Cannot add a NULL input device")
-            .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un périphérique d'entrée / sortie invalide");
+            .SetString(ResourceString::LANG_FR, "IOMux: Impossible d'ajouter un pÃ©riphÃ©rique d'entrÃ©e / sortie invalide");
     }
 
     return false;
@@ -304,7 +304,7 @@ const IODevice* const IOMux::SwitchNextDevice(void)
         {
             m_cliLastError
                 .SetString(ResourceString::LANG_EN, "IOMux: No input / output device")
-                .SetString(ResourceString::LANG_FR, "IOMux: Pas de périphérique d'entrée / sortie");
+                .SetString(ResourceString::LANG_FR, "IOMux: Pas de pÃ©riphÃ©rique d'entrÃ©e / sortie");
         }
     }
 
@@ -381,7 +381,7 @@ IODevice* const IOMux::CheckCurrentDevice(void) const
     // No more input.
     m_cliLastError
         .SetString(ResourceString::LANG_EN, "IOMux: No more input")
-        .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée");
+        .SetString(ResourceString::LANG_FR, "IOMux: Aucun pÃ©riphÃ©rique d'entrÃ©e");
     return NULL;
 }
 
@@ -412,7 +412,7 @@ const bool IOMux::ReleaseFirstDevice(void)
     {
         m_cliLastError
             .SetString(ResourceString::LANG_EN, "IOMux: No more input / output")
-            .SetString(ResourceString::LANG_FR, "IOMux: Aucun périphérique d'entrée / sortie");
+            .SetString(ResourceString::LANG_FR, "IOMux: Aucun pÃ©riphÃ©rique d'entrÃ©e / sortie");
         return false;
     }
 }

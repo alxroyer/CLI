@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -32,7 +32,7 @@
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:cli="http://alexis.royer.free.fr/CLI"
         xmlns:db="http://docbook.org/docbook-ng">
-<xsl:output method="xml" encoding="iso-8859-1"/>
+<xsl:output method="xml" encoding="utf-8"/>
 
 
 <xsl:variable name="STR_Endl"><xsl:text>
@@ -41,7 +41,7 @@
 
 <xsl:template match="/">
     <db:programlisting>
-    <xsl:text>&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</xsl:text><xsl:value-of select="$STR_Endl"/>
+    <xsl:text>&lt;?xml version="1.0" encoding="utf-8"?&gt;</xsl:text><xsl:value-of select="$STR_Endl"/>
     <xsl:apply-templates/>
     </db:programlisting>
 </xsl:template>
@@ -49,9 +49,9 @@
 <xsl:template match="cli:endl">
     <!-- Start the 'endl' element -->
     <xsl:call-template name="T_Indent"/>
-    <xsl:text>&lt;endl</xsl:text><xsl:apply-templates select="@*"/><xsl:text>&gt;</xsl:text>
-    <!-- Display native code -->
+        <xsl:text>&lt;endl</xsl:text><xsl:apply-templates select="@*"/><xsl:text>&gt;</xsl:text>
     <xsl:if test="cli:cpp or cli:java or cli:menu"><xsl:value-of select="$STR_Endl"/></xsl:if>
+    <!-- Display native code -->
     <xsl:for-each select="cli:cpp|cli:java|comment()"><xsl:apply-templates select="."/></xsl:for-each>
     <!-- Display menus and menu references -->
     <xsl:if test="(cli:cpp or cli:java) and cli:menu"><xsl:value-of select="$STR_Endl"/></xsl:if>
@@ -67,6 +67,14 @@
         <xsl:text>&gt;</xsl:text>
     <xsl:apply-templates/>
     <xsl:text>&lt;/help&gt;</xsl:text>
+</xsl:template>
+
+<xsl:template match="cli:comment">
+    <xsl:call-template name="T_Indent"/>
+        <xsl:text>&lt;comment</xsl:text>
+        <xsl:apply-templates select="@*"/>
+        <xsl:text>/&gt;</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
 </xsl:template>
 
 <xsl:template match="cli:cpp|cli:java">
@@ -97,10 +105,10 @@
 
 <xsl:template match="cli:tag[@ref]">
     <xsl:call-template name="T_Indent"/>
-    <xsl:text>&lt;tag</xsl:text>
-    <xsl:apply-templates select="@*"/>
-    <xsl:text>/&gt;</xsl:text>
-    <xsl:value-of select="$STR_Endl"/>
+        <xsl:text>&lt;tag</xsl:text>
+        <xsl:apply-templates select="@*"/>
+        <xsl:text>/&gt;</xsl:text>
+        <xsl:value-of select="$STR_Endl"/>
 </xsl:template>
 
 <xsl:template match="cli:menu[@ref]">
@@ -127,7 +135,7 @@
         <xsl:text>&gt;</xsl:text>
         <xsl:apply-templates select="cli:help"/>
         <xsl:value-of select="$STR_Endl"/>
-    <xsl:apply-templates select="cli:*[not(self::cli:help)]"/>
+    <xsl:apply-templates select="cli:*[not(self::cli:help)]|comment()"/>
     <xsl:call-template name="T_Indent"/>
         <xsl:text>&lt;/</xsl:text>
         <xsl:value-of select="local-name(.)"/>

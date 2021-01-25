@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -36,6 +36,7 @@ SRC_DIR = $(CLI_DIR)/cpp/tests/cpp
 PROJ_INCLUDES += -I$(CLI_DIR)/cpp/include
 PROJ_INCLUDES += -I$(CLI_DIR)/cpp/tests/include
 PROJ_LIBS = -L$(TARGET)$(CXX)/$(RDX) -lclicpp -lncurses
+AUTO_DEPS = yes
 INT_DIR = $(TARGET)$(CXX)/$(RDX)/__$(PROJECT)
 OUT_DIR = $(TARGET)$(CXX)/$(RDX)/__$(PROJECT)
 include _build.mak

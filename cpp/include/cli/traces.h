@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -158,7 +158,7 @@ CLI_NS_BEGIN(cli)
     public:
         //! @brief Trace class declaration.
         //! @return true if the class has been declared successfully or the class was already declared.
-        //! @return false if an error as occured.
+        //! @return false if an error as occurred.
         const bool Declare(
             const TraceClass& CLI_Class     //!< Trace class to declare.
             );

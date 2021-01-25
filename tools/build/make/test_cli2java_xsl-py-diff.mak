@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -41,7 +41,12 @@ CLI_XML_FILES = $(CLI_XML_REGULAR_FILES)
 CLI_XML_RES = $(CLI_DIR)/samples/clisample/clisample.xml
 CLI_JAVA_XSL = $(patsubst $(CLI_DIR)/samples/%.xml,$(OUT_DIR)/%.xsl.java,$(CLI_XML_RES))
 CLI_JAVA_PY = $(patsubst $(CLI_DIR)/samples/%.xml,$(OUT_DIR)/%.py.java,$(CLI_XML_RES))
+OUT_DIFF = $(patsubst $(CLI_DIR)/samples/%.xml, $(OUT_DIR)/%.diff,$(CLI_XML_RES))
+EXPECTED_DIFF = $(patsubst %.xml,%.cli2java.diff,$(CLI_XML_RES))
 TIME = time
+
+# Infinite cli2java generation for cross-tags.xml test sample.
+CLI_XML_FILES := $(filter-out $(CLI_DIR)/samples/tests/cross-tags.xml,$(CLI_XML_FILES))
 
 # Rules
 .PHONY: check
@@ -51,8 +56,15 @@ check:
 
 .PHONY: check.xml
 check.xml: $(CLI_JAVA_XSL).lite $(CLI_JAVA_PY).lite
+ifeq ($(shell ls $(EXPECTED_DIFF) 2> /dev/null),$(EXPECTED_DIFF))
+	# Diff expected...
+	diff $(CLI_JAVA_XSL).lite $(CLI_JAVA_PY).lite > $(OUT_DIFF) || true
+	diff $(OUT_DIFF) $(EXPECTED_DIFF) | head
+	@diff $(OUT_DIFF) $(EXPECTED_DIFF) > /dev/null
+else
 	diff $(CLI_JAVA_XSL).lite $(CLI_JAVA_PY).lite | head
 	@diff $(CLI_JAVA_XSL).lite  $(CLI_JAVA_PY).lite  > /dev/null
+endif
 
 $(CLI_JAVA_XSL).lite: $(CLI_JAVA_XSL)
 	cat $< | sed -e "s/cli2java\.xsl/cli2java/g" > $@
@@ -67,15 +79,13 @@ $(CLI_JAVA_XSL): SHELL := /bin/bash
 $(CLI_JAVA_XSL): $(CLI_XML_RES) $(CLI_DIR)/tools/cli2java.xsl 
 	$(call CheckDir,$(dir $@))
 	# XSLT transformation of $(CLI_XML_RES)...
-	$(TIME) (xsltproc $(CLI_DIR)/tools/cli2java.xsl $< > $@.tmp)
-	mv $@.tmp $@
+	$(TIME) (xsltproc --output $@ $(CLI_DIR)/tools/cli2java.xsl $<)
 
 $(CLI_JAVA_PY): SHELL := /bin/bash
-$(CLI_JAVA_PY): $(CLI_XML_RES) $(PYLINT_RESULT) $(wildcard $(CLI_DIR)/tools/*.py)
+$(CLI_JAVA_PY): $(CLI_XML_RES) $(wildcard $(CLI_DIR)/tools/*.py)
 	$(call CheckDir,$(dir $@))
 	# python transformation of $(CLI_XML_RES)...
-	$(TIME) ($(PYTHON) $(CLI_DIR)/tools/cli2java.py $< > $@.tmp)
-	mv $@.tmp $@
+	$(TIME) ($(PYTHON) $(CLI_DIR)/tools/cli2java.py $< --output $@)
 
 .PHONY: deps
 deps: ;
@@ -89,7 +99,7 @@ ifneq ($(CLI_XML_FILES),_)
 else
 	rm -f $(CLI_JAVA_XSL) $(CLI_JAVA_XSL).tmp $(CLI_JAVA_XSL).lite
 	rm -f $(CLI_JAVA_PY) $(CLI_JAVA_PY).tmp $(CLI_JAVA_PY).lite
-	rm -f $(PYLINT_RESULT)
+	rm -f $(OUT_DIFF)
 endif
 
 # Debug and help
@@ -105,4 +115,4 @@ $(CLI_DIR)/build/make/cli2java.help:
 .PHONY: $(CLI_DIR)/build/make/cli2java.vars
 vars: $(CLI_DIR)/build/make/cli2java.vars
 $(CLI_DIR)/build/make/cli2java.vars:
-	$(call ShowVariables,CLI_XML_FILES CLI_XML_RES CLI_JAVA_XSL CLI_JAVA_PY PYLINT_RESULT TIME)
+	$(call ShowVariables,CLI_XML_FILES CLI_XML_RES CLI_JAVA_XSL CLI_JAVA_PY TIME)

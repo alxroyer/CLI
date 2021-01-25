@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,8 +36,7 @@
 #include "NativeTraces.h"
 
 
-//extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice_ScreenInfo__1_1ScreenInfo(
-extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1ScreenInfo(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1ScreenInfo(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jint I_Width, jint I_Height, jboolean B_TrueCls, jboolean B_WrapLines)
 {
@@ -48,46 +47,45 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1Screen
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_Height", I_Height) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_TrueCls", B_TrueCls) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_WrapLines", B_WrapLines) << cli::endl;
-    NativeObject::REF i_ScreenInfoRef = 0;
+    NativeObject::REF i64_ScreenInfoRef = 0;
     if (cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = new cli::OutputDevice::ScreenInfo(I_Width, I_Height, B_TrueCls, B_WrapLines))
     {
         NativeObject::Use(*pcli_ScreenInfo);
-        i_ScreenInfoRef = NativeObject::GetNativeRef(*pcli_ScreenInfo);
+        i64_ScreenInfoRef = NativeObject::GetNativeRef(*pcli_ScreenInfo);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.ScreenInfo.__ScreenInfo()", i_ScreenInfoRef) << cli::endl;
-    return i_ScreenInfoRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("OutputDevice.ScreenInfo.__ScreenInfo()", i64_ScreenInfoRef) << cli::endl;
+    return i64_ScreenInfoRef;
 }
 
-//extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice_ScreenInfo__1_1copy(
 extern "C" JNIEXPORT void JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1copy(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeScreenInfoRef1, jint I_NativeScreenInfoRef2)
+        jlong I64_NativeScreenInfoRef1, jlong I64_NativeScreenInfoRef2)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__copy(I_NativeScreenInfoRef1, I_NativeScreenInfoRef2)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef1", I_NativeScreenInfoRef1) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef2", I_NativeScreenInfoRef2) << cli::endl;
-    if (cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo1 = NativeObject::GetNativeObject<cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef1))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__copy(I64_NativeScreenInfoRef1, I64_NativeScreenInfoRef2)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef1", I64_NativeScreenInfoRef1) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef2", I64_NativeScreenInfoRef2) << cli::endl;
+    if (cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo1 = NativeObject::GetNativeObject<cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef1))
     {
-        if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo2 = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef2))
+        if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo2 = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef2))
         {
             pcli_ScreenInfo1->operator=(*pcli_ScreenInfo2);
         }
     }
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndVoid("OutputDevice.ScreenInfo.__copy()") << cli::endl;
 }
 
-//extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice_ScreenInfo__1_1getWidth(
 extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getWidth(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeScreenInfoRef)
+        jlong I64_NativeScreenInfoRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getWidth(I_NativeScreenInfoRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef", I_NativeScreenInfoRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getWidth(I64_NativeScreenInfoRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef", I64_NativeScreenInfoRef) << cli::endl;
     int i_Width = 0;
-    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef))
+    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef))
     {
         i_Width = pcli_ScreenInfo->GetWidth();
     }
@@ -95,35 +93,33 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getWid
     return i_Width;
 }
 
-//extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice_ScreenInfo__1_1getSafeWidth(
 extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getSafeWidth(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeScreenInfoRef)
+        jlong I64_NativeScreenInfoRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getSafeWidth(I_NativeScreenInfoRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef", I_NativeScreenInfoRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getSafeWidth(I64_NativeScreenInfoRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef", I64_NativeScreenInfoRef) << cli::endl;
     unsigned int ui_SafeWidth = cli::OutputDevice::ScreenInfo::DEFAULT_WIDTH;
-    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef))
+    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef))
     {
         ui_SafeWidth = pcli_ScreenInfo->GetSafeWidth();
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.ScreenInfo.__getSafeWidth()", ui_SafeWidth) << cli::endl;
-    return ui_SafeWidth;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.ScreenInfo.__getSafeWidth()", (int) ui_SafeWidth) << cli::endl;
+    return (int) ui_SafeWidth;
 }
 
-//extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice_ScreenInfo__1_1getHeight(
 extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getHeight(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeScreenInfoRef)
+        jlong I64_NativeScreenInfoRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getHeight(I_NativeScreenInfoRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef", I_NativeScreenInfoRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getHeight(I64_NativeScreenInfoRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef", I64_NativeScreenInfoRef) << cli::endl;
     int i_Height = 0;
-    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef))
+    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef))
     {
         i_Height = pcli_ScreenInfo->GetHeight();
     }
@@ -131,53 +127,50 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getHei
     return i_Height;
 }
 
-//extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice_ScreenInfo__1_1getSafeHeight(
 extern "C" JNIEXPORT jint JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getSafeHeight(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeScreenInfoRef)
+        jlong I64_NativeScreenInfoRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getSafeHeight(I_NativeScreenInfoRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef", I_NativeScreenInfoRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getSafeHeight(I64_NativeScreenInfoRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef", I64_NativeScreenInfoRef) << cli::endl;
     unsigned int ui_SafeHeight = cli::OutputDevice::ScreenInfo::DEFAULT_HEIGHT;
-    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef))
+    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef))
     {
         ui_SafeHeight = pcli_ScreenInfo->GetSafeHeight();
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.ScreenInfo.__getSafeHeight()", ui_SafeHeight) << cli::endl;
-    return ui_SafeHeight;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputDevice.ScreenInfo.__getSafeHeight()", (int) ui_SafeHeight) << cli::endl;
+    return (int) ui_SafeHeight;
 }
 
-//extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice_ScreenInfo__1_1hasTrueCls(
-extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1hasTrueCls(
+extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getbTrueCls(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeScreenInfoRef)
+        jlong I64_NativeScreenInfoRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__hasTrueCls(I_NativeScreenInfoRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef", I_NativeScreenInfoRef) << cli::endl;
-    bool b_HasTrueCls = false;
-    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getbTrueCls(I64_NativeScreenInfoRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef", I64_NativeScreenInfoRef) << cli::endl;
+    bool b_TrueCls = false;
+    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef))
     {
-        b_HasTrueCls = pcli_ScreenInfo->GetbTrueCls();
+        b_TrueCls = pcli_ScreenInfo->GetbTrueCls();
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("OutputDevice.ScreenInfo.__hasTrueCls()", b_HasTrueCls) << cli::endl;
-    return b_HasTrueCls;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndBool("OutputDevice.ScreenInfo.__getbTrueCls()", b_TrueCls) << cli::endl;
+    return b_TrueCls;
 }
 
-//extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice_ScreenInfo__1_1getbWrapLines(
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_OutputDevice__1_1ScreenInfo_1_1getbWrapLines(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeScreenInfoRef)
+        jlong I64_NativeScreenInfoRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getbWrapLines(I_NativeScreenInfoRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeScreenInfoRef", I_NativeScreenInfoRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputDevice.ScreenInfo.__getbWrapLines(I64_NativeScreenInfoRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeScreenInfoRef", I64_NativeScreenInfoRef) << cli::endl;
     bool b_WrapLines = false;
-    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I_NativeScreenInfoRef))
+    if (const cli::OutputDevice::ScreenInfo* const pcli_ScreenInfo = NativeObject::GetNativeObject<const cli::OutputDevice::ScreenInfo*>(I64_NativeScreenInfoRef))
     {
         b_WrapLines = pcli_ScreenInfo->GetbWrapLines();
     }

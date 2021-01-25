@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -59,14 +59,16 @@ $(CLI_CPP_XSL): $(CLI_XML_RES) $(CLI_DIR)/tools/cli2cpp.xsl
 	rm -f $@.error
 	(xsltproc $(CLI_DIR)/tools/cli2cpp.xsl $< > /dev/null 2> $@.tmp) || touch $@.error
 	test -f $@.error
+	rm -f $@.error
 	mv $@.tmp $@ 2> /dev/null
 
-$(CLI_CPP_PY): $(CLI_XML_RES) $(PYLINT_RESULT) $(wildcard $(CLI_DIR)/tools/*.py)
+$(CLI_CPP_PY): $(CLI_XML_RES) $(wildcard $(CLI_DIR)/tools/*.py)
 	$(call CheckDir,$(dir $@))
 	rm -f $@.error
 	($(PYTHON) $(CLI_DIR)/tools/cli2cpp.py $< > /dev/null 2> $@.tmp) || touch $@.error
 	test -f $@.error
-	sed -s "s/^Error\!.*\]: /Error: /" -i $@.tmp
+	rm -f $@.error
+	sed -e "s/^Error\!.*\]: /Error: /" -i $@.tmp
 	mv $@.tmp $@ 2> /dev/null
 
 .PHONY: deps
@@ -79,7 +81,6 @@ ifneq ($(CLI_XML_FILES),_)
 	$(call Map,MkCallClean,$(CLI_XML_FILES) $(CLI_DIR)/samples/tests/big.xml)
 	$(call RemoveDir,$(shell find $(OUT_DIR) -type d | sort -r))
 else
-	rm -f $(PYLINT_RESULT)
 	rm -f $(CLI_CPP_XSL) $(CLI_CPP_XSL).tmp $(CLI_CPP_XSL).error
 	rm -f $(CLI_CPP_PY) $(CLI_CPP_PY).tmp $(CLI_CPP_PY).error
 endif
@@ -97,4 +98,4 @@ $(CLI_DIR)/build/make/cli2cpp.help:
 .PHONY: $(CLI_DIR)/build/make/cli2cpp.vars
 vars: $(CLI_DIR)/build/make/cli2cpp.vars
 $(CLI_DIR)/build/make/cli2cpp.vars:
-	$(call ShowVariables,CLI_XML_FILES CLI_XML_RES CLI_ERROR_LOG CLI_CPP_XSL CLI_CPP_PY PYLINT_RESULT)
+	$(call ShowVariables,CLI_XML_FILES CLI_XML_RES CLI_ERROR_LOG CLI_CPP_XSL CLI_CPP_PY)

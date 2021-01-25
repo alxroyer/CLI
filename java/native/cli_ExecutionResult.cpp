@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -63,9 +63,9 @@ protected:
     virtual void OnResult(const cli::ExecutionContext& CLI_Context)
     {
         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("NativeExecutionResult::OnResult(CLI_Context)") << cli::endl;
-        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("CLI_Context", NativeObject::GetNativeRef(CLI_Context)) << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("CLI_Context", NativeObject::GetNativeRef(CLI_Context)) << cli::endl;
 
-        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValueInt("this", NativeObject::GetNativeRef(*this)) << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValueInt64("this", NativeObject::GetNativeRef(*this)) << cli::endl;
         
         if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
         {
@@ -73,13 +73,13 @@ protected:
             if (const jclass pj_ResultClass = pj_Env->FindClass(NativeObject::GetJavaClassName(*this).c_str()))
             {
                 cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_ResultClass", pj_ResultClass) << cli::endl;
-                if (const jmethodID pj_OnResultMethodID = pj_Env->GetMethodID(pj_ResultClass, "__onResult", "(I)V"))
+                if (const jmethodID pj_OnResultMethodID = pj_Env->GetMethodID(pj_ResultClass, "__onResult", "(J)V")) // 'J' stands for 'long'.
                 {
                     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_OnResultMethodID", pj_OnResultMethodID) << cli::endl;
                     if (const jobject pj_Object = NativeObject::GetJavaObject(*this, true))
                     {
                         cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
-                        pj_Env->CallVoidMethod(pj_Object, pj_OnResultMethodID, (jint) NativeObject::GetNativeRef(CLI_Context));
+                        pj_Env->CallVoidMethod(pj_Object, pj_OnResultMethodID, (jlong) NativeObject::GetNativeRef(CLI_Context));
                     }
                 }
             }
@@ -90,34 +90,34 @@ protected:
 };
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ExecutionResult__1_1ExecutionResult(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ExecutionResult__1_1ExecutionResult(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionResult.__ExecutionResult()") << cli::endl;
-    NativeObject::REF i_ResultRef = 0;
+    NativeObject::REF i64_ResultRef = 0;
     if (cli::ExecutionResult* const pcli_Result = new NativeExecutionResult())
     {
         NativeObject::Use(*pcli_Result);
-        i_ResultRef = NativeObject::GetNativeRef(*pcli_Result);
+        i64_ResultRef = NativeObject::GetNativeRef(*pcli_Result);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ExecutionResult.__ExecutionResult()", i_ResultRef) << cli::endl;
-    return i_ResultRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ExecutionResult.__ExecutionResult()", i64_ResultRef) << cli::endl;
+    return i64_ResultRef;
 }
 
 extern "C" JNIEXPORT void JNICALL Java_cli_ExecutionResult__1_1watchResult(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeResultRef, jint I_NativeContextRef)
+        jlong I64_NativeResultRef, jlong I64_NativeContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__watchResult(I_NativeResultRef, I_NativeContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeResultRef", I_NativeResultRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeContextRef", I_NativeContextRef) << cli::endl;
-    if (cli::ExecutionResult* const pcli_Result = NativeObject::GetNativeObject<cli::ExecutionResult*>(I_NativeResultRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ExecutionContext.Common.__watchResult(I64_NativeResultRef, I64_NativeContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeResultRef", I64_NativeResultRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeContextRef", I64_NativeContextRef) << cli::endl;
+    if (cli::ExecutionResult* const pcli_Result = NativeObject::GetNativeObject<cli::ExecutionResult*>(I64_NativeResultRef))
     {
-        if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeContextRef))
+        if (cli::ExecutionContext* const pcli_Context = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeContextRef))
         {
             pcli_Result->WatchResult(*pcli_Context);
         }

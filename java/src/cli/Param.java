@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -31,9 +31,9 @@ package cli;
 public abstract class Param extends SyntaxNode {
 
     /** Constructor.
-        @param I_NativeRef Native instance reference. */
-    protected Param(int I_NativeRef) {
-        super(I_NativeRef);
+        @param I64_NativeRef Native instance reference. */
+    protected Param(long I64_NativeRef) {
+        super(I64_NativeRef);
     }
 
     /** Copy value method.
@@ -41,15 +41,15 @@ public abstract class Param extends SyntaxNode {
     public final void copyValue(Param CLI_Param) {
         __copyValue(this.getNativeRef(), CLI_Param.getNativeRef());
     }
-    private static final native boolean __copyValue(int I_NativeDestParamRef, int I_NativeSrcParamRef);
+    private static final native boolean __copyValue(long I64_NativeDestParamRef, long I64_NativeSrcParamRef);
 
     /** Determines whether an element matches this parameter.
         @param CLI_Element Element to check the correspondance with this parameter.
         @return true if the element matches this parameter, false if the element does not match this parameter. */
     public boolean matches(Element CLI_Element) {
         Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Param.matches(CLI_Element)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("this", new Integer(this.getNativeRef()).toString()));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("CLI_Element", new Integer(CLI_Element.getNativeRef()).toString()));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("this", new Long(this.getNativeRef()).toString()));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("CLI_Element", new Long(CLI_Element.getNativeRef()).toString()));
 
         boolean b_Res = false;
         if (CLI_Element instanceof Param) {
@@ -70,6 +70,6 @@ public abstract class Param extends SyntaxNode {
     protected final cli.Param getCloned() {
         return (cli.Param) NativeObject.getObject(__getCloned(this.getNativeRef()));
     }
-    private static final native int __getCloned(int I_NativeParamRef);
+    private static final native long __getCloned(long I64_NativeParamRef);
 
 }

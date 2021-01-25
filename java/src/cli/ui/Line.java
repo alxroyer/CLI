@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -45,12 +45,12 @@ public class Line extends UI {
     public Line(cli.ExecutionContext.Interface CLI_ParentContext, String J_DefaultLine, int I_MinLineLength, int I_MaxLineLength) {
         super(__Line(CLI_ParentContext.getNativeRef(), J_DefaultLine, I_MinLineLength, I_MaxLineLength));
     }
-    private static final native int __Line(int I_NativeParentContextRef, String J_DefaultLine, int I_MinLineLength, int I_MaxLineLength);
+    private static final native long __Line(long I64_NativeParentContextRef, String J_DefaultLine, int I_MinLineLength, int I_MaxLineLength);
 
     /** Contructor for derived classes only.
-        @param I_NativeRef Native object reference. */
-    protected Line(int I_NativeRef) {
-        super(I_NativeRef);
+        @param I64_NativeRef Native instance reference. */
+    protected Line(long I64_NativeRef) {
+        super(I64_NativeRef);
     }
 
     /** Line retrieval.
@@ -58,6 +58,6 @@ public class Line extends UI {
     public String getLine() {
         return __getLine(this.getNativeRef());
     }
-    private static final native String __getLine(int I_NativeLineRef);
+    private static final native String __getLine(long I64_NativeLineRef);
 
 }

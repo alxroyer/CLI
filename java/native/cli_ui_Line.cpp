@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,23 +36,23 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Line__1_1Line(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Line__1_1Line(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef, jstring PJ_DefaultLine, jint I_MinLineLength, jint I_MaxLineLength)
+        jlong I64_NativeParentContextRef, jstring PJ_DefaultLine, jint I_MinLineLength, jint I_MaxLineLength)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Line.__Line(I_NativeParentContextRef, PJ_DefaultLine, I_MinLineLength, I_MaxLineLength)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Line.__Line(I64_NativeParentContextRef, PJ_DefaultLine, I_MinLineLength, I_MaxLineLength)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_DefaultLine", NativeExec::Java2Native(PJ_DefaultLine).c_str()) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_MinLineLength", I_MinLineLength) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_MaxLineLength", I_MaxLineLength) << cli::endl;
-    NativeObject::REF i_LineRef = 0;
+    NativeObject::REF i64_LineRef = 0;
     const cli::tk::String tk_DefaultLine(NativeExec::Java2Native(PJ_DefaultLine).size(), NativeExec::Java2Native(PJ_DefaultLine).c_str());
     cli::ui::Line* pcli_Line = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_Line = new cli::ui::Line(*pcli_ParentContext, tk_DefaultLine, I_MinLineLength, I_MaxLineLength);
         }
@@ -64,22 +64,22 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Line__1_1Line(
     if (pcli_Line != NULL)
     {
         NativeObject::Use(*pcli_Line);
-        i_LineRef = NativeObject::GetNativeRef(*pcli_Line);
+        i64_LineRef = NativeObject::GetNativeRef(*pcli_Line);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Line.__Line()", i_LineRef) << cli::endl;
-    return i_LineRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Line.__Line()", i64_LineRef) << cli::endl;
+    return i64_LineRef;
 }
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_ui_Line__1_1getLine(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeLineRef)
+        jlong I64_NativeLineRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Line.__getLine(I_NativeLineRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeLineRef", I_NativeLineRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Line.__getLine(I64_NativeLineRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeLineRef", I64_NativeLineRef) << cli::endl;
     std::string str_Line;
-    if (const cli::ui::Line* const pcli_Line = NativeObject::GetNativeObject<const cli::ui::Line*>(I_NativeLineRef))
+    if (const cli::ui::Line* const pcli_Line = NativeObject::GetNativeObject<const cli::ui::Line*>(I64_NativeLineRef))
     {
         str_Line = (const char*) pcli_Line->GetLine();
     }

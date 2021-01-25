@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -53,7 +53,7 @@ ResourceString& ResourceString::operator=(const ResourceString& CLI_String)
 {
     for (   LANG e_Lang = (LANG) 0;
             e_Lang < LANG_COUNT;
-            e_Lang = (LANG) (e_Lang + 1))
+            e_Lang = (LANG) (((int) e_Lang) + 1))
     {
         if (CLI_String.HasString(e_Lang))
         {
@@ -80,7 +80,7 @@ ResourceString& ResourceString::SetString(const ResourceString::LANG E_Lang, con
     {
         GetTraces().Trace(INTERNAL_ERROR)
             << "Could not set resource '" << STR_String << "' "
-            << "for language " << E_Lang
+            << "for language " << (int) E_Lang
             << endl;
     }
     return *this;
@@ -149,7 +149,7 @@ const tk::String ResourceString::Concat(
     return tk::String::Concat(MAX_RESOURCE_LENGTH, STR_1, STR_2, STR_3, STR_4, STR_5);
 }
 
-ResourceString cli::operator+(const ResourceString& CLI_Str1, const ResourceString& CLI_Str2)
+const ResourceString cli::operator+(const ResourceString& CLI_Str1, const ResourceString& CLI_Str2)
 {
     ResourceString cli_Result;
     for (int e_Lang = 0; e_Lang < ResourceString::LANG_COUNT; e_Lang ++)

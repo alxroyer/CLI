@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -32,6 +32,8 @@
 #ifndef _CLI_IO_DEVICE_H_
 #define _CLI_IO_DEVICE_H_
 
+#include <stdint.h> // int8_t, int16_t, int32_t, int64_t...
+
 #include "cli/namespace.h"
 #include "cli/object.h"
 #include "cli/debug.h"
@@ -41,13 +43,195 @@
 
 CLI_NS_BEGIN(cli)
 
+
+    //! @brief Input keys.
+    //! @return N/A (doxygen warning)
+    typedef enum _KEY
+    {
+        NULL_KEY = '\0',    //!< Null key.
+
+        BREAK = 3,          //!< Break (Ctrl+C).
+        LOGOUT = 4,         //!< Logout (Ctrl+D).
+        ENTER = 10,         //!< Enter.
+        ESCAPE = 27,        //!< Escape.
+        SPACE = 32,         //!< Space.
+        BACKSPACE = 8,      //!< Backspace (changed from '\\b' to 8 in version 2.7 for ASCII compliance).
+        DELETE = 127,       //!< Delete key (changed from 128 to 127 in version 2.7 for ASCII compliance).
+        CLS = 501,          //!< Clean screen key (changed from 129 to 501 in order to avoid overlap with printable ASCII characters).
+        INSERT = 502,       //!< Insert key (changed from 500 to 502 in order to avoid overlap with printable ASCII characters).
+        TAB = '\t',         //!< Tab key
+
+        KEY_0 = '0',
+        KEY_1 = '1',
+        KEY_2 = '2',
+        KEY_3 = '3',
+        KEY_4 = '4',
+        KEY_5 = '5',
+        KEY_6 = '6',
+        KEY_7 = '7',
+        KEY_8 = '8',
+        KEY_9 = '9',
+        KEY_a = 'a',
+            KEY_aacute = 0xc3a1,    //!< Based on utf-8 encoding for 'Ã¡' (changed in version 2.9)
+            KEY_agrave = 0xc3a0,    //!< Based on utf-8 encoding for 'Ã ' (changed in version 2.9)
+            KEY_auml = 0xc3a4,      //!< Based on utf-8 encoding for 'Ã¤' (changed in version 2.9)
+            KEY_acirc = 0xc3a2,     //!< Based on utf-8 encoding for 'Ã¢' (changed in version 2.9)
+        KEY_b = 'b',
+        KEY_c = 'c',
+            KEY_ccedil = 0xc3a7,    //!< Based on utf-8 encoding for 'Ã§' (changed in version 2.9)
+        KEY_d = 'd',
+        KEY_e = 'e',
+            KEY_eacute = 0xc3a9,    //!< Based on utf-8 encoding for 'Ã©' (changed in version 2.9)
+            KEY_egrave = 0xc3a8,    //!< Based on utf-8 encoding for 'Ã¨' (changed in version 2.9)
+            KEY_euml = 0xc3ab,      //!< Based on utf-8 encoding for 'Ã¼' (changed in version 2.9)
+            KEY_ecirc = 0xc3aa,     //!< Based on utf-8 encoding for 'Ã»' (changed in version 2.9)
+        KEY_f = 'f',
+        KEY_g = 'g',
+        KEY_h = 'h',
+        KEY_i = 'i',
+            KEY_iacute = 0xc3ad,    //!< Based on utf-8 encoding for 'Ã­' (changed in version 2.9)
+            KEY_igrave = 0xc3ac,    //!< Based on utf-8 encoding for 'Ã¬' (changed in version 2.9)
+            KEY_iuml = 0xc3af,      //!< Based on utf-8 encoding for 'Ã¯' (changed in version 2.9)
+            KEY_icirc = 0xc3ae,     //!< Based on utf-8 encoding for 'Ã®' (changed in version 2.9)
+        KEY_j = 'j',
+        KEY_k = 'k',
+        KEY_l = 'l',
+        KEY_m = 'm',
+        KEY_n = 'n',
+        KEY_o = 'o',
+            KEY_oacute = 0xc3b3,    //!< Based on utf-8 encoding for 'Ã³' (changed in version 2.9)
+            KEY_ograve = 0xc3b2,    //!< Based on utf-8 encoding for 'Ã²' (changed in version 2.9)
+            KEY_ouml = 0xc3b6,      //!< Based on utf-8 encoding for 'Ã¶' (changed in version 2.9)
+            KEY_ocirc = 0xc3b4,     //!< Based on utf-8 encoding for 'Ã´' (changed in version 2.9)
+        KEY_p = 'p',
+        KEY_q = 'q',
+        KEY_r = 'r',
+        KEY_s = 's',
+        KEY_t = 't',
+        KEY_u = 'u',
+            KEY_uacute = 0xc3ba,    //!< Based on utf-8 encoding for 'Ãº' (changed in version 2.9)
+            KEY_ugrave = 0xc3b9,    //!< Based on utf-8 encoding for 'Ã¹' (changed in version 2.9)
+            KEY_uuml = 0xc3bc,      //!< Based on utf-8 encoding for 'Ã¼' (changed in version 2.9)
+            KEY_ucirc = 0xc3bb,     //!< Based on utf-8 encoding for 'Ã»' (changed in version 2.9)
+        KEY_v = 'v',
+        KEY_w = 'w',
+        KEY_x = 'x',
+        KEY_y = 'y',
+        KEY_z = 'z',
+
+        KEY_A = 'A',
+        KEY_B = 'B',
+        KEY_C = 'C',
+        KEY_D = 'D',
+        KEY_E = 'E',
+        KEY_F = 'F',
+        KEY_G = 'G',
+        KEY_H = 'H',
+        KEY_I = 'I',
+        KEY_J = 'J',
+        KEY_K = 'K',
+        KEY_L = 'L',
+        KEY_M = 'M',
+        KEY_N = 'N',
+        KEY_O = 'O',
+        KEY_P = 'P',
+        KEY_Q = 'Q',
+        KEY_R = 'R',
+        KEY_S = 'S',
+        KEY_T = 'T',
+        KEY_U = 'U',
+        KEY_V = 'V',
+        KEY_W = 'W',
+        KEY_X = 'X',
+        KEY_Y = 'Y',
+        KEY_Z = 'Z',
+
+        PLUS = '+',
+        MINUS = '-',
+        STAR = '*',
+        SLASH = '/',
+        LOWER_THAN = '<',
+        GREATER_THAN = '>',
+        EQUAL = '=',
+        PERCENT = '%',
+
+        UNDERSCORE = '_',
+        AROBASE = '@',
+        SHARP = '#',
+        AMPERCENT = '&',
+        DOLLAR = '$',
+        BACKSLASH = '\\',
+        PIPE = '|',
+        TILDE = '~',
+        SQUARE = 0xc2b2,    //!< Based on utf-8 encoding for 'Â²' (changed in version 2.9)
+        EURO = 0xe282ac,    //!< Based on utf-8 encoding for 'â‚¬' (changed in version 2.9)
+        POUND = 0xc2a3,     //!< Based on utf-8 encoding for 'Â£' (changed in version 2.9)
+        MICRO = 0xc2b5,     //!< Based on utf-8 encoding for 'Âµ' (changed in version 2.9)
+        PARAGRAPH = 0xc2a7, //!< Based on utf-8 encoding for 'Â§' (changed in version 2.9)
+        DEGREE = 0xc2b0,    //!< Based on utf-8 encoding for 'Â°' (changed in version 2.9)
+        COPYRIGHT = 0xc2a9, //!< Based on utf-8 encoding for 'Â©' (changed in version 2.9)
+
+        QUESTION = '?',
+        EXCLAMATION = '!',
+        COLUMN = ':',
+        DOT = '.',
+        COMA = ',',
+        SEMI_COLUMN = ';',
+        QUOTE = '\'',
+        DOUBLE_QUOTE = '"',
+        BACK_QUOTE = '`',
+
+        OPENING_BRACE = '(',
+        CLOSING_BRACE = ')',
+        OPENING_CURLY_BRACE = '{',
+        CLOSING_CURLY_BRACE = '}',
+        OPENING_BRACKET = '[',
+        CLOSING_BRACKET = ']',
+
+        KEY_UP = 1001,              //!< Up arrow key.
+        KEY_DOWN = 1002,            //!< Down arrow key.
+        KEY_LEFT = 1003,            //!< Left arrow key.
+        KEY_RIGHT = 1004,           //!< Right arrow key.
+        PAGE_UP = 1005,             //!< Page up arrow key.
+        PAGE_DOWN = 1006,           //!< Page down arrow key.
+        PAGE_LEFT = 1007,           //!< Page left arrow key.
+        PAGE_RIGHT = 1008,          //!< Page right arrow key.
+
+        KEY_BEGIN = 1020,           //!< Begin key.
+        KEY_END = 1021,             //!< End key.
+
+        COPY = 2001,                //!< Copy.
+        CUT = 2002,                 //!< Cut.
+        PASTE = 2003,               //!< Paste.
+
+        UNDO = 2004,                //!< Undo.
+        REDO = 2005,                //!< Redo.
+        PREVIOUS = 2006,            //!< Previous key.
+        NEXT = 2007,                //!< Forward key.
+
+        F1 = 0x0f000001,
+        F2 = 0x0f000002,
+        F3 = 0x0f000003,
+        F4 = 0x0f000004,
+        F5 = 0x0f000005,
+        F6 = 0x0f000006,
+        F7 = 0x0f000007,
+        F8 = 0x0f000008,
+        F9 = 0x0f000009,
+        F10 = 0x0f00000a,
+        F11 = 0x0f00000b,
+        F12 = 0x0f00000c,
+
+        FEED_MORE = 0xffffffff,     //!< Return code while analyzing input characters, till the encoding sequence is not fulfilled.
+    } KEY;
+
     //! @brief End of line for input/output devices.
     //! @see endl
     class IOEndl : public Object
     {
     public:
         //! @brief Default constructor.
-        explicit IOEndl(void) {}
+        explicit IOEndl(void) : Object() {}
 
     private:
         //! @brief No copy constructor.
@@ -62,6 +246,10 @@ CLI_NS_BEGIN(cli)
     //! endl can be passed to OutputDevice to print carriage returns.
     extern const IOEndl endl;
 
+
+    // Forward declarations.
+    class StringEncoder;
+    class StringDecoder;
 
     //! @brief Generic output device.
     //! @see endl
@@ -175,49 +363,55 @@ CLI_NS_BEGIN(cli)
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            const int I_Out             //!< Integer number.
-            ) const;
-
-        //! @brief Output operator.
-        //! @return The output device itself.
-        const OutputDevice& operator<<(
-            const unsigned int UI_Out   //!< Unsigned integer number.
-            ) const;
-
-        //! @brief Output operator.
-        //! @return The output device itself.
-        const OutputDevice& operator<<(
             const char C_Out            //!< Single character.
             ) const;
 
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            const unsigned char UC_Out  //!< Unsigned char number.
+            const KEY E_Key             //!< Single character as a KEY.
             ) const;
 
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            const short S_Out           //!< Short number.
+            const uint8_t UI8_Out       //!< 8 bits unsigned integer number.
             ) const;
 
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            const unsigned short US_Out //!< Unsigned short number.
+            const int16_t I16_Out       //!< 16 bits integer number.
             ) const;
 
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            const long L_Out            //!< Long number.
+            const uint16_t UI16_Out     //!< 16 bits unsigned integer number.
             ) const;
 
         //! @brief Output operator.
         //! @return The output device itself.
         const OutputDevice& operator<<(
-            const unsigned long UL_Out  //!< Unsigned long number.
+            const int32_t I32_Out       //!< 32 bits integer number.
+            ) const;
+
+        //! @brief Output operator.
+        //! @return The output device itself.
+        const OutputDevice& operator<<(
+            const uint32_t UI32_Out     //!< 32 bits unsigned integer number.
+            ) const;
+
+        //! @brief Output operator.
+        //! @return The output device itself.
+        const OutputDevice& operator<<(
+            const int64_t I64_Out       //!< 64 bits integer number.
+            ) const;
+
+        //! @brief Output operator.
+        //! @return The output device itself.
+        const OutputDevice& operator<<(
+            const uint64_t UI64_Out     //!< 64 bits unsigned integer number.
             ) const;
 
         //! @brief Output operator.
@@ -268,12 +462,11 @@ CLI_NS_BEGIN(cli)
         {
         public:
             //! @brief ScreenInfo regular values.
-            //! @return N/A (doxygen warning)
-            enum {
+            enum _RegularValues {
                 UNKNOWN = -1,           //!< Unknown value constant for either width or height.
                 DEFAULT_WIDTH = 80,     //!< Default width constant.
                 DEFAULT_HEIGHT = 20     //!< Default height constant.
-            } _RegularValues;
+            };
 
         private:
             //! No default constructor.
@@ -298,7 +491,7 @@ CLI_NS_BEGIN(cli)
                     m_bTrueCls(CLI_Info.GetbTrueCls()), m_bWrapLines(CLI_Info.GetbWrapLines())
             {}
             //! @brief Destructor.
-            ~ScreenInfo(void) {}
+            virtual ~ScreenInfo(void) {}
         public:
             //! @brief Assignment operator.
             //! @return Same ScreenInfo instance reference.
@@ -373,125 +566,14 @@ CLI_NS_BEGIN(cli)
         //! Open state lock count.
         int m_iOpenLock;
 
+        //! String encdoing.
+        StringEncoder& m_cliStringEncoder;
+
     protected:
         //! Last error.
         //! @return N/A (doxygen warning)
         mutable ResourceString m_cliLastError;
     };
-
-
-    //! @brief Input characters.
-    //! @return N/A (doxygen warning)
-    typedef enum _KEY
-    {
-        NULL_KEY = '\0',    //!< Null key.
-
-        BREAK = 3,          //!< Break (Ctrl+C).
-        LOGOUT = 4,         //!< Logout (Ctrl+D).
-        ENTER = 13,         //!< Enter.
-        ESCAPE = 27,        //!< Escape.
-        SPACE = 32,         //!< Space.
-        BACKSPACE = 8,      //!< Backspace (changed from '\\b' to 8 in version 2.7 for ASCII compliance).
-        DELETE = 127,       //!< Delete key (changed from 128 to 127 in version 2.7 for ASCII compliance).
-        CLS = 501,          //!< Clean screen key (changed from 129 to 501 in order to avoid overlap with printable ASCII characters).
-        INSERT = 502,       //!< Insert key (changed from 500 to 502 in order to avoid overlap with printable ASCII characters).
-
-        TAB = '\t',
-        KEY_0 = '0', KEY_1 = '1', KEY_2 = '2', KEY_3 = '3', KEY_4 = '4', KEY_5 = '5',
-        KEY_6 = '6', KEY_7 = '7', KEY_8 = '8', KEY_9 = '9',
-        KEY_a = 'a', KEY_aacute = 'á', KEY_agrave = 'à', KEY_auml = 'ä', KEY_acirc = 'â',
-        KEY_b = 'b', KEY_c = 'c', KEY_ccedil = 'ç', KEY_d = 'd',
-        KEY_e = 'e', KEY_eacute = 'é', KEY_egrave = 'è', KEY_euml = 'ë', KEY_ecirc = 'ê',
-        KEY_f = 'f', KEY_g = 'g', KEY_h = 'h',
-        KEY_i = 'i', KEY_iacute = 'í', KEY_igrave = 'ì', KEY_iuml = 'ï', KEY_icirc = 'î',
-        KEY_j = 'j', KEY_k = 'k', KEY_l = 'l', KEY_m = 'm', KEY_n = 'n',
-        KEY_o = 'o', KEY_oacute = 'ó', KEY_ograve = 'ò', KEY_ouml = 'ö', KEY_ocirc = 'ô',
-        KEY_p = 'p', KEY_q = 'q', KEY_r = 'r', KEY_s = 's', KEY_t = 't',
-        KEY_u = 'u', KEY_uacute = 'ú', KEY_ugrave = 'ù', KEY_uuml = 'ü', KEY_ucirc = 'û',
-        KEY_v = 'v', KEY_w = 'w', KEY_x = 'x', KEY_y = 'y', KEY_z = 'z',
-
-        KEY_A = 'A', KEY_B = 'B', KEY_C = 'C', KEY_D = 'D', KEY_E = 'E', KEY_F = 'F',
-        KEY_G = 'G', KEY_H = 'H', KEY_I = 'I', KEY_J = 'J', KEY_K = 'K', KEY_L = 'L',
-        KEY_M = 'M', KEY_N = 'N', KEY_O = 'O', KEY_P = 'P', KEY_Q = 'Q', KEY_R = 'R',
-        KEY_S = 'S', KEY_T = 'T', KEY_U = 'U', KEY_V = 'V', KEY_W = 'W', KEY_X = 'X',
-        KEY_Y = 'Y', KEY_Z = 'Z',
-
-        PLUS = '+',
-        MINUS = '-',
-        STAR = '*',
-        SLASH = '/',
-        LOWER_THAN = '<',
-        GREATER_THAN = '>',
-        EQUAL = '=',
-        PERCENT = '%',
-
-        UNDERSCORE = '_',
-        AROBASE = '@',
-        SHARP = '#',
-        AMPERCENT = '&',
-        DOLLAR = '$',
-        BACKSLASH = '\\',
-        PIPE = '|',
-        TILDE = '~',
-        SQUARE = '²',
-        EURO = '€',
-        POUND = '£',
-        MICRO = 'µ',
-        PARAGRAPH = '§',
-        DEGREE = '°',
-        COPYRIGHT = '©',
-
-        QUESTION = '?',
-        EXCLAMATION = '!',
-        COLUMN = ':',
-        DOT = '.',
-        COMA = ',',
-        SEMI_COLUMN = ';',
-        QUOTE = '\'',
-        DOUBLE_QUOTE = '"',
-        BACK_QUOTE = '`',
-
-        OPENING_BRACE = '(',
-        CLOSING_BRACE = ')',
-        OPENING_CURLY_BRACE = '{',
-        CLOSING_CURLY_BRACE = '}',
-        OPENING_BRACKET = '[',
-        CLOSING_BRACKET = ']',
-
-        KEY_UP = 1001,              //!< Up arrow key.
-        KEY_DOWN = 1002,            //!< Down arrow key.
-        KEY_LEFT = 1003,            //!< Left arrow key.
-        KEY_RIGHT = 1004,           //!< Right arrow key.
-        PAGE_UP = 1005,             //!< Page up arrow key.
-        PAGE_DOWN = 1006,           //!< Page down arrow key.
-        PAGE_LEFT = 1007,           //!< Page left arrow key.
-        PAGE_RIGHT = 1008,          //!< Page right arrow key.
-
-        KEY_BEGIN = 1020,           //!< Begin key.
-        KEY_END = 1021,             //!< End key.
-
-        COPY = 2001,                //!< Copy.
-        CUT = 2002,                 //!< Cut.
-        PASTE = 2003,               //!< Paste.
-
-        UNDO = 2004,                //!< Undo.
-        REDO = 2005,                //!< Redo.
-        PREVIOUS = 2006,            //!< Previous key.
-        NEXT = 2007,                //!< Forward key.
-
-        F1 = 0x0f000001,
-        F2 = 0x0f000002,
-        F3 = 0x0f000003,
-        F4 = 0x0f000004,
-        F5 = 0x0f000005,
-        F6 = 0x0f000006,
-        F7 = 0x0f000007,
-        F8 = 0x0f000008,
-        F9 = 0x0f000009,
-        F10 = 0x0f00000a,
-        F11 = 0x0f00000b,
-        F12 = 0x0f00000c,
-    } KEY;
 
 
     //! @brief Generic input/output device.
@@ -544,12 +626,17 @@ CLI_NS_BEGIN(cli)
         //! @return Standard input device reference.
         static IODevice& GetStdIn(void);
 
-    public:
+    protected:
         //! @brief Common char translation.
-        //! @return KEY code corresponding to the given common char.
-        static const KEY GetKey(
+        //! @return KEY code corresponding to the given common char,
+        //!         FEED_MORE when the character has been analyzed as part of a sequence, and the end of the sequence should be given to determine the actual KEY.
+        //! @note Routine explicitely renamed in order to cause compilation errors due to the addition of the FEED_MORE return code.
+        const KEY Char2Key(
             const int I_Char    //!< Common char to translate.
-            );
+            ) const;
+    private:
+        //! String decoding.
+        StringDecoder& m_cliStringDecoder;
     };
 
 CLI_NS_END(cli)

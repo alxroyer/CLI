@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -31,7 +31,6 @@ include $(CLI_DIR)/build/make/_vars.mak
 
 # Variables
 PROJECT = $(patsubst %.mak,%,$(THIS_MAKEFILE))
-THIS_MAKEFILE = $(firstword $(MAKEFILE_LIST))
 OUT_DIR = __$(PROJECT)
 CLI_XML_ERROR_FILES = $(patsubst %.error.log,%.xml,$(shell find $(CLI_DIR)/samples -name "*.error.log" -print))
 CLI_XML_BIG_FILE = $(CLI_DIR)/samples/tests/big.xml
@@ -43,7 +42,7 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(CLI_DIR)/tools/build/make/_vars.vars
 vars: $(CLI_DIR)/tools/build/make/_vars.vars
 $(CLI_DIR)/tools/build/make/_vars.vars:
-	$(call ShowVariables,PROJECT THIS_MAKEFILE OUT_DIR CLI_XML_REGULAR_FILES CLI_XML_ERROR_FILES CLI_XML_BIG_FILE)
+	$(call ShowVariables,PROJECT OUT_DIR CLI_XML_REGULAR_FILES CLI_XML_ERROR_FILES CLI_XML_BIG_FILE)
 
 endif
 # __TOOLS_VARS__

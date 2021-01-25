@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -63,24 +63,30 @@ html: dirs $(HTML_USER_GUIDE) ;
 # => Main files
 $(HTML_USER_GUIDE): $(wildcard $(DB_DIR)/*.xml $(DB_DIR)/*.css) $(DB_SAMPLES) $(MISC_FILES) user-guide.mak
 ifneq ($(XSL_STYLESHEET),)
-	xsltproc $(XSLT_OPTIONS) "$(XSL_STYLESHEET)" "$(DB_USER_GUIDE)" > $@.tmp \
-	&& cp -f $@.tmp $@ \
-	&& head -n 1 $@.tmp \
-		| sed -e "s/<body/<body onload=\"onLoad();\" onscroll=\"onScroll();\" /" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/jquery-1.6.4.js\"><\/script><\/head>/" \
-		| sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"..\/jquery-ui-1.8.16.custom\/css\/smoothness\/jquery-ui-1.8.16.custom.css\"><\/head>/" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/jquery-ui-1.8.16.custom\/js\/jquery-ui-1.8.16.custom.min.js\"><\/script><\/head>/" \
-		| sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"..\/blackbirdjs-1.0\/blackbird-lite.css\"><\/head>/" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/blackbirdjs-1.0\/blackbird.js\"><\/script><\/head>/" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/cli-traces.js\"><\/script><\/head>/" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/xml-node.js\"><\/script><\/head>/" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/dynamic-menu.js\"><\/script><\/head>/" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/dynamic-dialog.js\"><\/script><\/head>/" \
-		| sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"cli-user-guide.css\"><\/head>/" \
-		| sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"cli-user-guide.js\"><\/script><\/head>/" \
-		> $@ \
-	&& tail -n +2 $@.tmp >> $@ \
-	&& rm $@.tmp
+	# Apply docbook XSL stylesheets
+	xsltproc $(XSLT_OPTIONS) "$(XSL_STYLESHEET)" "$(DB_USER_GUIDE)" > $@.tmp
+	# Adjust the first line:
+	head -n 1 $@.tmp > $@
+	#  - add 'onLoad()' and 'onScroll()' handlers.
+	sed -e "s/<body/<body onload=\"onLoad();\" onscroll=\"onScroll();\" /" -i $@
+	#  - load jquery scripts and stylesheets
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/jquery-1.6.4.js\"><\/script><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"..\/jquery-ui-1.8.16.custom\/css\/smoothness\/jquery-ui-1.8.16.custom.css\"><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/jquery-ui-1.8.16.custom\/js\/jquery-ui-1.8.16.custom.min.js\"><\/script><\/head>/" -i $@
+	#  - load blackbird scripts and stylesheets
+	sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"..\/blackbirdjs-1.0\/blackbird-lite.css\"><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/blackbirdjs-1.0\/blackbird.js\"><\/script><\/head>/" -i $@
+	#  - load CLI scripts and stylesheets
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/cli-traces.js\"><\/script><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/xml-node.js\"><\/script><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/dynamic-menu.js\"><\/script><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"..\/dynamic-dialog.js\"><\/script><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<link type=\"text\/css\" rel=\"stylesheet\" href=\"cli-user-guide.css\"><\/head>/" -i $@
+	sed -e "s/<\/head>/\n<script type=\"text\/javascript\" src=\"cli-user-guide.js\"><\/script><\/head>/" -i $@
+	# Append the rest of the docbook content
+	tail -n +2 $@.tmp >> $@
+	# Eventually remove the temporary docbook content
+	rm $@.tmp
 else
 $(warning Please set DOCBOOK_XSL_HTML to a valid UNIX path to have the docbook user-guide being generated)
 endif
@@ -103,23 +109,23 @@ $(SAMPLES_DIR)/ui-text-java.db: $(CLI_DIR)/samples/user-guide/UISampleText.java
 $(SAMPLES_DIR)/%.db: $(CLI_DIR)/samples/user-guide/%.xml $(SAMPLES_DIR)/cli2db.xsl
 	xsltproc $(SAMPLES_DIR)/cli2db.xsl $< > $@
 
-$(MISC_DIR)/empty.cpp: $(CLI_DIR)/samples/user-guide/empty.xml $(CLI_DIR)/tools/cli2cpp.xsl
-	xsltproc $(CLI_DIR)/tools/cli2cpp.xsl $< > $@
+$(MISC_DIR)/empty.cpp: $(CLI_DIR)/samples/user-guide/empty.xml $(CLI_DIR)/tools/cli2cpp.py
+	python $(CLI_DIR)/tools/cli2cpp.py $< --output $@
 
-$(MISC_DIR)/Empty.java: $(CLI_DIR)/samples/user-guide/empty.xml $(CLI_DIR)/tools/cli2java.xsl
-	xsltproc --stringparam STR_CliClassName "Empty" $(CLI_DIR)/tools/cli2java.xsl $< > $@
+$(MISC_DIR)/Empty.java: $(CLI_DIR)/samples/user-guide/empty.xml $(CLI_DIR)/tools/cli2java.py
+	python $(CLI_DIR)/tools/cli2java.py --cli-class-name "Empty" $< --output $@
 
 $(MISC_DIR)/clisample.xml: $(CLI_DIR)/samples/clisample/clisample.xml
 	cp $< $@
 
-$(MISC_DIR)/clisample.html: $(MISC_DIR)/clisample.xml $(CLI_DIR)/tools/cli2help.xsl
-	xsltproc $(CLI_DIR)/tools/cli2help.xsl $< > $@
+$(MISC_DIR)/clisample.html: $(MISC_DIR)/clisample.xml $(CLI_DIR)/tools/cli2help.py
+	python $(CLI_DIR)/tools/cli2help.py $< --output $@
 
 $(MISC_DIR)/pwd_shell.h: $(CLI_DIR)/samples/user-guide/pwd_shell.h
-	cat $< | sed -e "s/\&/\&amp;/g" | sed -e "s/</\&lt;/g" > $@
+	cat $< | sed -e "s/\&/\&amp;/g" | sed -e "s/</\&lt;/g" | unix2dos > $@
 
 $(MISC_DIR)/PwdShellContext.java: $(CLI_DIR)/samples/user-guide/PwdShellContext.java
-	cat $< | sed -e "s/\&/\&amp;/g" | sed -e "s/</\&lt;/g" > $@
+	cat $< | sed -e "s/\&/\&amp;/g" | sed -e "s/</\&lt;/g" | unix2dos > $@
 
 .PHONY: dirs
 dirs: ;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -43,28 +43,28 @@ public class Choice extends Line {
     public Choice(cli.ExecutionContext.Interface CLI_ParentContext, int I_DefaultChoice, java.util.Collection<cli.ResourceString> J_Choices) {
         super(__Choice(CLI_ParentContext, I_DefaultChoice, J_Choices));
     }
-    private static final int __Choice(cli.ExecutionContext.Interface CLI_ParentContext, int I_DefaultChoice, java.util.Collection<cli.ResourceString> J_Choices) {
-        int i_NativeChoiceListRef = __beginChoiceList();
+    private static final long __Choice(cli.ExecutionContext.Interface CLI_ParentContext, int I_DefaultChoice, java.util.Collection<cli.ResourceString> J_Choices) {
+        long i64_NativeChoiceListRef = __beginChoiceList();
         for (java.util.Iterator<cli.ResourceString> it = J_Choices.iterator(); it.hasNext(); ) {
             cli.ResourceString cli_Choice = it.next();
             if (cli_Choice != null) {
-                __addChoice(i_NativeChoiceListRef, cli_Choice.getNativeRef());
+                __addChoice(i64_NativeChoiceListRef, cli_Choice.getNativeRef());
             }
         }
         if (CLI_ParentContext == null) {
-            return __Choice(0, I_DefaultChoice, i_NativeChoiceListRef);
+            return __Choice(0, I_DefaultChoice, i64_NativeChoiceListRef);
         } else {
-            return __Choice(CLI_ParentContext.getNativeRef(), I_DefaultChoice, i_NativeChoiceListRef);
+            return __Choice(CLI_ParentContext.getNativeRef(), I_DefaultChoice, i64_NativeChoiceListRef);
         }
     }
-    private static final native int __beginChoiceList();
-    private static final native void __addChoice(int I_NativeChoiceListRef, int I_NativeResourceStringRef);
-    private static final native int __Choice(int I_NativeParentContextRef, int I_DefaultChoice, int I_NativeChoiceListRef);
+    private static final native long __beginChoiceList();
+    private static final native void __addChoice(long I64_NativeChoiceListRef, long I64_NativeResourceStringRef);
+    private static final native long __Choice(long I64_NativeParentContextRef, int I_DefaultChoice, long I64_NativeChoiceListRef);
 
     /** Contructor for derived classes only.
-        @param I_NativeRef Native object reference. */
-    protected Choice(int I_NativeRef) {
-        super(I_NativeRef);
+        @param I64_NativeRef Native instance reference. */
+    protected Choice(long I64_NativeRef) {
+        super(I64_NativeRef);
     }
 
     /** Choice retrieval.
@@ -72,7 +72,7 @@ public class Choice extends Line {
     public int getChoice() {
         return __getChoice(this.getNativeRef());
     }
-    private static final native int __getChoice(int I_NativeChoiceRef);
+    private static final native int __getChoice(long I64_NativeChoiceRef);
 
     /** Choice retrieval in its string form.
         @return String of the choice. Empty string if no matching choice found. */
@@ -84,6 +84,6 @@ public class Choice extends Line {
         }
         return cli_Choice;
     }
-    private static final native String __getstrChoice(int I_NativeChoiceRef, int E_Lang);
+    private static final native String __getstrChoice(long I64_NativeChoiceRef, int E_Lang);
 
 }

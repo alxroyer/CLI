@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -155,7 +155,7 @@ CLI_NS_BEGIN(cli)
     //! @return The concatenation of the resource string arguments.
     //!
     //! Concats the strings of the input resource string objects for each language.
-    ResourceString operator+(
+    const ResourceString operator+(
         const ResourceString& CLI_Str1,     //!< First member.
         const ResourceString& CLI_Str2      //!< Second member.
         );

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -23,6 +23,34 @@
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------
+
+Version 2.9
+(March, 14th 2018)
+    Major modifications:
+        * Comment line pattern management
+        * Java 64bits compatibility
+            - Native object references changed from int to long
+            - OutputDevice::operator<<(int64_t/uint64_t) addition, refactoring of io_device.h for a better support of the different architectures
+        * Contributions:
+            - Dinesh Balasubramaniam: TelnetServer multiple clients bug fix
+        * File encodings:
+            - Basic encoding changed from iso-8859-1 to utf-8 encoding
+    Miscellaneous:
+        * Better output for 'double' numbers
+        * Python tools
+            - XSLT stylesheets deprecated in favor of python tools
+            - Checked and restyled with pylint 1.3.1 & 1.5.2, pylint checkings now optional with pylint.mak
+            - '--output' option addition: prevents bad partial generations for a more robust integration with Makefiles instead of standard output redirections
+            - Better error display for malformed XML inputs
+            - Debug log improvement
+        * Security improvements
+            - Code quality review
+            - Compilation warning removal
+            - Better control of snprintf return values
+        * Makefiles:
+            - C++: dependencies computation ensured in a deterministic order (for configuration tracking concerns)
+            - Java: path modification for generated sample & test source files
+            - Tools: better pylint/no pylint integration
 
 Version 2.8
 (July, 15th 2013):

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -38,14 +38,22 @@
     <!ENTITY faq        SYSTEM "faq.xml">
     <!ENTITY conclusion SYSTEM "conclusion.xml">
 
+    <!ENTITY sample-circle-color-cli    SYSTEM "samples/circle-color.db">
+    <!ENTITY sample-circle-cpp          SYSTEM "samples/circle-cpp.db">
+    <!ENTITY sample-circle-java         SYSTEM "samples/circle-java.db">
+    <!ENTITY sample-circle-pos-cli      SYSTEM "samples/circle-pos.db">
+    <!ENTITY sample-comments            SYSTEM "samples/comments.db">
+    <!ENTITY sample-cpp                 SYSTEM "samples/cpp.db">
+    <!ENTITY sample-cpp-full            SYSTEM "samples/cpp-full.db">
     <!ENTITY sample-empty               SYSTEM "samples/empty.db">
     <!ENTITY sample-empty-cpp           SYSTEM "samples/empty-cpp.db">
     <!ENTITY sample-hello               SYSTEM "samples/hello.db">
     <!ENTITY sample-hello-shout         SYSTEM "samples/hello-shout.db">
     <!ENTITY sample-hello-bye-shout     SYSTEM "samples/hello-bye-shout.db">
     <!ENTITY sample-help                SYSTEM "samples/help.db">
-    <!ENTITY sample-cpp                 SYSTEM "samples/cpp.db">
-    <!ENTITY sample-cpp-full            SYSTEM "samples/cpp-full.db">
+    <!ENTITY sample-menu-config         SYSTEM "samples/menu-config.db">
+    <!ENTITY sample-menu-cpp            SYSTEM "samples/menu-cpp.db">
+    <!ENTITY sample-menu-handler        SYSTEM "samples/menu-handler.db">
     <!ENTITY sample-output              SYSTEM "samples/output.db">
     <!ENTITY sample-param               SYSTEM "samples/param.db">
     <!ENTITY sample-tag-a-star          SYSTEM "samples/tag-a-star.db">
@@ -56,23 +64,16 @@
     <!ENTITY sample-tag-a-b-plus        SYSTEM "samples/tag-a-b-plus.db">
     <!ENTITY sample-tag-a-b1-b2-c       SYSTEM "samples/tag-a-b1-b2-c.db">
     <!ENTITY sample-tag-a-b1-b2-nil-c   SYSTEM "samples/tag-a-b1-b2-nil-c.db">
-    <!ENTITY sample-circle-cpp          SYSTEM "samples/circle-cpp.db">
-    <!ENTITY sample-circle-java         SYSTEM "samples/circle-java.db">
-    <!ENTITY sample-circle-pos-cli      SYSTEM "samples/circle-pos.db">
-    <!ENTITY sample-circle-color-cli    SYSTEM "samples/circle-color.db">
-    <!ENTITY sample-menu-config         SYSTEM "samples/menu-config.db">
-    <!ENTITY sample-menu-handler        SYSTEM "samples/menu-handler.db">
-    <!ENTITY sample-menu-cpp            SYSTEM "samples/menu-cpp.db">
-    <!ENTITY sample-ui-line             SYSTEM "samples/ui-line.db">
-    <!ENTITY sample-ui-password         SYSTEM "samples/ui-password.db">
+    <!ENTITY sample-ui-choice           SYSTEM "samples/ui-choice.db">
     <!ENTITY sample-ui-int              SYSTEM "samples/ui-int.db">
     <!ENTITY sample-ui-float            SYSTEM "samples/ui-float.db">
-    <!ENTITY sample-ui-yesno            SYSTEM "samples/ui-yesno.db">
-    <!ENTITY sample-ui-choice           SYSTEM "samples/ui-choice.db">
+    <!ENTITY sample-ui-less             SYSTEM "samples/ui-less.db">
+    <!ENTITY sample-ui-line             SYSTEM "samples/ui-line.db">
+    <!ENTITY sample-ui-more             SYSTEM "samples/ui-more.db">
+    <!ENTITY sample-ui-password         SYSTEM "samples/ui-password.db">
     <!ENTITY sample-ui-text-cpp         SYSTEM "samples/ui-text-cpp.db">
     <!ENTITY sample-ui-text-java        SYSTEM "samples/ui-text-java.db">
-    <!ENTITY sample-ui-more             SYSTEM "samples/ui-more.db">
-    <!ENTITY sample-ui-less             SYSTEM "samples/ui-less.db">
+    <!ENTITY sample-ui-yesno            SYSTEM "samples/ui-yesno.db">
     <!ENTITY misc-pwd-shell-cpp         SYSTEM "misc/pwd_shell.h">
     <!ENTITY misc-pwd-shell-java        SYSTEM "misc/PwdShellContext.java">
 ]>
@@ -83,7 +84,7 @@
 <artheader>
     <author><firstname>Royer</firstname><surname>Alexis</surname></author>
     <issuenum>2.7</issuenum>
-    <pubdate>Jul, 15th 2013</pubdate>
+    <pubdate>March, 14th 2018</pubdate>
     <title>CLI library user guide</title>
     <!--<titleabbrev></titleabbrev>-->
     &history;

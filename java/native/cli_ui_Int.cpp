@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,22 +36,22 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Int__1_1Int(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Int__1_1Int(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef, jint I_DefaultValue, jint I_MinValue, jint I_MaxValue)
+        jlong I64_NativeParentContextRef, jint I_DefaultValue, jint I_MinValue, jint I_MaxValue)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Int.__Int(I_NativeParentContextRef, I_DefaultValue, I_MinValue, I_MaxValue)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Int.__Int(I64_NativeParentContextRef, I_DefaultValue, I_MinValue, I_MaxValue)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_DefaultValue", I_DefaultValue) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_MinValue", I_MinValue) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_MaxValue", I_MaxValue) << cli::endl;
-    NativeObject::REF i_IntRef = 0;
+    NativeObject::REF i64_IntRef = 0;
     cli::ui::Int* pcli_Int = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_Int = new cli::ui::Int(*pcli_ParentContext, I_DefaultValue, I_MinValue, I_MaxValue);
         }
@@ -63,22 +63,22 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Int__1_1Int(
     if (pcli_Int != NULL)
     {
         NativeObject::Use(*pcli_Int);
-        i_IntRef = NativeObject::GetNativeRef(*pcli_Int);
+        i64_IntRef = NativeObject::GetNativeRef(*pcli_Int);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Int.__Int()", i_IntRef) << cli::endl;
-    return i_IntRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Int.__Int()", i64_IntRef) << cli::endl;
+    return i64_IntRef;
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Int__1_1getInt(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeIntRef)
+        jlong I64_NativeIntRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Int.__getInt(I_NativeIntRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeIntRef", I_NativeIntRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Int.__getInt(I64_NativeIntRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeIntRef", I64_NativeIntRef) << cli::endl;
     int i_Int = 0;
-    if (const cli::ui::Int* const pcli_Int = NativeObject::GetNativeObject<const cli::ui::Int*>(I_NativeIntRef))
+    if (const cli::ui::Int* const pcli_Int = NativeObject::GetNativeObject<const cli::ui::Int*>(I64_NativeIntRef))
     {
         i_Int = pcli_Int->GetInt();
     }

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -1019,6 +1019,65 @@ add circle green
         </note>
 
         <blockquote>
+        I can define my own command lines, organize them in menus.
+        Pretty well!
+        Now, how can I handle comment lines?
+        Should I define something like a dummy command line for that?
+        </blockquote>
+
+        <para>
+        Could be, but a dedicated comment line pattern feature has been designed for that purpose,
+        which makes it easier and smarter by the way.
+        </para>
+
+    </section>
+
+    <section id="xmlres.comment">
+    <title id="xmlres.comment.title"><sgmltag class="element">comment</sgmltag>
+                - Define comment line patterns</title>
+
+        <para>
+        In addition to regular command lines, defined as sequences of keywords and parameters,
+        the XML resource file provides a way to easily define comment line patterns.
+        </para>
+
+        <note>
+        This feature has been added in the version 2.9 of the CLI toolkit.
+        </note>
+
+        <example id="eg.comment"><title id="eg.comment.title">Define comment line patterns</title>
+            <para>
+            Comment line patterns are defined through <sgmltag class="element">comment</sgmltag> elements directly within the <sgmltag class="element">cli</sgmltag> root node.
+            </para>
+            <para>
+            This example defines three comment line patterns:
+            lines starting with '#', '//' or '--' will be interpreted as comment lines.
+            </para>
+                &sample-comments;
+            <para>
+            In as much as these patterns are applicable to all the menus and sub-menus of the CLI,
+            they are reminded to the user in the beginning of the help message of any menu:
+            </para>
+<programlisting>
+Comments>help
+  Start with '#', '//' or '--' for a comment line
+  cls             Clean screen
+  exit            Exit menu 'Comments'
+  hello           Say hello to somebody
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+Comments>
+</programlisting>
+        </example>
+
+        <para>
+        Comment line patterns apply before the syntax analysis of the command line:
+        if the command line is recognized as a comment, the syntax analysis is not executed.
+        The comment line appears in the history the same as regular command lines do.
+        </para>
+
+        <blockquote>
         Thank you for this detailed documentation.
         Do you provide a schema in order to check automatically this XML resource syntax?
         </blockquote>
@@ -1077,44 +1136,27 @@ my-cli.xml validates</programlisting>
     <title id="xmlres.cli2help.title">Automatic documentation generation</title>
 
         <para>
-        Since version 2.5, the CLI toolkit is provided with a <filename>cli2help.xsl</filename> XSL stylesheet.
-        And since version 2.8, a python tool equivalent <filename>cli2help.py</filename> is also provided.
-        These tools generate CLI documentation automatically.
+        Since version 2.5, the CLI toolkit is provided with scripts that generate CLI documentation automatically.
         </para>
 
         <note>
-        As discussed in the <link linkend="xslt" endterm="xslt.title"/> section
-        for <filename>cli2cpp.py</filename> and <filename>cli2java.py</filename>,
-        the python tool works better than the XSL stylesheets,
-        but both technologies are still provided for backward compatibility reasons.
+        This documentation generation was originally processed thanks to a <filename>cli2help.xsl</filename> XSLT stylesheet.
+        However, in as much as the python script equivalent introduced in version 2.8 works better and faster,
+        this original XSLT stylesheet is still provided within the <filename>${CLI_DIR}/tools/</filename> directory, but is now declared deprecated since version 2.9.
         </note>
 
-        <example id="eg.cli2help"><title id="cli2help.title"><filename>cli2help.xsl</filename> / <filename>cli2help.py</filename> automatic documentation generation</title>
+        <example id="eg.cli2help"><title id="cli2help.title"><filename>cli2help.py</filename> automatic documentation generation</title>
             Based on the following sample <ulink url="misc/clisample.xml">clisample.xml</ulink> CLI XML resource file,
-            the XSL transformation below automatically generates the given documentation <ulink url="misc/clisample.html">clisample.html</ulink>.
-            <programlisting>xsltproc ${CLI_DIR}/tools/cli2help.xsl clisample.xml &gt; clisample.html</programlisting>
-            or:
-            <programlisting>python ${CLI_DIR}/tools/cli2help.py clisample.xml &gt; clisample.html</programlisting>
+            the transformation below automatically generates the given documentation <ulink url="misc/clisample.html">clisample.html</ulink>:
+                <programlisting>python ${CLI_DIR}/tools/cli2help.py clisample.xml --output clisample.html</programlisting>
         </example>
-
-        <para>
-        The XSL transformation stylesheet has several parameters:
-        <itemizedlist>
-        <listitem><varname>STR_Lang</varname>:
-                    Documentation language. May be either 'en' or 'fr'. Default is 'en'.</listitem>
-        <listitem><varname>B_GenerateToc</varname>:
-                    Table of content generation. 1 to enable. O to disable. Default is 1.</listitem>
-        <listitem><varname>B_NumberTitles</varname>:
-                    Set chapter numbers to titles. 1 to enable. 0 to disable. Default is 1.</listitem>
-        </itemizedlist>
-        </para>
 
         <para>
         The python tool comes with a <option>--help</option> option:
 <programlisting>
 $ python ${CLI_DIR}/tools/cli2help.py --help
 usage: cli2help [-h] [--version] [--lang LANG] [--toc | --no-toc]
-                [--title-numbers | --no-title-numbers]
+                [--title-numbers | --no-title-numbers] [--output OUTPUT]
                 xml-res
 
 positional arguments:
@@ -1128,6 +1170,8 @@ optional arguments:
   --no-toc            Do not generate table of content.
   --title-numbers     Generate titles with their number.
   --no-title-numbers  Generate titles with no number.
+  --output OUTPUT     Output file (by default the result is printed out in the
+                      standard output)
 </programlisting>
         </para>
 

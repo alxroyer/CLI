@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,9 +30,10 @@ package cli.ui;
 /** Generic user interface class. */
 public abstract class UI extends cli.ExecutionContext.Native {
 
-    /** Default constructor. */
-    protected UI(int I_NativeRef) {
-        super(I_NativeRef);
+    /** Default constructor.
+        @param I64_NativeRef Native instance reference corresponding to this Java instance. */
+    protected UI(long I64_NativeRef) {
+        super(I64_NativeRef);
     }
 
     /** Execution result accessor.
@@ -40,6 +41,6 @@ public abstract class UI extends cli.ExecutionContext.Native {
     public boolean getbExecResult() {
         return __getbExecResult(this.getNativeRef());
     }
-    private static final native boolean __getbExecResult(int I_NativeUIRef);
+    private static final native boolean __getbExecResult(long I64_NativeUIRef);
 
 }

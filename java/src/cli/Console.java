@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -34,6 +34,6 @@ public class Console extends IODevice.Native {
     public Console() {
         super(__Console());
     }
-    private static final native int __Console();
+    private static final native long __Console();
 
 }

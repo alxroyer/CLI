@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -30,18 +30,18 @@ package cli;
 public class TelnetConnection extends NonBlockingIODevice.Native {
 
     /** Creation from native code.
-        @param I_NativeStringRef Native instance reference. */
-    private static void createFromNative(int I_NativeConnectionRef) {
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.begin("TelnetConnection.createFromNative(I_NativeConnectionRef)"));
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.param("I_NativeConnectionRef", new Integer(I_NativeConnectionRef).toString()));
+        @param I64_NativeStringRef Native instance reference. */
+    private static void createFromNative(long I64_NativeConnectionRef) {
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.begin("TelnetConnection.createFromNative(I64_NativeConnectionRef)"));
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.param("I64_NativeConnectionRef", new Long(I64_NativeConnectionRef).toString()));
 
-        NativeObject.createdFromNative(new TelnetConnection(I_NativeConnectionRef));
+        NativeObject.createdFromNative(new TelnetConnection(I64_NativeConnectionRef));
 
-        Traces.safeTrace(NativeTraces.CLASS, I_NativeConnectionRef, NativeTraces.end("TelnetConnection.createFromNative()"));
+        Traces.safeTrace(NativeTraces.CLASS, I64_NativeConnectionRef, NativeTraces.end("TelnetConnection.createFromNative()"));
     }
     /** Constructor for createFromNative(). */
-    private TelnetConnection(int I_NativeConnectionRef) {
-        super(I_NativeConnectionRef);
+    private TelnetConnection(long I64_NativeConnectionRef) {
+        super(I64_NativeConnectionRef);
     }
 
 }

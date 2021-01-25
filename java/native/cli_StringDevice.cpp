@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,33 +36,33 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_StringDevice__1_1StringDevice(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_StringDevice__1_1StringDevice(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("StringDevice.__StringDevice()") << cli::endl;
-    NativeObject::REF i_StringDeviceRef = 0;
+    NativeObject::REF i64_StringDeviceRef = 0;
     if (cli::StringDevice* const pcli_StringDevice = new cli::StringDevice(0, true)) // UI_OutputMaxLen not taken in account by STL implementation.
     {
         NativeObject::Use(*pcli_StringDevice);
-        i_StringDeviceRef = NativeObject::GetNativeRef(*pcli_StringDevice);
+        i64_StringDeviceRef = NativeObject::GetNativeRef(*pcli_StringDevice);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("StringDevice.__StringDevice()", i_StringDeviceRef) << cli::endl;
-    return i_StringDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("StringDevice.__StringDevice()", i64_StringDeviceRef) << cli::endl;
+    return i64_StringDeviceRef;
 }
 
 extern "C" JNIEXPORT jstring JNICALL Java_cli_StringDevice__1_1getString(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeStringDeviceRef)
+        jlong I64_NativeStringDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     std::string str_String;
-    if (const cli::StringDevice* const pcli_StringDevice = NativeObject::GetNativeObject<const cli::StringDevice*>(I_NativeStringDeviceRef))
+    if (const cli::StringDevice* const pcli_StringDevice = NativeObject::GetNativeObject<const cli::StringDevice*>(I64_NativeStringDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::Begin("StringDevice.__getString(I_NativeStringDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::ParamInt("I_NativeStringDeviceRef", I_NativeStringDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::Begin("StringDevice.__getString(I64_NativeStringDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::ParamInt64("I64_NativeStringDeviceRef", I64_NativeStringDeviceRef) << cli::endl;
 
         str_String = (const char*) pcli_StringDevice->GetString();
 
@@ -73,14 +73,14 @@ extern "C" JNIEXPORT jstring JNICALL Java_cli_StringDevice__1_1getString(
 
 extern "C" JNIEXPORT void JNICALL Java_cli_StringDevice__1_1reset(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeStringDeviceRef)
+        jlong I64_NativeStringDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (cli::StringDevice* const pcli_StringDevice = NativeObject::GetNativeObject<cli::StringDevice*>(I_NativeStringDeviceRef))
+    if (cli::StringDevice* const pcli_StringDevice = NativeObject::GetNativeObject<cli::StringDevice*>(I64_NativeStringDeviceRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::Begin("StringDevice.__reset(I_NativeStringDeviceRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::ParamInt("I_NativeStringDeviceRef", I_NativeStringDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::Begin("StringDevice.__reset(I64_NativeStringDeviceRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_StringDevice) << NativeTraces::ParamInt64("I64_NativeStringDeviceRef", I64_NativeStringDeviceRef) << cli::endl;
 
         pcli_StringDevice->Reset();
 

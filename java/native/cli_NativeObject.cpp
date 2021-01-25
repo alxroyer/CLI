@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,18 +39,18 @@
 
 extern "C" JNIEXPORT void JNICALL Java_cli_NativeObject__1_1finalize(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeRef)
+        jlong I64_NativeRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    if (const cli::Object* const pcli_Object = NativeObject::GetNativeObject<const cli::Object*>(I_NativeRef))
+    if (const cli::Object* const pcli_Object = NativeObject::GetNativeObject<const cli::Object*>(I64_NativeRef))
     {
         // Remember whether traces are effective (or not, either because TRACE_JNI traces are off, or because pcli_Object is unsafe for traces).
         const cli::OutputDevice& cli_TracesDevice = (
-            cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_Object) << NativeTraces::Begin("NativeObject.__finalize(I_NativeRef)") << cli::endl
+            cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_Object) << NativeTraces::Begin("NativeObject.__finalize(I64_NativeRef)") << cli::endl
         );
         if (& cli_TracesDevice != & cli::OutputDevice::GetNullDevice()) {
-            cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeRef", I_NativeRef) << cli::endl;
+            cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeRef", I64_NativeRef) << cli::endl;
         }
 
         if (const cli::Shell* const pcli_Shell = dynamic_cast<const cli::Shell*>(pcli_Object))

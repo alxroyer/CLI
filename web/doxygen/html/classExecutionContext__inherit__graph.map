@@ -1,13 +1,13 @@
-<map id="G" name="G">
-<area shape="rect" id="node5" href="$classShell.html" title="Shell management." alt="" coords="59,160,109,189"/>
-<area shape="rect" id="node7" href="$classUI.html" title="Generic user interface class." alt="" coords="133,160,171,189"/>
-<area shape="rect" id="node2" href="$classObject.html" title="Generic object." alt="" coords="88,5,147,35"/>
-<area shape="rect" id="node9" href="$classLess.html" title="Simple line user interface object." alt="" coords="19,237,69,267"/>
-<area shape="rect" id="node11" href="$classLine.html" title="Simple line user interface object." alt="" coords="93,237,139,267"/>
-<area shape="rect" id="node21" href="$classMore.html" title="Simple line user interface object." alt="" coords="163,237,213,267"/>
-<area shape="rect" id="node23" href="$classPassword.html" title="Password user interface object." alt="" coords="237,237,315,267"/>
-<area shape="rect" id="node13" href="$classChoice.html" title="Choice user interface class." alt="" coords="5,315,67,344"/>
-<area shape="rect" id="node17" href="$classFloat.html" title="Float user interface class." alt="" coords="91,315,141,344"/>
-<area shape="rect" id="node19" href="$classInt.html" title="Integer user interface object." alt="" coords="165,315,203,344"/>
-<area shape="rect" id="node15" href="$classYesNo.html" title="Yes/No question user interface object." alt="" coords="5,392,67,421"/>
+<map id="ExecutionContext" name="ExecutionContext">
+<area shape="rect" id="node3" href="$classShell.html" title="Shell management. " alt="" coords="59,155,110,181"/>
+<area shape="rect" id="node4" href="$classUI.html" title="Generic user interface class. " alt="" coords="135,155,173,181"/>
+<area shape="rect" id="node2" href="$classObject.html" title="Generic object. " alt="" coords="89,5,149,32"/>
+<area shape="rect" id="node5" href="$classLess.html" title="Simple line user interface object. " alt="" coords="19,229,70,256"/>
+<area shape="rect" id="node6" href="$classLine.html" title="Simple line user interface object. " alt="" coords="95,229,141,256"/>
+<area shape="rect" id="node11" href="$classMore.html" title="Simple line user interface object. " alt="" coords="166,229,217,256"/>
+<area shape="rect" id="node12" href="$classPassword.html" title="Password user interface object. " alt="" coords="241,229,320,256"/>
+<area shape="rect" id="node7" href="$classChoice.html" title="Choice user interface class. " alt="" coords="5,304,68,331"/>
+<area shape="rect" id="node9" href="$classFloat.html" title="Float user interface class. " alt="" coords="93,304,143,331"/>
+<area shape="rect" id="node10" href="$classInt.html" title="Integer user interface object. " alt="" coords="168,304,207,331"/>
+<area shape="rect" id="node8" href="$classYesNo.html" title="Yes/No question user interface object. " alt="" coords="6,379,67,405"/>
 </map>

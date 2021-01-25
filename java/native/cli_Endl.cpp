@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,40 +37,40 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Endl__1_1Endl(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Endl__1_1Endl(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeHelpRef)
+        jlong I64_NativeHelpRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Endl.__Endl(I_NativeHelpRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
-    NativeObject::REF i_EndlRef = 0;
-    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Endl.__Endl(I64_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeHelpRef", I64_NativeHelpRef) << cli::endl;
+    NativeObject::REF i64_EndlRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I64_NativeHelpRef))
     {
         if (cli::Endl* const pcli_Endl = new cli::Endl(*pcli_Help))
         {
             NativeObject::Use(*pcli_Endl);
-            i_EndlRef = NativeObject::GetNativeRef(*pcli_Endl);
+            i64_EndlRef = NativeObject::GetNativeRef(*pcli_Endl);
         }
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Endl.__Endl()", i_EndlRef) << cli::endl;
-    return i_EndlRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Endl.__Endl()", i64_EndlRef) << cli::endl;
+    return i64_EndlRef;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_Endl__1_1setMenuRef(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeEndlRef, jint I_NativeMenuRefRef)
+        jlong I64_NativeEndlRef, jlong I64_NativeMenuRefRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Endl.__setMenuRef(I_NativeEndlRef, I_NativeMenuRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeEndlRef", I_NativeEndlRef) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeMenuRefRef", I_NativeMenuRefRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Endl.__setMenuRef(I64_NativeEndlRef, I64_NativeMenuRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeEndlRef", I64_NativeEndlRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeMenuRefRef", I64_NativeMenuRefRef) << cli::endl;
     bool b_Res = false;
-    if (cli::Endl* const pcli_Endl = NativeObject::GetNativeObject<cli::Endl*>(I_NativeEndlRef))
+    if (cli::Endl* const pcli_Endl = NativeObject::GetNativeObject<cli::Endl*>(I64_NativeEndlRef))
     {
-        if (cli::MenuRef* const pcli_MenuRef = NativeObject::GetNativeObject<cli::MenuRef*>(I_NativeMenuRefRef))
+        if (cli::MenuRef* const pcli_MenuRef = NativeObject::GetNativeObject<cli::MenuRef*>(I64_NativeMenuRefRef))
         {
             pcli_Endl->SetMenuRef(pcli_MenuRef);
             // Delegate the MenuRef instance deletion to the Endl instance set with.

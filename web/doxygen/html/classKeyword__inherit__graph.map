@@ -1,5 +1,5 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classSyntaxNode.html" title="Syntax node elements." alt="" coords="5,160,99,189"/>
-<area shape="rect" id="node4" href="$classElement.html" title="Generic CLI element." alt="" coords="17,83,87,112"/>
-<area shape="rect" id="node6" href="$classObject.html" title="Generic object." alt="" coords="23,5,81,35"/>
+<map id="Keyword" name="Keyword">
+<area shape="rect" id="node2" href="$classSyntaxNode.html" title="Syntax node elements. " alt="" coords="5,155,99,181"/>
+<area shape="rect" id="node3" href="$classElement.html" title="Generic CLI element. " alt="" coords="17,80,87,107"/>
+<area shape="rect" id="node4" href="$classObject.html" title="Generic object. " alt="" coords="22,5,82,32"/>
 </map>

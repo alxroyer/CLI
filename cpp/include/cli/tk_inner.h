@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -112,8 +112,8 @@ CLI_NS_BEGIN(cli)
             explicit String(
                     const unsigned int UI_MaxLen    //!< Maximum string length.
                     )
-              : m_uiMaxLen(UI_MaxLen),
-                m_strString(new char[UI_MaxLen + 1])
+              : Object(),
+                m_uiMaxLen(UI_MaxLen), m_strString(new char[UI_MaxLen + 1])
             {
                 Reset();
             }
@@ -125,8 +125,8 @@ CLI_NS_BEGIN(cli)
                     const unsigned int UI_MaxLen,   //!< Maximum string length.
                     const char* const STR_String    //!< Initial value.
                     )
-              : m_uiMaxLen(UI_MaxLen),
-                m_strString(new char[UI_MaxLen + 1])
+              : Object(),
+                m_uiMaxLen(UI_MaxLen), m_strString(new char[UI_MaxLen + 1])
             {
                 Reset();
                 Set(STR_String);
@@ -136,8 +136,8 @@ CLI_NS_BEGIN(cli)
             String(
                     const String& TK_String //!< Source object.
                     )
-              : m_uiMaxLen(TK_String.m_uiMaxLen),
-                m_strString(new char[TK_String.m_uiMaxLen + 1])
+              : Object(),
+                m_uiMaxLen(TK_String.m_uiMaxLen), m_strString(new char[TK_String.m_uiMaxLen + 1])
             {
                 Reset();
                 Set(TK_String);
@@ -363,9 +363,8 @@ CLI_NS_BEGIN(cli)
             explicit Queue(
                     const unsigned int UI_MaxCount  //!< Maximum item count.
                     )
-              : m_uiMaxCount(UI_MaxCount),
-                m_arptQueue(new T*[UI_MaxCount]),
-                m_uiCount(0)
+              : Object(),
+                m_uiMaxCount(UI_MaxCount), m_arptQueue(new T*[UI_MaxCount]), m_uiCount(0)
             {
                 if (m_arptQueue != NULL)
                 {
@@ -377,9 +376,8 @@ CLI_NS_BEGIN(cli)
             Queue(
                     const Queue<T>& TK_Queue    //!< Source queue object.
                     )
-              : m_uiMaxCount(TK_Queue.m_uiMaxCount),
-                m_arptQueue(new T*[TK_Queue.m_uiMaxCount]),
-                m_uiCount(0)
+              : Object(),
+                m_uiMaxCount(TK_Queue.m_uiMaxCount), m_arptQueue(new T*[TK_Queue.m_uiMaxCount]), m_uiCount(0)
             {
                 if (m_arptQueue != NULL)
                 {
@@ -763,7 +761,7 @@ CLI_NS_BEGIN(cli)
             explicit Map(
                     const unsigned int UI_MaxCount  //!< Maximum item count.
                     )
-              : m_qPairs(UI_MaxCount)
+              : Object(), m_qPairs(UI_MaxCount)
             {
             }
 
@@ -771,7 +769,7 @@ CLI_NS_BEGIN(cli)
             Map(
                     const Map<K,T>& TK_Map      //!< Source map object.
                     )
-              : m_qPairs(TK_Map.m_qPairs)
+              : Object(), m_qPairs(TK_Map.m_qPairs)
             {
             }
 

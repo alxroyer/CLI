@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,6 +35,8 @@
         <keyword string="choice">
             <param type="int" id="count">
                 <endl>
+                    <!-- Note: blocking execution integration only! -->
+
                     <!-- C++ implementation -->
                     <cpp><out/> &lt;&lt; "Select choice: ";</cpp>
                     <cpp>cli::tk::Queue&lt;cli::ResourceString&gt; tk_Choices(<value-of param="count"/>);</cpp>

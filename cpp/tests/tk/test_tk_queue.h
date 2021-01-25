@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -106,7 +106,7 @@ static const bool CheckQueue(void)
         // Sort.
         class _ { public:
             static const int cmp(const int& i_1, const int& i_2) {
-                if (0) {}
+                if (false) {}
                 else if (i_1 < i_2) { return -1; }
                 else if (i_1 > i_2) { return 1; }
                 else { return 0; }
@@ -168,3 +168,4 @@ static const bool CheckQueue(void)
 }
 
 #endif // __CLI_TEST_TK_QUEUE_H__
+

@@ -1,0 +1,21 @@
+165c165
+<             <a href="#7">[...] option stop</a>
+---
+>             <a href="#7">(...) option stop</a>
+175c175
+<     <h3>[...] option stop</h3>
+---
+>     <h3>(...) option stop</h3>
+179c179
+<       <span class="command-synopsis">[option]* option stop</span>
+---
+>       <span class="command-synopsis">(do | option) option stop</span>
+188a189,196
+>         <tr>
+>           <td>
+>             <span class="option-name">do</span>
+>           </td>
+>           <td>
+>             <span class="default">No help available</span>
+>           </td>
+>         </tr>

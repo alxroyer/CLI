@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,13 +29,19 @@
 
 #include <stdio.h>
 #include <math.h>
+// See https://stackoverflow.com/questions/8132399/how-to-printf-uint64-t-fails-with-spurious-trailing-in-format#8132440
+// "The ISO C99 standard specifies that these macros must only be defined if explicitly requested."
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h> // PRId64, PRIu64
 
 #include "cli/io_device.h"
 #include "cli/cli.h"
 #include "cli/string_device.h"
 #include "cli/traces.h"
 #include "cli/assert.h"
+#include "encoding.h"
 #include "constraints.h"
+#include "utils.h"
 
 CLI_NS_USE(cli)
 
@@ -53,7 +59,7 @@ static const TraceClass& GetIODeviceInstancesTraceClass(void)
 {
     static const TraceClass cli_IODeviceInstancesTraceClass("CLI_IO_DEVICE_INSTANCES", Help()
         .AddHelp(Help::LANG_EN, "IO device instance management")
-        .AddHelp(Help::LANG_FR, "Gestion des intances de périphériques d'entrée/sortie"));
+        .AddHelp(Help::LANG_FR, "Gestion des intances de pÃ©riphÃ©riques d'entrÃ©e/sortie"));
     return cli_IODeviceInstancesTraceClass;
 }
 //! @brief Input/Output device opening/closure trace class singleton redirection.
@@ -63,7 +69,7 @@ static const TraceClass& GetIODeviceOpeningTraceClass(void)
 {
     static const TraceClass cli_IODeviceOpeningTraceClass("CLI_IO_DEVICE_OPENING", Help()
         .AddHelp(Help::LANG_EN, "IO device opening management")
-        .AddHelp(Help::LANG_FR, "Gestion de l'ouverture des périphériques d'entrée/sortie"));
+        .AddHelp(Help::LANG_FR, "Gestion de l'ouverture des pÃ©riphÃ©riques d'entrÃ©e/sortie"));
     return cli_IODeviceOpeningTraceClass;
 }
 
@@ -73,6 +79,7 @@ OutputDevice::OutputDevice(
         const bool B_AutoDelete)
   : m_strDebugName(MAX_DEVICE_NAME_LENGTH, STR_DbgName),
     m_iInstanceLock(B_AutoDelete ? 0 : 1), m_iOpenLock(0),
+    m_cliStringEncoder(* new StringEncoder()),
     m_cliLastError()
 {
     // Please, no traces in constructor for consistency reasons.
@@ -80,6 +87,7 @@ OutputDevice::OutputDevice(
 
 OutputDevice::~OutputDevice(void)
 {
+    delete & m_cliStringEncoder;
 }
 
 const tk::String OutputDevice::GetDebugName(void) const
@@ -212,11 +220,6 @@ const OutputDevice& OutputDevice::operator <<(const char* const STR_Out) const
     return *this;
 }
 
-const OutputDevice& OutputDevice::operator <<(const unsigned char UC_Out) const
-{
-    return this->operator<<((unsigned int) UC_Out);
-}
-
 const OutputDevice& OutputDevice::operator <<(const char C_Out) const
 {
     char arc_String[] = { C_Out, '\0' };
@@ -224,38 +227,51 @@ const OutputDevice& OutputDevice::operator <<(const char C_Out) const
     return *this;
 }
 
-const OutputDevice& OutputDevice::operator <<(const short S_Out) const
+const OutputDevice& OutputDevice::operator <<(const KEY E_Key) const
 {
-    return this->operator<<((int) S_Out);
+    PutString(m_cliStringEncoder.Encode(E_Key));
+    return *this;
 }
 
-const OutputDevice& OutputDevice::operator <<(const unsigned short US_Out) const
+const OutputDevice& OutputDevice::operator <<(const uint8_t UI8_Out) const
 {
-    return this->operator<<((unsigned int) US_Out);
+    return this->operator<<((uint32_t) UI8_Out);
 }
 
-const OutputDevice& OutputDevice::operator <<(const long L_Out) const
+const OutputDevice& OutputDevice::operator <<(const int16_t I16_Out) const
 {
-    return this->operator <<((int) L_Out);
+    return this->operator<<((int32_t) I16_Out);
 }
 
-const OutputDevice& OutputDevice::operator <<(const unsigned long UL_Out) const
+const OutputDevice& OutputDevice::operator <<(const uint16_t UI16_Out) const
 {
-    return this->operator <<((unsigned int) UL_Out);
+    return this->operator<<((uint32_t) UI16_Out);
 }
 
-const OutputDevice& OutputDevice::operator <<(const int I_Out) const
+const OutputDevice& OutputDevice::operator <<(const int32_t I32_Out) const
+{
+    return this->operator<<((int64_t) I32_Out);
+}
+
+const OutputDevice& OutputDevice::operator <<(const uint32_t UI32_Out) const
+{
+    return this->operator<<((uint64_t) UI32_Out);
+}
+
+const OutputDevice& OutputDevice::operator <<(const int64_t I64_Out) const
 {
     char str_Out[128];
-    snprintf(str_Out, sizeof(str_Out), "%d", I_Out);
+    const int i_Res = snprintf(str_Out, sizeof(str_Out), "%" PRId64, I64_Out);
+    CheckSnprintfResult(str_Out, sizeof(str_Out), i_Res);
     PutString(str_Out);
     return *this;
 }
 
-const OutputDevice& OutputDevice::operator <<(const unsigned int UI_Out) const
+const OutputDevice& OutputDevice::operator <<(const uint64_t UI64_Out) const
 {
     char str_Out[128];
-    snprintf(str_Out, sizeof(str_Out), "%u", UI_Out);
+    const int i_Res = snprintf(str_Out, sizeof(str_Out), "%" PRIu64, UI64_Out);
+    CheckSnprintfResult(str_Out, sizeof(str_Out), i_Res);
     PutString(str_Out);
     return *this;
 }
@@ -267,30 +283,64 @@ const OutputDevice& OutputDevice::operator <<(const float F_Out) const
 
 const OutputDevice& OutputDevice::operator <<(const double D_Out) const
 {
-    // First of all, find out the appropriate format.
-    char str_Format[128];
-    if ((D_Out != 0.0) && (-1e-6 <= D_Out) && (D_Out <= 1e-6))
+    double d_Out = D_Out;
+
+    // Positive / negative number management
+    const char* str_Sign = "";
+    if (d_Out < 0.0)
     {
-        snprintf(str_Format, sizeof(str_Format), "%s", "%f");
+        str_Sign = "-";
+        d_Out = - d_Out;
+    }
+
+    // Reframe very big or very small numbers so that it can be displayed with an appropriate number of digits.
+    int i_Exp = 0;
+    if (d_Out > 1e6)
+    {
+        while (d_Out >= 1000.0)
+        {
+            d_Out /= 1000.0;
+            i_Exp += 3;
+        }
+    }
+    if ((d_Out < 1e-6) && (d_Out != 0.0))
+    {
+        while (d_Out < 1.0)
+        {
+            d_Out *= 1000.0;
+            i_Exp -= 3;
+        }
+    }
+
+    // Let's print out 6 digits max.
+    // Avoid useless trailing '0' in the decimal (after the coma).
+    // double d_Decimals = d_Out;
+    // d_tmp -= (int) d_tmp;
+    int i_Decimal, i_Out;
+    for (   i_Decimal = 6, i_Out = (int) floor(d_Out * 1e6 + 0.5); // floor(D+1/2) should be equivalent to round(D)
+            i_Decimal > 1;
+            i_Decimal --, i_Out /= 10)
+    {
+        if ((i_Out % 10) != 0)
+        {
+            break;
+        }
+    }
+
+    // Format the float number with the computed characteristics.
+    char str_Format[128], str_Out[128];
+    if (i_Exp == 0)
+    {
+        snprintf(str_Format, sizeof(str_Format), "%%s%%.%df", i_Decimal); // No call needed to CheckSnprintfResult() here.
+        const int i_Res = snprintf(str_Out, sizeof(str_Out), str_Format, str_Sign, d_Out);
+        CheckSnprintfResult(str_Out, sizeof(str_Out), i_Res);
     }
     else
     {
-        int i_Decimal, i_Out;
-        for (   i_Decimal = 6, i_Out = (int) floor(D_Out * 1e6 + 0.5); // floor(D+1/2) should be equivalent to round(D)
-                i_Decimal > 1;
-                i_Decimal --, i_Out /= 10)
-        {
-            if ((i_Out % 10) != 0)
-            {
-                break;
-            }
-        }
-        snprintf(str_Format, sizeof(str_Format), "%s.%d%s", "%", i_Decimal, "f");
+        snprintf(str_Format, sizeof(str_Format), "%%s%%.%dfe%%d", i_Decimal); // No call needed to CheckSnprintfResult() here.
+        const int i_Res = snprintf(str_Out, sizeof(str_Out), str_Format, str_Sign, d_Out, i_Exp);
+        CheckSnprintfResult(str_Out, sizeof(str_Out), i_Res);
     }
-
-    // Format the float number with the computed format.
-    char str_Out[128];
-    snprintf(str_Out, sizeof(str_Out), str_Format, D_Out);
 
     // Output the computed string.
     PutString(str_Out);
@@ -302,7 +352,8 @@ const OutputDevice& OutputDevice::operator <<(const double D_Out) const
 const OutputDevice& OutputDevice::operator <<(const void* const PV_Out) const
 {
     char str_Out[128];
-    snprintf(str_Out, sizeof(str_Out), "%p", PV_Out);
+    const int i_Res = snprintf(str_Out, sizeof(str_Out), "%p", PV_Out);
+    CheckSnprintfResult(str_Out, sizeof(str_Out), i_Res);
     PutString(str_Out);
     return *this;
 }
@@ -413,12 +464,14 @@ const bool OutputDevice::WouldOutput(const OutputDevice& CLI_Device) const
 IODevice::IODevice(
         const char* const STR_DbgName,
         const bool B_AutoDelete)
-  : OutputDevice(STR_DbgName, B_AutoDelete)
+  : OutputDevice(STR_DbgName, B_AutoDelete),
+    m_cliStringDecoder(* new StringDecoder())
 {
 }
 
 IODevice::~IODevice(void)
 {
+    delete & m_cliStringDecoder;
 }
 
 IODevice& IODevice::GetNullDevice(void)
@@ -468,7 +521,13 @@ IODevice& IODevice::GetStdIn(void)
         }
         virtual const KEY GetKey(void) const {
             const char c_Char = (char) getchar();
-            return IODevice::GetKey(c_Char);
+            const KEY e_Key = Char2Key(c_Char);
+            if (e_Key != FEED_MORE) {
+                return e_Key;
+            } else {
+                // Recursive call
+                return GetKey();
+            }
         }
     };
 
@@ -476,146 +535,9 @@ IODevice& IODevice::GetStdIn(void)
     return cli_StdIn;
 }
 
-const KEY IODevice::GetKey(const int I_Char)
+const KEY IODevice::Char2Key(const int I_Char) const
 {
-    switch (I_Char)
-    {
-    case 10: case 13:   return ENTER;
-
-    case ' ':   return SPACE;
-    case '\t':  return TAB;
-    case '\b':  return BACKSPACE;
-
-    case '0':   return KEY_0;
-    case '1':   return KEY_1;
-    case '2':   return KEY_2;
-    case '3':   return KEY_3;
-    case '4':   return KEY_4;
-    case '5':   return KEY_5;
-    case '6':   return KEY_6;
-    case '7':   return KEY_7;
-    case '8':   return KEY_8;
-    case '9':   return KEY_9;
-
-    case 'a':   return KEY_a;
-    case 'á':   return KEY_aacute;
-    case 'à':   return KEY_agrave;
-    case 'ä':   return KEY_auml;
-    case 'â':   return KEY_acirc;
-    case 'b':   return KEY_b;
-    case 'c':   return KEY_c;
-    case 'ç':   return KEY_ccedil;
-    case 'd':   return KEY_d;
-    case 'e':   return KEY_e;
-    case 'é':   return KEY_eacute;
-    case 'è':   return KEY_egrave;
-    case 'ë':   return KEY_euml;
-    case 'ê':   return KEY_ecirc;
-    case 'f':   return KEY_f;
-    case 'g':   return KEY_g;
-    case 'h':   return KEY_h;
-    case 'i':   return KEY_i;
-    case 'í':   return KEY_iacute;
-    case 'ì':   return KEY_igrave;
-    case 'ï':   return KEY_iuml;
-    case 'î':   return KEY_icirc;
-    case 'j':   return KEY_j;
-    case 'k':   return KEY_k;
-    case 'l':   return KEY_l;
-    case 'm':   return KEY_m;
-    case 'n':   return KEY_n;
-    case 'o':   return KEY_o;
-    case 'ó':   return KEY_oacute;
-    case 'ò':   return KEY_ograve;
-    case 'ö':   return KEY_ouml;
-    case 'ô':   return KEY_ocirc;
-    case 'p':   return KEY_p;
-    case 'q':   return KEY_q;
-    case 'r':   return KEY_r;
-    case 's':   return KEY_s;
-    case 't':   return KEY_t;
-    case 'u':   return KEY_u;
-    case 'ú':   return KEY_uacute;
-    case 'ù':   return KEY_ugrave;
-    case 'ü':   return KEY_uuml;
-    case 'û':   return KEY_ucirc;
-    case 'v':   return KEY_v;
-    case 'w':   return KEY_w;
-    case 'x':   return KEY_x;
-    case 'y':   return KEY_y;
-    case 'z':   return KEY_z;
-
-    case 'A':   return KEY_A;
-    case 'B':   return KEY_B;
-    case 'C':   return KEY_C;
-    case 'D':   return KEY_D;
-    case 'E':   return KEY_E;
-    case 'F':   return KEY_F;
-    case 'G':   return KEY_G;
-    case 'H':   return KEY_H;
-    case 'I':   return KEY_I;
-    case 'J':   return KEY_J;
-    case 'K':   return KEY_K;
-    case 'L':   return KEY_L;
-    case 'M':   return KEY_M;
-    case 'N':   return KEY_N;
-    case 'O':   return KEY_O;
-    case 'P':   return KEY_P;
-    case 'Q':   return KEY_Q;
-    case 'R':   return KEY_R;
-    case 'S':   return KEY_S;
-    case 'T':   return KEY_T;
-    case 'U':   return KEY_U;
-    case 'V':   return KEY_V;
-    case 'W':   return KEY_W;
-    case 'X':   return KEY_X;
-    case 'Y':   return KEY_Y;
-    case 'Z':   return KEY_Z;
-
-    case '+':   return PLUS;
-    case '-':   return MINUS;
-    case '*':   return STAR;
-    case '/':   return SLASH;
-    case '<':   return LOWER_THAN;
-    case '>':   return GREATER_THAN;
-    case '=':   return EQUAL;
-    case '%':   return PERCENT;
-
-    case '_':   return UNDERSCORE;
-    case '@':   return AROBASE;
-    case '#':   return SHARP;
-    case '&':   return AMPERCENT;
-    case '$':   return DOLLAR;
-    case '\\':  return BACKSLASH;
-    case '|':   return PIPE;
-    case '~':   return TILDE;
-    case '²':   return SQUARE;
-    case '€':   return EURO;
-    case '£':   return POUND;
-    case 'µ':   return MICRO;
-    case '§':   return PARAGRAPH;
-    case '°':   return DEGREE;
-
-    case '?':   return QUESTION;
-    case '!':   return EXCLAMATION;
-    case ':':   return COLUMN;
-    case '.':   return DOT;
-    case ',':   return COMA;
-    case ';':   return SEMI_COLUMN;
-    case '\'':  return QUOTE;
-    case '"':   return DOUBLE_QUOTE;
-
-    case '(':   return OPENING_BRACE;
-    case ')':   return CLOSING_BRACE;
-    case '{':   return OPENING_CURLY_BRACE;
-    case '}':   return CLOSING_CURLY_BRACE;
-    case '[':   return OPENING_BRACKET;
-    case ']':   return CLOSING_BRACKET;
-
-    default:
-        // Unrecognized character.
-        return NULL_KEY;
-    }
+    return m_cliStringDecoder.Decode(I_Char);
 }
 
 const ResourceString IODevice::GetLocation(void) const

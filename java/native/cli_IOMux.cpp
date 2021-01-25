@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,36 +36,36 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_IOMux__1_1IOMux(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_IOMux__1_1IOMux(
         JNIEnv* PJ_Env, jclass PJ_Class)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("IOMux.__IOMux()") << cli::endl;
-    NativeObject::REF i_IOMuxRef = 0;
+    NativeObject::REF i64_IOMuxRef = 0;
     if (cli::IOMux* const pcli_IOMux = new cli::IOMux(true))
     {
         NativeObject::Use(*pcli_IOMux);
-        i_IOMuxRef = NativeObject::GetNativeRef(*pcli_IOMux);
+        i64_IOMuxRef = NativeObject::GetNativeRef(*pcli_IOMux);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("IOMux.__IOMux()", i_IOMuxRef) << cli::endl;
-    return i_IOMuxRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("IOMux.__IOMux()", i64_IOMuxRef) << cli::endl;
+    return i64_IOMuxRef;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_IOMux__1_1addDevice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeIOMuxRef, jint I_NativeDeviceRef)
+        jlong I64_NativeIOMuxRef, jlong I64_NativeDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     bool b_Res = false;
-    if (cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<cli::IOMux*>(I_NativeIOMuxRef))
+    if (cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<cli::IOMux*>(I64_NativeIOMuxRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__addDevice(I_NativeIOMuxRef, I_NativeInputRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt("I_NativeIOMuxRef", I_NativeIOMuxRef) << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt("I_NativeDeviceRef", I_NativeDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__addDevice(I64_NativeIOMuxRef, I64_NativeInputRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt64("I64_NativeIOMuxRef", I64_NativeIOMuxRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt64("I64_NativeDeviceRef", I64_NativeDeviceRef) << cli::endl;
 
-        if (cli::IODevice* const pcli_Device = NativeObject::GetNativeObject<cli::IODevice*>(I_NativeDeviceRef))
+        if (cli::IODevice* const pcli_Device = NativeObject::GetNativeObject<cli::IODevice*>(I64_NativeDeviceRef))
         {
             b_Res = pcli_IOMux->AddDevice(pcli_Device);
         }
@@ -75,61 +75,61 @@ extern "C" JNIEXPORT jboolean JNICALL Java_cli_IOMux__1_1addDevice(
     return b_Res;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_IOMux__1_1getCurrentDevice(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_IOMux__1_1getCurrentDevice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeIOMuxRef)
+        jlong I64_NativeIOMuxRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    jint i_CurrentDeviceRef = 0;
-    if (const cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<const cli::IOMux*>(I_NativeIOMuxRef))
+    NativeObject::REF i64_CurrentDeviceRef = 0;
+    if (const cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<const cli::IOMux*>(I64_NativeIOMuxRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__getCurrentDevice(I_NativeIOMuxRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt("I_NativeIOMuxRef", I_NativeIOMuxRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__getCurrentDevice(I64_NativeIOMuxRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt64("I64_NativeIOMuxRef", I64_NativeIOMuxRef) << cli::endl;
 
         if (const cli::IODevice* const pcli_CurrentDevice = pcli_IOMux->GetCurrentDevice())
         {
-            i_CurrentDeviceRef = NativeObject::GetNativeRef(*pcli_CurrentDevice);
+            i64_CurrentDeviceRef = NativeObject::GetNativeRef(*pcli_CurrentDevice);
         }
 
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::EndInt("IOMux.__getCurrentDevice()", i_CurrentDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::EndInt64("IOMux.__getCurrentDevice()", i64_CurrentDeviceRef) << cli::endl;
     }
-    return i_CurrentDeviceRef;
+    return i64_CurrentDeviceRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_IOMux__1_1switchNextDevice(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_IOMux__1_1switchNextDevice(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeIOMuxRef)
+        jlong I64_NativeIOMuxRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    jint i_NextDeviceRef = 0;
-    if (cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<cli::IOMux*>(I_NativeIOMuxRef))
+    NativeObject::REF i64_NextDeviceRef = 0;
+    if (cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<cli::IOMux*>(I64_NativeIOMuxRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__switchNextDevice(I_NativeIOMuxRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt("I_NativeIOMuxRef", I_NativeIOMuxRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__switchNextDevice(I64_NativeIOMuxRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt64("I64_NativeIOMuxRef", I64_NativeIOMuxRef) << cli::endl;
 
         if (const cli::IODevice* const pcli_NextDevice = pcli_IOMux->SwitchNextDevice())
         {
-            i_NextDeviceRef = NativeObject::GetNativeRef(*pcli_NextDevice);
+            i64_NextDeviceRef = NativeObject::GetNativeRef(*pcli_NextDevice);
         }
 
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::EndInt("IOMux.__switchNextDevice()", i_NextDeviceRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::EndInt64("IOMux.__switchNextDevice()", i64_NextDeviceRef) << cli::endl;
     }
-    return i_NextDeviceRef;
+    return i64_NextDeviceRef;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_IOMux__1_1resetDeviceList(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeIOMuxRef)
+        jlong I64_NativeIOMuxRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
     jboolean b_Res = false;
-    if (cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<cli::IOMux*>(I_NativeIOMuxRef))
+    if (cli::IOMux* const pcli_IOMux = NativeObject::GetNativeObject<cli::IOMux*>(I64_NativeIOMuxRef))
     {
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__resetDeviceList(I_NativeIOMuxRef)") << cli::endl;
-        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt("I_NativeIOMuxRef", I_NativeIOMuxRef) << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::Begin("IOMux.__resetDeviceList(I64_NativeIOMuxRef)") << cli::endl;
+        cli::GetTraces().SafeTrace(TRACE_JNI, *pcli_IOMux) << NativeTraces::ParamInt64("I64_NativeIOMuxRef", I64_NativeIOMuxRef) << cli::endl;
 
         b_Res = pcli_IOMux->ResetDeviceList();
 

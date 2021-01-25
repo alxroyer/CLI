@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -43,21 +43,22 @@
 
         <para>
         Regular Linux installs usually have everything needed to have the CLI library compile.
-        If you compile on Windows, you may install cygwin.
+        If you compile on Windows, you may install Cygwin.
         </para>
 
         <para>
         Here is a list of required utilities:
         <itemizedlist>
         <listitem>make</listitem>
-        <listitem>xsltproc</listitem>
+        <listitem>python 2.7</listitem>
         <listitem>dos2unix and unix2dos</listitem>
         <listitem>g++</listitem>
-        <listitem>ncurses devel (Linux only)</listitem>
+        <listitem>ncurses devel (Linux and Cygwin only)</listitem>
         </itemizedlist>
         Plus, for Java users:
         <itemizedlist>
         <listitem>JDK (optional)</listitem>
+        <listitem>x86_64-w64-mingw32-g++ (optional, Cygwin only)</listitem>
         </itemizedlist>
         </para>
 
@@ -65,13 +66,20 @@
         Plus, optionally, for unit tests (<command>make check</command>):
         <itemizedlist>
         <listitem>xmllint (optional)</listitem>
+        <listitem>xsltproc (optional)</listitem>
         <listitem>gawk (optional)</listitem>
-        <listitem>python and pylint (optional)</listitem>
+        <listitem>pylint (optional)</listitem>
         </itemizedlist>
+            <tip>
+            Make sure your antivirus will not block network operations for binaries generated and executed for unit-tests.
+            If so, configure antivirus exceptions.
+            </tip>
         or documentation generation (<command>make doc</command>):
         <itemizedlist>
         <listitem>doxygen (optional)</listitem>
-        <listitem>docbook_xsl (optional)</listitem>
+        <listitem>xsltproc and docbook_xsl (optional)</listitem>
+        <listitem>dot (optional)</listitem>
+        <listitem>mscgen (optional)</listitem>
         </itemizedlist>
         </para>
 
@@ -87,9 +95,12 @@
         </para>
 
         <para>
-        Optionally, set the <varname>JAVA_HOME</varname> environment variable:
+        Optionally, if you want to use Java set the <varname>JAVA_HOME</varname> environment variable:
             <programlisting>export JAVA_HOME="$(dirname "$(dirname "$(which javac)")")"</programlisting>
         </para>
+        <note>
+        In as much as the Java CLI library is based on the JNI technology, a full JDK needs to be used.
+        </note>
 
         <para>
         Go to <filename class="directory">build/make</filename>:
@@ -97,7 +108,7 @@
         and build:
             <programlisting>make</programlisting>
         or (debug version):
-            <programlisting>make _DEBUG=</programlisting>
+            <programlisting>make _DEBUG=1</programlisting>
         This compilation will run over C++ and Java (depending on <varname>JAVA_HOME</varname> value) library compilations.
         </para>
             <note>

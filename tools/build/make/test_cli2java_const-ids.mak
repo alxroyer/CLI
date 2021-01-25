@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -58,10 +58,9 @@ $(CLI_JAVA).lite: $(CLI_JAVA)
 	| sed -e "s/;//" \
 	> $@
 
-$(CLI_JAVA): $(CLI_XML_RES) $(CLI_DIR)/tools/cli2java.xsl
+$(CLI_JAVA): $(CLI_XML_RES) $(CLI_DIR)/tools/cli2java.py
 	$(call CheckDir,$(dir $@))
-	xsltproc $(CLI_DIR)/tools/cli2java.xsl $< > $@.tmp
-	mv $@.tmp $@
+	python $(CLI_DIR)/tools/cli2java.py $< --output $@
 
 .PHONY: clean
 clean:

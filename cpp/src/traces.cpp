@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -59,7 +59,7 @@ static const TraceClass& GetTracesTraceClass(void)
 {
     static const TraceClass cli_TracesTraceClass("CLI_TRACES", Help()
         .AddHelp(Help::LANG_EN, "Traces about traces")
-        .AddHelp(Help::LANG_FR, "Traces du système de traces"));
+        .AddHelp(Help::LANG_FR, "Traces du systÃ¨me de traces"));
     return cli_TracesTraceClass;
 }
 
@@ -129,7 +129,7 @@ Traces::Traces(void)
 
 Traces::~Traces(void)
 {
-    // If the assertion below occures, you might call UnsetStream() before program termination.
+    // If the assertion below occurs, you might call UnsetStream() before program termination.
     CLI_ASSERT(m_qStreams.IsEmpty());
 }
 
@@ -150,19 +150,17 @@ const OutputDevice& Traces::GetStream(void) const
 const bool Traces::SetStream(OutputDevice& CLI_Stream)
 {
     // Store next reference.
+    CLI_Stream.UseInstance(__CALL_INFO__);
+    if (! CLI_Stream.OpenUp(__CALL_INFO__))
     {
-        CLI_Stream.UseInstance(__CALL_INFO__);
-        if (! CLI_Stream.OpenUp(__CALL_INFO__))
-        {
-            OutputDevice::GetStdErr() << CLI_Stream.GetLastError().GetString(ResourceString::LANG_DEFAULT) << endl;
+        OutputDevice::GetStdErr() << CLI_Stream.GetLastError().GetString(ResourceString::LANG_DEFAULT) << endl;
 
-            // Store nothing on error.
-            CLI_Stream.FreeInstance(__CALL_INFO__);
-            return false;
-        }
-        // Do not store the reference until opening is done.
-        m_qStreams.AddHead(& CLI_Stream);
+        // Store nothing on error.
+        CLI_Stream.FreeInstance(__CALL_INFO__);
+        return false;
     }
+    // Do not store the reference until opening is done.
+    m_qStreams.AddHead(& CLI_Stream);
 
     return true;
 }
@@ -344,14 +342,19 @@ const OutputDevice& Traces::Trace(const TraceClass& CLI_Class)
 
 const OutputDevice& Traces::SafeTrace(const TraceClass& CLI_Class, const Object& CLI_AvoidStream)
 {
-    if (const OutputDevice* const pcli_AvoidStream = dynamic_cast<const OutputDevice*>(& CLI_AvoidStream))
+    if (IsTraceOn(CLI_Class))
     {
-        if (GetStream().WouldOutput(*pcli_AvoidStream))
+        if (const OutputDevice* const pcli_AvoidStream = dynamic_cast<const OutputDevice*>(& CLI_AvoidStream))
         {
-            return OutputDevice::GetNullDevice();
+            if (GetStream().WouldOutput(*pcli_AvoidStream))
+            {
+                // return OutputDevice::GetNullDevice();
+                return (OutputDevice::GetStdErr() << "<" << CLI_Class.GetName() << "> ");
+            }
         }
+        return Trace(CLI_Class);
     }
-    return Trace(CLI_Class);
+    return OutputDevice::GetNullDevice();
 }
 
 const OutputDevice& Traces::BeginTrace(const TraceClass& CLI_Class)

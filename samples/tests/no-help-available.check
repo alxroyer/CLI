@@ -1,0 +1,25 @@
+no-help-available>do 
+  option1         'do option1...' option help
+  option2         'do option2...' option help
+no-help-available>do option1 
+  option1         'do option1...' option help
+  stop            'do option1* stop' command help
+no-help-available>do option1 option1 
+  option1         'do option1...' option help
+  stop            'do option1* stop' command help
+no-help-available>do option1 option1 stop 
+  <cr>            'do option1* stop' execution
+no-help-available>do option1 option1 stop 
+no-help-available>do 
+  option1         'do option1...' option help
+  option2         'do option2...' option help
+no-help-available>do option2 
+  option2         'do option2...' option help
+  stop            'do option2* stop' command help
+no-help-available>do option2 option2 
+  option2         'do option2...' option help
+  stop            'do option2* stop' command help
+no-help-available>do option2 option2 stop 
+  <cr>            'do option2* stop' execution
+no-help-available>do option2 option2 stop 
+no-help-available>

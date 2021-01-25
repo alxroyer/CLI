@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -54,9 +54,9 @@ public abstract class IODevice {
     /** Native-implemented input/output devices. */
     public static abstract class Native extends OutputDevice.Native implements IODevice.Interface {
         /** Constructor.
-            @param I_NativeRef Native instance reference. */
-        protected Native(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference. */
+        protected Native(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
 
         // IODevice.Interface native input/output device implementation.
@@ -77,9 +77,9 @@ public abstract class IODevice {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Native class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global IODevice class with a __Native prefix.
-    private static final native int __Native__getKey(int I_NativeDeviceRef);
-    private static final native int __Native__getLocation(int I_NativeDeviceRef);
-    private static final native boolean __Native__wouldInput(int I_NativeIODeviceRef, int I_NativeIODevice2Ref);
+    private static final native int __Native__getKey(long I64_NativeDeviceRef);
+    private static final native int __Native__getLocation(long I64_NativeDeviceRef);
+    private static final native boolean __Native__wouldInput(long I64_NativeIODeviceRef, long I64_NativeIODevice2Ref);
 
     /** Java-implemented input/output devices. */
     public static abstract class Java extends OutputDevice.Java implements IODevice.Interface {
@@ -90,9 +90,9 @@ public abstract class IODevice {
         }
 
         /** Constructor for NonBlockingIODevice classes only.
-            @param I_NativeRef Native instance reference. */
-        protected Java(int I_NativeRef) {
-            super(I_NativeRef);
+            @param I64_NativeRef Native instance reference. */
+        protected Java(long I64_NativeRef) {
+            super(I64_NativeRef);
         }
 
         // IODevice.Interface Java input/output device implementation.
@@ -106,11 +106,11 @@ public abstract class IODevice {
         }
 
         public abstract ResourceString getLocation();
-        private final void __getLocation(int I_NativeResourceStringRef) {
-            Traces.safeTrace(NativeTraces.CLASS, this, NativeTraces.begin("IODevice.Java.__getLocation(I_NativeResourceStringRef)"));
-            Traces.safeTrace(NativeTraces.CLASS, this, NativeTraces.param("I_NativeResourceStringRef", new Integer(I_NativeResourceStringRef).toString()));
+        private final void __getLocation(long I64_NativeResourceStringRef) {
+            Traces.safeTrace(NativeTraces.CLASS, this, NativeTraces.begin("IODevice.Java.__getLocation(I64_NativeResourceStringRef)"));
+            Traces.safeTrace(NativeTraces.CLASS, this, NativeTraces.param("I64_NativeResourceStringRef", new Long(I64_NativeResourceStringRef).toString()));
             // Retrieve the native resource string instance (output parameter).
-            ResourceString cli_NativeLocation = (ResourceString) NativeObject.getObject(I_NativeResourceStringRef);
+            ResourceString cli_NativeLocation = (ResourceString) NativeObject.getObject(I64_NativeResourceStringRef);
             if (cli_NativeLocation != null) {
                 // Make the call to the Java handler.
                 ResourceString cli_JavaLocation = getLocation();
@@ -130,12 +130,12 @@ public abstract class IODevice {
         public boolean wouldInput(IODevice.Interface CLI_Device) {
             return (CLI_Device == this);
         }
-        private final boolean __wouldInput(int I_NativeDeviceRef) {
+        private final boolean __wouldInput(long I64_NativeDeviceRef) {
             // Do not trace! for consistency reasons.
             //Traces.safeTrace(NativeTraces.CLASS, this, NativeTraces.begin("OutputDevice.Java.__wouldOutput(CLI_Device)"));
             boolean b_Res = false;
             try {
-                IODevice.Interface cli_Device = (IODevice.Interface) NativeObject.getObject(I_NativeDeviceRef);
+                IODevice.Interface cli_Device = (IODevice.Interface) NativeObject.getObject(I64_NativeDeviceRef);
                 if (cli_Device != null) {
                     b_Res = wouldInput(cli_Device);
                 }
@@ -147,7 +147,7 @@ public abstract class IODevice {
     }
     // JNI seems to have trouble at linking following methods when they are embedded in the nested Java class above (at least with java 1.5.0_03).
     // Therefore they are just declared in the scope of the global IODevice class with a __Java prefix.
-    private static final native int __Java__Java(String J_DbgName);
+    private static final native long __Java__Java(String J_DbgName);
 
 
     // General static input/output device features.
@@ -165,7 +165,7 @@ public abstract class IODevice {
         }
         return m_cliNullDevice;
     }
-    private static final native int __getNullDevice();
+    private static final native long __getNullDevice();
     private static IODevice.Interface m_cliNullDevice = null;
 
     /** Standard input device singleton.
@@ -181,7 +181,7 @@ public abstract class IODevice {
         }
         return m_cliStdIn;
     }
-    private static final native int __getStdIn();
+    private static final native long __getStdIn();
     private static IODevice.Interface m_cliStdIn = null;
 
     /** @brief Common char translation.
@@ -209,47 +209,68 @@ public abstract class IODevice {
         case '9':   return OutputDevice.KEY_9;
 
         case 'a':   return OutputDevice.KEY_a;
-        case 'á':   return OutputDevice.KEY_aacute;
-        case 'à':   return OutputDevice.KEY_agrave;
-        case 'ä':   return OutputDevice.KEY_auml;
-        case 'â':   return OutputDevice.KEY_acirc;
+        case 0xe1:  // iso-8859-1 encoding for 'Ã¡'
+                    return OutputDevice.KEY_aacute;
+        case 0xe0:  // iso-8859-1 encoding for 'Ã '
+                    return OutputDevice.KEY_agrave;
+        case 0xe4:  // iso-8859-1 encoding for 'Ã¤'
+                    return OutputDevice.KEY_auml;
+        case 0xe2:  // iso-8859-1 encoding for 'Ã¢'
+                    return OutputDevice.KEY_acirc;
         case 'b':   return OutputDevice.KEY_b;
         case 'c':   return OutputDevice.KEY_c;
-        case 'ç':   return OutputDevice.KEY_ccedil;
+        case 0xe7:  // iso-8859-1 encoding for 'Ã§'
+                    return OutputDevice.KEY_ccedil;
         case 'd':   return OutputDevice.KEY_d;
         case 'e':   return OutputDevice.KEY_e;
-        case 'é':   return OutputDevice.KEY_eacute;
-        case 'è':   return OutputDevice.KEY_egrave;
-        case 'ë':   return OutputDevice.KEY_euml;
-        case 'ê':   return OutputDevice.KEY_ecirc;
+        case 0xe9:  // iso-8859-1 encoding for 'Ã©'
+                    return OutputDevice.KEY_eacute;
+        case 0xe8:  // iso-8859-1 encoding for 'Ã¨'
+                    return OutputDevice.KEY_egrave;
+        case 0xeb:  // iso-8859-1 encoding for 'Ã«'
+                    return OutputDevice.KEY_euml;
+        case 0xea:  // iso-8859-1 encoding for 'Ãª'
+                    return OutputDevice.KEY_ecirc;
         case 'f':   return OutputDevice.KEY_f;
         case 'g':   return OutputDevice.KEY_g;
         case 'h':   return OutputDevice.KEY_h;
         case 'i':   return OutputDevice.KEY_i;
-        case 'í':   return OutputDevice.KEY_iacute;
-        case 'ì':   return OutputDevice.KEY_igrave;
-        case 'ï':   return OutputDevice.KEY_iuml;
-        case 'î':   return OutputDevice.KEY_icirc;
+        case 0xed:  // iso-8859-1 encoding for 'Ã­'
+                    return OutputDevice.KEY_iacute;
+        case 0xec:  // iso-8859-1 encoding for 'Ã¬'
+                    return OutputDevice.KEY_igrave;
+        case 0xef:  // iso-8859-1 encoding for 'Ã¯'
+                    return OutputDevice.KEY_iuml;
+        case 0xee:  // iso-8859-1 encoding for 'Ã®'
+                    return OutputDevice.KEY_icirc;
         case 'j':   return OutputDevice.KEY_j;
         case 'k':   return OutputDevice.KEY_k;
         case 'l':   return OutputDevice.KEY_l;
         case 'm':   return OutputDevice.KEY_m;
         case 'n':   return OutputDevice.KEY_n;
         case 'o':   return OutputDevice.KEY_o;
-        case 'ó':   return OutputDevice.KEY_oacute;
-        case 'ò':   return OutputDevice.KEY_ograve;
-        case 'ö':   return OutputDevice.KEY_ouml;
-        case 'ô':   return OutputDevice.KEY_ocirc;
+        case 0xf3:  // iso-8859-1 encoding for 'Ã³'
+                    return OutputDevice.KEY_oacute;
+        case 0xf2:  // iso-8859-1 encoding for 'Ã²'
+                    return OutputDevice.KEY_ograve;
+        case 0xf6:  // iso-8859-1 encoding for 'Ã¶'
+                    return OutputDevice.KEY_ouml;
+        case 0xf4:  // iso-8859-1 encoding for 'Ã´'
+                    return OutputDevice.KEY_ocirc;
         case 'p':   return OutputDevice.KEY_p;
         case 'q':   return OutputDevice.KEY_q;
         case 'r':   return OutputDevice.KEY_r;
         case 's':   return OutputDevice.KEY_s;
         case 't':   return OutputDevice.KEY_t;
         case 'u':   return OutputDevice.KEY_u;
-        case 'ú':   return OutputDevice.KEY_uacute;
-        case 'ù':   return OutputDevice.KEY_ugrave;
-        case 'ü':   return OutputDevice.KEY_uuml;
-        case 'û':   return OutputDevice.KEY_ucirc;
+        case 0xfa:  // iso-8859-1 encoding for 'Ãº'
+                    return OutputDevice.KEY_uacute;
+        case 0xf9:  // iso-8859-1 encoding for 'Ã¹'
+                    return OutputDevice.KEY_ugrave;
+        case 0xfc:  // iso-8859-1 encoding for 'Ã¼'
+                    return OutputDevice.KEY_uuml;
+        case 0xfb:  // iso-8859-1 encoding for 'Ã»'
+                    return OutputDevice.KEY_ucirc;
         case 'v':   return OutputDevice.KEY_v;
         case 'w':   return OutputDevice.KEY_w;
         case 'x':   return OutputDevice.KEY_x;
@@ -300,12 +321,20 @@ public abstract class IODevice {
         case '\\':  return OutputDevice.BACKSLASH;
         case '|':   return OutputDevice.PIPE;
         case '~':   return OutputDevice.TILDE;
-        case '²':   return OutputDevice.SQUARE;
-        case '€':   return OutputDevice.EURO;
-        case '£':   return OutputDevice.POUND;
-        case 'µ':   return OutputDevice.MICRO;
-        case '§':   return OutputDevice.PARAGRAPH;
-        case '°':   return OutputDevice.DEGREE;
+        case 0xb2:  // iso-8859-1 encoding for 'Â²'
+                    return OutputDevice.SQUARE;
+        case 0x80:  // iso-8859-1 encoding for 'â‚¬'
+                    return OutputDevice.EURO;
+        case 0xa3:  // iso-8859-1 encoding for 'Â£'
+                    return OutputDevice.POUND;
+        case 0xb5:  // iso-8859-1 encoding for 'Âµ'
+                    return OutputDevice.MICRO;
+        case 0xa7:  // iso-8859-1 encoding for 'Â§'
+                    return OutputDevice.PARAGRAPH;
+        case 0xb0:  // iso-8859-1 encoding for 'Â°'
+                    return OutputDevice.DEGREE;
+        case 0xa9:  // iso-8859-1 encoding for 'Â©'
+                    return OutputDevice.COPYRIGHT;
 
         case '?':   return OutputDevice.QUESTION;
         case '!':   return OutputDevice.EXCLAMATION;

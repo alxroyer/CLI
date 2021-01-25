@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -41,13 +41,13 @@ public class YesNo extends Choice {
     public YesNo(cli.ExecutionContext.Interface CLI_ParentContext, boolean B_DefaultAnswer) {
         super(__YesNo(CLI_ParentContext.getNativeRef(), B_DefaultAnswer));
     }
-    private static final native int __YesNo(int I_NativeParentContextRef, boolean B_DefaultAnswer);
+    private static final native long __YesNo(long I64_NativeParentContextRef, boolean B_DefaultAnswer);
 
     /** Yes/No answer retrieval.
         @return true for 'yes', false for 'no'. */
     public boolean getYesNo() {
         return __getYesNo(this.getNativeRef());
     }
-    private static final native boolean __getYesNo(int I_NativeYesNoRef);
+    private static final native boolean __getYesNo(long I64_NativeYesNoRef);
 
 }

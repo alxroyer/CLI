@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,24 +36,24 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_SingleCommand__1_1SingleCommand(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_SingleCommand__1_1SingleCommand(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jstring PJ_CommandLine, jint I_NativeOutputDeviceRef)
+        jstring PJ_CommandLine, jlong I64_NativeOutputDeviceRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SingleCommand.__SingleCommand(PJ_CommandLine, I_NativeOutputDeviceRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SingleCommand.__SingleCommand(PJ_CommandLine, I64_NativeOutputDeviceRef)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_CommandLine", NativeExec::Java2Native(PJ_CommandLine).c_str()) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeOutputDeviceRef", I_NativeOutputDeviceRef) << cli::endl;
-    NativeObject::REF i_DeviceRef = 0;
-    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I_NativeOutputDeviceRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeOutputDeviceRef", I64_NativeOutputDeviceRef) << cli::endl;
+    NativeObject::REF i64_DeviceRef = 0;
+    if (cli::OutputDevice* const pcli_OutputDevice = NativeObject::GetNativeObject<cli::OutputDevice*>(I64_NativeOutputDeviceRef))
     {
         if (cli::SingleCommand* const pcli_Device = new cli::SingleCommand(NativeExec::Java2Native(PJ_CommandLine).c_str(), *pcli_OutputDevice, true))
         {
             NativeObject::Use(*pcli_Device);
-            i_DeviceRef = NativeObject::GetNativeRef(*pcli_Device);
+            i64_DeviceRef = NativeObject::GetNativeRef(*pcli_Device);
         }
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("SingleCommand.__SingleCommand()", i_DeviceRef) << cli::endl;
-    return i_DeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("SingleCommand.__SingleCommand()", i64_DeviceRef) << cli::endl;
+    return i64_DeviceRef;
 }

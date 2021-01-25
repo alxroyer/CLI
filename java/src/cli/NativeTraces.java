@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -34,7 +34,8 @@ public abstract class NativeTraces {
     public static final cli.TraceClass CLASS = TraceClass.getJniTraceClass();
 
     /** Traces the entrance within a method.
-        @param STR_Method   Method name. */
+        @param STR_Method   Method name.
+        @return Trace line. */
     public static final String begin(String STR_Method) {
         return __begin(STR_Method);
     }
@@ -42,7 +43,8 @@ public abstract class NativeTraces {
 
     /** Traces a parameter value, when entering a method basically.
         @param STR_ParamName    Name of the parameter.
-        @param STR_ParamValue   Value of the parameter. */
+        @param STR_ParamValue   Value of the parameter.
+        @return Trace line. */
     public static final String param(String STR_ParamName, String STR_ParamValue) {
         return __param(STR_ParamName, STR_ParamValue);
     }
@@ -50,20 +52,23 @@ public abstract class NativeTraces {
 
     /** Traces a variable value, within the body of a method basically.
         @param STR_VarName      Name of the variable.
-        @param STR_VarValue     Value of the variable. */
+        @param STR_VarValue     Value of the variable.
+        @return Trace line. */
     public static final String value(String STR_VarName, String STR_VarValue) {
         return __value(STR_VarName, STR_VarValue);
     }
     private static final native String __value(String STR_VarName, String STR_VarValue);
 
     /** Traces the output of a void method.
-        @param STR_Method   Method name. */
+        @param STR_Method   Method name.
+        @return Trace line. */
     public static final String end(String STR_Method) {
         return __end(STR_Method);
     }
     /** Traces the output of a method returning a value.
         @param STR_Method   Method name.
-        @param STR_Result   Value returned by the method. */
+        @param STR_Result   Value returned by the method.
+        @return Trace line. */
     public static final String end(String STR_Method, String STR_Result) {
         if (STR_Result != null) {
             return __end(STR_Method, STR_Result);

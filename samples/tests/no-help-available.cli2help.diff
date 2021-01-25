@@ -1,0 +1,12 @@
+173c173
+<             <a href="#25">[...] option2 stop</a>
+---
+>             <a href="#25">do (...) option2 stop</a>
+200c200
+<     <h3>[...] option2 stop</h3>
+---
+>     <h3>do (...) option2 stop</h3>
+204c204
+<       <span class="command-synopsis">[option2]* option2 stop</span>
+---
+>       <span class="command-synopsis">do (option2 | ) option2 stop</span>

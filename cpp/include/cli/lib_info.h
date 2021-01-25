@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,10 +37,10 @@
 
 CLI_NS_BEGIN(cli)
 
-    static const char* const LIB_VERSION = "2.8";
-    static const char* const LIB_COPYRIGHT = "Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI";
+    static const char* const LIB_VERSION = "2.9";
+    static const char* const LIB_COPYRIGHT = "Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI";
     static const char* const LIB_LICENSE =
-"Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI\n\
+"Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI\n\
 \n\
 All rights reserved.\n\
 \n\

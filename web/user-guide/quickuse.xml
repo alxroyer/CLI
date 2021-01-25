@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -38,21 +38,15 @@
     </orderedlist>
     The content of the XML resource file will be presented
     in the <link linkend="xmlres">next section</link>.
-    The <link linkend="xslt">transformation</link>
+    The <link linkend="transformation">transformation</link>
     and <link linkend="integ">integration</link> steps are discussed here.
     </para>
 
-    <section id="xslt"><title id="xslt.title">Transformation</title>
+    <section id="transformation"><title id="transformation.title">Transformation</title>
 
         <para>
         The transformation of the XML resource file into target language code is very easy.
         It is nothing but a simple transformation.
-        </para>
-
-        <para>
-        You may use either the original XSL transformation stylesheets <filename>cli2cpp.xsl</filename> and <filename>cli2java.xsl</filename>,
-        or their python tools equivalents <filename>cli2cpp.py</filename> and <filename>cli2java.py</filename>.
-        Even though python tools, added in version 2.8, run faster than XSL stylesheets, both techologies are still provided for backward compatibility reasons.
         </para>
 
         <example id="eg.transformation"><title id="eg.transformation.title">Transformation of an XML resource file</title>
@@ -65,23 +59,15 @@
 
             <para>
             Let's say we want to have C++.
-            Using <filename>cli2cpp.xsl</filename>, launch the XSL transformation
-            thanks to a command line XSLT processor.
-            I usually use <!--<command>saxon</command>:
-                <programlisting>saxon empty.xml cli2cpp.xsl &gt; empty.cpp</programlisting>
-            or--> <command>xsltproc</command>:
-                <programlisting>xsltproc ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty.cpp</programlisting>
-            Or, since version 2.8, the python tools that do the same:
-                <programlisting>python ${CLI_DIR}/tools/cli2cpp.py empty.xml &gt; empty.cpp</programlisting>
+            Launch the transformation from XML to C++ using the <filename>cli2cpp.py</filename> python script:
+                <programlisting>python ${CLI_DIR}/tools/cli2cpp.py empty.xml --output empty.cpp</programlisting>
             That's all folks!
             Have a look at the <ulink url="misc/empty.cpp">generated C++ file</ulink> if you want.
             </para>
 
             <para>
-            And it works with java also!
-                <programlisting>xsltproc --stringparam STR_CliClassName "Empty" ${CLI_DIR}/tools/cli2java.xsl empty.xml &gt; Empty.java</programlisting>
-            or:
-                <programlisting>python ${CLI_DIR}/tools/cli2java.py --cli-class-name "Empty" empty.xml &gt; Empty.java</programlisting>
+            And it works with java as well!
+                <programlisting>python ${CLI_DIR}/tools/cli2java.py --cli-class-name "Empty" empty.xml --output Empty.java</programlisting>
             Have a look at the <ulink url="misc/Empty.java">generated Java file</ulink>.
             </para>
 
@@ -90,61 +76,20 @@
             </para>
         </example>
 
-        <para>
-        The XSL transformation stylesheets have several parameters:
-        <variablelist>
-        <varlistentry><term>C++:</term>
-            <listitem>
-                <itemizedlist>
-                <listitem><varname>B_CliStaticCreation</varname>:
-                            CLI static creation. Default is 0 (false) since version 2.7.
-                            When set to 1, a static instance of the CLI you defined is automatically defined in the source code generated.
-                            When set to 0, the CLI instance is not created by the XSL transformation,
-                            so that you can do the dynamic instantiation at the appropriate time
-                            (inherited from Java experience).</listitem>
-                <listitem><varname>STR_VarPrefix</varname>:
-                            Variables prefix. Default is <constant>m_pcli_</constant>.</listitem>
-                <listitem><varname>STR_ClassPrefix</varname>:
-                            Classes prefix. Default is empty.</listitem>
-                <listitem><varname>STR_Indent</varname>:
-                            Basic indentation. Default is four spaces.</listitem>
-                <listitem><varname>STR_UserIndent</varname>:
-                            User code indentation. Makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
-                <listitem><varname>STR_CliClassName</varname>:
-                            CLI class name. Default is a derivate from the CLI name.</listitem>
-                </itemizedlist>
-            </listitem>
-        </varlistentry>
-        <varlistentry><term>Java:</term>
-            <listitem>
-                <itemizedlist>
-                <listitem><varname>STR_CliClassScope</varname>:
-                            CLI class scope. Default is empty, which means private.</listitem>
-                <listitem><varname>STR_VarPrefix</varname>:
-                            Variables prefix. Default is <code class="value">m_cli</code>.</listitem>
-                <listitem><varname>STR_ClassPrefix</varname>:
-                            Classes prefix. Default is empty.</listitem>
-                <listitem><varname>STR_Indent</varname>:
-                            Basic indentation. Default is four spaces.</listitem>
-                <listitem><varname>STR_UserIndent</varname>:
-                            User code indentation. Makes the generated code more readable when debugging. Default is <code>/* &gt; */ </code>.</listitem>
-                <listitem><varname>STR_CliClassName</varname>:
-                            CLI class name. Default is a derivate from the CLI name.
-                            It is highly recommended you override this parameter for integration considerations.</listitem>
-                </itemizedlist>
-            </listitem>
-        </varlistentry>
-        </variablelist>
-        </para>
+        <note>
+        This code generation was originally processed thanks to <filename>cli2cpp.xsl</filename> and <filename>cli2java.xsl</filename> XSLT stylesheets.
+        However, in as much as the python script equivalents introduced in version 2.8 work better and faster,
+        these original stylesheets are still provided within the <filename>${CLI_DIR}/tools/</filename> directory, but are now declared deprecated since version 2.9.
+        </note>
 
         <para>
-        The python tools come with <option>--help</option> options:
+        The <filename>cli2cpp.py</filename> and <filename>cli2java.py</filename> python scripts come with <option>--help</option> options:
 <programlisting>
 $ python ${CLI_DIR}/tools/cli2cpp.py --help
 usage: cli2cpp [-h] [--version] [--cli-class-name CLI_CLASS_NAME]
                [--cli-class-scope CLI_CLASS_SCOPE] [--static | --no-static]
                [--class-prefix CLASS_PREFIX] [--var-prefix VAR_PREFIX]
-               [--indent INDENT] [--user-indent USER_INDENT]
+               [--indent INDENT] [--user-indent USER_INDENT] [--output OUTPUT]
                xml-res
 
 positional arguments:
@@ -154,8 +99,8 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   --cli-class-name CLI_CLASS_NAME
-                        Main CLI class name (default is based on &lt;class-
-                        prefix&gt; and @name attribute).
+                        Main CLI class name (default is based on CLASS_PREFIX
+                        and @name attribute).
   --cli-class-scope CLI_CLASS_SCOPE
                         Main CLI class scope (default is empty).
   --static              Static instance creation
@@ -166,7 +111,9 @@ optional arguments:
                         Variable prefix (default is 'm_pcli_').
   --indent INDENT       Indentation pattern (default is 4 spaces).
   --user-indent USER_INDENT
-                        User-code indentation pattern (default is '/* &gt; */ ').
+                        User-code indentation pattern (default is '/* > */ ').
+  --output OUTPUT       Output file (by default the result is printed out in
+                        the standard output)
 </programlisting>
 <programlisting>
 $ python ${CLI_DIR}/tools/cli2java.py --help
@@ -174,6 +121,7 @@ usage: cli2java [-h] [--version] [--cli-class-name CLI_CLASS_NAME]
                 [--cli-class-scope CLI_CLASS_SCOPE]
                 [--class-prefix CLASS_PREFIX] [--var-prefix VAR_PREFIX]
                 [--indent INDENT] [--user-indent USER_INDENT]
+                [--output OUTPUT]
                 xml-res
 
 positional arguments:
@@ -183,8 +131,8 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   --cli-class-name CLI_CLASS_NAME
-                        Main CLI class name (default is based on &lt;class-
-                        prefix&gt; and @name attribute).
+                        Main CLI class name (default is based on CLASS_PREFIX
+                        and @name attribute).
   --cli-class-scope CLI_CLASS_SCOPE
                         Main CLI class scope (default is empty).
   --class-prefix CLASS_PREFIX
@@ -193,23 +141,23 @@ optional arguments:
                         Variable prefix (default is 'm_cli').
   --indent INDENT       Indentation pattern (default is 4 spaces).
   --user-indent USER_INDENT
-                        User-code indentation pattern (default is '/* &gt; */ ').
+                        User-code indentation pattern (default is '/* > */ ').
+  --output OUTPUT       Output file (by default the result is printed out in
+                        the standard output)
 </programlisting>
         </para>
 
         <note>
-            <para>
-            If you have a look at the output source code, the complexity of this generated code may disturb you.
-            As a matter of fact, since it is some managed code, you are not supposed to get into it,
-            and even less supposed to modify it.
-            But, you may however also figure out that it is nevertheless quite well presented:
-            <itemizedlist>
-            <listitem>Indentation is respected;</listitem>
-            <listitem>User-code is highlighted thanks to the <varname>STR_UserIndent</varname> pattern at the beginning of the lines;</listitem>
-            <listitem>The current word sequence in analysis is presented in comments throughout the code.</listitem>
-            </itemizedlist>
-            I hope these measures could help you when something goes wrong at compile or at debug time.
-            </para>
+        If you have a look at the output source code, the complexity of this generated code may disturb you.
+        As a matter of fact, since it is some managed code, you are not supposed to get into it,
+        and even less supposed to modify it.
+        But, you may however also figure out that it is nevertheless quite well presented:
+        <itemizedlist>
+        <listitem>Indentation is respected;</listitem>
+        <listitem>User-code is highlighted thanks to the <varname>STR_UserIndent</varname> pattern at the beginning of the lines;</listitem>
+        <listitem>The current word sequence in analysis is presented in comments throughout the code.</listitem>
+        </itemizedlist>
+        I hope these measures could help you when something goes wrong at compile or at debug time.
         </note>
 
     </section>
@@ -257,8 +205,8 @@ optional arguments:
 
             <example id="eg.cpp.init1"><title id="eg.cpp.init1.title">C++ integration - instantiation from user code</title>
                 <para>
-                Use <filename>cli2cpp.xsl</filename> parameters to give an explicit name to CLI class generated:
-                    <programlisting>xsltproc --param STR_CliClassName "'EmptyCli'" ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty_cli.h</programlisting>
+                Use <filename>cli2cpp.py</filename> parameters to give an explicit name to CLI class generated:
+                    <programlisting>python ${CLI_DIR}/tools/cli2cpp.py --cli-class-name "EmptyCli" empty.xml --output empty_cli.h</programlisting>
                 Create a <filename>goempty.cpp</filename> file that simply includes <filename>empty_cli.h</filename> and make the instantiation at the appropriate time:
 <programlisting>
 #include "cli/common.h"
@@ -288,8 +236,8 @@ g++ -o empty goempty.o -L${CLI_DIR}/cpp/build/make/Cygwing++/Release -lclicpp -l
 
             <example id="eg.cpp.init2"><title id="eg.cpp.init2.title">C++ integration - static instantiation</title>
                 <para>
-                Use <filename>cli2cpp.xsl</filename> parameters to activate static CLI creation:
-                    <programlisting>xsltproc --param B_CliStaticCreation 1 ${CLI_DIR}/tools/cli2cpp.xsl empty.xml &gt; empty_cli.cpp</programlisting>
+                Use <filename>cli2cpp.py</filename> parameters to activate static CLI creation:
+                    <programlisting>python ${CLI_DIR}/tools/cli2cpp.py --static empty.xml --output empty_cli.cpp</programlisting>
                 Then the file <filename>goempty2.cpp</filename> below looks for CLI instances that had been created thanks to a regular expression on their names:
 <programlisting>
 #include "cli/common.h"
@@ -335,7 +283,7 @@ g++ -o empty2 empty_cli.o goempty2.o -L${CLI_DIR}/cpp/build/make/${TARGET}${CXX}
                 <para>
                 The <sgmltag class="attribute">cpp</sgmltag> attribute
                 defines a C++ global <classname>cli::Cli</classname> pointer name,
-                that will be defined and set in the output of the XSL transformation.
+                that will be defined and set in the output of the XML to code transformation.
                 This way, you can refer to the <classname>cli::Cli</classname> object
                 from the outside of this output.
                 </para>
@@ -369,7 +317,7 @@ int main(void) {
             <example id="eg.java.init"><title id="eg.java.init.title">Java integration</title>
                 <para>
                 Considering you have generated a <filename>Empty.java</filename> file
-                as described in <link linkend="xslt">XSLT transformation section</link>,
+                as described in the <link linkend="transformation" endterm="transformation.title"/> section,
                 you may just compile this file with <command>javac</command>,
                 and another source file <filename>GoEmpty.java</filename> loading the <classname>Empty</classname> class:
 <programlisting>

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -48,7 +48,7 @@ SRC_DIR ?= .
 JAVA_FILES ?= $(wildcard $(SRC_DIR)/*.java)
 JAVA_OBJS ?= $(patsubst $(SRC_DIR)/%.java,$(OUT_DIR)/%.class,$(JAVA_FILES))
 ifndef JAVAC_OPTS
-JAVAC_OPTS ?= -Xlint:deprecation -encoding ISO-8859-1
+JAVAC_OPTS ?= -Xlint:deprecation -encoding utf-8
 ifdef _DEBUG
 	JAVAC_OPTS += -g
 endif
@@ -85,7 +85,7 @@ build.java: $(JAVA_FILES)
 	javac $(JAVAC_OPTS) $(JAVA_PATH) $(JAVA_FILES)
 
 ifneq ($(JAR_OBJ),build.java)
-$(JAR_OBJ): $(JAVA_FILES)
+$(JAR_OBJ): $(JAVA_FILES) $(THIS_MAKEFILE)
 	javac $(JAVAC_OPTS) $(JAVA_PATH) $(JAVA_FILES)
 	cd $(OUT_DIR) && jar $(JAR_OPTS) -cf $(notdir $(JAR_OBJ)) $(patsubst $(OUT_DIR)/%,%,$(JAR_SRC_FILES))
 endif

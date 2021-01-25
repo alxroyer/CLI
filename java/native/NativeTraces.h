@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -27,8 +27,12 @@
 #ifndef _CLI_NATIVE_TRACES_H_
 #define _CLI_NATIVE_TRACES_H_
 
+#include <stdint.h> // int64_t
+
 #include "cli/traces.h"
 #include "cli/io_device.h"
+
+#include "NativeObject.h"
 
 
 //! @brief JNI trace class singleton redirection.
@@ -64,6 +68,11 @@ public:
             const char* const STR_ParamName,    //!< Parameter name.
             const int I_Value                   //!< Parameter value.
             );
+    //! @brief Traces a parameter of type integer 64bits of a native method.
+    static const cli::tk::String ParamInt64(
+            const char* const STR_ParamName,    //!< Parameter name.
+            const int64_t I64_Value             //!< Parameter value.
+            );
     //! @brief Traces a parameter of type boolean of a native method.
     static const cli::tk::String ParamBool(
             const char* const STR_ParamName,    //!< Parameter name.
@@ -90,6 +99,11 @@ public:
             const char* const STR_ValueName,    //!< Variable name.
             const int I_Value                   //!< Variable value.
             );
+    //! @brief Traces a value of a native variable of type integer 64 bits.
+    static const cli::tk::String ValueInt64(
+            const char* const STR_ValueName,    //!< Variable name.
+            const int64_t I64_Value             //!< Variable value.
+            );
     //! @brief Traces a value of a native variable of type boolean.
     static const cli::tk::String ValueBool(
             const char* const STR_ValueName,    //!< Variable name.
@@ -115,10 +129,15 @@ public:
             const char* const STR_Method,       //!< Method name.
             const void* const PV_Value          //!< Return value.
             );
-    //! @brief Traces the end of a non-void native method returning an int.
+    //! @brief Traces the end of a non-void native method returning an integer.
     static const cli::tk::String EndInt(
             const char* const STR_Method,       //!< Method name.
             const int I_Value                   //!< Return value.
+            );
+    //! @brief Traces the end of a non-void native method returning an integer 64 bits.
+    static const cli::tk::String EndInt64(
+            const char* const STR_Method,       //!< Method name.
+            const int64_t I64_Value             //!< Return value.
             );
     //! @brief Traces the end of a non-void native method returning a boolean.
     static const cli::tk::String EndBool(
@@ -133,7 +152,7 @@ public:
 
     //! @brief Traces the status of a native object.
     static const cli::tk::String Instance(
-            const int I_NativeObjectRef,        //!< Native object reference.
+            const NativeObject::REF I64_NativeObjectRef, //!< Native object reference.
             const int I_Tokens,                 //!< Number of tokens in use.
             const bool B_AutoDelete             //!< Auto-delete flag.
             );

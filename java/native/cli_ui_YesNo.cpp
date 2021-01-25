@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,20 +36,20 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_YesNo__1_1YesNo(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_YesNo__1_1YesNo(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef, jboolean B_DefaultAnswer)
+        jlong I64_NativeParentContextRef, jboolean B_DefaultAnswer)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.YesNo.__YesNo(I_NativeParentContextRef, B_DefaultAnswer)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.YesNo.__YesNo(I64_NativeParentContextRef, B_DefaultAnswer)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_DefaultAnswer", B_DefaultAnswer) << cli::endl;
-    NativeObject::REF i_YesNoRef = 0;
+    NativeObject::REF i64_YesNoRef = 0;
     cli::ui::YesNo* pcli_YesNo = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_YesNo = new cli::ui::YesNo(*pcli_ParentContext, B_DefaultAnswer);
         }
@@ -61,22 +61,22 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_YesNo__1_1YesNo(
     if (pcli_YesNo != NULL)
     {
         NativeObject::Use(*pcli_YesNo);
-        i_YesNoRef = NativeObject::GetNativeRef(*pcli_YesNo);
+        i64_YesNoRef = NativeObject::GetNativeRef(*pcli_YesNo);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.YesNo.__YesNo()", i_YesNoRef) << cli::endl;
-    return i_YesNoRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.YesNo.__YesNo()", i64_YesNoRef) << cli::endl;
+    return i64_YesNoRef;
 }
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ui_YesNo__1_1getYesNo(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeYesNoRef)
+        jlong I64_NativeYesNoRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.YesNo.__getYesNo(I_NativeYesNoRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeYesNoRef", I_NativeYesNoRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.YesNo.__getYesNo(I64_NativeYesNoRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeYesNoRef", I64_NativeYesNoRef) << cli::endl;
     bool b_YesNo = false;
-    if (const cli::ui::YesNo* const pcli_YesNo = NativeObject::GetNativeObject<const cli::ui::YesNo*>(I_NativeYesNoRef))
+    if (const cli::ui::YesNo* const pcli_YesNo = NativeObject::GetNativeObject<const cli::ui::YesNo*>(I64_NativeYesNoRef))
     {
         b_YesNo = pcli_YesNo->GetYesNo();
     }

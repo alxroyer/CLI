@@ -1,0 +1,25 @@
+help-errors>cli-config
+cli-config>lang en
+English language
+cli-config>exit
+help-errors>help
+  cli-config      CLI configuration menu
+  cls             Clean screen
+  exit            Exit menu 'help-errors'
+  help            Get help
+  help-errors     Bug(major)! " or \ characters in <help/> contents cause compilation errors
+  pwm             Print Working Menu
+  quit            Quit
+help-errors>cli-config
+cli-config>lang fr
+Langue française
+cli-config>exit
+help-errors>help
+  cli-config      Menu de configuration du CLI
+  cls             Nettoyage de l'écran
+  exit            Sortir du menu 'help-errors'
+  help            Obtenir de l'aide
+  help-errors     Qu'est-ce qui se passe si la chaîne se termine par un \
+  pwm             Affichage du menu courant
+  quit            Quitter
+help-errors>exit

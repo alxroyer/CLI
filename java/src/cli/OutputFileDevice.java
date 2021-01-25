@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,6 +35,6 @@ public class OutputFileDevice extends OutputDevice.Native {
     public OutputFileDevice(String STR_OutputFileName) {
         super(__OutputFileDevice(STR_OutputFileName));
     }
-    private static final native int __OutputFileDevice(String STR_OutputFileName);
+    private static final native long __OutputFileDevice(String STR_OutputFileName);
 
 }

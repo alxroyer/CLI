@@ -1,0 +1,6 @@
+$(INT_DIR)/cli_format.o: ../../../cpp/tests/format/cli_format.cpp \
+ ../../../cpp/include/cli/pch.h ../../../cpp/include/cli/string_device.h \
+ ../../../cpp/include/cli/tk.h ../../../cpp/include/cli/namespace.h \
+ ../../../cpp/include/cli/tk_stl.h ../../../cpp/include/cli/object.h \
+ ../../../cpp/include/cli/io_device.h ../../../cpp/include/cli/debug.h \
+ ../../../cpp/include/cli/resource_string.h

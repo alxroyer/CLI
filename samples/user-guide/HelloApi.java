@@ -1,3 +1,3 @@
-class HelloApi {
+public class HelloApi {
     public static void sayHello() {}
 }

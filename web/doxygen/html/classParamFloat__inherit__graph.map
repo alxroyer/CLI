@@ -1,7 +1,7 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classParamT.html" title="ParamT\&lt; double \&gt;" alt="" coords="5,315,133,344"/>
-<area shape="rect" id="node4" href="$classParam.html" title="Base parameter class." alt="" coords="40,237,99,267"/>
-<area shape="rect" id="node6" href="$classSyntaxNode.html" title="Syntax node elements." alt="" coords="23,160,116,189"/>
-<area shape="rect" id="node8" href="$classElement.html" title="Generic CLI element." alt="" coords="35,83,104,112"/>
-<area shape="rect" id="node10" href="$classObject.html" title="Generic object." alt="" coords="40,5,99,35"/>
+<map id="ParamFloat" name="ParamFloat">
+<area shape="rect" id="node2" href="$classParamT.html" title="ParamT\&lt; double \&gt;" alt="" coords="5,304,135,331"/>
+<area shape="rect" id="node3" href="$classParam.html" title="Base parameter class. " alt="" coords="40,229,100,256"/>
+<area shape="rect" id="node4" href="$classSyntaxNode.html" title="Syntax node elements. " alt="" coords="23,155,117,181"/>
+<area shape="rect" id="node5" href="$classElement.html" title="Generic CLI element. " alt="" coords="35,80,105,107"/>
+<area shape="rect" id="node6" href="$classObject.html" title="Generic object. " alt="" coords="40,5,100,32"/>
 </map>

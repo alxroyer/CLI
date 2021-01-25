@@ -1,0 +1,4 @@
+44c44
+<         m_clikeyword_help_errors_a = (cli.Keyword) m_cliOwnerCli.m_clicli_a.addElement(new cli.Keyword("help-errors", new cli.Help().addHelp(cli.Help.LANG_EN, "Bug(major)! " or \ characters in <help/> contents cause compilation errors").addHelp(cli.Help.LANG_FR, "Qu'est-ce qui se passe si la chaîne se termine par un \")));
+---
+>         m_clikeyword_help_errors_a = (cli.Keyword) m_cliOwnerCli.m_clicli_a.addElement(new cli.Keyword("help-errors", new cli.Help().addHelp(cli.Help.LANG_EN, "Bug(major)! \" or \\ characters in <help/> contents cause compilation errors").addHelp(cli.Help.LANG_FR, "Qu'est-ce qui se passe si la chaîne se termine par un \\")));

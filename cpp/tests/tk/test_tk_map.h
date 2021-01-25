@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -66,13 +66,13 @@ static const bool CheckMap(void)
     }
     class _ { public:
         static const int CmpInt(const int& I1, const int& I2) {
-            if (0) {}
+            if (false) {}
             else if (I1 < I2) return 1;
             else if (I1 > I2) return -1;
             else return 0;
         }
         static const int CmpString(const cli::tk::String& STR1, const cli::tk::String& STR2) {
-            if (0) {}
+            if (false) {}
             else if (STR1 < STR2) return 1;
             else if (STR2 > STR1) return -1;
             else return 0;
@@ -110,3 +110,4 @@ static const bool CheckMap(void)
 }
 
 #endif // __CLI_TEST_TK_MAP_H__
+

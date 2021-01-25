@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -217,7 +217,7 @@ public class TestExecContext {
     // First execution: login successfully, then prompt for the user to enter a line, then abort everything.
         trace("--- First execution");
         cli.Cli cli_Cli = new TestTools.Cli();
-        PwdShellContext cli_PwdShell = new PwdShellContext(cli_Cli, "hello");
+        cli.test.samples.PwdShellContext cli_PwdShell = new cli.test.samples.PwdShellContext(cli_Cli, "hello");
         if (cli_PwdShell.isRunning()) { error().put("PwdShell should not be running.").endl(); return false; }
 
         cli_PwdShell.run(cli_Device);

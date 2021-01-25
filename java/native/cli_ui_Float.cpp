@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,22 +36,22 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Float__1_1Float(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_Float__1_1Float(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef, jdouble D_DefaultValue, jdouble D_MinValue, jdouble D_MaxValue)
+        jlong I64_NativeParentContextRef, jdouble D_DefaultValue, jdouble D_MinValue, jdouble D_MaxValue)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Float.__Float(I_NativeParentContextRef, D_DefaultValue, D_MinValue, D_MaxValue)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Float.__Float(I64_NativeParentContextRef, D_DefaultValue, D_MinValue, D_MaxValue)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamFloat("D_DefaultValue", D_DefaultValue) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamFloat("D_MinValue", D_MinValue) << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamFloat("D_MaxValue", D_MaxValue) << cli::endl;
-    NativeObject::REF i_FloatRef = 0;
+    NativeObject::REF i64_FloatRef = 0;
     cli::ui::Float* pcli_Float = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_Float = new cli::ui::Float(*pcli_ParentContext, D_DefaultValue, D_MinValue, D_MaxValue);
         }
@@ -63,22 +63,22 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_Float__1_1Float(
     if (pcli_Float != NULL)
     {
         NativeObject::Use(*pcli_Float);
-        i_FloatRef = NativeObject::GetNativeRef(*pcli_Float);
+        i64_FloatRef = NativeObject::GetNativeRef(*pcli_Float);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.Float.__Float()", i_FloatRef) << cli::endl;
-    return i_FloatRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.Float.__Float()", i64_FloatRef) << cli::endl;
+    return i64_FloatRef;
 }
 
 extern "C" JNIEXPORT jdouble JNICALL Java_cli_ui_Float__1_1getFloat(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeFloatRef)
+        jlong I64_NativeFloatRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Float.__getFloat(I_NativeFloatRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeFloatRef", I_NativeFloatRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.Float.__getFloat(I64_NativeFloatRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeFloatRef", I64_NativeFloatRef) << cli::endl;
     double d_Float = 0.0;
-    if (const cli::ui::Float* const pcli_Float = NativeObject::GetNativeObject<const cli::ui::Float*>(I_NativeFloatRef))
+    if (const cli::ui::Float* const pcli_Float = NativeObject::GetNativeObject<const cli::ui::Float*>(I64_NativeFloatRef))
     {
         d_Float = pcli_Float->GetFloat();
     }

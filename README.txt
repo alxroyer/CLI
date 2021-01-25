@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -44,7 +44,7 @@ INSTALL
 
 USE
   Write CLI definitions in XML files.
-  Generate native code thanks to the XSL stylesheet.
+  Generate native code thanks to the cli2cpp.py and cli2java.py transformation tool.
   Compile and link with the library.
   Enjoy...
 

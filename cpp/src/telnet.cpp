@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -38,13 +38,12 @@
     #include <winsock2.h> // Windows sockets
     #define socket_errno WSAGetLastError()
     #define socklen_t int
-    #define EADDRINUSE WSAEADDRINUSE
     #define SHUT_RD SD_RECEIVE
     #define SHUT_WR SD_SEND
     #define SHUT_RDWR SD_BOTH
     #define close closesocket
     #define sleep(seconds) Sleep((seconds)*1000)
-    // Disable disturbing macros.
+    // Disable conflicting macros.
     #undef DELETE
 #endif
 #include <string.h>
@@ -53,6 +52,8 @@
 #include "cli/telnet.h"
 #include "cli/exec_context.h"
 #include "cli/traces.h"
+
+#include "encoding.h"
 
 CLI_NS_USE(cli)
 
@@ -78,7 +79,7 @@ static const TraceClass& GetTelnetInTraceClass(void)
 {
     static const TraceClass cli_TelnetInTraceClass("CLI_TELNET_IN", Help()
         .AddHelp(Help::LANG_EN, "CLI telnet connection input traces")
-        .AddHelp(Help::LANG_FR, "Traces d'entrées d'une connexion telnet CLI"));
+        .AddHelp(Help::LANG_FR, "Traces d'entrÃ©es d'une connexion telnet CLI"));
     return cli_TelnetInTraceClass;
 }
 //! @brief Telnet connection trace class singleton redirection.
@@ -108,7 +109,7 @@ TelnetServer::~TelnetServer(void)
 
 void TelnetServer::StartServer(void)
 {
-    GetTraces().Trace(CLI_TELNET_SERVER) << "Starting server on port " << m_ulTcpPort << endl;
+    GetTraces().Trace(CLI_TELNET_SERVER) << "Starting server on port " << (uint32_t) m_ulTcpPort << endl;
 
     m_iServerSocket = socket(AF_INET, SOCK_STREAM, 0);
 #ifdef CLI_WIN_NETWORK
@@ -158,7 +159,11 @@ void TelnetServer::StartServer(void)
     while (bind(m_iServerSocket, (struct sockaddr*) & s_SockAddr, sizeof(s_SockAddr)) < 0)
     {
         i_BindTries ++;
+#ifndef CLI_WIN_NETWORK
         if ((socket_errno == EADDRINUSE) && (i_BindTries < 2))
+#else
+        if ((socket_errno == WSAEADDRINUSE) && (i_BindTries < 2))
+#endif
         {
             sleep(500);
         }
@@ -254,10 +259,11 @@ const bool TelnetServer::RunLoop(const int I_Milli)
     // Check the server is still running.
     if (m_iServerSocket < 0)
     {
-        return true;
+        return false;
     }
 
     // Use select.
+    GetTraces().Trace(CLI_TELNET_SERVER) << "calling select()..." << endl;
     const int i_Select = select(FD_SETSIZE, & fd_Sockets, NULL, NULL, pt_Timeout);
     GetTraces().Trace(CLI_TELNET_SERVER) << "select() returned " << i_Select << endl;
     if (i_Select < 0)
@@ -269,7 +275,7 @@ const bool TelnetServer::RunLoop(const int I_Milli)
     // Check the server is still running.
     if (m_iServerSocket < 0)
     {
-        return true;
+        return false;
     }
 
     // Are there new connections?
@@ -292,16 +298,27 @@ const bool TelnetServer::RunLoop(const int I_Milli)
         {
             if (FD_ISSET(pcli_Info->i_Socket, & fd_Sockets))
             {
-                if (const TelnetConnection* const pcli_Connection = pcli_Info->pcli_Connection)
+                if (TelnetConnection* const pcli_Connection = const_cast<TelnetConnection*>(pcli_Info->pcli_Connection))
                 {
                     GetTraces().Trace(CLI_TELNET_SERVER)
                         << "FD_ISSET(" << pcli_Info->i_Socket << " , & fd_Sockets) "
                         << "= " << FD_ISSET(pcli_Info->i_Socket, & fd_Sockets) << endl;
 
-                    // If ReceiveChars() or ProcessKeys() fail, this is just a client error => do not consider a server error.
-                    // Do not avoid neither ProcessKeys() depending on the return of ReceiveChars() (stack could just be full).
-                    pcli_Connection->ReceiveChars();
-                    pcli_Connection->ProcessKeys();
+                    bool b_Res = false;
+                    if (pcli_Connection->ReceiveChars())
+                    {
+                        if (pcli_Connection->ProcessKeys())
+                        {
+                            b_Res = true;
+                        }
+                    }
+                    if (! b_Res)
+                    {
+                        // [contrib: Dinesh Balasubramaniam, 2014, based on CLI 2.8]
+                        // Client error / termination. Release socket resources so that pending/subsequent clients can be handled.
+                        GetTraces().SafeTrace(CLI_TELNET_SERVER, *pcli_Connection) << "Error while receiving/processing keys. Closing telnet connection for socket " << i_ConnectionSocket << endl;
+                        CloseConnection(i_ConnectionSocket);
+                    }
                 }
             }
         }
@@ -326,25 +343,26 @@ const bool TelnetServer::AcceptConnection(void)
     GetTraces().Trace(CLI_TELNET_SERVER) << "accept() successful (i_ConnectionSocket = " << i_ConnectionSocket << ")" << endl;
     const ResourceString cli_InfoClient = ResourceString()
         .SetString(ResourceString::LANG_EN, "Accepting telnet connection")
-        .SetString(ResourceString::LANG_FR, "Connexion telnet acceptée");
+        .SetString(ResourceString::LANG_FR, "Connexion telnet acceptÃ©e");
     GetTraces().Trace(CLI_TELNET_SERVER) << cli_InfoClient.GetString(m_eLang) << endl;
 
-    // Once every socket configuration is done, make object configuration.
+    // TelnetConnection / ExecutionContext configurations
     if (TelnetConnection* const pcli_Connection = new TelnetConnection(this, i_ConnectionSocket, m_eLang, true))
     {
         // First check we do not have too many connections.
+        GetTraces().Trace(CLI_TELNET_SERVER) << "Already " << m_tkConnections.GetCount() << " active connections" << endl;
         if (m_tkConnections.GetCount() >= m_uiMaxConnections)
         {
             const ResourceString cli_Error = ResourceString()
                 .SetString(ResourceString::LANG_EN, "Too many connections!")
-                .SetString(ResourceString::LANG_FR, "Nombre de connexions dépassé.");
+                .SetString(ResourceString::LANG_FR, "Nombre de connexions dÃ©passÃ©.");
             GetTraces().Trace(CLI_TELNET_SERVER) << cli_Error.GetString(m_eLang) << endl;
             if (pcli_Connection->OpenUp(__CALL_INFO__))
             {
                 *pcli_Connection << cli_Error.GetString(m_eLang) << endl;
                 const ResourceString cli_Sorry = ResourceString()
-                    .SetString(ResourceString::LANG_EN, "Sorry.")
-                    .SetString(ResourceString::LANG_FR, "Désolé.");
+                    .SetString(ResourceString::LANG_EN, "Too many connections! Sorry.")
+                    .SetString(ResourceString::LANG_FR, "Nombre de connexions dÃ©passÃ©. DÃ©solÃ©.");
                 *pcli_Connection << cli_Sorry.GetString(m_eLang) << endl;
                 pcli_Connection->CloseDown(__CALL_INFO__);
             }
@@ -363,17 +381,23 @@ const bool TelnetServer::AcceptConnection(void)
                     pcli_Connection->UseInstance(__CALL_INFO__);
                     pcli_Context->Run(*pcli_Connection);
 
+                    // ExecutionContext automatically configures the stream as a trace stream.
+                    // However in case of telnet connections, this may not be convenient by default.
+                    GetTraces().UnsetStream(*pcli_Connection);
+
                     // Since telnet connections are non-blocking devices, let's return successfully right now.
                     return true;
                 }
 
-                // Fallback releases.
+                // Fallback release.
                 OnCloseConnection(*pcli_Connection, pcli_Context);
             }
         }
-        delete pcli_Connection; // Telnet connection instance.
+        // Fallback release.
+        delete pcli_Connection;
     }
-    close(i_ConnectionSocket); // Socket.
+    // Fallback release.
+    close(i_ConnectionSocket);
     return false;
 }
 
@@ -479,6 +503,8 @@ const bool TelnetConnection::CloseDevice(void)
             GetTraces().SafeTrace(CLI_TELNET_SERVER, *this) << "errno = " << socket_errno << endl;
             return false;
         }
+        GetTraces().SafeTrace(CLI_TELNET_SERVER, *this) << "getsockopt(" << m_iSocket << ", SO_LINGER): onoff = " << t_Linger.l_onoff << endl;
+        GetTraces().SafeTrace(CLI_TELNET_SERVER, *this) << "getsockopt(" << m_iSocket << ", SO_LINGER): linger = " << t_Linger.l_linger << endl;
 
         if (t_Linger.l_onoff)
         {
@@ -518,17 +544,17 @@ const bool TelnetConnection::ReceiveChars(void) const
 {
     // Dequeue characters from the socket
     GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "m_iSocket = " << m_iSocket << ", calling recv()..." << endl;
-    const int i_LenMax = ((m_qChars.GetCount() + 256 > CLI_TELNET_INPUT_BUFFER_SIZE) ? (CLI_TELNET_INPUT_BUFFER_SIZE - m_qChars.GetCount()) : 256);
     char arc_Buffer[256];
+    const int i_LenMax = ((CLI_TELNET_INPUT_BUFFER_SIZE - m_qChars.GetCount() < 256) ? (CLI_TELNET_INPUT_BUFFER_SIZE - m_qChars.GetCount()) : 256);
     const int i_Len = recv(m_iSocket, arc_Buffer, i_LenMax, 0);
     GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "recv() returned " << i_Len << endl;
     if (i_Len <= 0)
     {
         m_cliLastError
             .SetString(ResourceString::LANG_EN, "Telnet reception error")
-            .SetString(ResourceString::LANG_FR, "Echec de réception en telnet");
+            .SetString(ResourceString::LANG_FR, "Echec de rÃ©ception en telnet");
         GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "recv() failed, errno = " << socket_errno << endl;
-        return NULL_KEY;
+        return false; // [contrib: Dinesh Balasubramaniam, 2014, based on CLI 2.8]
     }
 
     // Queue them in the internal fifo
@@ -538,8 +564,10 @@ const bool TelnetConnection::ReceiveChars(void) const
         {
             if (! m_qChars.AddTail(arc_Buffer[i]))
             {
+                // In as much as i_LenMax has been computed on the amount of available space in m_qChars, that should never happen.
+                // Yet, let's handle the error.
                 GetTraces().SafeTrace(INTERNAL_ERROR, *this)
-                    << "TelnetConnection::GetKey(): "
+                    << "TelnetConnection::ReceiveChars(): "
                     << "Could not append character '" << arc_Buffer[i] << "' "
                     << "to m_qChars" << endl;
                 return false;
@@ -573,9 +601,10 @@ const bool TelnetConnection::CheckUp(void) const
     const ExecutionContext* const pcli_ExecutionContext = NonBlockingIODevice::GetExecutionContext();
     if ((pcli_ExecutionContext == NULL) || (! pcli_ExecutionContext->IsRunning()))
     {
-        // The shell is done. Hold on!
+        // The shell is done. Hang up!
         if (m_pcliServer != NULL)
         {
+            GetTraces().SafeTrace(CLI_TELNET_SERVER, *this) << "Shell is done. Closing telnet connection for socket " << m_iSocket << endl;
             m_pcliServer->CloseConnection(m_iSocket);
         }
         else
@@ -591,14 +620,7 @@ const bool TelnetConnection::CheckUp(void) const
 const KEY TelnetConnection::GetKey(void) const
 {
     // Wait for characters if needed
-    bool b_ReceiveCharacters = false;
-    if (m_qChars.IsEmpty())
-    {
-        GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "m_qChars.GetCount() = " << m_qChars.GetCount() << endl;
-
-        b_ReceiveCharacters = true;
-    }
-    else if (m_qChars.GetCount() < 10)
+    if (m_qChars.GetCount() < 10)
     {
         GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "m_qChars.GetCount() = " << m_qChars.GetCount() << endl;
 
@@ -607,25 +629,23 @@ const KEY TelnetConnection::GetKey(void) const
         timeval t_Timeout; t_Timeout.tv_sec = 0; t_Timeout.tv_usec = 10000;
         const int i_Select = select(FD_SETSIZE, & fd_Read, NULL, NULL, & t_Timeout);
         GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "select() returned " << i_Select << endl;
-        GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "FD_ISSET(m_iSocket, & fd_Read) = " << FD_ISSET(m_iSocket, & fd_Read) << endl;
-        if ((i_Select > 0) && FD_ISSET(m_iSocket, & fd_Read))
-        {
-            b_ReceiveCharacters = true;
-        }
         if (i_Select < 0)
         {
             m_cliLastError
                 .SetString(ResourceString::LANG_EN, "Telnet reception error")
-                .SetString(ResourceString::LANG_FR, "Echec de réception en telnet");
+                .SetString(ResourceString::LANG_FR, "Echec de rÃ©ception en telnet");
             GetTraces().SafeTrace(CLI_TELNET_SERVER, *this) << "select() failed, errno = " << socket_errno << endl;
             return NULL_KEY;
         }
-    }
-    if (b_ReceiveCharacters)
-    {
-        if (! ReceiveChars())
+
+        GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "FD_ISSET(m_iSocket, & fd_Read) = " << FD_ISSET(m_iSocket, & fd_Read) << endl;
+        if ((i_Select > 0) && FD_ISSET(m_iSocket, & fd_Read))
         {
-            return NULL_KEY;
+            GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "Calling ReceiveChars() from TelnetConnection::GetKey()" << endl;
+            if (! ReceiveChars())
+            {
+                return NULL_KEY;
+            }
         }
     }
 
@@ -644,13 +664,14 @@ const KEY TelnetConnection::GetKey(void) const
         case 4:     return LOGOUT;      // CTRL+D
         case 5:     return KEY_END;     // CTRL+E
         case 8:     return BACKSPACE;   // CTRL+H
+        case 10:    return ENTER;
         case 13:
             if (! m_qChars.IsEmpty())
             {
                 GetTraces().SafeTrace(CLI_TELNET_IN, *this) << "i_Char2 = " << (char) m_qChars.GetHead() << " (" << m_qChars.GetHead() << ")" << endl;
                 if (m_qChars.GetHead() == 10)
                 {
-                    // Process only the character 13 when the sequence is 13-10.
+                    // Sequence is 13-10 => ENTER
                     m_qChars.RemoveHead();
                     return ENTER;
                 }
@@ -867,15 +888,20 @@ const KEY TelnetConnection::GetKey(void) const
 
         // Unhandled
         // Use default behaviour.
-        const KEY e_Char = IODevice::GetKey(i_Front);
-        if (e_Char != NULL_KEY)
-        {
-            return e_Char;
-        }
-        else
+        const KEY e_Char = Char2Key(i_Front);
+        if (e_Char == NULL_KEY)
         {
             // Unknown character.
             return GetKey();
+        }
+        else if (e_Char == FEED_MORE)
+        {
+            // More characters needed
+            return GetKey();
+        }
+        else
+        {
+            return e_Char;
         }
     }
 
@@ -906,11 +932,13 @@ void TelnetConnection::PutString(const char* const STR_Out) const
         if (char* const str_Out = new char[i_OutLen + 1])
         {
             memset(str_Out, '\0', i_OutLen + 1);
+            int o = 0;
 
             // Conversions.
-            for (int i=0, o=0; i<i_InLen; i++)
+            StringDecoder cli_Out(STR_Out);
+            for (KEY e_Key = cli_Out.GetKey(); e_Key != NULL_KEY; e_Key = cli_Out.GetKey())
             {
-                switch (STR_Out[i])
+                switch (e_Key)
                 {
                 case KEY_aacute:    str_Out[o++] = (char) -96;  break;
                 case KEY_agrave:    str_Out[o++] = (char) -123; break;
@@ -940,10 +968,12 @@ void TelnetConnection::PutString(const char* const STR_Out) const
                 case PARAGRAPH:     str_Out[o++] = (char) -11;  break;
                 case DEGREE:        str_Out[o++] = (char) -8;   break;
                 case COPYRIGHT:     str_Out[o++] = (char) -72;  break;
-                case '\n':          str_Out[o++] = '\r'; str_Out[o++] = '\n'; break;
-                default:            str_Out[o++] = STR_Out[i];  break;
+                case ENTER:         str_Out[o++] = '\r'; str_Out[o++] = '\n'; break;
+                default:            str_Out[o++] = (char) e_Key; break;
                 }
             }
+            // Due to conversions above, i_OutLen may be shorter than expected.
+            i_OutLen = (int) strlen(str_Out);
 
             // Send the buffer.
             for (int r=0; r<i_OutLen; r++)
@@ -955,7 +985,7 @@ void TelnetConnection::PutString(const char* const STR_Out) const
             {
                 m_cliLastError
                     .SetString(ResourceString::LANG_EN, "Telnet emission error")
-                    .SetString(ResourceString::LANG_FR, "Echec d'émission en telnet");
+                    .SetString(ResourceString::LANG_FR, "Echec d'Ã©mission en telnet");
 
                 if (i_Len < 0)
                 {

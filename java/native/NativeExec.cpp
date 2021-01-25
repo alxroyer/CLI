@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -40,7 +40,7 @@ static const cli::TraceClass& GetJniExecutionTraceClass(void)
 {
     static const cli::TraceClass cli_JniExecutionTraceClass("CLI_JNI_EXEC", cli::Help()
         .AddHelp(cli::Help::LANG_EN, "Advanced JNI execution traces")
-        .AddHelp(cli::Help::LANG_FR, "Traces d'exécution avancées JNI"));
+        .AddHelp(cli::Help::LANG_FR, "Traces d'exÃ©cution avancÃ©es JNI"));
     return cli_JniExecutionTraceClass;
 }
 
@@ -75,7 +75,7 @@ NativeExec::NativeExec(void)
     );
     if (m_hMutex == NULL)
     {
-        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "CreateMutex() failed (" << ::GetLastError() << ")" << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "CreateMutex() failed (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
         CLI_ASSERT(false);
     }
     #endif // _WINDOWS
@@ -102,7 +102,7 @@ NativeExec::~NativeExec(void)
     {
         if (! ::CloseHandle(m_hMutex))
         {
-            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "CloseHandle() failed (" << ::GetLastError() << ")" << cli::endl;
+            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "CloseHandle() failed (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
             CLI_ASSERT(false);
         }
     }
@@ -132,13 +132,13 @@ void NativeExec::RegJNIEnv(JNIEnv* const PJ_Env)
         {
             if (*ppj_KnownEnv != PJ_Env)
             {
-                cli::GetTraces().Trace(TRACE_JNI_EXEC) << "Changing JNI environment from " << *ppj_KnownEnv << " to " << PJ_Env << " for thread " << h_ThreadId << cli::endl;
+                cli::GetTraces().Trace(TRACE_JNI_EXEC) << "Changing JNI environment from " << *ppj_KnownEnv << " to " << PJ_Env << " for thread " << (uint64_t) h_ThreadId << cli::endl;
                 m_tkThreadEnvMap.SetAt(h_ThreadId, PJ_Env);
             }
         }
         else
         {
-            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "Registering JNI environment " << PJ_Env << " for thread " << h_ThreadId << cli::endl;
+            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "Registering JNI environment " << PJ_Env << " for thread " << (uint64_t) h_ThreadId << cli::endl;
             m_tkThreadEnvMap.SetAt(h_ThreadId, PJ_Env);
         }
 
@@ -154,7 +154,7 @@ void NativeExec::RegJNIEnv(JNIEnv* const PJ_Env)
         #if ((defined _WINDOWS) || (defined _CYGWIN))
         if (! ::ReleaseMutex(m_hMutex))
         {
-            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "ReleaseMutex() failed (" << ::GetLastError() << cli::endl;
+            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "ReleaseMutex() failed (" << (uint64_t) ::GetLastError() << cli::endl;
             CLI_ASSERT(false);
         }
         #endif // _WINDOWS
@@ -171,11 +171,14 @@ void NativeExec::RegJNIEnv(JNIEnv* const PJ_Env)
     #if ((defined _WINDOWS) || (defined _CYGWIN))
         break;
     case WAIT_FAILED:
-        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_FAILED (" << ::GetLastError() << ")" << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_FAILED (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
+        break;
     case WAIT_ABANDONED:
-        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_ABANDONED (" << ::GetLastError() << ")" << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_ABANDONED (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
+        break;
     case WAIT_TIMEOUT:
-        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_TIMEOUT (" << ::GetLastError() << ")" << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_TIMEOUT (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
+        break;
     default:
         CLI_ASSERT(false);
         break;
@@ -210,7 +213,7 @@ JNIEnv* const NativeExec::GetJNIEnv(void)
         }
         else
         {
-            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "No JNI environment for thread " << h_ThreadId << cli::endl;
+            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "No JNI environment for thread " << (uint64_t) h_ThreadId << cli::endl;
             CLI_ASSERT(false);
         }
 
@@ -226,7 +229,7 @@ JNIEnv* const NativeExec::GetJNIEnv(void)
         #if ((defined _WINDOWS) || (defined _CYGWIN))
         if (! ::ReleaseMutex(m_hMutex))
         {
-            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "ReleaseMutex() failed (" << ::GetLastError() << cli::endl;
+            cli::GetTraces().Trace(TRACE_JNI_EXEC) << "ReleaseMutex() failed (" << (uint64_t) ::GetLastError() << cli::endl;
             CLI_ASSERT(false);
         }
         #endif // _WINDOWS
@@ -243,11 +246,14 @@ JNIEnv* const NativeExec::GetJNIEnv(void)
     #if ((defined _WINDOWS) || (defined _CYGWIN))
         break;
     case WAIT_FAILED:
-        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_FAILED (" << ::GetLastError() << ")" << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_FAILED (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
+        break;
     case WAIT_ABANDONED:
-        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_ABANDONED (" << ::GetLastError() << ")" << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_ABANDONED (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
+        break;
     case WAIT_TIMEOUT:
-        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_TIMEOUT (" << ::GetLastError() << ")" << cli::endl;
+        cli::GetTraces().Trace(TRACE_JNI_EXEC) << "WaitForSingleObject() returned WAIT_TIMEOUT (" << (uint64_t) ::GetLastError() << ")" << cli::endl;
+        break;
     default:
         CLI_ASSERT(false);
         break;
@@ -281,25 +287,25 @@ jstring NativeExec::Native2Java(const std::string& STR_String)
     return pj_String;
 }
 
-jintArray NativeExec::Native2Java(const std::vector<NativeObject::REF>& STD_ObjectList)
+jlongArray NativeExec::Native2Java(const std::vector<NativeObject::REF>& STD_ObjectList)
 {
-    jintArray j_Array = NULL;
+    jlongArray j_Array = NULL;
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
     {
-        if ((j_Array = pj_Env->NewIntArray(STD_ObjectList.size())))
+        if ((j_Array = pj_Env->NewLongArray(STD_ObjectList.size())))
         {
             if (! STD_ObjectList.empty())
             {
-                if (jint* const pi_Array = new jint[STD_ObjectList.size()])
+                if (jlong* const pi64_Array = new jlong[STD_ObjectList.size()])
                 {
                     unsigned int ui = 0;
                     for (std::vector<NativeObject::REF>::const_iterator it = STD_ObjectList.begin(); it != STD_ObjectList.end(); it ++)
                     {
-                        pi_Array[ui] = *it;
+                        pi64_Array[ui] = *it;
                         ui ++;
                     }
-                    pj_Env->SetIntArrayRegion(j_Array, 0, ui, pi_Array);
-                    delete [] pi_Array;
+                    pj_Env->SetLongArrayRegion(j_Array, 0, ui, pi64_Array);
+                    delete [] pi64_Array;
                 }
             }
         }

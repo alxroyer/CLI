@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -88,7 +88,7 @@ CLI_NS_BEGIN(cli)
             virtual const bool OnStartExecution(void);
             // Inherit doxygen comments from cli::ExecutionContext interface documentation.
             virtual const bool OnStopExecution(void);
-            // Note: cli::ExecutionContext::OnKey will be overriden by sub-classes...
+            // Note: cli::ExecutionContext::OnKey will be overridden by sub-classes...
         protected:
             //! @brief Method to call by child classes in order to end the control execution.
             void EndControl(

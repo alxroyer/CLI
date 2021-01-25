@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -100,6 +100,13 @@
         <xsd:sequence>
             <xsd:choice minOccurs="0" maxOccurs="unbounded">
                 <xsd:group ref="cli:G_Help"/>
+                <xsd:element name="comment" type="cli:T_Comment" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                            Only the 'cli' element may contain 'comment' nodes.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
                 <xsd:group ref="cli:G_MenuContent"/>
                 <!--<xsd:element name="menu[@name]" type="cli:T_Menu"/>-->
                 <xsd:element name="menu" type="cli:T_MenuAnyType">
@@ -170,6 +177,24 @@
 
                     The '@ref' attribute references the name of menu previously declared,
                     either by a 'menu[@name]' or the main 'cli' element.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <!-- Comment node. -->
+    <xsd:complexType name="T_Comment">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+                'comment' nodes declare patterns for comment lines definition.
+                They may be declared within the 'cli' element only.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="start" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                    Only starter patterns are managed for the moment.
+                    They have been defined through a '@start' attribute for future evolution concerns, in case we would like to add a '@end' as well.
                 </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>

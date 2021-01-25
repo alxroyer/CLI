@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,23 +36,23 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_MenuRef__1_1MenuRef(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_MenuRef__1_1MenuRef(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeMenuRef)
+        jlong I64_NativeMenuRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("MenuRef.__MenuRef(I_NativeMenuRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeMenuRef", I_NativeMenuRef) << cli::endl;
-    NativeObject::REF i_MenuRefRef = 0;
-    if (const cli::Menu* const pcli_Menu = NativeObject::GetNativeObject<const cli::Menu*>(I_NativeMenuRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("MenuRef.__MenuRef(I64_NativeMenuRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeMenuRef", I64_NativeMenuRef) << cli::endl;
+    NativeObject::REF i64_MenuRefRef = 0;
+    if (const cli::Menu* const pcli_Menu = NativeObject::GetNativeObject<const cli::Menu*>(I64_NativeMenuRef))
     {
         if (cli::MenuRef* const pcli_MenuRef = new cli::MenuRef(*pcli_Menu))
         {
             NativeObject::Use(*pcli_MenuRef);
-            i_MenuRefRef = NativeObject::GetNativeRef(*pcli_MenuRef);
+            i64_MenuRefRef = NativeObject::GetNativeRef(*pcli_MenuRef);
         }
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("MenuRef.__MenuRef()", i_MenuRefRef) << cli::endl;
-    return i_MenuRefRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("MenuRef.__MenuRef()", i64_MenuRefRef) << cli::endl;
+    return i64_MenuRefRef;
 }

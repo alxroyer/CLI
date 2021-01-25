@@ -17,11 +17,11 @@ Hello>say hello
 Hello>say hello 
 Hello>cli-config
 cli-config>lang fr
-Langue française
+Langue franÃ§aise
 cli-config>exit
 Hello>
   cli-config      Menu de configuration du CLI
-  cls             Nettoyage de l'écran
+  cls             Nettoyage de l'Ã©cran
   exit            Sortir du menu 'Hello'
   help            Obtenir de l'aide
   pwm             Affichage du menu courant

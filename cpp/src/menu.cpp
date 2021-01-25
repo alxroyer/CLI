@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -94,7 +94,7 @@ void Menu::SetCli(Cli& CLI_Cli)
     {
         Help cli_Help(Help()
             .AddHelp(Help::LANG_EN, "Clean screen")
-            .AddHelp(Help::LANG_FR, "Nettoyage de l'écran"));
+            .AddHelp(Help::LANG_FR, "Nettoyage de l'Ã©cran"));
         m_pcliCls = dynamic_cast<Keyword*>(& AddElement(new Keyword("cls", cli_Help)));
         m_pcliCls->AddElement(new Endl(cli_Help));
     }
@@ -108,7 +108,7 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     else if (it == *m_pcliHelp)
     {
         if (! it.StepIt()) { return false; }
-        if (dynamic_cast<const Endl*>(*it))
+        if (dynamic_cast<const Endl*>(*it) != NULL)
         {
             GetShell().DisplayHelp();
             return true;
@@ -117,7 +117,7 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     else if (it == *m_pcliExit)
     {
         if (! it.StepIt()) { return false; }
-        if (dynamic_cast<const Endl*>(*it))
+        if (dynamic_cast<const Endl*>(*it) != NULL)
         {
             GetShell().ExitMenu(false);
             return true;
@@ -126,7 +126,7 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     else if (it == *m_pcliQuit)
     {
         if (! it.StepIt()) { return false; }
-        if (dynamic_cast<const Endl*>(*it))
+        if (dynamic_cast<const Endl*>(*it) != NULL)
         {
             GetShell().Quit();
             return true;
@@ -135,7 +135,7 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     else if (it == *m_pcliPwm)
     {
         if (! it.StepIt()) { return false; }
-        if (dynamic_cast<const Endl*>(*it))
+        if (dynamic_cast<const Endl*>(*it) != NULL)
         {
             GetShell().PrintWorkingMenu();
             return true;
@@ -144,7 +144,7 @@ const bool Menu::ExecuteReserved(const CommandLine& CLI_CommandLine) const
     else if (it == *m_pcliCls)
     {
         if (! it.StepIt()) { return false; }
-        if (dynamic_cast<const Endl*>(*it))
+        if (dynamic_cast<const Endl*>(*it) != NULL)
         {
             GetShell().CleanScreen(false);
             return true;
@@ -158,7 +158,7 @@ const bool Menu::Execute(const CommandLine& CLI_CommandLine) const
 {
     const ResourceString cli_Error = ResourceString()
         .SetString(ResourceString::LANG_EN, "No execution defined for the current command line")
-        .SetString(ResourceString::LANG_FR, "Pas d'exécution définie pour la ligne de commande");
+        .SetString(ResourceString::LANG_FR, "Pas d'exÃ©cution dÃ©finie pour la ligne de commande");
     GetErrorStream() << cli_Error.GetString(GetShell().GetLang()) << endl;
     return true;
 }

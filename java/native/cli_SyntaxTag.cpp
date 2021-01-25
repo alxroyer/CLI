@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -35,7 +35,7 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_SyntaxTag__1_1SyntaxTag(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_SyntaxTag__1_1SyntaxTag(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jboolean B_Hollow)
 {
@@ -43,12 +43,12 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_SyntaxTag__1_1SyntaxTag(
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("SyntaxTag.__SyntaxTag(B_Hollow)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamBool("B_Hollow", B_Hollow) << cli::endl;
-    NativeObject::REF i_TagRef = 0;
+    NativeObject::REF i64_TagRef = 0;
     if (cli::SyntaxTag* const pcli_Tag = new cli::SyntaxTag(B_Hollow))
     {
         NativeObject::Use(*pcli_Tag);
-        i_TagRef = NativeObject::GetNativeRef(*pcli_Tag);
+        i64_TagRef = NativeObject::GetNativeRef(*pcli_Tag);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("SyntaxTag.__SyntaxTag()", i_TagRef) << cli::endl;
-    return i_TagRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("SyntaxTag.__SyntaxTag()", i64_TagRef) << cli::endl;
+    return i64_TagRef;
 }

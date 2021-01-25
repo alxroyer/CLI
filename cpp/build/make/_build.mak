@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -47,7 +47,7 @@ include $(CLI_DIR)/build/make/_utils.mak
 # Parameters
 	# Project
 		# Project name. It is generally similar to the makefile name.
-		PROJECT ?= $(patsubst %.mak,%,$(firstword $(MAKEFILE_LIST)))
+		PROJECT ?= $(patsubst %.mak,%,$(THIS_MAKEFILE))
 		# Project dependencies. Projects this one relies on. Build and clean rules will be proprgated to them.
 		PROJECT_DEPS ?=
 		# PRODUCT_TYPE can be one of (BIN|STATIC_LIB|DYN_LIB).
@@ -85,6 +85,11 @@ ifneq ($(CYGWIN),)
 endif
 		# All C++ flags
 		CPP_FLAGS ?= -Wall $(CPP_OPT_FLAGS) $(CPP_DEBUG_FLAG) $(CPP_OS_FLAGS) $(PROJ_CPP_FLAGS)
+ifneq ($(LINUX),)
+ifeq ($(PRODUCT_TYPE),DYN_LIB)
+		CPP_FLAGS += -fPIC
+endif
+endif
 		# Project includes
 		PROJ_INCLUDES ?=
 		# All includes
@@ -142,13 +147,13 @@ endif
 %.o:
 	$(if $<,$(CXX) $(CPP_FLAGS) $(INCLUDES) -c $< -o $@,@echo "Error: dependency missing for $@. Please update dependencies ('deps' rule)." && false)
 
-# Automatic dependencies
+# Automatic dependencies (CLI 2.9: deterministic order addition)
 .PHONY: deps
 ifeq ($(AUTO_DEPS),yes)
 MkDepFile = $(CXX) $(CPP_FLAGS) $(INCLUDES) -MT $(patsubst %.cpp,$$\(INT_DIR\)/%.o,$(notdir $(1))) -MM $(1) >> $(AUTO_DEPS_FILE)
 deps:
 	rm -f $(AUTO_DEPS_FILE) && touch $(AUTO_DEPS_FILE)
-	$(call Map,MkDepFile,$(CPP_FILES))
+	$(call Map,MkDepFile,$(sort $(CPP_FILES)))
 else
 # Do nothing
 deps: ;

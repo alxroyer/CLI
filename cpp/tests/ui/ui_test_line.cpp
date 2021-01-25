@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,6 +28,7 @@
 #include "cli/pch.h"
 
 #include "cli/ui_line.h"
+#include "constraints.h"
 
 #include "test_error.h"
 #include "test_device.h"
@@ -94,6 +95,17 @@ const bool CheckGetLine(void)
     if (! Test::Line(__CALL_INFO__, "", "0123456789\n", 0, 10, true, "0123456789", Out().txt("0123456789").endl())) return false;
     // TEST maximum line length.
     if (! Test::Line(__CALL_INFO__, "", "0123456789a\n", 0, 10, true, "0123456789", Out().txt("0123456789").beep().endl())) return false;
+    // TEST MAX_CMD_LINE_LENGTH line length limitation.
+    do {
+        char str_In[cli::MAX_CMD_LINE_LENGTH + 10 + 2], str_Out[cli::MAX_CMD_LINE_LENGTH + 1];
+        memset(str_In, 'a', sizeof(str_In));
+        str_In[cli::MAX_CMD_LINE_LENGTH + 10 + 0] = '\n';
+        str_In[cli::MAX_CMD_LINE_LENGTH + 10 + 1] = '\0';
+        memset(str_Out, 'a', sizeof(str_Out));
+        str_Out[cli::MAX_CMD_LINE_LENGTH + 0] = '\0';
+        if (! Test::Line(__CALL_INFO__, "", str_In, 0, 4096, true, str_Out, Out().txt(str_Out).endl())) return false;
+    } while (0);
+
     if (! Test::Line(__CALL_INFO__, "", "012345\b6789a\n", 0, 10, true, "012346789a", Out().txt("012345").bsp(1).txt("6789a").endl())) return false;
     //      ... even though a wrong backspace at first.
     if (! Test::Line(__CALL_INFO__, "", "\b0123456789a\n", 0, 10, true, "0123456789", Out().beep().txt("0123456789").beep().endl())) return false;

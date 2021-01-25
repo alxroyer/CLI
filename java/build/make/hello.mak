@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -32,29 +32,29 @@ hello.default: $(.DEFAULT_GOAL) ;
 CLI_DIR := ../../..
 include _vars.mak
 PRODUCT = hello
-SRC_DIR = $(CLI_DIR)/java/src/cli/test
+SRC_DIR = $(CLI_DIR)/java/src/cli
 CLI_XML_RES = $(CLI_DIR)/samples/user-guide/hello.xml
-CLI_JAVA = $(patsubst %.xml,$(CLI_DIR)/java/src/cli/test/%.java,$(notdir $(CLI_XML_RES)))
-CLI_GO_JAVA = $(CLI_DIR)/java/src/cli/test/GoHello.java
+CLI_JAVA = $(patsubst %.xml,$(SRC_DIR)/samples/%.java,$(notdir $(CLI_XML_RES)))
+CLI_GO_JAVA = $(SRC_DIR)/test/GoHello.java
 JAVA_FILES += $(CLI_GO_JAVA)
 JAVA_FILES += $(CLI_JAVA)
-JAVA_FILES += $(SRC_DIR)/TestTools.java
+JAVA_FILES += $(SRC_DIR)/test/TestTools.java
 PROJECT_DEPS = libclijava.mak jni.mak native.mak
 include _build.mak
 PROJ_CLEAN += $(CLI_JAVA)
 
 # Variables
-CLI_XSL = $(CLI_DIR)/tools/cli2java.xsl
+CLI_CLI2JAVA = $(CLI_DIR)/tools/cli2java.py
 CLI_JAVA_CLASS_NAME = $(subst -,_,$(patsubst %.java,%,$(notdir $(CLI_JAVA))))
 
 # Rules
 run: build
-	java $(JAVA_PATH) $(JAVA_LIBS) cli.test.GoHello
+	$(call RunJava,cli.test.GoHello)
 
-$(CLI_JAVA): $(CLI_XML_RES) $(CLI_XSL)
+$(CLI_JAVA): $(CLI_XML_RES) $(CLI_CLI2JAVA)
 	$(call CheckDir,$(dir $@))
-	echo "package cli.test;" > $@
-	xsltproc --stringparam STR_CliClassName $(CLI_JAVA_CLASS_NAME) $(CLI_XSL) $(CLI_XML_RES) >> $@
+	python $(CLI_CLI2JAVA) --cli-class-name $(CLI_JAVA_CLASS_NAME) --cli-class-scope public $(CLI_XML_RES) --output $@
+	sed -e "1s/^/package cli.samples;\n/" -i $@
 
 .PHONY: deps
 deps: ;
@@ -70,7 +70,7 @@ $(CLI_DIR)/java/build/make/hello.help:
 .PHONY: $(CLI_DIR)/java/build/make/hello.vars
 vars: $(CLI_DIR)/java/build/make/hello.vars
 $(CLI_DIR)/java/build/make/hello.vars:
-	$(call ShowVariables,CLI_XML_RES CLI_XSL CLI_JAVA CLI_JAVA_CLASS_NAME CLI_GO_JAVA)
+	$(call ShowVariables,CLI_XML_RES CLI_CLI2JAVA CLI_JAVA CLI_JAVA_CLASS_NAME CLI_GO_JAVA)
 
 # Dependencies
 build: $(JAVA_FILES)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -33,11 +33,14 @@ public class TraceClass extends NativeObject {
     /** Native JNI trace class singleton.
         @return Native JNI trace class instance. */
     public static final TraceClass getJniTraceClass() {
-        TraceClass cli_JniTraceClass = new TraceClass(__getJniTraceClass());
-        cli_JniTraceClass.dontFinalize(); // Do not try to finalize native JNI trace class.
-        return cli_JniTraceClass;
+        if (m_cliJniTraceClass == null) {
+            m_cliJniTraceClass = new TraceClass(__getJniTraceClass());
+            m_cliJniTraceClass.dontFinalize(); // Do not try to finalize native JNI trace class.
+        }
+        return m_cliJniTraceClass;
     }
-    private static final native int __getJniTraceClass();
+    private static TraceClass m_cliJniTraceClass = null;
+    private static final native long __getJniTraceClass();
 
     /** Copy constructor.
         @param CLI_Class Source class object. */
@@ -50,30 +53,37 @@ public class TraceClass extends NativeObject {
     public TraceClass(String STR_ClassName, Help CLI_Help) {
         super(__TraceClass(STR_ClassName, CLI_Help.getNativeRef()));
     }
-    private static final native int __TraceClass(String STR_ClassName, int I_NativeHelpRef);
+    private static final native long __TraceClass(String STR_ClassName, long I64_NativeHelpRef);
 
     /** By native reference constructor.
         Almost for getJniTraceClass() singleton.
-        @param I_NativeTraceClassRef Native trace class reference. */
-    private TraceClass(int I_NativeTraceClassRef) {
-        super(I_NativeTraceClassRef);
+        @param I64_NativeTraceClassRef Native trace class reference. */
+    private TraceClass(long I64_NativeTraceClassRef) {
+        super(I64_NativeTraceClassRef);
     }
 
     /** Class name accessor.
-        @return Class name. null if an error occured. */
+        @return Class name. null if an error occurred. */
     public String getClassName() {
         return __getClassName(getNativeRef());
     }
-    private static final native String __getClassName(int I_NativeTraceClassRef);
+    private static final native String __getClassName(long I64_NativeTraceClassRef);
 
-    /** Help string accessor.
-        @return Help string. null if an error occured. */
+    /** Help object accessor.
+        @return Help string. null if an error occurred. */
     public Help getHelp() {
         Help cli_Help = (Help) NativeObject.getObject(__getHelp(this.getNativeRef()));
         // This trace class instance will not be deleted by the native code.
         NativeObject.forget(cli_Help);
         return cli_Help;
     }
-    private static final native int __getHelp(int I_NativeTraceClassRef);
+    private static final native long __getHelp(long I64_NativeTraceClassRef);
 
+    /** Direct help string accessor.
+        Facility provided in order to shorten .getHelp().getHelp(cli.Help.LANG_EN) calls into .getHelp(cli.Help.LANG_EN).
+        @param E_Lang Language identifier.
+        @return The help string defined for the given language. */
+    public String getHelp(int E_Lang) {
+        return getHelp().getHelp(E_Lang);
+    }
 }

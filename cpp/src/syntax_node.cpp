@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -135,7 +135,7 @@ const bool SyntaxNode::FindElements(
     {
         if (const Element* const pcli_Element = m_cliElements.GetAt(it))
         {
-            if (0) {}
+            if (false) {}
             else if (const SyntaxTag* const pcli_Tag = dynamic_cast<const SyntaxTag*>(pcli_Element))
             {
                 // Propagate call over child non hollow tag.

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -85,6 +85,23 @@ int main(int I_ArgCount, char* ARSTR_Args[])
             return -1;
         }
     }
+
+    static const cli::TraceClass CLI_TELNET_SERVER("CLI_TELNET_SERVER", cli::Help());
+    static const cli::TraceClass CLI_TELNET_IN("CLI_TELNET_IN", cli::Help());
+    static const cli::TraceClass CLI_TELNET_OUT("CLI_TELNET_OUT", cli::Help());
+    static const cli::TraceClass CLI_EXEC_CTX("CLI_EXEC_CTX", cli::Help());
+    class _Trace { public:
+        explicit _Trace() {
+            cli::GetTraces().SetStream(cli::OutputDevice::GetStdErr());
+            cli::GetTraces().Declare(CLI_TELNET_SERVER);    cli::GetTraces().SetFilter(CLI_TELNET_SERVER, false);
+            cli::GetTraces().Declare(CLI_TELNET_IN);        cli::GetTraces().SetFilter(CLI_TELNET_IN, false);
+            cli::GetTraces().Declare(CLI_TELNET_OUT);       cli::GetTraces().SetFilter(CLI_TELNET_OUT, false);
+            cli::GetTraces().Declare(CLI_EXEC_CTX);         cli::GetTraces().SetFilter(CLI_EXEC_CTX, false);
+        }
+        ~_Trace() {
+            cli::GetTraces().UnsetStream(cli::OutputDevice::GetStdErr());
+        }
+    } guard;
 
     TestServer cli_Server(ul_Port);
     cli_Server.StartServer();

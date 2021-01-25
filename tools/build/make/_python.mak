@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -31,20 +31,23 @@ include $(CLI_DIR)/build/make/_vars.mak
 include $(CLI_DIR)/tools/build/make/_vars.mak
 
 # Variables
-PYTHONPATH :=
+PYTHONPATH := $(CLI_DIR)/tools
 PYTHON = export PYTHONPATH=$(PYTHONPATH) && python
+PYLINT =
+ifneq ($(shell which pylint 2> /dev/null),)
 PYLINT = export PYTHONPATH=$(PYTHONPATH) && pylint
+endif
+OUT_DIR ?= "."
 
 PYLINT_RESULT = $(OUT_DIR)/pylint.done
 
 # Rules
 $(PYLINT_RESULT): $(wildcard $(CLI_DIR)/tools/*.py)
-ifneq ($(PYLINT),)
+ifeq ($(PYLINT),)
+	$(warning Please install pylint in order to check python scripts before execution)
+else
 	$(call CheckDir,$(dir $@))
 	$(PYLINT) --rcfile=$(CLI_DIR)/tools/pylint.conf $(wildcard $(CLI_DIR)/tools/*.py)
-	touch $@
-else
-	$(warning Please install pylint in order to check python scripts before execution)
 	touch $@
 endif
 
@@ -54,7 +57,11 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(CLI_DIR)/tools/build/make/_python.vars
 vars: $(CLI_DIR)/tools/build/make/_python.vars
 $(CLI_DIR)/tools/build/make/_python.vars:
-	$(call ShowVariables,PYTHON PYLINT PYLINT_RESULT)
+	$(call ShowVariables,PYTHONPATH PYTHON PYLINT OUT_DIR PYLINT_RESULT)
+
+.PHONY: clean.pylint
+clean.pylint:
+	rm -f $(PYLINT_RESULT)
 
 endif
 # __TOOLS_PYTHON__

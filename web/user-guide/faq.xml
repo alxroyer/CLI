@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -29,7 +29,7 @@
 
 <section id="faq"><title id="faq.title">Frequently Asked Questions</title>
 
-    <!--<section id="faq.features"><title id="faq.features.title">Features</title>-->
+    <section id="faq.features"><title id="faq.features.title">Features</title>
 
         <section id="faq.Q020"><title>I need to repeat a same set of commands. How can I do?</title>
 
@@ -51,7 +51,7 @@
                 <para>
                 Define a <filename>top.xml</filename> cli XML file like this:
 <programlisting>
-&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;!DOCTYPE cli [
  &lt;!ENTITY child SYSTEM "child.xml"&gt;
 ]&gt;
@@ -77,7 +77,7 @@
                 <para>
                 Define a <filename>child.xml</filename> cli XML file like this:
 <programlisting>
-&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;keyword string="k1"&gt;
  &lt;endl&gt;&lt;/endl&gt;
 &lt;/keyword&gt;
@@ -98,7 +98,7 @@
                 <para>
                 Define a <filename>top2.xml</filename> cli XML file like this:
 <programlisting>
-&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;cli xmlns="http://alexis.royer.free.fr/CLI" name="top"&gt;
  &lt;keyword string="menu1"&gt;
   &lt;endl&gt;
@@ -140,7 +140,7 @@
             It is up to you to implement such kind of functions, depending on your security requirements.
             By the way, I advise you to read through the <link linkend="adv.exec-ctx" endterm="adv.exec-ctx.title"/> section,
             and its <link linkend="eg.exec-ctx.pwd-shell" endterm="eg.exec-ctx.pwd-shell.title"/> example.
-            Also have a look at non blocking devices,
+            Also have a look at non-blocking devices,
             in the <link linkend="adv.non-blocking" endterm="adv.non-blocking.title"/> section,
             which are more suitable to implement timeout aspects.
             </para>
@@ -159,9 +159,9 @@
 
         </section>
 
-    <!--</section>-->
+    </section>
 
-    <!--<section id="faq.compile"><title id="faq.compile.title">Compile time troubles</title>-->
+    <section id="faq.compile"><title id="faq.compile.title">Compile time troubles</title>
 
         <section id="faq.Q200"><title>I can't compile for a 64 bit architecture!</title>
 
@@ -242,9 +242,9 @@
 
         </section>
 
-    <!--</section>-->
+    </section>
 
-    <!--<section id="faq.run"><title id="faq.run.title">Run time troubles</title>-->
+    <section id="faq.run"><title id="faq.run.title">Runtime troubles</title>
 
         <section id="faq.Q600"><title>I am coming across problems while trying to print onto the CLI console: unwanted indenting, interleaved text...</title>
 
@@ -298,38 +298,81 @@ void runShellWithFiles()
 
         </section>
 
-        <section id="faq.Q650"><title>The <link linkend="eg.java.init" endterm="eg.java.init.title"/> sample gets stuck when executed under cygwin!</title>
+        <section id="faq.Q650"><title>The <link linkend="eg.java.init" endterm="eg.java.init.title"/> sample gets stuck when executed under Cygwin!</title>
 
             <para>
-            The Java implementation relies on a native dynamic library
-            which device console is based on <filename>win_console.cpp</filename> under cygwin.
-            This choice makes your Java programs work without a dependency on <filename>cygwin1.dll</filename>,
-            which is convenient for applications running in a <application>Windows</application> environment.
+            The very short answer to this issue is:
+            please do not use the default Cygwin <application>mintty</application> terminal for CLI Java programs, use <application>cmd.exe</application> instead.
             </para>
 
             <para>
-            Latest Cygwin distributions propose the <application>mintty</application> console,
-            which works correctly with <filename>ncurses_console.cpp</filename>
-            but unfortunatley not with <filename>win_console.cpp</filename> implementation.
-            By the way, if you run the given <command>java</command> command line in a regular <application>cmd.exe</application> console,
-            it works as expected.
-                <tip>
-                Make sure you execute the Java program with a <command>java</command> version compatible with the one of the <command>javac</command> you used to compile,
-                otherwise you may get "Unsupported major.minor version" errors.
-                </tip>
+            Here is the explanation below.
             </para>
 
             <para>
-            If you want to compile Java programs under cygwin and execute them in the same console as well (devel configuration for example),
-            you may launch a <application>cmd.exe</application> console and run the <filename>Cygwin.bat</filename> script provided in your cygwin install directory.
+            On the one hand,
+            regarding the Java implementation of the CLI library,
+            you should first be aware that it relies on the use of the JNI technology.
+            This choice of design basically comes from the will not to multiply development efforts between the various programming languages supported,
+            and keep the core of it in the C++ implementation only.
+            But regardless of the operating system, the use of JNI is mandatory:
+            the Java side alone cannot catch input keys typed in a console,
+            and a native library needs to be called anyway.
+            </para>
+
+            <para>
+            On the other hand,
+            in as much as this CLI toolkit is provided with a toolchain based on Linux commands and makefiles,
+            Cygwin is one of the straight forward candidates as a development environment.
+            </para>
+
+            <para>
+            Unfortunately, the JNI technology integrates poorly in a Cygwin environment.
+            Please read through the <ulink url="https://stackoverflow.com/questions/8413290/using-java-jni-on-cygwin#47069933">"Using Java / JNI on Cygwin" Stack Overflow question page</ulink>,
+            and particularly this following answer:
+                <blockquote>
+                I couldn't get JNI to work with Cygwin's <command>g++</command> -- that induces a dependency on <filename>cygwin1.dll</filename>,
+                which clashes with the JNI mechanism, causing a crash.
+                The <option>-mno-cygwin</option> flag is no longer supported.
+                But using <command>/bin/x86_64-w64-mingw32-g++.exe</command> fixed the problem for me.
+                </blockquote>
+            That's the reason why the Java implementation is compiled and linked with <command>mingw</command> compilation and linkage.
+            By the way, the regular Cygwin/Linux <filename>ncurses_console.cpp</filename> input/output device cannot be used anymore,
+            and we have to rely on the native Windows <filename>win_console.cpp</filename>.
+            </para>
+
+            <para>
+            Eventually, the CLI Java programs compile and link correctly with a Cygwin environment,
+            but still do not run correctly in the <application>mintty</application> terminal that comes by default with Cygwin.
+            Nevertheless, if you try to run the given <command>java</command> command line in a regular <application>cmd.exe</application> console, it works as expected.
+            </para>
+
+            <para>
+            At the end of it, here are some workarounds we could suggest.
+            </para>
+
+            <para>If you want to use Cygwin as your development environment (for compilation, linkage as well as execution and debugging):
+            <itemizedlist>
+            <listitem>launch a launch a <application>cmd.exe</application> console,</listitem>
+            <listitem>and run the <filename>Cygwin.bat</filename> script provided in your Cygwin install directory (eg: <filename>C:\cygwin64\Cygwin.bat</filename>).</listitem>
+            </itemizedlist>
+            In a console configured such a way, you may compile CLI programs and execute them as well.
+            </para>
+
+            <para>
+            Another option remains:
+            <itemizedlist>
+            <listitem>you still can build the CLI library with a regular <application>mintty</application> Cygwin terminal as usual,</listitem>
+            <listitem>then develop and debug your full application in another development environment (Eclipse or any other Java IDE).</listitem>
+            </itemizedlist>
             </para>
 
         </section>
 
-        <section id="faq.Q700"><title>My Console device does not behave nicely!</title>
+        <section id="faq.Q700"><title>My console device does not behave nicely!</title>
 
             <para>
-            I had once noticed strange behaviours with my WinConsole device, through Java execution under cygwin:
+            I had once noticed strange behaviours with my WinConsole device, through Java execution under Cygwin:
             <itemizedlist>
             <listitem>could not ensure the visibility of the cursor when moving it left or right,</listitem>
             <listitem>could not get the Windows optimized clean screen feature running, but had many blank lines printed out instead,</listitem>
@@ -347,9 +390,26 @@ void runShellWithFiles()
 
         </section>
 
-    <!--</section>-->
+        <section id="faq.Q750"><title>How can I handle thread programming troubles?</title>
 
-    <!--<section id="faq.devel"><title id="faq.devel.title">Developpers</title>-->
+            <para>
+            Using a blocking execution integration, in a full application, may require the creation of a dedicated thread.
+            By the way, thread programming implies common risks such as dead-locks or bad memory management.
+            </para>
+
+            <para>
+            Please consider using the <link linkend="adv.non-blocking">non-blocking execution integration</link> mode.
+            Thanks to the real improvement of this feature in CLI 2.8,
+            with the addition of <link linkend="adv.exec-ctx">execution context management</link>,
+            you shall now let the CLI execution take place directly within your regular execution context,
+            without the need to thread it anymore which is a generally safer strategy.
+            </para>
+
+        </section>
+
+    </section>
+
+    <section id="faq.devel"><title id="faq.devel.title">Developpers</title>
 
         <section id="faq.Q500"><title>Why ain't there regular VC++ memory leak macros in CLI source files?</title>
 
@@ -369,6 +429,22 @@ void runShellWithFiles()
 
         </section>
 
-    <!--</section>-->
+        <section id="faq.Q800"><title>Telnet unit tests fail</title>
+            <para>
+            Hopefully, unit tests provided are expected to work :-)
+            However, in as much as telnet unit tests generate and execute binaries that open server sockets and others with client sockets, those binaries could be blocked by your antivirus.
+            </para>
+
+            <para>
+            If so, configuring antivirus exceptions for binaries generated in your CLI directory should solve the problem.
+            </para>
+
+            <note>
+            For instance, Avast says: "If you are a developer go to autosandbox expert settings and disable autosandboxing files with a low reputation."
+            (see <ulink url="https://blog.avast.com/2012/03/20/autosandbox-why-are-you-annoying-me/">https://blog.avast.com/2012/03/20/autosandbox-why-are-you-annoying-me/</ulink>).
+            </note>
+        </section>
+
+    </section>
 
 </section>

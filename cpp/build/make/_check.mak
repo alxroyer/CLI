@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -47,12 +47,10 @@ include _mkres.mak
 .PHONY: log
 log: build_depends $(CLI_LOG) ;
 
-$(CLI_LOG): $(CLI_BINARY) $(CLI_TEST) $(CLI_DIR)/samples/clean_outlog.sh
+$(CLI_LOG): $(CLI_BINARY) $(CLI_TEST) $(CLI_DIR)/tools/clean_outlog.py
 	dos2unix $(CLI_TEST) 2> /dev/null
 	$(CLI_BINARY) --input $(CLI_TEST) --output $(CLI_LOG) 1> /dev/null 2> /dev/null
-	$(call CheckSh,$(CLI_DIR)/samples/clean_outlog.sh)
-	$(CLI_DIR)/samples/clean_outlog.sh $(CLI_LOG)
-	dos2unix $(CLI_LOG) 2> /dev/null
+	python $(CLI_DIR)/tools/clean_outlog.py $(CLI_LOG)
 
 .PHONY: check check.xml
 check check.xml: build_depends $(CLI_LOG) $(CLI_CHECK)

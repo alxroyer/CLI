@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -33,6 +33,8 @@
     <keyword string="enter">
         <keyword string="int">
             <endl>
+                <!-- Note: blocking execution integration only! -->
+
                 <!-- C++ implementation -->
                 <cpp><out/> &lt;&lt; "Enter integer number: ";</cpp>
                 <cpp>cli::ui::Int ui_Int(GetShell(), 0, -1000, 1000);</cpp>

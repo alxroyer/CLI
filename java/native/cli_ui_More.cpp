@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,19 +36,19 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_More__1_1More(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_More__1_1More(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeParentContextRef)
+        jlong I64_NativeParentContextRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.More.__More(I_NativeParentContextRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeParentContextRef", I_NativeParentContextRef) << cli::endl;
-    NativeObject::REF i_MoreRef = 0;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.More.__More(I64_NativeParentContextRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeParentContextRef", I64_NativeParentContextRef) << cli::endl;
+    NativeObject::REF i64_MoreRef = 0;
     cli::ui::More* pcli_More = NULL;
-    if (I_NativeParentContextRef != 0)
+    if (I64_NativeParentContextRef != 0)
     {
-        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I_NativeParentContextRef))
+        if (cli::ExecutionContext* const pcli_ParentContext = NativeObject::GetNativeObject<cli::ExecutionContext*>(I64_NativeParentContextRef))
         {
             pcli_More = new cli::ui::More(*pcli_ParentContext, 0, 0); // UI_MaxLines & UI_MaxLineLength not taken in account by tk STL implementation
         }
@@ -60,25 +60,25 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_ui_More__1_1More(
     if (pcli_More != NULL)
     {
         NativeObject::Use(*pcli_More);
-        i_MoreRef = NativeObject::GetNativeRef(*pcli_More);
+        i64_MoreRef = NativeObject::GetNativeRef(*pcli_More);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.More.__More()", i_MoreRef) << cli::endl;
-    return i_MoreRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.More.__More()", i64_MoreRef) << cli::endl;
+    return i64_MoreRef;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_ui_More__1_1getText(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_ui_More__1_1getText(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeMoreRef)
+        jlong I64_NativeMoreRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.More.__getText(I_NativeMoreRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeMoreRef", I_NativeMoreRef) << cli::endl;
-    NativeObject::REF i_TextRef = 0;
-    if (cli::ui::More* const pcli_More = NativeObject::GetNativeObject<cli::ui::More*>(I_NativeMoreRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.More.__getText(I64_NativeMoreRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeMoreRef", I64_NativeMoreRef) << cli::endl;
+    NativeObject::REF i64_TextRef = 0;
+    if (cli::ui::More* const pcli_More = NativeObject::GetNativeObject<cli::ui::More*>(I64_NativeMoreRef))
     {
-        i_TextRef = NativeObject::GetNativeRef(pcli_More->GetText());
+        i64_TextRef = NativeObject::GetNativeRef(pcli_More->GetText());
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("ui.More.__getText()", i_TextRef) << cli::endl;
-    return i_TextRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("ui.More.__getText()", i64_TextRef) << cli::endl;
+    return i64_TextRef;
 }

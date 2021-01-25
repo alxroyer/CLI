@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -47,10 +47,12 @@ CPP_FILES += $(CLI_DIR)/cpp/src/tk.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/debug.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/traces.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/io_device.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/encoding.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/string_device.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/help.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/resource_string.cpp
 CPP_FILES += $(CLI_DIR)/cpp/src/consistency.cpp
+CPP_FILES += $(CLI_DIR)/cpp/src/utils.cpp
 PROJ_CPP_FLAGS += $(call IfEquals,$(USE_STL),no,-DCLI_NO_STL)
 INT_DIR = $(TARGET)$(CXX)/$(RDX)/__$(PROJECT)
 OUT_DIR = $(TARGET)$(CXX)/$(RDX)/__$(PROJECT)
@@ -61,18 +63,18 @@ endif
 ifeq ($(USE_STL),)
 .PHONY: check
 check:
-	$(MAKE) USE_STL=yes -f $(firstword $(MAKEFILE_LIST)) check
-	$(MAKE) USE_STL=no -f $(firstword $(MAKEFILE_LIST)) check
+	$(MAKE) USE_STL=yes -f $(THIS_MAKEFILE) check
+	$(MAKE) USE_STL=no -f $(THIS_MAKEFILE) check
 
 .PHONY: deps
 deps:
-	$(MAKE) USE_STL=yes -f $(firstword $(MAKEFILE_LIST)) deps
-	$(MAKE) USE_STL=no -f $(firstword $(MAKEFILE_LIST)) deps
+	$(MAKE) USE_STL=yes -f $(THIS_MAKEFILE) deps
+	$(MAKE) USE_STL=no -f $(THIS_MAKEFILE) deps
 
 .PHONY: clean
 clean:
-	$(MAKE) USE_STL=yes -f $(firstword $(MAKEFILE_LIST)) clean
-	$(MAKE) USE_STL=no -f $(firstword $(MAKEFILE_LIST)) clean
+	$(MAKE) USE_STL=yes -f $(THIS_MAKEFILE) clean
+	$(MAKE) USE_STL=no -f $(THIS_MAKEFILE) clean
 
 else
 
@@ -95,8 +97,8 @@ vars: $(CLI_DIR)/cpp/build/make/test_tk.vars
 $(CLI_DIR)/cpp/build/make/test_tk.vars:
 	$(call ShowVariables,USE_STL)
 ifeq ($(USE_STL),)
-	$(MAKE) USE_STL=yes -f $(firstword $(MAKEFILE_LIST)) vars
-	$(MAKE) USE_STL=no -f $(firstword $(MAKEFILE_LIST)) vars
+	$(MAKE) USE_STL=yes -f $(THIS_MAKEFILE) vars
+	$(MAKE) USE_STL=no -f $(THIS_MAKEFILE) vars
 endif
 
 # Dependencies

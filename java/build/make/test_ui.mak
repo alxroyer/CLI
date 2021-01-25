@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -34,24 +34,23 @@ include _vars.mak
 PRODUCT = test_ui
 SRC_DIR = $(CLI_DIR)/java/src/cli/test
 JAVA_FILES += $(CLI_DIR)/java/src/cli/test/TestUI.java
-JAVA_FILES += $(CLI_DIR)/java/src/cli/test/UISampleText.java
+JAVA_FILES += $(CLI_DIR)/java/src/cli/test/samples/UISampleText.java
 JAVA_FILES += $(CLI_DIR)/java/src/cli/test/TestTools.java
 PROJECT_DEPS = libclijava.mak jni.mak native.mak
 include _build.mak
 JAVAC_OPTS += -nowarn
-PROJ_CLEAN += $(CLI_DIR)/java/src/cli/test/UISampleText.java
+PROJ_CLEAN += $(CLI_DIR)/java/src/cli/test/samples/UISampleText.java
 PROJ_CLEAN += $(OUT_DIR)/TestUI.output.log
 
 # Rules
 .PHONY: check
-check: build $(SRC_DIR)/TestUI.output.log $(CLI_DIR)/samples/clean_outlog.sh
+check: build $(SRC_DIR)/TestUI.output.log $(CLI_DIR)/tools/clean_outlog.py
 	cd $(OUT_DIR) && java -Djava.library.path=. cli.test.TestUI
-	$(call CheckSh,$(CLI_DIR)/samples/clean_outlog.sh)
-	$(CLI_DIR)/samples/clean_outlog.sh $(OUT_DIR)/TestUI.output.log
+	python $(CLI_DIR)/tools/clean_outlog.py $(OUT_DIR)/TestUI.output.log
 	dos2unix $(OUT_DIR)/TestUI.output.log $(SRC_DIR)/TestUI.output.log
 	diff $(OUT_DIR)/TestUI.output.log $(SRC_DIR)/TestUI.output.log
 
-$(CLI_DIR)/java/src/cli/test/UISampleText.java: $(CLI_DIR)/samples/user-guide/UISampleText.java
+$(CLI_DIR)/java/src/cli/test/samples/UISampleText.java: $(CLI_DIR)/samples/user-guide/UISampleText.java
 	$(MAKE) -f test_all_samples.mak $@
 
 .PHONY: deps

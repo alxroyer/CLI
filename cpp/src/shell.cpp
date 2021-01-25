@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -311,6 +311,40 @@ void Shell::DisplayHelp(void)
 {
     if (! m_qMenus.IsEmpty())
     {
+        // First display comment line patterns if any.
+        if (! GetCli().GetCommentLinePatterns().IsEmpty())
+        {
+            for (unsigned int i = 0; i < HELP_MARGIN; i++)
+            {
+                GetStream(OUTPUT_STREAM) << " ";
+            }
+            GetStream(OUTPUT_STREAM) << "Start with ";
+            unsigned int ui_PatternsDisplayed = 0;
+            for (   tk::Queue<tk::String>::Iterator it = GetCli().GetCommentLinePatterns().GetIterator();
+                    GetCli().GetCommentLinePatterns().IsValid(it);
+                    GetCli().GetCommentLinePatterns().MoveNext(it))
+            {
+                ui_PatternsDisplayed ++;
+                if (ui_PatternsDisplayed == GetCli().GetCommentLinePatterns().GetCount())
+                {
+                    GetStream(OUTPUT_STREAM) << "or ";
+                }
+                GetStream(OUTPUT_STREAM) << "'" << GetCli().GetCommentLinePatterns().GetAt(it) << "'";
+                if (ui_PatternsDisplayed < GetCli().GetCommentLinePatterns().GetCount())
+                {
+                    if (ui_PatternsDisplayed + 1 < GetCli().GetCommentLinePatterns().GetCount())
+                    {
+                        GetStream(OUTPUT_STREAM) << ",";
+                    }
+                    GetStream(OUTPUT_STREAM) << " ";
+                }
+                else
+                {
+                    GetStream(OUTPUT_STREAM) << " for a comment line" << endl;
+                }
+            }
+        }
+
         const tk::String tk_Left = m_cliCmdLine.GetLeft(), tk_Right = m_cliCmdLine.GetRight();
         m_cliCmdLine.Reset();
         OnHelp(
@@ -416,9 +450,13 @@ void Shell::OnKey(const KEY E_KeyCode)
         case TAB:       OnHelp(true, true);                     break;
         case QUESTION:
             if (m_cliCmdLine.GetLine().GetChar(m_cliCmdLine.GetLine().GetLength() - 1) == '\\')
+            {
                 OnPrintableChar(E_KeyCode);
+            }
             else
+            {
                 OnHelp(true, false);
+            }
             break;
         case CLS:       CleanScreen(true);                      break;
 
@@ -495,9 +533,9 @@ void Shell::OnKey(const KEY E_KeyCode)
     }
 }
 
-void Shell::OnPrintableChar(const char C_KeyCode)
+void Shell::OnPrintableChar(const KEY E_KeyCode)
 {
-    m_cliCmdLine.Put(GetStream(ECHO_STREAM), C_KeyCode);
+    m_cliCmdLine.Put(GetStream(ECHO_STREAM), E_KeyCode);
 }
 
 void Shell::OnKeyBegin(void)
@@ -620,13 +658,13 @@ void Shell::OnHelp(const bool B_PromptMenu, const bool B_Completion)
                     Beep();
                 }
                 else if ((cli_Elements.GetCount() == 1)
-                        && (! dynamic_cast<const Endl*>(cli_Elements.GetHead()))
-                        && (! dynamic_cast<const Param*>(cli_Elements.GetHead())))
+                        && (dynamic_cast<const Endl*>(cli_Elements.GetHead()) == NULL)
+                        && (dynamic_cast<const Param*>(cli_Elements.GetHead()) == NULL))
                 {
                     // Straight forward completion.
                     m_cliCmdLine.Delete(GetStream(ECHO_STREAM), - cli_CommandLine.GetNumBackspacesForCompletion());
                     m_cliCmdLine.Put(GetStream(ECHO_STREAM), cli_Elements.GetHead()->GetKeyword());
-                    m_cliCmdLine.Put(GetStream(ECHO_STREAM), ' ');
+                    m_cliCmdLine.Put(GetStream(ECHO_STREAM), SPACE);
                 }
                 else
                 {
@@ -636,8 +674,8 @@ void Shell::OnHelp(const bool B_PromptMenu, const bool B_Completion)
                             cli_Elements.IsValid(it);
                             cli_Elements.MoveNext(it))
                     {
-                        if (dynamic_cast<const Param*>(cli_Elements.GetAt(it))
-                            || dynamic_cast<const Endl*>(cli_Elements.GetAt(it)))
+                        if ((dynamic_cast<const Param*>(cli_Elements.GetAt(it)) != NULL)
+                            || (dynamic_cast<const Endl*>(cli_Elements.GetAt(it)) != NULL))
                         {
                             // No completion for parameters and end of lines.
                             str_CompletionSoFar.Set("");
@@ -681,10 +719,8 @@ void Shell::OnHelp(const bool B_PromptMenu, const bool B_Completion)
                 class _ { public:
                     static const int cmp(const Element* const& PCLI_1, const Element* const& PCLI_2)
                     {
-                        if (PCLI_1->GetKeyword() < PCLI_2->GetKeyword())
-                            return 1;
-                        if (PCLI_1->GetKeyword() > PCLI_2->GetKeyword())
-                            return -1;
+                        if (PCLI_1->GetKeyword() < PCLI_2->GetKeyword()) { return 1; }
+                        if (PCLI_1->GetKeyword() > PCLI_2->GetKeyword()) { return -1; }
                         return 0;
                     }
                 };
@@ -740,51 +776,74 @@ void Shell::OnExecute(void)
         // First of all, store the line in history stack.
         m_cliHistory.Push(m_cliCmdLine);
 
-        // Append "\n" to the line and parse it.
-        tk::String str_Line(MAX_CMD_LINE_LENGTH + 1);
-        CommandLine cli_CommandLine;
-        if (str_Line.Set(m_cliCmdLine.GetLine()) && str_Line.Append("\n")
-            && cli_CommandLine.Parse(*m_qMenus.GetTail(), str_Line, true))
+        // Then check whether this is a comment line.
+        bool b_CommentLine = false;
+        for (   tk::Queue<tk::String>::Iterator it0 = GetCli().GetCommentLinePatterns().GetIterator();
+                (! b_CommentLine) && GetCli().GetCommentLinePatterns().IsValid(it0);
+                GetCli().GetCommentLinePatterns().MoveNext(it0))
         {
-            bool b_Executed = false;
-            // No need to execute unless there are at least one word and one endl elements in the command line.
-            CommandLineIterator it(cli_CommandLine);
-            if (it.StepIt() && it.StepIt())
+            const tk::String& tk_Pattern = GetCli().GetCommentLinePatterns().GetAt(it0);
+            if (m_cliCmdLine.GetLine().SubString(0, tk_Pattern.GetLength()) == tk_Pattern)
             {
-                // Command line execution.
-                if (const Menu* const pcli_Menu = m_qMenus.GetTail())
-                {
-                    if (pcli_Menu->ExecuteReserved(cli_CommandLine))
-                        b_Executed = true;
-                    if (pcli_Menu->Execute(cli_CommandLine))
-                        b_Executed = true;
-                }
-
-                // Post-execution.
-                if (b_Executed)
-                {
-                    // Entering a sub-menu.
-                    if (const Endl* pcli_Endl = dynamic_cast<const Endl*>(& cli_CommandLine.GetLastElement()))
-                    {
-                        if (pcli_Endl->GetMenuRef() != NULL)
-                        {
-                            EnterMenu(pcli_Endl->GetMenuRef()->GetMenu(), false);
-                        }
-                    }
-                }
-                else
-                {
-                    const ResourceString cli_ExecutionError = ResourceString()
-                        .SetString(ResourceString::LANG_EN, "Execution error")
-                        .SetString(ResourceString::LANG_FR, "Erreur d'exÈcution");
-                    PrintError(GetInput().GetLocation(), cli_ExecutionError);
-                }
+                b_CommentLine = true;
             }
         }
-        else
+
+        // Non-comment lines.
+        if (! b_CommentLine)
         {
-            PrintError(GetInput().GetLocation(), cli_CommandLine.GetLastError());
+            // Append "\n" to the line and parse it.
+            tk::String str_Line(MAX_CMD_LINE_LENGTH + 1);
+            CommandLine cli_CommandLine;
+            if (str_Line.Set(m_cliCmdLine.GetLine()) && str_Line.Append("\n")
+                && cli_CommandLine.Parse(*m_qMenus.GetTail(), str_Line, true))
+            {
+                bool b_Executed = false;
+                // No need to execute unless there are at least one word and one endl elements in the command line.
+                CommandLineIterator it(cli_CommandLine);
+                if (it.StepIt() && it.StepIt())
+                {
+                    // Command line execution.
+                    if (const Menu* const pcli_Menu = m_qMenus.GetTail())
+                    {
+                        if (pcli_Menu->ExecuteReserved(cli_CommandLine))
+                        {
+                            b_Executed = true;
+                        }
+                        if (pcli_Menu->Execute(cli_CommandLine))
+                        {
+                            b_Executed = true;
+                        }
+                    }
+
+                    // Post-execution.
+                    if (b_Executed)
+                    {
+                        // Entering a sub-menu.
+                        if (const Endl* pcli_Endl = dynamic_cast<const Endl*>(& cli_CommandLine.GetLastElement()))
+                        {
+                            if (pcli_Endl->GetMenuRef() != NULL)
+                            {
+                                EnterMenu(pcli_Endl->GetMenuRef()->GetMenu(), false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        const ResourceString cli_ExecutionError = ResourceString()
+                            .SetString(ResourceString::LANG_EN, "Execution error")
+                            .SetString(ResourceString::LANG_FR, "Erreur d'ex√©cution");
+                        PrintError(GetInput().GetLocation(), cli_ExecutionError);
+                    }
+                }
+            }
+            else
+            {
+                PrintError(GetInput().GetLocation(), cli_CommandLine.GetLastError());
+            }
         }
+
+        // Let's get ready for another command line.
         m_cliCmdLine.Reset();
         PromptMenu();
     }

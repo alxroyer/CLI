@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -40,22 +40,22 @@ public final class Help extends ResourceString {
     public Help(Help CLI_Help) {
         super(__Help(CLI_Help.getNativeRef()));
     }
-    private static final native int __Help();
-    private static final native int __Help(int I_NativeHelpRef);
+    private static final native long __Help();
+    private static final native long __Help(long I64_NativeHelpRef);
 
     /** Creation from native code.
         Useful for help members of other classes.
-        @param I_NativeHelpRef Native instance reference. */
-    protected static void createFromNative(int I_NativeHelpRef) {
-        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Help.createFromNative(I_NativeHelpRef)"));
-        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I_NativeHelpRef", new Integer(I_NativeHelpRef).toString()));
+        @param I64_NativeHelpRef Native instance reference. */
+    protected static void createFromNative(long I64_NativeHelpRef) {
+        Traces.trace(NativeTraces.CLASS, NativeTraces.begin("Help.createFromNative(I64_NativeHelpRef)"));
+        Traces.trace(NativeTraces.CLASS, NativeTraces.param("I64_NativeHelpRef", new Long(I64_NativeHelpRef).toString()));
 
-        NativeObject.createdFromNative(new Help(I_NativeHelpRef));
+        NativeObject.createdFromNative(new Help(I64_NativeHelpRef));
 
         Traces.trace(NativeTraces.CLASS, NativeTraces.end("Help.createFromNative()"));
     }
-    private Help(int I_NativeHelpRef) {
-        super(I_NativeHelpRef);
+    private Help(long I64_NativeHelpRef) {
+        super(I64_NativeHelpRef);
     }
 
     /** Help addition for a given language.
@@ -66,7 +66,7 @@ public final class Help extends ResourceString {
         __addHelp(this.getNativeRef(), E_Lang, J_Help);
         return this;
     }
-    private static final native boolean __addHelp(int I_NativeHelpRef, int E_Lang, String J_Help);
+    private static final native boolean __addHelp(long I64_NativeHelpRef, int E_Lang, String J_Help);
 
     /** States whether the help object has a help resource for the given language.
         @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
@@ -74,7 +74,7 @@ public final class Help extends ResourceString {
     public final boolean hasHelp(int E_Lang) {
         return __hasHelp(this.getNativeRef(), E_Lang);
     }
-    private static final native boolean __hasHelp(int I_NativeHelpRef, int E_Lang);
+    private static final native boolean __hasHelp(long I64_NativeHelpRef, int E_Lang);
 
     /** Retrieves help resource for the given language.
         @param E_Lang   Language identifier (LANG_EN, LANG_FR...)
@@ -82,5 +82,5 @@ public final class Help extends ResourceString {
     public final String getHelp(int E_Lang) {
         return __getHelp(this.getNativeRef(), E_Lang);
     }
-    private static final native String __getHelp(int I_NativeHelpRef, int E_Lang);
+    private static final native String __getHelp(long I64_NativeHelpRef, int E_Lang);
 }

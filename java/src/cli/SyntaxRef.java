@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,6 +37,6 @@ public class SyntaxRef extends Element {
     public SyntaxRef(SyntaxTag CLI_SyntaxTag) {
         super(__SyntaxRef(CLI_SyntaxTag.getNativeRef()));
     }
-    private static final native int __SyntaxRef(int I_NativeTagRef);
+    private static final native long __SyntaxRef(long I64_NativeTagRef);
 
 }

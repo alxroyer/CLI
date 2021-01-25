@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,7 +36,7 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_OutputFileDevice__1_1OutputFileDevice(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_OutputFileDevice__1_1OutputFileDevice(
         JNIEnv* PJ_Env, jclass PJ_Class,
         jstring PJ_OutputFileName)
 {
@@ -44,12 +44,12 @@ extern "C" JNIEXPORT jint JNICALL Java_cli_OutputFileDevice__1_1OutputFileDevice
 
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("OutputFileDevice.__OutputFileDevice(PJ_OutputFileName)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_OutputFileName", NativeExec::Java2Native(PJ_OutputFileName).c_str()) << cli::endl;
-    NativeObject::REF i_FileDeviceRef = 0;
+    NativeObject::REF i64_FileDeviceRef = 0;
     if (cli::OutputFileDevice* const pcli_FileDevice = new cli::OutputFileDevice(NativeExec::Java2Native(PJ_OutputFileName).c_str(), true))
     {
         NativeObject::Use(*pcli_FileDevice);
-        i_FileDeviceRef = NativeObject::GetNativeRef(*pcli_FileDevice);
+        i64_FileDeviceRef = NativeObject::GetNativeRef(*pcli_FileDevice);
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("OutputFileDevice.__OutputFileDevice()", i_FileDeviceRef) << cli::endl;
-    return i_FileDeviceRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("OutputFileDevice.__OutputFileDevice()", i64_FileDeviceRef) << cli::endl;
+    return i64_FileDeviceRef;
 }

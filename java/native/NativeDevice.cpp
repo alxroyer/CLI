@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,7 +36,7 @@
 const bool __NativeDevice__OpenDevice(const cli::OutputDevice& CLI_Device)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__OpenDevice(CLI_Device)") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
 
     bool b_Res = false;
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
@@ -46,7 +46,7 @@ const bool __NativeDevice__OpenDevice(const cli::OutputDevice& CLI_Device)
         if (const jclass pj_MenuClass = pj_Env->FindClass(NativeObject::GetJavaClassName(CLI_Device).c_str()))
         {
             cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_MenuClass", pj_MenuClass) << cli::endl;
-            if (const jmethodID pj_OpenMethodID = pj_Env->GetMethodID(pj_MenuClass, "__openDevice", "()Z"))
+            if (const jmethodID pj_OpenMethodID = pj_Env->GetMethodID(pj_MenuClass, "__openDevice", "()Z")) // 'Z' stands for 'boolean'.
             {
                 cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_OpenMethodID", pj_OpenMethodID) << cli::endl;
                 if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Device, true))
@@ -64,7 +64,7 @@ const bool __NativeDevice__OpenDevice(const cli::OutputDevice& CLI_Device)
 const bool __NativeDevice__CloseDevice(const cli::OutputDevice& CLI_Device)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__CloseDevice(CLI_Device)") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
 
     bool b_Res = false;
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
@@ -74,7 +74,7 @@ const bool __NativeDevice__CloseDevice(const cli::OutputDevice& CLI_Device)
         if (const jclass pj_MenuClass = pj_Env->FindClass(NativeObject::GetJavaClassName(CLI_Device).c_str()))
         {
             cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_MenuClass", pj_MenuClass) << cli::endl;
-            if (const jmethodID pj_CloseMethodID = pj_Env->GetMethodID(pj_MenuClass, "__closeDevice", "()Z"))
+            if (const jmethodID pj_CloseMethodID = pj_Env->GetMethodID(pj_MenuClass, "__closeDevice", "()Z")) // 'Z' stands for 'boolean'.
             {
                 cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_CloseMethodID", pj_CloseMethodID) << cli::endl;
                 if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Device, true))
@@ -92,7 +92,7 @@ const bool __NativeDevice__CloseDevice(const cli::OutputDevice& CLI_Device)
 void __NativeDevice__PutString(const cli::OutputDevice& CLI_Device, const char* const STR_Out)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__PutString(CLI_Device, STR_Out)") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamStr("STR_Out", STR_Out) << cli::endl;
 
     if ((STR_Out != NULL) && (strlen(STR_Out) > 0))
@@ -126,7 +126,7 @@ void __NativeDevice__PutString(const cli::OutputDevice& CLI_Device, const char* 
 void __NativeDevice__Beep(const cli::OutputDevice& CLI_Device)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__Beep()") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
 
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
     {
@@ -151,7 +151,7 @@ void __NativeDevice__Beep(const cli::OutputDevice& CLI_Device)
 void __NativeDevice__CleanScreen(const cli::OutputDevice& CLI_Device)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__CleanScreen()") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
 
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
     {
@@ -176,7 +176,7 @@ void __NativeDevice__CleanScreen(const cli::OutputDevice& CLI_Device)
 const cli::OutputDevice::ScreenInfo __NativeDevice__GetScreenInfo(const cli::OutputDevice& CLI_Device)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__GetScreenInfo()") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
 
     cli::OutputDevice::ScreenInfo cli_ScreenInfo(-1, -1, false, false);
     if (NativeObject::CreateFromNative(cli_ScreenInfo))
@@ -187,13 +187,13 @@ const cli::OutputDevice::ScreenInfo __NativeDevice__GetScreenInfo(const cli::Out
             if (const jclass pj_MenuClass = pj_Env->FindClass(NativeObject::GetJavaClassName(CLI_Device).c_str()))
             {
                 cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_MenuClass", pj_MenuClass) << cli::endl;
-                if (const jmethodID pj_GetScreenInfoMethodID = pj_Env->GetMethodID(pj_MenuClass, "__getScreenInfo", "(I)V"))
+                if (const jmethodID pj_GetScreenInfoMethodID = pj_Env->GetMethodID(pj_MenuClass, "__getScreenInfo", "(J)V")) // 'J' stands for 'long'.
                 {
                     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_GetScreenInfoMethodID", pj_GetScreenInfoMethodID) << cli::endl;
                     if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Device, true))
                     {
                         cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
-                        pj_Env->CallVoidMethod(pj_Object, pj_GetScreenInfoMethodID, NativeObject::GetNativeRef(cli_ScreenInfo));
+                        pj_Env->CallVoidMethod(pj_Object, pj_GetScreenInfoMethodID, (jlong) NativeObject::GetNativeRef(cli_ScreenInfo));
                     }
                 }
             }
@@ -224,11 +224,11 @@ const bool __NativeDevice__WouldOutput(const cli::OutputDevice& CLI_Device1, con
     {
         if (const jclass pj_MenuClass = pj_Env->FindClass(NativeObject::GetJavaClassName(CLI_Device1).c_str()))
         {
-            if (const jmethodID pj_WouldOutputMethodID = pj_Env->GetMethodID(pj_MenuClass, "__wouldOutput", "(I)Z"))
+            if (const jmethodID pj_WouldOutputMethodID = pj_Env->GetMethodID(pj_MenuClass, "__wouldOutput", "(J)Z")) // 'J' stands for 'long', 'Z' for boolean.
             {
                 if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Device1, false))
                 {
-                    b_Res = pj_Env->CallBooleanMethod(pj_Object, pj_WouldOutputMethodID, (jint) NativeObject::GetNativeRef(CLI_Device2));
+                    b_Res = pj_Env->CallBooleanMethod(pj_Object, pj_WouldOutputMethodID, (jlong) NativeObject::GetNativeRef(CLI_Device2));
                 }
             }
         }
@@ -239,7 +239,7 @@ const bool __NativeDevice__WouldOutput(const cli::OutputDevice& CLI_Device1, con
 const cli::KEY __NativeDevice__GetKey(const cli::OutputDevice& CLI_Device)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__GetKey()") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
 
     cli::KEY e_Key = cli::NULL_KEY;
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
@@ -271,7 +271,7 @@ const cli::KEY __NativeDevice__GetKey(const cli::OutputDevice& CLI_Device)
 const cli::ResourceString __NativeDevice__GetLocation(const cli::OutputDevice& CLI_Device)
 {
     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::Begin("__NativeDevice__GetLocation()") << cli::endl;
-    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
+    cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ParamInt64("CLI_Device", NativeObject::GetNativeRef(CLI_Device)) << cli::endl;
 
     cli::ResourceString cli_Location;
     if (JNIEnv* const pj_Env = NativeExec::GetInstance().GetJNIEnv())
@@ -280,14 +280,14 @@ const cli::ResourceString __NativeDevice__GetLocation(const cli::OutputDevice& C
         if (const jclass pj_MenuClass = pj_Env->FindClass(NativeObject::GetJavaClassName(CLI_Device).c_str()))
         {
             cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_MenuClass", pj_MenuClass) << cli::endl;
-            if (const jmethodID pj_GetLocationMethodID = pj_Env->GetMethodID(pj_MenuClass, "__getLocation", "(I)V"))
+            if (const jmethodID pj_GetLocationMethodID = pj_Env->GetMethodID(pj_MenuClass, "__getLocation", "(J)V")) // 'J' stands for 'long'.
             {
                 cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_GetLocationMethodID", pj_GetLocationMethodID) << cli::endl;
                 if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Device, true))
                 {
                     NativeObject::CreateFromNative(cli_Location);
                     cli::GetTraces().SafeTrace(TRACE_JNI, CLI_Device) << NativeTraces::ValuePtr("pj_Object", pj_Object) << cli::endl;
-                    pj_Env->CallVoidMethod(pj_Object, pj_GetLocationMethodID, (jint) NativeObject::GetNativeRef(cli_Location));
+                    pj_Env->CallVoidMethod(pj_Object, pj_GetLocationMethodID, (jlong) NativeObject::GetNativeRef(cli_Location));
                     NativeObject::DeleteFromNative(NativeObject::GetNativeRef(cli_Location));
                 }
             }
@@ -305,11 +305,11 @@ const bool __NativeDevice__WouldInput(const cli::OutputDevice& CLI_Device1, cons
     {
         if (const jclass pj_MenuClass = pj_Env->FindClass(NativeObject::GetJavaClassName(CLI_Device1).c_str()))
         {
-            if (const jmethodID pj_WouldInputMethodID = pj_Env->GetMethodID(pj_MenuClass, "__wouldInput", "(I)Z"))
+            if (const jmethodID pj_WouldInputMethodID = pj_Env->GetMethodID(pj_MenuClass, "__wouldInput", "(J)Z")) // 'J' stands for 'long', 'Z' for 'boolean'.
             {
                 if (const jobject pj_Object = NativeObject::GetJavaObject(CLI_Device1, false))
                 {
-                    b_Res = pj_Env->CallBooleanMethod(pj_Object, pj_WouldInputMethodID, (jint) NativeObject::GetNativeRef(CLI_Device2));
+                    b_Res = pj_Env->CallBooleanMethod(pj_Object, pj_WouldInputMethodID, (jlong) NativeObject::GetNativeRef(CLI_Device2));
                 }
             }
         }

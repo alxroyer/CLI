@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -45,14 +45,14 @@ public class Float extends Line {
     public Float(cli.ExecutionContext.Interface CLI_ParentContext, double D_DefaultValue, double D_MinValue, double D_MaxValue) {
         super(__Float(CLI_ParentContext.getNativeRef(), D_DefaultValue, D_MinValue, D_MaxValue));
     }
-    private static final native int __Float(int I_NativeParentContextRef, double D_DefaultValue, double D_MinValue, double D_MaxValue);
+    private static final native long __Float(long I64_NativeParentContextRef, double D_DefaultValue, double D_MinValue, double D_MaxValue);
 
     /** Float retrieval.
         @return Float value entered by the user. */
     public double getFloat() {
         return __getFloat(this.getNativeRef());
     }
-    private static final native double __getFloat(int I_NativeFloatRef);
+    private static final native double __getFloat(long I64_NativeFloatRef);
 
 }
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -32,8 +32,8 @@ CLI_XML_OBJ ?= $(patsubst %.cpp,%.o,$(CLI_XML_CPP))
 CLI_MAIN_CPP ?= $(CLI_DIR)/cpp/tests/testsample.cpp
 CLI_MAIN_OBJ ?= $(patsubst %.cpp,$(INT_DIR)/%.o,$(notdir $(CLI_MAIN_CPP)))
 CLI_BINARY ?= $(OUT_DIR)/$(BIN_PREFIX)$(PROJECT)$(BIN_SUFFIX)
-CLI_XSL ?= $(CLI_DIR)/tools/cli2cpp.xsl
-CLI_XSLT_OPTS += --param B_CliStaticCreation 1
+CLI_CLI2CPP ?= $(CLI_DIR)/tools/cli2cpp.py
+CLI_CLI2CPP_OPTS += --static
 
 # Includes
 PROJECT ?= $(patsubst %.xml,%,$(notdir $(CLI_XML_RES)))
@@ -47,9 +47,9 @@ PROJ_CLEAN += $(CLI_XML_CPP)
 include $(CLI_DIR)/cpp/build/make/_build.mak
 
 # Rules
-$(CLI_XML_CPP): $(CLI_XML_RES) $(CLI_XSL)
+$(CLI_XML_CPP): $(CLI_XML_RES) $(CLI_CLI2CPP)
 	$(call CheckDir,$(dir $(CLI_XML_CPP)))
-	xsltproc $(CLI_XSLT_OPTS) $(CLI_XSL) $(CLI_XML_RES) > $(CLI_XML_CPP)
+	python $(CLI_CLI2CPP) $(CLI_CLI2CPP_OPTS) $(CLI_XML_RES) --output $(CLI_XML_CPP)
 
 # Rely on PROJECT_DEPS instead, otherwise it keeps on linking
 #.PHONY: $(CLI_CPP_LIB)
@@ -64,7 +64,7 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(CLI_DIR)/cpp/build/make/_mkres.vars
 vars: $(CLI_DIR)/cpp/build/make/_mkres.vars
 $(CLI_DIR)/cpp/build/make/_mkres.vars:
-	$(call ShowVariables,CLI_XML_RES CLI_XML_CPP CLI_XML_OBJ CLI_MAIN_CPP CLI_MAIN_OBJ CLI_BINARY CLI_XSL CLI_XSLT_OPTS)
+	$(call ShowVariables,CLI_XML_RES CLI_XML_CPP CLI_XML_OBJ CLI_MAIN_CPP CLI_MAIN_OBJ CLI_BINARY CLI_CLI2CPP CLI_CLI2CPP_OPTS)
 
 # Dependencies
 $(CLI_XML_OBJ): $(CLI_XML_CPP) $(wildcard $(CLI_DIR)/cpp/include/cli/*.h)

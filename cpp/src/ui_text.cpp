@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -280,7 +280,7 @@ CLI_NS_BEGIN(cli)
                         // When line wrapping is on, a line ending at the right end of the screen should not cause an empty line below.
                         // Thus, print a carriage return only in the following cases:
                         || (it.m_uiBottomChar == 0)                                         // Regular empty line.
-                        || (it.m_cliScreenInfo.GetSafeWidth() <= 0)                         // (Avoid invalid modulo, should never occure however)
+                        || (it.m_cliScreenInfo.GetSafeWidth() <= 0)                         // (Avoid invalid modulo, should never occur however)
                         || (it.m_uiBottomChar % it.m_cliScreenInfo.GetSafeWidth() != 0))    // Line not ending at the right end the screen.
                     {
                         CLI_Out << endl;

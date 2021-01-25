@@ -1,0 +1,12 @@
+backward-hollow-tag>do 
+  option          
+backward-hollow-tag>do option 
+  option          
+  stop            
+backward-hollow-tag>do option option 
+  option          
+  stop            
+backward-hollow-tag>do option option stop 
+  <cr>            
+backward-hollow-tag>do option option stop 
+backward-hollow-tag>

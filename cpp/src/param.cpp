@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -99,12 +99,12 @@ const bool Param::SetValue(const char* const STR_Value) const
     }
 }
 
-const Param* const Param::InitClone(Param& CLI_Param) const
+const Param* const Param::InitClone(Param& CLI_CloneParam) const
 {
-    CLI_Param.SetCli(const_cast<Cli&>(GetCli()));
-    CLI_Param.SetstrValue(GetstrValue());
-    CLI_Param.SetCloned(*this);
-    return & CLI_Param;
+    CLI_CloneParam.SetCli(const_cast<Cli&>(GetCli()));
+    CLI_CloneParam.SetstrValue(GetstrValue());
+    CLI_CloneParam.SetCloned(*this);
+    return & CLI_CloneParam;
 }
 
 const bool Param::SetCloned(const Param& CLI_Cloned)

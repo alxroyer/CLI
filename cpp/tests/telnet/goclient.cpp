@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -36,16 +36,18 @@
     #include <sys/socket.h> // socket, bind, listen
     #include <netinet/in.h> // sockaddr_in
     #include <netdb.h> // gethostbyname
+    #include <unistd.h> // close
 #else
     #include <winsock2.h> // Windows sockets
     #define socket_errno WSAGetLastError()
-    #define EADDRINUSE WSAEADDRINUSE
+    #ifndef EADDRINUSE
+        #define EADDRINUSE WSAEADDRINUSE
+    #endif
     #define close closesocket
     #define in_addr_t in_addr
     // Disable disturbing macros.
     #undef DELETE
 #endif
-#include <stdio.h> // close
 
 #include "cli/common.h"
 #include "cli/telnet.h"
@@ -59,10 +61,8 @@ int main(int I_ArgCount, char* ARSTR_Args[])
     class _Trace { public:
         explicit _Trace() {
             cli::GetTraces().SetStream(cli::OutputDevice::GetStdErr());
-            //  cli::GetTraces().Declare(CLI_TELNET_CLIENT);
-            //  cli::GetTraces().SetFilter(CLI_TELNET_CLIENT, true);
-            //  cli::GetTraces().Declare(CLI_TELNET_IN);
-            //  cli::GetTraces().SetFilter(CLI_TELNET_IN, false);
+            cli::GetTraces().Declare(CLI_TELNET_CLIENT);    cli::GetTraces().SetFilter(CLI_TELNET_CLIENT, false);
+            cli::GetTraces().Declare(CLI_TELNET_IN);        cli::GetTraces().SetFilter(CLI_TELNET_IN, false);
         }
         ~_Trace() {
             cli::GetTraces().UnsetStream(cli::OutputDevice::GetStdErr());
@@ -142,6 +142,7 @@ int main(int I_ArgCount, char* ARSTR_Args[])
     cli::TelnetConnection cli_TelnetConnection(NULL, i_ClientSocket, cli::ResourceString::LANG_EN, false);
     if (cli_TelnetConnection.OpenUp(__CALL_INFO__))
     {
+        // First, let's push all the input file content to the telnet connection.
         cli::InputFileDevice cli_TestFile(str_TestFile, cli::OutputDevice::GetStdOut(), false);
         cli_TestFile.EnableSpecialCharacters(true);
         if (cli_TestFile.OpenUp(__CALL_INFO__))
@@ -156,6 +157,9 @@ int main(int I_ArgCount, char* ARSTR_Args[])
             cli_TestFile.CloseDown(__CALL_INFO__);
             cli::GetTraces().Trace(CLI_TELNET_CLIENT) << "Push of '" << str_TestFile << "' done" << cli::endl;
 
+            // Then, read all outputs from the telnet connection.
+            // GetKey() will ensure the call of ReceiveChars() till there are characters to read in the socket.
+            // As soon as the server stops talking, a NULL_KEY will be returned and this loop will end.
             cli::GetTraces().Trace(CLI_TELNET_CLIENT) << "Reading from socket" << cli::endl;
             while (1)
             {
@@ -173,17 +177,6 @@ int main(int I_ArgCount, char* ARSTR_Args[])
                         cli::OutputDevice::GetStdOut() << (char) e_Key;
                         break;
                 }
-                /*char str_Buffer[1];
-                const int i_Len = recv(i_ClientSocket, str_Buffer, 1, 0);
-                int e_Key = str_Buffer[0];
-                if (i_Len <= 0)
-                {
-                    cli::OutputDevice::GetStdErr() << "recv() failed (" << i_Len << ")" << cli::endl;
-                    cli::GetTraces().Trace(CLI_TELNET_CLIENT) << "errno = " << socket_errno << cli::endl;
-                    break;
-                }
-                cli::GetTraces().Trace(CLI_TELNET_CLIENT) << (char) e_Key << "(" << (int) e_Key << ")" << cli::endl;
-                cli::OutputDevice::GetStdOut() << (char) e_Key;*/
             }
             cli_TelnetConnection.CloseDown(__CALL_INFO__);
             cli::GetTraces().Trace(CLI_TELNET_CLIENT) << "Read from socket done" << cli::endl;

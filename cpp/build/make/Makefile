@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -39,16 +39,18 @@ PROJECTS += hello.mak
 PROJECTS += clisample.mak
 # Tests
 check: PROJECTS =
-check clean: PROJECTS += test_tk.mak
-check clean: PROJECTS += test_cpp.mak
-check clean: PROJECTS += test_tuning.mak
-check clean: PROJECTS += test_cmd_line.mak
-check clean: PROJECTS += test_ui.mak
-check clean: PROJECTS += test_io_device.mak
-check clean: PROJECTS += test_non_blocking_device.mak
-check clean: PROJECTS += test_exec_context.mak
-check clean: PROJECTS += test_telnet.mak
-check clean: PROJECTS += test_all_samples.mak
+check deps clean: PROJECTS += test_tk.mak
+check deps clean: PROJECTS += test_cpp.mak
+check deps clean: PROJECTS += test_tuning.mak
+check deps clean: PROJECTS += test_cmd_line.mak
+check deps clean: PROJECTS += test_ui.mak
+check deps clean: PROJECTS += test_format.mak
+check deps clean: PROJECTS += test_io_device.mak
+check deps clean: PROJECTS += test_non_blocking_device.mak
+check deps clean: PROJECTS += test_exec_context.mak
+check deps clean: PROJECTS += test_telnet.mak
+check deps clean: PROJECTS += test_telnet_multi_clients.mak
+check deps clean: PROJECTS += test_all_samples.mak
 # Clean
 CLEAN_DIR += $(OUT_DIR)
 CLEAN_DIR += $(TARGET)$(CXX)

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -39,14 +39,14 @@
 
 extern "C" JNIEXPORT jboolean JNICALL Java_cli_ui_UI__1_1getbExecResult(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jint I_NativeUIRef)
+        jlong I64_NativeUIRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.UI.__getbExecResult(I_NativeUIRef)") << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeUIRef", I_NativeUIRef) << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("ui.UI.__getbExecResult(I64_NativeUIRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeUIRef", I64_NativeUIRef) << cli::endl;
     bool b_Res = false;
-    if (const cli::ui::UI* const pcli_UI = NativeObject::GetNativeObject<const cli::ui::UI*>(I_NativeUIRef))
+    if (const cli::ui::UI* const pcli_UI = NativeObject::GetNativeObject<const cli::ui::UI*>(I64_NativeUIRef))
     {
         b_Res = pcli_UI->GetbExecResult();
     }

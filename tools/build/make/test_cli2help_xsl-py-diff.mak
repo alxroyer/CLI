@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -45,6 +45,9 @@ OUT_DIFF_FR = $(patsubst $(CLI_DIR)/samples/%.xml, $(OUT_DIR)/%.fr.diff,$(CLI_XM
 EXPECTED_DIFF = $(patsubst %.xml,%.cli2help.diff,$(CLI_XML_RES))
 TIME = time
 
+# Infinite cli2help generation for cross-tags.xml test sample.
+CLI_XML_FILES := $(filter-out $(CLI_DIR)/samples/tests/cross-tags.xml,$(CLI_XML_FILES))
+
 # Rules
 .PHONY: check
 check: MkCallCheck = $(MAKE) -s --no-print-directory -f $(THIS_MAKEFILE) CLI_XML_FILES=_ CLI_XML_RES=$(1) TIME= check.xml
@@ -72,7 +75,8 @@ ifeq ($(shell ls $(EXPECTED_DIFF) 2> /dev/null),$(EXPECTED_DIFF))
 	diff $(CLI_HTML_FR_XSL).lite $(CLI_HTML_FR_PY).lite > $(OUT_DIFF_FR) || true
 	sed -e "s/Description :/Description:/" -i $(OUT_DIFF_FR)
 	sed -e "s/Aucune aide disponible/No help available/" -i $(OUT_DIFF_FR)
-	sed -e "s/Valeur enti\xe8re/int value/" -i $(OUT_DIFF_FR)
+	sed -e "s/Adresse réseau/host value/" -i $(OUT_DIFF_FR)
+	sed -e "s/Valeur entière/int value/" -i $(OUT_DIFF_FR)
 	diff $(OUT_DIFF_FR) $(EXPECTED_DIFF)
 else
 	# No diff expected...
@@ -81,16 +85,13 @@ else
 endif
 
 %.xsl.html.lite: %.xsl.html
-# uniq fails when dealing when latin-1 characters, export LC_ALL fixes that behaviour
-	export LC_ALL='C' && uniq $< $@.tmp
-	sed -e "s/iso-8859-1/ISO-8859-1/" -i $@.tmp
+	uniq $< $@.tmp
 	sed -e "s/cli2help\.xsl/cli2help/" -i $@.tmp
 	sed -e "s/ xmlns:cli=\"http:\/\/alexis\.royer\.free\.fr\/CLI\"//" -i $@.tmp
 	mv $@.tmp $@
 
 %.py.html.lite: %.py.html
-# uniq fails when dealing when latin-1 characters, export LC_ALL fixes that behaviour
-	export LC_ALL='C' && uniq $< $@.tmp
+	uniq $< $@.tmp
 	sed -e "s/cli2help\.py/cli2help/" -i $@.tmp
 	mv $@.tmp $@
 
@@ -99,25 +100,25 @@ $(OUT_DIR)/%.en.xsl.html: SHELL := /bin/bash
 $(OUT_DIR)/%.en.xsl.html: $(CLI_DIR)/samples/%.xml $(CLI_DIR)/tools/cli2help.xsl
 	$(call CheckDir,$(dir $@))
 	# XSLT transformation of $(CLI_XML_RES)...
-	$(TIME) (xsltproc --stringparam STR_Lang 'en' $(CLI_DIR)/tools/cli2help.xsl $< > $@.tmp)
-	mv $@.tmp $@
+	$(TIME) (xsltproc --output $@ --stringparam STR_Lang 'en' $(CLI_DIR)/tools/cli2help.xsl $<)
 
+$(OUT_DIR)/%.fr.xsl.html: SHELL := /bin/bash
 $(OUT_DIR)/%.fr.xsl.html: $(CLI_DIR)/samples/%.xml $(CLI_DIR)/tools/cli2help.xsl
 	$(call CheckDir,$(dir $@))
-	xsltproc --stringparam STR_Lang 'fr' $(CLI_DIR)/tools/cli2help.xsl $< > $@.tmp
-	mv $@.tmp $@
+	# XSLT transformation of $(CLI_XML_RES)...
+	$(TIME) (xsltproc --output $@ --stringparam STR_Lang 'fr' $(CLI_DIR)/tools/cli2help.xsl $<)
 
 $(OUT_DIR)/%.en.py.html: SHELL := /bin/bash
-$(OUT_DIR)/%.en.py.html: $(CLI_DIR)/samples/%.xml $(PYLINT_RESULT) $(wildcard $(CLI_DIR)/tools/*.py)
+$(OUT_DIR)/%.en.py.html: $(CLI_DIR)/samples/%.xml $(wildcard $(CLI_DIR)/tools/*.py)
 	$(call CheckDir,$(dir $@))
 	# python transformation of $(CLI_XML_RES)...
-	$(TIME) ($(PYTHON) $(CLI_DIR)/tools/cli2help.py --lang='en' $< > $@.tmp)
-	mv $@.tmp $@
+	$(TIME) ($(PYTHON) $(CLI_DIR)/tools/cli2help.py --lang='en' $< --output $@)
 
-$(OUT_DIR)/%.fr.py.html: $(CLI_DIR)/samples/%.xml $(PYLINT_RESULT) $(wildcard $(CLI_DIR)/tools/*.py)
+$(OUT_DIR)/%.fr.py.html: SHELL := /bin/bash
+$(OUT_DIR)/%.fr.py.html: $(CLI_DIR)/samples/%.xml $(wildcard $(CLI_DIR)/tools/*.py)
 	$(call CheckDir,$(dir $@))
-	$(PYTHON) $(CLI_DIR)/tools/cli2help.py --lang='fr' $< > $@.tmp
-	cat $@.tmp | sed -e "s/Adresse r�seau/host value/g" > $@
+	# python transformation of $(CLI_XML_RES)...
+	$(TIME) ($(PYTHON) $(CLI_DIR)/tools/cli2help.py --lang='fr' $< --output $@)
 
 .PHONY: deps
 deps: ;
@@ -134,7 +135,6 @@ else
 	rm -f $(CLI_HTML_EN_PY) $(CLI_HTML_EN_PY).tmp $(CLI_HTML_EN_PY).lite $(CLI_HTML_EN_PY).lite.tmp
 	rm -f $(CLI_HTML_FR_PY) $(CLI_HTML_FR_PY).tmp $(CLI_HTML_FR_PY).lite $(CLI_HTML_FR_PY).lite.tmp
 	rm -f $(OUT_DIFF_EN) $(OUT_DIFF_FR)
-	rm -f $(PYLINT_RESULT)
 endif
 
 # Debug and help

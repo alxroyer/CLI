@@ -1,4 +1,4 @@
-# Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+# Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 #
 # All rights reserved.
 #
@@ -45,6 +45,7 @@ OUT_DIR = $(RDX)
 # Java flags
 JAVA_PATH = -classpath $(OUT_DIR)
 JAVA_LIBS = -Djava.library.path=$(OUT_DIR)
+RunJava = PATH="$${PATH}:$(OUT_DIR)" && java $(JAVA_PATH) $(JAVA_LIBS) $(1)
 
 # Products
 JAVA_ARCHIVE = $(OUT_DIR)/cli.jar
@@ -56,7 +57,7 @@ include $(CLI_DIR)/build/make/_help.mak
 .PHONY: $(CLI_DIR)/java/build/make/_vars.vars
 vars: $(CLI_DIR)/java/build/make/_vars.vars
 $(CLI_DIR)/java/build/make/_vars.vars:
-	$(call ShowVariables,JDK_DIR JAVA_SRC_DIR NATIVE_DIR OUT_DIR JAVA_PATH JAVA_ARCHIVE JAVA_DYN_LIB)
+	$(call ShowVariables,JDK_DIR JAVA_SRC_DIR NATIVE_DIR OUT_DIR JAVA_PATH JAVA_LIBS JAVA_ARCHIVE JAVA_DYN_LIB)
 
 endif
 # __JAVA_VARS__

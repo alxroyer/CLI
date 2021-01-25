@@ -1,0 +1,29 @@
+Comments>help
+  Start with '#', '//' or '--' for a comment line
+  cli-config      CLI configuration menu
+  cls             Clean screen
+  exit            Exit menu 'Comments'
+  hello           Say hello to somebody
+  help            Get help
+  pwm             Print Working Menu
+  quit            Quit
+Comments># Hello world
+Comments>#Hello world
+Comments>cli-config
+cli-config>help
+  Start with '#', '//' or '--' for a comment line
+  beep            Modify beep behavior
+  cls             Clean screen
+  echo            Modify echo behavior
+  exit            Exit menu 'cli-config'
+  help            Get help
+  lang            Language setting
+  pwm             Print Working Menu
+  quit            Quit
+  show            Show CLI information
+cli-config>// Hello world
+cli-config>//Hello world
+cli-config>exit
+Comments>-- Hello world
+Comments>--Hello world
+Comments>quit

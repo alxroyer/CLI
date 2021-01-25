@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -37,24 +37,24 @@
 #include "NativeTraces.h"
 
 
-extern "C" JNIEXPORT jint JNICALL Java_cli_Menu__1_1Menu(
+extern "C" JNIEXPORT jlong JNICALL Java_cli_Menu__1_1Menu(
         JNIEnv* PJ_Env, jclass PJ_Class,
-        jstring PJ_Name, jint I_NativeHelpRef)
+        jstring PJ_Name, jlong I64_NativeHelpRef)
 {
     NativeExec::GetInstance().RegJNIEnv(PJ_Env);
 
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Menu.__Menu(PJ_Name, I_NativeHelpRef)") << cli::endl;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::Begin("Menu.__Menu(PJ_Name, I64_NativeHelpRef)") << cli::endl;
     cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamStr("PJ_Name", NativeExec::Java2Native(PJ_Name).c_str()) << cli::endl;
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt("I_NativeHelpRef", I_NativeHelpRef) << cli::endl;
-    NativeObject::REF i_MenuRef = 0;
-    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I_NativeHelpRef))
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::ParamInt64("I64_NativeHelpRef", I64_NativeHelpRef) << cli::endl;
+    NativeObject::REF i64_MenuRef = 0;
+    if (const cli::Help* const pcli_Help = NativeObject::GetNativeObject<const cli::Help*>(I64_NativeHelpRef))
     {
         if (cli::Menu* const pcli_Menu = new NativeMenu<cli::Menu>(NativeExec::Java2Native(PJ_Name).c_str(), *pcli_Help))
         {
             NativeObject::Use(*pcli_Menu);
-            i_MenuRef = NativeObject::GetNativeRef(*pcli_Menu);
+            i64_MenuRef = NativeObject::GetNativeRef(*pcli_Menu);
         }
     }
-    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt("Menu.__Menu()", i_MenuRef) << cli::endl;
-    return i_MenuRef;
+    cli::GetTraces().Trace(TRACE_JNI) << NativeTraces::EndInt64("Menu.__Menu()", i64_MenuRef) << cli::endl;
+    return i64_MenuRef;
 }

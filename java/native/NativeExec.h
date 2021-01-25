@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006-2013, Alexis Royer, http://alexis.royer.free.fr/CLI
+    Copyright (c) 2006-2018, Alexis Royer, http://alexis.royer.free.fr/CLI
 
     All rights reserved.
 
@@ -28,8 +28,7 @@
 #define _CLI_NATIVE_EXEC_H_
 
 #include <jni.h>
-#if 0
-#elif (defined _LINUX)
+#if (defined _LINUX)
 #include <pthread.h>
 typedef pthread_t ThreadHandle;
 typedef pthread_mutex_t* MutexHandle;
@@ -90,7 +89,7 @@ public:
 
     //! @brief Native 2 Java object list conversion.
     //! @return Java object references array newly allocated.
-    static jintArray Native2Java(
+    static jlongArray Native2Java(
         const std::vector<NativeObject::REF>& STD_ObjectList    //!< List of objects references to be converted.
         );
 
