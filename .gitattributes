@@ -1,0 +1,4 @@
+# Avoid github detect HTML as the main language.
+# Inspired from https://stackoverflow.com/questions/34713765/github-changes-repository-to-the-wrong-language#57504900.
+*.html linguist-detectable=false
+*.js linguist-detectable=false
